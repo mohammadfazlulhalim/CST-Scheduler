@@ -3,10 +3,11 @@ Tests should go into the __"\_\_tests\_\_"__ directory.
 Route files should go into the __"routes"__ directory, and views into the __"views"__ directory.  
 Object class files should go into the __"private\\javascript"__ directory.  
 Database files should go into the __"private\\database"__ directory.  
+Note that there is an example file __"sum.js"__ in __"private\\javascript"__ and an example test __"testExample"__ in __"\_\_tests\_\_"__
 
 ## Runnable Scripts
 To run all tests, you can run __"npm test"__ in the console or find the test script in __"package.json"__.  
-To start the Electron program, you can run __"npm start"__ in the console or find the start script in __"package.json"__.  
+To start the Electron program, you can run __"npm start"__ in the console or find the start script in __"package.json"__.
 
 ## After each git pull
 After each time you run a git pull, run __"npm i"__ in the console to ensure all packages from "package.json" are installed.  
