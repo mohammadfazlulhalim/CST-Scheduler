@@ -10,3 +10,7 @@ To start the Electron program, you can run __"npm start"__ in the console or fin
 
 ## After each git pull
 After each time you run a git pull, run __"npm i"__ in the console to ensure all packages from "package.json" are installed.  
+
+## Set Up Linter
+To set up the linter in WebStorm 2023, go to __File > Settings__ and search __"lint"__.  
+Click the __"Automatic ESLint configuration"__ radio button and the __"Run eslint --fix on save"__ checkbox.
