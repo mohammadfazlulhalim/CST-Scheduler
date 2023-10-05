@@ -2,8 +2,7 @@
 Tests should go into the __"\_\_tests\_\_"__ directory.  
 Route files should go into the __"routes"__ directory, and views into the __"views"__ directory.  
 Object class files should go into the __"private\\javascript"__ directory.  
-Database files should go into the __"private\\database"__ directory.  
-Note that there is an example file __"sum.js"__ in __"private\\javascript"__ and an example test __"testExample"__ in __"\_\_tests\_\_"__
+Database files should go into the __"private\\database"__ directory.
 
 ## Runnable Scripts
 To run all tests, you can run __"npm test"__ in the console or find the test script in __"package.json"__.  
