@@ -1,31 +1,51 @@
+const {Sequelize, DataTypes} = require('sequelize');
+const sequelize = new Sequelize('sqlite::memory:');
+
 /**
  * This class stores objects that represent course offerings to be used in the CST Scheduler.
  */
-class CourseOffering {
-  courseCode;
-  termNumber;
-  group;
-  primaryInstructorID;
-  secondaryInstructorID;
+const CourseOffering = sequelize.define('CourseOffering', {
+  courseCode: {
+    type: DataTypes.STRING,
+  },
 
-  /**
-   * Creates a new CourseOffering object.
-   *
-   * @param {string} courseCode            - The course this offering is for
-   * @param {number} termNumber            - The term number this offering takes place during
-   * @param {string} group                 - The group this offering is for
-   * @param {string} primaryInstructorID   - The primary instructor who will be teaching this offering
-   * @param {string} secondaryInstructorID - The secondary instructor who will be teaching this offering
-   */
-  constructor(courseCode, termNumber, group, primaryInstructorID, secondaryInstructorID) {
-  }
+  termNumber: {
+    type: DataTypes.INTEGER,
+  },
 
-  /**
-   * Returns an array of all course offerings in the database.
-   *
-   * @return {CourseOffering[]} - An array of all course offerings in the database
-   */
-  static getAllOfferings() {
-    return null;
-  }
-}
+  group: {
+    type: DataTypes.STRING(1),
+    validate: {
+      isAlphanumeric: {
+        args: true,
+        msg: 'Course Offering group can only contain letters and numbers',
+      },
+      isUppercase: {
+        args: true,
+        msg: 'Course Offering group can only contain uppercase letters',
+      },
+      len: {
+        args: [0, 1],
+        msg: 'Course offering group can only be 0 or 1 character long',
+      },
+    },
+  },
+
+  primaryInstructorID: {
+    type: DataTypes.STRING,
+  },
+
+  secondaryInstructorID: {
+    type: DataTypes.STRING,
+  },
+});
+
+/**
+ * This function returns all course offerings in the database.
+ *
+ * @return {Promise<void>}  - All course offerings in the database
+ */
+CourseOffering.getCourseOfferings = async function() {
+};
+
+module.exports = CourseOffering;
