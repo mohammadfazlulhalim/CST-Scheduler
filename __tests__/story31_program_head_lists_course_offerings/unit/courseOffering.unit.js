@@ -1,5 +1,7 @@
 const CourseOffering = require('../../../private/javascript/CourseOffering');
 
+// point Sequelize to use an in-memory DB
+
 describe('group', () => {
   test(' with one letter is valid', async function() {
     const groupLetter = 'A';
@@ -70,3 +72,36 @@ describe('group', () => {
     }
   });
 });
+
+describe('getAllOfferings()', () => {
+  test(' returns correct number of items', async function() {
+    const expectedLength = 0;
+    // create a bunch of course offerings in the db
+    await createCourseOfferings();
+
+    // retrieve the offerings from the db
+    const courseOfferings = CourseOffering.getAllOfferings();
+
+    expect((await courseOfferings).length).toBe(expectedLength);
+  });
+
+  test(' returns empty array when there are no items', async function() {
+    expect((await CourseOffering.getAllOfferings()).length).toBe(0);
+  });
+});
+
+/**
+ * Creates a bunch of course offerings to use for testing.
+ *
+ * @param {number} amount - The amount of offerings to create
+ */
+async function createCourseOfferings(amount) {
+  // drop and recreate the table
+  CourseOffering.sync({force: true});
+  const viableGroups = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0'.split(' ');
+  for (let i = 0; i < amount; i++) {
+    await CourseOffering.create({
+      group: viableGroups[Math.random() * viableGroups.length],
+    });
+  }
+}
