@@ -1,7 +1,6 @@
 // Importing the ORM object
 const Term = require('../../../private/javascript/Term.js');
 
-
 // Here is a function to remind myself of syntax
 // This is working and passing, testing library is all working now
 test('Test title', () => {
@@ -11,44 +10,35 @@ test('Test title', () => {
     expect(functionCall).toBe(expectedResult);
 });
 
-// Now I just need to add in all my tests, and stubs for all my methods
-// Need to think out all of my constructors
-// As a group, how do we plan on doing things regarding classes and constructor restrictions
-
 // Term 1 Tests
-test('testThatTerm1AcceptsStartDateInAugust', async () => {
-    // For an accept, it will be easy
+test('testThatTerm1StartDateInAugustPass', async () => {
+    // For a pass, it will be easy
     //  1. Call constructor with arguments
-    const term1 = await Term.create({startDate: '01-Aug-23', endDate: '01-Dec-23', termNumber: 1});
+    const term1 = await Term.create({startDate: '2023-08-01', endDate: '2023-12-01', termNumber: 1});
     //  2. Check that object is created and has valid info
     expect(term1).toBeTruthy();
-    expect(term1.startDate).toBe('01-Aug-23');
+    expect(term1.startDate).toBe('2023-08-01');
 
     // Check for no errors
     expect(term1.validate()).resolves.toBe(undefined);
 
 });
 
-test('testThatTerm1AcceptsStartDateInSeptember', async () => {
-
-    // For an accept, it will be easy
-    //  1. Call constructor with arguments
-    const term1 = await Term.create({startDate: '01-Sep-23', endDate: '01-Dec-23', termNumber: 1});
-    //  2. Check that object is created and has valid info
+test('testThatTerm1StartDateInSeptemberPass', async () => {
+    const term1 = await Term.create({startDate: '2023-09-01', endDate: '2023-12-01', termNumber: 1});
     expect(term1).toBeTruthy();
-    expect(term1.startDate).toBe('01-Sep-23');
+    expect(term1.startDate).toBe('2023-09-01');
 
-    // Check for no errors
     expect(term1.validate()).resolves.toBe(undefined);
 
 
 
 });
 
-test('testThatTerm1RejectsStartDateInJuly', async () => {
-    // For a reject, we need to catch the error message
+test('testThatTerm1StartDateInJulyFail', async () => {
+    // For a fail, we need to catch the error message
     try {
-        const term1 = await Term.create({startDate: 'July 1', endDate: 'end', termNumber: 1});
+        const term1 = await Term.create({startDate: '2023-07-01', endDate: '2023-12-01', termNumber: 1});
     } catch (err) {
         expect(err.errors[0].message).toBe('Term 1 must start in August or September');
     }
@@ -56,51 +46,51 @@ test('testThatTerm1RejectsStartDateInJuly', async () => {
 });
 
 // Term 4 Tests
-test('testThatTerm4AcceptsStartDateInAugust', () => {
+test('testThatTerm4StartDateInAugustPass', () => {
 
 });
 
-test('testThatTerm4AcceptsStartDateInSeptember', () => {
+test('testThatTerm4StartDateInSeptemberPass', () => {
 
 });
 
-test('testThatTerm4RejectsStartDateInJuly', () => {
+test('testThatTerm4StartDateInJulyFail', () => {
 
 });
 
 // Term 2 Tests
-test('testThatTerm2AcceptsStartDateInJanuary', () => {
+test('testThatTerm2StartDateInJanuaryPass', () => {
 
 });
 
-test('testThatTerm2RejectsStartDateInDecember', () => {
+test('testThatTerm2StartDateInDecemberFail', () => {
 
 });
 
 // Term 5 Tests
-test('testThatTerm5AcceptsStartDateInJanuary', () => {
+test('testThatTerm5StartDateInJanuaryPass', () => {
 
 });
 
-test('testThatTerm5RejectsStartDateInDecember', () => {
+test('testThatTerm5StartDateInDecemberFail', () => {
 
 });
 
 // Term 3
-test('testThatTerm3AcceptsStartDateInMay', () => {
+test('testThatTerm3StartDateInMayPass', () => {
 
 });
 
-test('testThatTerm3RejectsStartDateInApril', () => {
+test('testThatTerm3StartDateInAprilFail', () => {
 
 });
 
 // Term 6
-test('testThatTerm6AcceptsStartDateInMay', () => {
+test('testThatTerm6StartDateInMayPass', () => {
 
 });
 
-test('testThatTerm6RejectsStartDateInApril', () => {
+test('testThatTerm6StartDateInAprilFail', () => {
 
 });
 

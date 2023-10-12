@@ -1,61 +1,71 @@
 // Term 1 Tests
-test('testThatTerm1AcceptsEndDateInDecember', ()=>{
-    
+const Term = require("../../../private/javascript/Term");
+test('testThatTerm1EndDateInDecemberPass', async ()=>{
+    const term1 = await Term.create({startDate: '2023-09-01', endDate: '2023-12-01', termNumber: 1});
+    expect(term1).toBeTruthy();
+    expect(term1.endDate).toBe('2023-12-01');
+
+    expect(term1.validate()).resolves.toBe(undefined);
 });
 
-test('testThatTerm1RejectsEndDateInJanuary', ()=>{
+test('testThatTerm1EndDateInJanuaryFail', async ()=>{
+    try {
+        const term1 = await Term.create({startDate: '2023-09-01', endDate: '2023-11-01', termNumber: 1});
+    } catch (err) {
+        expect(err.errors[0].message).toBe('Term 1 must edn in December');
+    }
 
 });
 
 // Term 4 Tests
-test('testThatTerm4AcceptsEndDateInDecember', ()=>{
+test('testThatTerm4EndDateInDecemberPass', ()=>{
 
 });
 
-test('testThatTerm4RejectsEndDateInJanuary', ()=>{
+test('testThatTerm4EndDateInJanuaryFail', ()=>{
 
 });
 
 // Term 2 Tests
-test('testThatTerm2AcceptsEndDateInApril', ()=>{
+test('testThatTerm2EndDateInAprilPass', ()=>{
 
 });
 
-test('testThatTerm2RejectsEndDateInMay', ()=>{
+test('testThatTerm2EndDateInMayFail', ()=>{
 
 });
 
 // Term 5 Tests
-test('testThatTerm5AcceptsEndDateInApril', ()=>{
+test('testThatTerm5EndDateInAprilPass', ()=>{
 
 });
 
-test('testThatTerm5RejectsEndDateInMay', ()=>{
+test('testThatTerm5EndDateInMayFail', ()=>{
 
 });
 
 // Term 3 Tests
-test('testThatTerm3AcceptsEndDateInMay', ()=>{
+test('testThatTerm3EndDateInMayPass', ()=>{
 
 });
 
-test('testThatTerm3AcceptsEndDateInJune', ()=>{
+test('testThatTerm3EndDateInJunePass', ()=>{
 
 });
 
-test('testThatTerm3RejectsEndDateInJuly', ()=>{
+test('testThatTerm3EndDateInJulyFail', ()=>{
 
 });
 
 // Term 6 Tests
-test('testThatTerm6AcceptsEndDateInMay', ()=>{
+test('testThatTerm6EndDateInMayPass', ()=>{
 
 });
 
-test('testThatTerm6AcceptsEndDateInJune', ()=>{
+test('testThatTerm6EndDateInJunePass', ()=>{
 
 });
 
-test('testThatTerm6RejectsEndDateInJuly', ()=>{
+test('testThatTerm6EndDateInJulyFail', ()=>{
 
 });

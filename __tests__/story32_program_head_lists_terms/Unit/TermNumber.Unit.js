@@ -1,7 +1,7 @@
-test('testThatTermAcceptsLowNumber', async ()=>{
+test('testThatTermLowNumberPass', async ()=>{
     // For an accept, it will be easy
     //  1. Call constructor with arguments
-    const term1 = await Term.create({startDate: 'start', endDate: 'end', termNumber: 1});
+    const term1 = await Term.create({startDate: '2023-09-01', endDate: '2023-12-01', termNumber: 1});
     //  2. Check that object is created and has valid info
     expect(term1).toBeTruthy();
     expect(term1.termNumber).toBe(1);
@@ -11,20 +11,20 @@ test('testThatTermAcceptsLowNumber', async ()=>{
 
 });
 
-test('testThatTermRejectsBelowOne', async ()=>{
+test('testThatTermBelowOneFail', async ()=>{
     // For a reject, we need to catch the error message
     try {
-        const term1 = await Term.create({startDate: 'start', endDate: 'end', termNumber: 0});
+        const term1 = await Term.create({startDate: '2023-09-01', endDate: '2023-12-01', termNumber: 0});
     } catch (err) {
         expect(err.errors[0].message).toBe('Term number must be between 1 and 6');
     }
 
 });
 
-test('testThatTermAcceptsHighNumber', ()=>{
+test('testThatTermHighNumberPass', ()=>{
 
 });
 
-test('testThatTermRejectsAboveSix', ()=>{
+test('testThatTermAboveSixFail', ()=>{
 
 });
