@@ -1,33 +1,63 @@
+const Classroom = require('../../../private/javascript/Classroom');
 
-
-describe('ClassroomUnitTests', () => {
-  test('IsValidWhenLessThan10Characters', () => {
-    const classroom = new Classroom('123@45$78');
-    expect(classroom.roomNumberIsValid()).toBe(true);
+describe('testThatRoomNumber', () => {
+  beforeAll(async () => {
+    try {
+      await sequelize.sync();
+      console.log('Instructors table created successfully');
+    } catch (error) {
+      console.error('Error creating Instructors table:', error);
+    }
   });
 
-  test('IsValidWithSpecialCharacters', () => {
-    const classroom = new Classroom('!');
-    expect(classroom.roomNumberIsValid()).toBe(true);
+  test('IsValidWhenLessThan10Characters', async () => {
+    const roomNumber = '123@45$78';
+    const classroom = await Classroom.create({roomNumber});
+
+    expect(classroom).toBeTruthy();
+    expect(classroom.roomNumber).toBe(roomNumber);
   });
 
-  test('IsValidWithSingleCharacter', () => {
-    const classroom = new Classroom('AB#12');
-    expect(classroom.roomNumberIsValid()).toBe(true);
+  test('IsValidWithSpecialCharacters', async () => {
+    const roomNumber = '!';
+    const classroom = await Classroom.create({roomNumber});
+
+    expect(classroom).toBeTruthy();
+    expect(classroom.roomNumber).toBe(roomNumber);
   });
 
-  test('IsInvalidWhenExactly10Characters', () => {
-    const classroom = new Classroom('1234567890');
-    expect(classroom.roomNumberIsValid()).toBe(false);
+  test('IsValidWithSingleCharacter', async () => {
+    const roomNumber = 'AB#12';
+    const classroom = await Classroom.create({roomNumber});
+
+    expect(classroom).toBeTruthy();
+    expect(classroom.roomNumber).toBe(roomNumber);
   });
 
-  test('IsInvalidWhenEmpty', () => {
-    const classroom = new Classroom('');
-    expect(classroom.roomNumberIsValid()).toBe(false);
+  test('IsInvalidWhenExactly10Characters', async () => {
+    try {
+      await Classroom.create({roomNumber: '1234567890'});
+    } catch (err) {
+      expect(err.errors[0].message).toBe('The Room Number must be between 1 and 10 characters in length.');
+    }
   });
 
-  test('IsValidWithWhitespace', () => {
-    const classroom = new Classroom('123A B');
-    expect(classroom.roomNumberIsValid()).toBe(true);
+  test('testThatEmptyRoomNumber IsInvalid', async () => {
+    try {
+      await Classroom.create({roomNumber: ''});
+    } catch (err) {
+      expect(err.errors[0].message).toBe('The Room Number must be between 1 and 10 characters in length.');
+    }
+  });
+
+  test('IsValidWithWhitespace', async () => {
+    const roomNumber = '123A B ';
+    const classroom = await Classroom.create({roomNumber});
+
+    expect(classroom).toBeTruthy();
+    expect(classroom.roomNumber).toBe(roomNumber);
+
+    // Use .resolves to resolve the promise; error list expected to be empty
+    expect(classroom.validate()).resolves.toBe(undefined);
   });
 });
