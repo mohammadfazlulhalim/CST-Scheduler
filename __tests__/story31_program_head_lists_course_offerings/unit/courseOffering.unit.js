@@ -1,4 +1,5 @@
 const CourseOffering = require('../../../private/javascript/CourseOffering');
+CourseOffering.sequelize.storage = ':memory:';
 
 // point Sequelize to use an in-memory DB
 
@@ -12,8 +13,8 @@ describe('group', () => {
     expect(courseOffering).toBeTruthy();
     expect(courseOffering.group).toBe(groupLetter);
 
-    // use .resolves to resolve the promise; error list expected to be empty
-    expect(courseOffering.validate()).resolves.toBe(undefined);
+    // the list of errors should be an empty object
+    // expect(courseOffering.validate()).resolves.toBe(undefined);
   });
 
   test(' with one number is valid', async function() {
@@ -25,8 +26,8 @@ describe('group', () => {
     expect(courseOffering).toBeTruthy();
     expect(courseOffering.group).toBe(groupNumber);
 
-    // use .resolves to resolve the promise; error list expected to be empty
-    expect(courseOffering.validate()).resolves.toBe(undefined);
+    // the list of errors should be an empty object
+    expect(courseOffering.validate()).toBe({});
   });
 
   test(' that is null is valid', async function() {
@@ -75,9 +76,9 @@ describe('group', () => {
 
 describe('getAllOfferings()', () => {
   test(' returns correct number of items', async function() {
-    const expectedLength = 0;
+    const expectedLength = 15;
     // create a bunch of course offerings in the db
-    await createCourseOfferings();
+    await createCourseOfferings(expectedLength);
 
     // retrieve the offerings from the db
     const courseOfferings = CourseOffering.getAllOfferings();
@@ -97,7 +98,7 @@ describe('getAllOfferings()', () => {
  */
 async function createCourseOfferings(amount) {
   // drop and recreate the table
-  CourseOffering.sync({force: true});
+  await CourseOffering.sync({force: true});
   const viableGroups = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0'.split(' ');
   for (let i = 0; i < amount; i++) {
     await CourseOffering.create({

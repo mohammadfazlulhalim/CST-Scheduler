@@ -1,6 +1,8 @@
 const {Sequelize, DataTypes} = require('sequelize');
-const sequelize = new Sequelize('sqlite:../database/scheduler.db');
-
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: '../database/scheduler.db',
+});
 /**
  * This class stores objects that represent course offerings to be used in the CST Scheduler.
  */
@@ -31,13 +33,14 @@ const CourseOffering = sequelize.define('CourseOffering', {
     },
   },
 
-  primaryInstructorID: {
-    type: DataTypes.STRING,
-  },
-
-  secondaryInstructorID: {
-    type: DataTypes.STRING,
-  },
+  // link the whole object here, not just the ID
+  // primaryInstructorID: {
+  //   type: DataTypes.STRING,
+  // },
+  //
+  // secondaryInstructorID: {
+  //   type: DataTypes.STRING,
+  // },
 }, {
   tableName: 'CourseOfferings',
 });
