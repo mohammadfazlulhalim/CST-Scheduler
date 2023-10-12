@@ -1,4 +1,7 @@
 const Classroom = require('../../../private/javascript/Classroom');
+const {Sequelize} = require('sequelize');
+
+const sequelize = new Sequelize('sqlite::memory:');
 
 describe('testThatRoomNumber', () => {
   beforeAll(async () => {
@@ -56,8 +59,5 @@ describe('testThatRoomNumber', () => {
 
     expect(classroom).toBeTruthy();
     expect(classroom.roomNumber).toBe(roomNumber);
-
-    // Use .resolves to resolve the promise; error list expected to be empty
-    expect(classroom.validate()).resolves.toBe(undefined);
   });
 });

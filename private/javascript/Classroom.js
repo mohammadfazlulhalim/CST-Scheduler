@@ -1,11 +1,8 @@
 const {Sequelize, DataTypes} = require('sequelize');
 
 // Initialize Sequelize
-// const sequelize = new Sequelize({
-//   dialect: 'sqlite', // Dialect is the type of database we're using
-//   storage: ':memory:', // Currently storing to an in-memory database
-// });
 const sequelize = new Sequelize('sqlite::memory:');
+
 // Define Classroom Model
 const Classroom = sequelize.define('Classroom', {
   // RoomNumber Attribute

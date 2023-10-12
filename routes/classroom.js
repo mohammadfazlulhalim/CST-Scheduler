@@ -4,9 +4,10 @@ const router = express.Router();
 const classroomList = [];
 
 // http://localhost:3000/
-router.get('/',
-    (req, res, next) =>{
+router.get('/', (req, res, next) =>{
+});
 
-    });
+
+async function loadClassroom() {}
 
 
