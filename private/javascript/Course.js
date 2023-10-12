@@ -1,13 +1,15 @@
-// SEQUELIZE STUB TO CLARIFY DATABASE ORM CONVERSATIONS!
-// Docs are utilized to assist in setting up the stub
-// https://sequelize.org/docs/v6/core-concepts/validations-and-constraints/
-// more resources:
-    // https://codesandbox.io/s/jest-sequelize-example-5zglq?file=/src/__tests__/consumer.js
-    //
-const {Sequelize, DataTypes} = require('sequelize');
 
-const courseInstance = sequelize.define ('Course', {
+const {Sequelize, DataTypes} = require('sequelize');
+const sequelize = new Sequelize('');
+
+
+
+// STUB START
+const Course = sequelize.define ('Course', {
     courseCode: {
+        // might have been tested elsewhere
+        // unsure if story34 branch needs testing
+        type: DataTypes.STRING,
 
     },
     courseName: {
@@ -37,22 +39,8 @@ const courseInstance = sequelize.define ('Course', {
 
 (async () => {
     await sequelize.sync( {force:true} )
-
-})
-
-// // // Stub end // // // //
-// --------------------------
-
-
-
-// // // TESTS // // // // //
-jest.mock(sequelize);
-
-describe('courseInstance', () => {
-
 })
 
 
-// // // Tests End // // // // //
-// --------------------------
 
+module.exports = Course;
