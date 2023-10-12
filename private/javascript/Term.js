@@ -14,19 +14,34 @@ const sequelize = new Sequelize({
 const Term = sequelize.define('Term', {
   startDate: {
     type: DataTypes.DATEONLY,
+      validate: {
+
+      }
     //Here is where I can put my validators
     // https://sequelize.org/docs/v6/core-concepts/validations-and-constraints/
   },
   endDate: {
     type: DataTypes.DATEONLY,
+      validate: {
+
+      }
     //add validators
     // https://sequelize.org/docs/v6/core-concepts/validations-and-constraints/
   },
   termNumber: {
     type: DataTypes.INTEGER,
+      validate: {
+
+      }
     // https://sequelize.org/docs/v6/core-concepts/validations-and-constraints/
   }
 });
+
+// Will retrieve all items from the database
+Term.retrieveList = async function()
+{
+
+}
 
 // Now need to keep it in sync with the database
 sequelize.sync()

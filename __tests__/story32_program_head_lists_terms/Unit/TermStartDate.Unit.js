@@ -16,20 +16,42 @@ test('Test title', () => {
 // As a group, how do we plan on doing things regarding classes and constructor restrictions
 
 // Term 1 Tests
-test('testThatTerm1AcceptsStartDateInAugust', () => {
+test('testThatTerm1AcceptsStartDateInAugust', async () => {
     // For an accept, it will be easy
     //  1. Call constructor with arguments
-    const term1 = Term.create({startDate: 'start', endDate: 'end', termNumber: 1});
-    //  2. Check that object has valid info
-    expect(term1.startDate).toBe("August 1");
+    const term1 = await Term.create({startDate: '01-Aug-23', endDate: '01-Dec-23', termNumber: 1});
+    //  2. Check that object is created and has valid info
+    expect(term1).toBeTruthy();
+    expect(term1.startDate).toBe('01-Aug-23');
+
+    // Check for no errors
+    expect(term1.validate()).resolves.toBe(undefined);
+
 });
 
-test('testThatTerm1AcceptsStartDateInSeptember', () => {
+test('testThatTerm1AcceptsStartDateInSeptember', async () => {
+
+    // For an accept, it will be easy
+    //  1. Call constructor with arguments
+    const term1 = await Term.create({startDate: '01-Sep-23', endDate: '01-Dec-23', termNumber: 1});
+    //  2. Check that object is created and has valid info
+    expect(term1).toBeTruthy();
+    expect(term1.startDate).toBe('01-Sep-23');
+
+    // Check for no errors
+    expect(term1.validate()).resolves.toBe(undefined);
+
+
 
 });
 
-test('testThatTerm1RejectsStartDateInJuly', () => {
+test('testThatTerm1RejectsStartDateInJuly', async () => {
     // For a reject, we need to catch the error message
+    try {
+        const term1 = await Term.create({startDate: 'July 1', endDate: 'end', termNumber: 1});
+    } catch (err) {
+        expect(err.errors[0].message).toBe('Term 1 must start in August or September');
+    }
 
 });
 
