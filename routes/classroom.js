@@ -8,6 +8,6 @@ router.get('/', (req, res, next) =>{
 });
 
 
-async function loadClassroom() {}
+function loadClassroom() {}
 
 
