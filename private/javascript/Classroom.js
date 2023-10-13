@@ -3,12 +3,13 @@ const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: '../database/scheduler.db',
 });
+
 // Define Classroom Model
 const Classroom = sequelize.define('Classroom', {
   // RoomNumber Attribute
   roomNumber: {
-    type: DataTypes.STRING(10), // Can be up to 10 characters
-    // allowNull: false, // Can't be null
+    type: DataTypes.STRING, // Can be up to 10 characters
+    allowNull: false, // Can't be null
     primaryKey: true,
     // Validation Rules
     validate: {
@@ -23,7 +24,7 @@ const Classroom = sequelize.define('Classroom', {
   },
 },
 {
-  tableName: 'Classroom',
+  freezeTableName: true, // Freeze table sets the table name to the object name.
 });
 
 module.exports = Classroom;

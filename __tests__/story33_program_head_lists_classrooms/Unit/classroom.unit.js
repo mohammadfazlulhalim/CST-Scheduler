@@ -1,86 +1,82 @@
-const {Sequelize} = require('sequelize');
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: ':memory:', // Use an in-memory database for testing
-});
-
 const Classroom = require('../../../private/javascript/Classroom');
+Classroom.sequelize.storage = ':memory:';
 
-// eslint-disable-next-line require-jsdoc
-async function createClassroom(attributes) {
+let classroomInstance;
+
+/**
+ * Create database tables for testing.
+ */
+async function createDatabaseTables() {
   try {
-    const classroom = await Classroom.create(attributes);
-    return classroom;
+    await Classroom.sync();
+    console.log('Database tables created successfully');
   } catch (error) {
-    console.error('Error creating classroom:', error);
-    return null;
+    console.error('Error creating database tables:', error);
   }
 }
 
-describe('testThatRoomAttributes', () => {
+describe('TestRoomAttributes', () => {
   beforeAll(async () => {
-    try {
-      await sequelize.sync();
-      console.log('Database tables created successfully');
-    } catch (error) {
-      console.error('Error creating database tables:', error);
-    }
+    const defaultRoomAttributes = {
+      roomNumber: '1234',
+    };
+    classroomInstance = await Classroom.build(defaultRoomAttributes);
+    await createDatabaseTables();
   });
 
   test('IsValidWhenLessThan10Characters', async () => {
-    const roomAttributes = {
-      roomNumber: '123@45$78',
-    };
-    const classroom = await createClassroom(roomAttributes);
-
-    expect(classroom).toBeTruthy();
-    expect(classroom.roomNumber).toBe(roomAttributes.roomNumber);
+    // Test if a room number with less than 10 characters is valid
+    classroomInstance.set({roomNumber: '123@45$78'});
+    await classroomInstance.save();
+    const updatedClassroom = await Classroom.findOne({
+      where: {roomNumber: '123@45$78'},
+    });
+    expect(updatedClassroom).toBeTruthy();
   });
 
   test('IsValidWithSpecialCharacters', async () => {
-    const roomAttributes = {
-      roomNumber: '!',
-    };
-    const classroom = await createClassroom(roomAttributes);
-
-    expect(classroom).toBeTruthy();
-    expect(classroom.roomNumber).toBe(roomAttributes.roomNumber);
+    // Test if a room number with special characters is valid
+    classroomInstance.set({roomNumber: '!'});
+    await classroomInstance.save();
+    const updatedClassroom = await Classroom.findOne({
+      where: {roomNumber: '!'},
+    });
+    expect(updatedClassroom).toBeTruthy();
   });
 
-
   test('IsInvalidWhenExactly10Characters', async () => {
+    // Test if a room number with exactly 10 characters is invalid
+    classroomInstance.set({roomNumber: '1234567890'});
     try {
-      const roomAttributes = {
-        roomNumber: '1234567890',
-        // Add other attributes here
-      };
-      await createClassroom(roomAttributes);
+      await classroomInstance.save();
     } catch (err) {
       expect(err.errors[0].message).toBe('The Room Number must be between 1 and 10 characters in length.');
     }
   });
-  test('testThatEmptyRoomNumber IsInvalid', async () => {
+
+  test('IsInvalidWhenEmptyRoomNumber', async () => {
+    // Test if an empty room number is invalid
+    classroomInstance.set({roomNumber: ''});
     try {
-      const roomAttributes = {
-        roomNumber: '',
-        // Add other attributes here
-      };
-      await createClassroom(roomAttributes);
+      await classroomInstance.save();
     } catch (err) {
       expect(err.errors[0].message).toBe('The Room Number must be between 1 and 10 characters in length.');
     }
   });
 
   test('IsValidWithWhitespace', async () => {
-    const roomAttributes = {
-      roomNumber: '123A B ',
-      // Add other attributes here
-    };
-    const classroom = await createClassroom(roomAttributes);
+    // Test if a room number with whitespace is valid
+    classroomInstance.set({roomNumber: '123A B '});
+    await classroomInstance.save();
+    const updatedClassroom = await Classroom.findOne({
+      where: {roomNumber: '123A B '},
+    });
+    expect(updatedClassroom).toBeTruthy();
+  });
 
-    expect(classroom).toBeTruthy();
-    expect(classroom.roomNumber).toBe(roomAttributes.roomNumber);
+  afterAll(async () => {
+    if (classroomInstance) {
+      await classroomInstance.destroy();
+    }
   });
 });
-
-
