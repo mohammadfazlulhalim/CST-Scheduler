@@ -1,0 +1,8 @@
+So, how do I want to approach coding my story?
+Things to figure out:
+    1. Setting up database connection properly, and testing to use in-memory as flagged in Raven's pre-code
+    2. Setting up validators
+    3. Retreiving database files in router
+    4. Displaying results in HBS file
+First step is to probably either get connection or validator
+    - Most time efficient way would be to work on validators as other members of the group are already working on db connections

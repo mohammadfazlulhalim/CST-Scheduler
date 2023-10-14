@@ -38,14 +38,6 @@ const Term = sequelize.define('Term', {
     }
 });
 
-/**
- * Rhis method will return an array of all entries of Term in the database
- * @returns {Promise<void>}
- */
-Term.retrieveList = async function () {
-
-}
-
 // Now need to keep it in sync with the database
 sequelize.sync()
     .then(() => {
