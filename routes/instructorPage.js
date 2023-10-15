@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const database = require('database.js');
+const instr = Instr
+
 router.get('/', function(req, res, next){
 
 });
@@ -8,3 +9,8 @@ router.get('/', function(req, res, next){
 router.post('/', function(req,res,next){
 
 });
+
+
+function getAllInstructors(){
+
+}
