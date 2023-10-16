@@ -7,19 +7,19 @@ const sequelize = new Sequelize({
 
 
 
-const InstrucorList = await sequelize.g
+// const InstrucorList = await sequelize.g
 
-// const Instructor = sequelize.define('Instructor', {
-//     firstName: {
-//         type: DataTypes.STRING,
-//         allowNull: false
-//     },
-//     lastName: {
-//         type: DataTypes.STRING,
-//         allowNull: false
-//     }
-// });
-//
+const Instructor = sequelize.define('Instructor', {
+    firstName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    lastName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+});
+
 // sequelize.sync() // pass stuff in here to make it drop?
 //     .then(() => {
 //         console.log('Database synchronized');
@@ -35,4 +35,4 @@ const InstrucorList = await sequelize.g
 // }).catch((error) => {
 //     console.error('Error creating Instructor:', error);
 // });
-//
+
