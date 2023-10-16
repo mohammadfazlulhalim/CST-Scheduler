@@ -12,27 +12,26 @@ const sequelize = new Sequelize({
 const Instructor = sequelize.define('Instructor', {
     firstName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notNull: {
+                args: true,
+                msg: 'First Name cannot be empty',
+            },
+            len: {
+                args: [1, 50],
+                msg: 'Exception “First Name cannot be more than 50 characters”',
+            },
+        },
     },
     lastName: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
-});
+        type: DataTypes.STRING
+    },
+},
+    {
+        tableName:'Instructor',
+    },
+    );
 
-// sequelize.sync() // pass stuff in here to make it drop?
-//     .then(() => {
-//         console.log('Database synchronized');
-//     })
-//     .catch((error) => {
-//         console.error('Error synchronizing database:', error);
-//     });
-//
-// const me = Instructor.create({firstName: 'Mason', lastName:'Rayburn'});
-//
-// me.then((instructor) => {
-//     console.log(instructor.firstName);
-// }).catch((error) => {
-//     console.error('Error creating Instructor:', error);
-// });
 
+module.exports = Instructor;
