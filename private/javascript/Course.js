@@ -31,12 +31,10 @@ const Course = sequelize.define ('Course', {
     courseNumCredits: {
         type: DataTypes.INTEGER,
         allowNull: false,
-
-
         min: 0,
-        max: 99,
+        max: 6,
         message: "Error: Enter a whole number between " +
-            "0 and 99 as a valid number of credits.",
+            "0 and 6 as a valid number of credits.",
     },
     courseNumHoursPerWeek: {
         type: DataTypes.INTEGER,

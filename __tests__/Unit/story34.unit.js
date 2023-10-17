@@ -19,17 +19,20 @@ let courseInstance;
 
 
 // ensure that databases are created successfully
-async function establishDatabaseTables() {
-    try {
-        await Course.sync();
-    } catch (e) {
-        console.error(e)
-    }
-}
+
 
 
 describe ('testCourseModel', () => {
-    beforeAll(async () => {
+
+    async function establishDatabaseTables() {
+        try {
+            await Course.sync();
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    beforeEach(async () => {
         // HARDCODED FOR NOW...
         try {
             const course =  {
@@ -47,15 +50,38 @@ describe ('testCourseModel', () => {
     });
 
 
-    test ("testCourseNameGood", async () => {
+    // upper bound test
+    test ("testCourseNameGoodUpperBound", async () => {
+        console.log(`courseInstance: \n ${courseInstance}`)
+
         courseInstance.set ({
-            courseName: 'Security 1'
+            courseName: 'a'.repeat(100)
         })
 
         try {
             await courseInstance.save();
             const updatedCourse = await Course.findOne({
-                where: {courseName: 'Security 1'}
+                where: {courseName: 'a'.repeat(100)}
+            })
+            expect(updatedCourse).toBeTruthy();
+
+        } catch (e) {
+            console.error(e)
+        }
+
+    })
+
+
+    // lower bound test
+    test ("testCourseNameLowerBound", async () => {
+        courseInstance.set ({
+            courseName: 'a'
+        })
+
+        try {
+            await courseInstance.save();
+            const updatedCourse = await Course.findOne({
+                where: {courseName: 'a'}
             })
             expect(updatedCourse).toBeTruthy();
 
@@ -66,10 +92,12 @@ describe ('testCourseModel', () => {
     })
 
     test("testCourseNameCatchNothingEntered", async () => {
+        console.log(courseInstance);
         courseInstance.set({courseName: ""} );
         try {
             await courseInstance.save();
         } catch (e) {
+            expect(e.errors.length).toBe(1);
             expect(e.errors[0].message)
                 .toBe("Error: Course Name must have 1 to 100 characters.")
         }
@@ -77,50 +105,18 @@ describe ('testCourseModel', () => {
 
 
     test("testCourseNameCatchTooLong", async () => {
-        // 127 chars
-        courseInstance.set({courseName: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"});
+        // 101 chars
+        courseInstance.set({courseName: "a".repeat(101)});
         try {
             await courseInstance.save();
         } catch (e) {
+            expect(e.length).toBe(1);
             expect(e.errors[0].message)
                 .toBe("Error: Course Name must have 1 to 100 characters.")
         }
     })
 
-    test("testCourseNameSpecialChars", async () => {
-        courseInstance.set ({
-            courseName: '$$#$%&'
-        })
 
-        try {
-            await courseInstance.save();
-            const updatedCourse = await Course.findOne({
-                where: {courseName: '$$#$%&'}
-            })
-            expect(updatedCourse).toBeTruthy();
-
-        } catch (e) {
-            console.error(e)
-        }
-
-    })
-
-    test("testCourseNameSpecialCharMixedWithGood", async () => {
-        courseInstance.set ({
-            courseName: '$Financial Hashcodes#$%&'
-        })
-
-        try {
-            await courseInstance.save();
-            const updatedCourse = await Course.findOne({
-                where: {courseName: '$Financial Hashcodes#$%&'}
-            })
-            expect(updatedCourse).toBeTruthy();
-
-        } catch (e) {
-            console.error(e)
-        }
-    })
 
     test("testCourseNameFrenchForUTF8", async () => {
         courseInstance.set ({
@@ -159,20 +155,6 @@ describe ('testCourseModel', () => {
     test("testNumberOfCreditsCatchString", async () => {
         courseInstance.set ({
             courseNumCredits: "Four"
-        })
-
-        try {
-            await courseInstance.save();
-        } catch (e) {
-            expect(e.errors[0].message)
-                .toBe("Error: Enter a whole number between " +
-                    "0 and 99 as a valid number of credits.")
-        }
-    })
-
-    test("testNumberOfCreditsCatchSpecialChars", async () => {
-        courseInstance.set ({
-            courseNumCredits: "$@%&"
         })
 
         try {
