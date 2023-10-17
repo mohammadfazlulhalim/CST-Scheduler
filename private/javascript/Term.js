@@ -1,13 +1,6 @@
 // Documentation for sequelize: https://sequelize.org/
 
-const {Sequelize, DataTypes} = require('sequelize');
-
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: '/private/database/scheduler.db', // This is causing errors when run, need to fix syntax or something
-    // instead of using persistent storage, going to try using the in memory syntax provided on sequelize docs
-    // 'sqlite::memory'
-});
+const {sequelize, DataTypes} = require('../../app');
 
 // Creating the model
 // See: https://sequelize.org/docs/v6/core-concepts/model-basics/
@@ -21,6 +14,21 @@ const Term = sequelize.define('Term', {
         validate: {
             //Here is where I can put my validators
             // https://sequelize.org/docs/v6/core-concepts/validations-and-constraints/
+            customValidator(value) {
+                // Going to do a check that it is not null
+                // if (value===null) {
+                //     throw new Error('Start date must be entered');
+                // }
+                // // This should probably be a switch statement later on
+                // if (termNumber===1)
+                // {
+                //     // getMonth() returns a zero-based value
+                //     if (value.getMonth() !==7 || value.Month !==8)
+                //     {
+                //         throw new Error('Term 1 must start in August or September');
+                //     }
+                // }
+            }
         }
     },
     endDate: {
