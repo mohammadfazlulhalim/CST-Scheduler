@@ -1,0 +1,18 @@
+<h1>{{title}}</h1>
+<p>Welcome to {{title}}</p>
+<table class="table table-bordered">
+    <thead class="table-primary">
+        <tr>
+            <th>Course Code</th>
+            <th>Term</th>
+            <th>Group</th>
+        </tr>
+    </thead>
+    {{#each offerings}}
+        <tr>
+            <td>{{this.courseCode}}</td>
+            <td>{{this.termNumber}}</td>
+            <td>{{this.group}}</td>
+        </tr>
+    {{/each}}
+</table>

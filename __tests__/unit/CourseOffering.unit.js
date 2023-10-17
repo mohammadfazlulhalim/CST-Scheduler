@@ -1,17 +1,14 @@
 const CourseOffering = require('../../private/javascript/CourseOffering');
-const {Sequelize} = require('sequelize');
 
-// point Sequelize to use an in-memory DB
-CourseOffering.sequelize = new Sequelize( {
-  dialect: 'sqlite',
-  storage: ':memory:',
-});
+// point Sequelize to use an in-memory DB - use environment variable instead of this in the future
+CourseOffering.sequelize = require('../../dataSource').sequelizeTesting;
 
 // tests for the 'group' field
 describe('group', () => {
   let testUser;
   // set up a valid user
   beforeEach(async function() {
+    // drop the table and re-create it
     await CourseOffering.sync({force: true});
     testUser = {
       courseCode: 'COSA 280',
@@ -28,8 +25,9 @@ describe('group', () => {
     expect(courseOffering).toBeTruthy();
     expect(courseOffering.group).toBe(groupLetter);
 
-    // the list of errors should be an empty object
-    // expect(courseOffering.validate()).resolves.toBe(undefined);
+    // if valid, validate() returns the object it was validating
+    // if invalid, it returns errors
+    expect(await courseOffering.validate()).toBe(courseOffering);
   });
 
   test('testThatGroupWithOneNumberIsValid', async function() {
@@ -40,8 +38,9 @@ describe('group', () => {
     expect(courseOffering).toBeTruthy();
     expect(courseOffering.group).toBe(groupNumber);
 
-    // // the list of errors should be an empty object
-    // expect(courseOffering.validate()).toBe({});
+    // if valid, validate() returns the object it was validating
+    // if invalid, it returns errors
+    expect(await courseOffering.validate()).toBe(courseOffering);
   });
 
   test('testThatNullGroupIsValid', async function() {
@@ -52,8 +51,9 @@ describe('group', () => {
     expect(courseOffering).toBeTruthy();
     expect(courseOffering.group).toBe(groupNumber);
 
-    // // use .resolves to resolve the promise; error list expected to be empty
-    // expect(courseOffering.validate()).resolves.toBe(undefined);
+    // if valid, validate() returns the object it was validating
+    // if invalid, it returns errors
+    expect(await courseOffering.validate()).toBe(courseOffering);
   });
 
   test('testThatLowercaseLetterGroupIsInvalid', async function() {
@@ -89,20 +89,26 @@ describe('group', () => {
 
 
 // This may be more appropriate for functional testing
-describe('getAllOfferings()', () => {
-  test('testGetAllOfferingsReturnsCorrectNumberOfItems', async function() {
+// tests for the findAll() method
+describe('findAll()', () => {
+  beforeEach(async function() {
+    // clear the table
+    await CourseOffering.sync({force: true});
+  });
+
+  test('testFindAllReturnsCorrectNumberOfItems', async function() {
     const expectedLength = 15;
     // create a bunch of course offerings in the db
     await createCourseOfferings(expectedLength);
 
     // retrieve the offerings from the db
-    const courseOfferings = CourseOffering.getAllOfferings();
+    const courseOfferings = CourseOffering.findAll();
 
     expect((await courseOfferings).length).toBe(expectedLength);
   });
 
-  test('testGetAllOfferingsReturnsEmptyArrayWhenThereAreNoItems', async function() {
-    expect((await CourseOffering.getAllOfferings()).length).toBe(0);
+  test('testFindAllReturnsEmptyArrayWhenThereAreNoItems', async function() {
+    expect((await CourseOffering.findAll()).length).toBe(0);
   });
 });
 
@@ -112,14 +118,16 @@ describe('getAllOfferings()', () => {
  * @param {number} amount - The amount of offerings to create
  */
 async function createCourseOfferings(amount) {
-  // drop and recreate the table
-  await CourseOffering.sync({force: true});
+  // list of viable groups
   const viableGroups = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0'.split(' ');
-  console.log(viableGroups);
+
+  // create valid entries
   for (let i = 0; i < amount; i++) {
+    // randomize the group number
     const random = Math.floor(Math.random() * viableGroups.length);
-    console.log(`Random: ${random} Character: ${viableGroups[random]}`);
     await CourseOffering.create({
+      courseCode: 'COSA 280',
+      termNumber: 4,
       group: viableGroups[random],
     });
   }
