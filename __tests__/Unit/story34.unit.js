@@ -7,10 +7,6 @@
 
 const test = require('node:test');
 
-// const jest = require("jest");
-
-
-
 const Course = require("../../private/javascript/Course");
 Course.sequelize.storage = ':memory:'; // borrowed from story33
 
