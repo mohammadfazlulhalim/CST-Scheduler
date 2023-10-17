@@ -28,11 +28,5 @@ const Instructor = sequelize.define('Instructor', {
   tableName: 'Instructor',
 });
 
-/**
- *  retrieves all instructors from database and returns as a JSON literal array
- */
-function getAllInstructors() {
-
-}
 
 module.exports = Instructor;

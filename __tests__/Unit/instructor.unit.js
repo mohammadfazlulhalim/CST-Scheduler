@@ -1,4 +1,4 @@
-const Instructor = require('../../../private/javascript/Instructor');
+const Instructor = require('../../private/javascript/Instructor');
 Instructor.sequelize.storage = ':memory:';
 
 
@@ -6,8 +6,6 @@ Instructor.sequelize.storage = ':memory:';
  * These are tests for the firstName attribute of Instructor
  */
 describe('firstName', () => {
-
-  beforeEach()
   test('testThatValidFirstNameCanBeEntered', async function() {
     const instructorFName = 'Sally'; // define first name
     const instructorLName = 'Sutherland'; // define last name
