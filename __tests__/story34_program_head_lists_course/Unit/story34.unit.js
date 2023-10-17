@@ -23,27 +23,33 @@ const Course = require("../../../private/javascript/Course");
 
 describe("Course Model", () => {
     // check the name of the course
-    it ('testCourseNameGood', async () => {
-        let course;
+    test ('testCourseNameGood', async () => {
+
+        // hardcoded for now...
         try {
-            course = await Course.create ( {
+            const course = await Course.create ( {
                 courseName: "Security 1",
                 courseNumCredits: 4,
                 courseNumHoursPerWeek: 60,
-
             } )
-        } catch (err) {
 
+
+        } catch (err) {
+            console.error(err);
         }
 
+
+
     });
+
+    it ('test')
 });
 
-describe("courseNumCredit", () => {
-    it('testCourseNumCredits', () => {
-        let course;
-    });
-});
+// describe("courseNumCredit", () => {
+//     it('testCourseNumCredits', () => {
+//         let course;
+//     });
+// });
 
 
 

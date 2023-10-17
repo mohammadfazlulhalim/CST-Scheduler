@@ -32,9 +32,9 @@ const Course = sequelize.define ('Course', {
         min: 1,
         max: 168, // 168 hours in a week
     },
-    programID: {
-        allowNull: false,
-    }
+    // programID: {
+    //
+    // }
 })
 
 (async () => {
