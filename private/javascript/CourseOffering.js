@@ -1,8 +1,6 @@
 const {Sequelize, DataTypes} = require('sequelize');
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: '../database/scheduler.db',
-});
+const sequelize = require('../../app').sequelize;
+
 /**
  * This class stores objects that represent course offerings to be used in the CST Scheduler.
  */
