@@ -1,10 +1,16 @@
 
 const {Sequelize, DataTypes} = require('sequelize');
-const sequelize = new Sequelize('');
+const sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: '../database/scheduler.db',
+    // As noted in story32 tests:
+    // This is causing errors when run, need to fix syntax or something
+    // instead of using persistent storage, going to try using
+    // the in memory syntax provided on sequelize docs 'sqlite::memory'
+});
 
 
-
-// STUB START
+// MODEL STUB START
 const Course = sequelize.define ('Course', {
     courseCode: {
         // might have been tested elsewhere
@@ -18,27 +24,26 @@ const Course = sequelize.define ('Course', {
         notEmpty: true,
         validate: {
             len: [1,100] // check if it's inclusive of the range numbers
-        }
+        },
+        message: "Error: Course Name must have 1 to 100 characters."
     },
     courseNumCredits: {
         type: DataTypes.INTEGER,
         allowNull: false,
         min: 0,
         max: 99,
+        message: "Error: Enter a whole number between " +
+            "0 and 99 as a valid number of credits.",
     },
     courseNumHoursPerWeek: {
         type: DataTypes.INTEGER,
         allowNull: false,
         min: 1,
         max: 168, // 168 hours in a week
-    },
-    // programID: {
-    //
-    // }
-})
+        message: "Error: Enter a whole number between 1 and 168 " +
+            "as a valid number of credits.",
+    }
 
-(async () => {
-    await sequelize.sync( {force:true} )
 })
 
 
