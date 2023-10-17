@@ -1,6 +1,7 @@
 // Documentation for sequelize: https://sequelize.org/
 
-const {sequelize, DataTypes} = require('../../app');
+//const {sequelize, DataTypes} = require('../../app');
+const {DataTypes, sequelize} = require('../../datasource');
 
 // Creating the model
 // See: https://sequelize.org/docs/v6/core-concepts/model-basics/
@@ -47,12 +48,6 @@ const Term = sequelize.define('Term', {
 });
 
 // Now need to keep it in sync with the database
-sequelize.sync()
-    .then(() => {
-        console.log('Term table created');
-    })
-    .catch((err) => {
-        console.error('Error creating Term table:', err);
-    });
 
-module.exports = Term;
+
+module.exports = {Term, sequelize};

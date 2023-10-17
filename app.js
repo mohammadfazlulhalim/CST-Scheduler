@@ -3,9 +3,9 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const {Sequelize, DataTypes} = require('sequelize');
+// const {Sequelize, DataTypes} = require('sequelize');
 
-const sequelize=new Sequelize('sqlite:./private/database/scheduler.db')
+// const sequelize=new Sequelize('sqlite:./private/database/scheduler.db')
 
 const indexRouter = require('./routes/index');
 const termRouter = require('./routes/term');
@@ -45,4 +45,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = {app, Sequelize, DataTypes, sequelize};
+// module.exports = {app, Sequelize, DataTypes, sequelize};
+module.exports = app;
