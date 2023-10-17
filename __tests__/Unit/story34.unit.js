@@ -5,7 +5,6 @@
     // https://codesandbox.io/s/jest-sequelize-example-5zglq?file=/src/__tests__/consumer.js
     //
 
-const test = require('node:test');
 
 const Course = require("../../private/javascript/Course");
 Course.sequelize.storage = ':memory:'; // borrowed from story33
@@ -31,7 +30,7 @@ async function establishDatabaseTables() {
 
 describe ('testCourseModel', () => {
     beforeAll(async () => {
-        // hardcoded for now...
+        // HARDCODED FOR NOW...
         try {
             const course =  {
                 courseName: "Security 1",

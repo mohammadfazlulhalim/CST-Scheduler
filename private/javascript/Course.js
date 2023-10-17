@@ -21,15 +21,18 @@ const Course = sequelize.define ('Course', {
     courseName: {
         type: DataTypes.STRING,
         allowNull: false,
-        notEmpty: true,
+
         validate: {
-            len: [1,100] // check if it's inclusive of the range numbers
+            notEmpty: true,
+            len: [1,100], // check if it's inclusive of the range numbers
+            message: "Error: Course Name must have 1 to 100 characters."
         },
-        message: "Error: Course Name must have 1 to 100 characters."
     },
     courseNumCredits: {
         type: DataTypes.INTEGER,
         allowNull: false,
+
+
         min: 0,
         max: 99,
         message: "Error: Enter a whole number between " +
