@@ -5,33 +5,32 @@ const sequelize = new Sequelize({
     storage: '../database/database.sqlite'
 });
 
-
-
-// const InstrucorList = await sequelize.g
-
+//Database constructor for Instructor
 const Instructor = sequelize.define('Instructor', {
-    firstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notNull: {
-                args: true,
-                msg: 'First Name cannot be empty',
-            },
-            len: {
-                args: [1, 50],
-                msg: 'Exception “First Name cannot be more than 50 characters”',
+        firstName: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notNull: {
+                    args: true,
+                    msg: 'Exception "First Name cannot be empty"',
+                },
+                len: {
+                    args: [1, 50],
+                    msg: 'Exception "First Name cannot be more than 50 characters"',
+                },
             },
         },
+        lastName: {
+            type: DataTypes.STRING
+        },
     },
-    lastName: {
-        type: DataTypes.STRING
-    },
-},
     {
-        tableName:'Instructor',
-    },
-    );
+        tableName: 'Instructor'
+    });
 
+function getAllInstructors() {
+
+}
 
 module.exports = Instructor;
