@@ -1,8 +1,4 @@
-const {Sequelize, DataTypes} = require('sequelize');
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: '../database/scheduler.db',
-});
+const {DataTypes, sequelize} = require('../../datasource');
 
 // Define Classroom Model
 const Classroom = sequelize.define('Classroom', {

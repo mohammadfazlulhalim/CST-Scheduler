@@ -1,0 +1,10 @@
+{{#if classrooms.length}}
+    <ul>
+        {{#each classroomList}}
+            <li>{{this.roomNumber}}</li>
+        {{/each}}
+    </ul>
+{{else}}
+    <p>No classrooms in the database.</p>
+{{/if}}
+

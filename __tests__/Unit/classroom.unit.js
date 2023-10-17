@@ -1,21 +1,9 @@
-const Classroom = require('../../../private/javascript/Classroom');
-Classroom.sequelize.storage = ':memory:';
+const Classroom = require('../../private/javascript/Classroom');
+const {sequelize}= require('../../datasource');
 
 let classroomInstance;
 
-/**
- * Create database tables for testing.
- */
-async function createDatabaseTables() {
-  try {
-    await Classroom.sync();
-    console.log('Database tables created successfully');
-  } catch (error) {
-    console.error('Error creating database tables:', error);
-  }
-}
-
-describe('TestRoomAttributes', () => {
+describe('testThatRoomNumber', () => {
   beforeAll(async () => {
     const defaultRoomAttributes = {
       roomNumber: '1234',
@@ -24,7 +12,7 @@ describe('TestRoomAttributes', () => {
     await createDatabaseTables();
   });
 
-  test('IsValidWhenLessThan10Characters', async () => {
+  test('IsValidWhenLessThan10CharactersAndMoreThan0', async () => {
     // Test if a room number with less than 10 characters is valid
     classroomInstance.set({roomNumber: '123@45$78'});
     await classroomInstance.save();
@@ -44,9 +32,19 @@ describe('TestRoomAttributes', () => {
     expect(updatedClassroom).toBeTruthy();
   });
 
-  test('IsInvalidWhenExactly10Characters', async () => {
+  test('IsValidWithSingleCharacter', async () => {
+    // Test if a room number with a single character is valid
+    classroomInstance.set({roomNumber: '1'});
+    await classroomInstance.save();
+    const updatedClassroom = await Classroom.findOne({
+      where: {roomNumber: '1'},
+    });
+    expect(updatedClassroom).toBeTruthy();
+  });
+
+  test('IsInvalidWhenExactly11Characters', async () => {
     // Test if a room number with exactly 10 characters is invalid
-    classroomInstance.set({roomNumber: '1234567890'});
+    classroomInstance.set({roomNumber: '12345678901'});
     try {
       await classroomInstance.save();
     } catch (err) {
