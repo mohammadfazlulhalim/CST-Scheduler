@@ -1,4 +1,4 @@
-const CourseOffering = require('../../../private/javascript/CourseOffering');
+const CourseOffering = require('../../private/javascript/CourseOffering');
 const {Sequelize} = require('sequelize');
 
 // point Sequelize to use an in-memory DB
@@ -61,6 +61,7 @@ describe('group', () => {
     try {
       await CourseOffering.create(testUser);
     } catch (err) {
+      expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Course Offering group can only contain uppercase letters');
     }
   });
@@ -70,6 +71,7 @@ describe('group', () => {
     try {
       await CourseOffering.create(testUser);
     } catch (err) {
+      expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Course offering group can only be 0 or 1 character long');
     }
   });
@@ -79,11 +81,14 @@ describe('group', () => {
     try {
       await CourseOffering.create(testUser);
     } catch (err) {
+      expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Course Offering group can only contain letters and numbers');
     }
   });
 });
 
+
+// This may be more appropriate for functional testing
 describe('getAllOfferings()', () => {
   test('testGetAllOfferingsReturnsCorrectNumberOfItems', async function() {
     const expectedLength = 15;
