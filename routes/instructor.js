@@ -1,8 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const instructor = require('../private/javascript/Instructor');
+const Instructor = require('../private/javascript/Instructor');
 
-router.get('/', function(req, res, next) {
-
+router.get('/', async function(req, res, next) {
+  const instructorList = await Instructor.findAll();
+  res.render('instructor', {
+    title: 'View Instructor',
+    instructorList: instructorList,
+  });
 });
 
+module.exports = router;

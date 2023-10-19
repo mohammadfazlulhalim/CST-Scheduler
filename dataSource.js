@@ -1,25 +1,11 @@
 const {Sequelize, DataTypes} = require('sequelize');
-const {static} = require('express');
 
 let connectionString;
-connectionString = 'sqlite:./private/database';
+connectionString = 'sqlite:./private/database/scheduler.db';
 if (process.env.TESTING_MODE==='testing') {
-  connectionString = 'sqlite:memory:';
+  connectionString = 'sqlite::memory:';
 }
-// connectionString = 'sqlite:memory:';
 const sequelize = new Sequelize(connectionString);
-
-
-function Memory()
-{
-  connectionString = 'sqlite:memory:';
-}
-
-function Database()
-{
-
-}
-
 
 
 module.exports = {Sequelize, DataTypes, sequelize};

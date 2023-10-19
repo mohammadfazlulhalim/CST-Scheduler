@@ -1,29 +1,36 @@
 const Instructor = require('../../private/javascript/Instructor');
-Instructor.sequelize.storage = ':memory:';
-
 
 /**
  * These are tests for the firstName attribute of Instructor
  */
 describe('firstName', () => {
-  test('testThatValidFirstNameCanBeEntered', async function() {
-    const instructorFName = 'Sally'; // define first name
-    const instructorLName = 'Sutherland'; // define last name
-    let err = '';
-    let instructor;
+  let instructor;
+  let testInstructor;
+  let err = '';
+  beforeAll(async function() {
+    await Instructor.sync({force: true}); // wipes instructor table if it exists
+    testInstructor = {
+      firstName: 'Sally',
+      lastName: 'Sutherland',
+    };
+  });
 
+  beforeEach(async function() {
+    testInstructor.firstName = 'Sally';
+    instructor = '';
+    err = '';
+  });
+
+  test('testThatValidFirstNameCanBeEntered', async function() {
     try {
-      instructor = await Instructor.create({ // create db object
-        firstName: instructorFName,
-        lastName: instructorLName,
-      });
+      instructor = await Instructor.create(testInstructor);
     } catch (error) {
       // If a validation error is thrown, fail the test with an error message
       err = error.message;
     }
 
     expect(instructor).toBeTruthy(); // check that instructor Object is created
-    expect(instructor.firstName).toBe(instructorFName); // check that instructor Object First name is correct
+    expect(instructor.firstName).toBe(testInstructor.firstName); // check that instructor Object First name is correct
     expect(err).toBe(''); // check that no errors are thrown
 
     if (instructor) { // destroy instructor if created
@@ -32,16 +39,10 @@ describe('firstName', () => {
   });
 
   test('testThatFirstNameCanNotBeEmpty', async function() {
-    const instructorFName = ''; // define first name
-    const instructorLName = 'Sutherland'; // define last name
-    let err = '';
-    let instructor;
+    testInstructor.firstName = '';
 
     try {
-      instructor = await Instructor.create({ // create db object
-        firstName: instructorFName,
-        lastName: instructorLName,
-      });
+      instructor = await Instructor.create(testInstructor);
     } catch (error) {
       // If validation error is thrown, get error message
       err = error.message;
@@ -57,23 +58,17 @@ describe('firstName', () => {
   });
 
   test('testThatFirstNameCanBeOneLetter', async function() {
-    const instructorFName = 'I'; // define first name
-    const instructorLName = 'Sutherland'; // define last name
-    let err = '';
-    let instructor;
+    testInstructor.firstName = 'I';
 
     try {
-      instructor = await Instructor.create({ // create db object
-        firstName: instructorFName,
-        lastName: instructorLName,
-      });
+      instructor = await Instructor.create(testInstructor);
     } catch (error) {
       // If a validation error is thrown, fail the test with an error message
       err = error.message;
     }
 
     expect(instructor).toBeTruthy(); // check that instructor Object is created
-    expect(instructor.firstName).toBe(instructorFName); // check that instructor Object First name is correct
+    expect(instructor.firstName).toBe(testInstructor.firstName); // check that instructor Object First name is correct
     expect(err).toBe(''); // check that no errors are thrown
 
     if (instructor) { // destroy instructor if created
@@ -82,23 +77,17 @@ describe('firstName', () => {
   });
 
   test('testThatFirstNameCanBe50Chars', async function() {
-    const instructorFName = 'a'.repeat(50); // define first name (50 chars)
-    const instructorLName = 'Sutherland'; // define last name
-    let err = '';
-    let instructor;
+    testInstructor.firstName = 'a'.repeat(50); // define first name (50 chars)
 
     try {
-      instructor = await Instructor.create({ // create db object
-        firstName: instructorFName,
-        lastName: instructorLName,
-      });
+      instructor = await Instructor.create(testInstructor);
     } catch (error) {
       // If a validation error is thrown, fail the test with an error message
       err = error.message;
     }
 
     expect(instructor).toBeTruthy(); // check that instructor Object is created
-    expect(instructor.firstName).toBe(instructorFName); // check that instructor Object First name is correct
+    expect(instructor.firstName).toBe(testInstructor.firstName); // check that instructor Object First name is correct
     expect(err).toBe(''); // check that no errors are thrown
 
     if (instructor) { // destroy instructor if created
@@ -107,16 +96,10 @@ describe('firstName', () => {
   });
 
   test('testThatFirstNameCanNotBe51Chars', async function() {
-    const instructorFName = 'a'.repeat(51); // define first name (51 Chars)
-    const instructorLName = 'Sutherland'; // define last name
-    let err = '';
-    let instructor;
+    testInstructor.firstName = 'a'.repeat(51); // define first name (51 Chars)
 
     try {
-      instructor = await Instructor.create({ // create db object
-        firstName: instructorFName,
-        lastName: instructorLName,
-      });
+      instructor = await Instructor.create(testInstructor);
     } catch (error) {
       // If a validation error is thrown, fail the test with an error message
       err = error.message;

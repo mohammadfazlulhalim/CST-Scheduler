@@ -3,9 +3,9 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const sequelize = require('sequelize');
 
 const indexRouter = require('./routes/index');
+const instructorRouter = require('./routes/instructor');
 
 const app = express();
 
@@ -21,6 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // routers
 app.use('/', indexRouter);
+app.use('/instructor', instructorRouter);
 
 // bootswatch
 app.use('/bw', express.static(__dirname + '/node_modules/bootswatch/dist'));

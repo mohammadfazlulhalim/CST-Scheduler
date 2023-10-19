@@ -1,9 +1,4 @@
-const {Sequelize, DataTypes} = require('sequelize');
-
-const sequelize = new Sequelize({ // get a sequelize object and route it to database
-  dialect: 'sqlite',
-  storage: '../database/database.sqlite',
-});
+const {DataTypes, sequelize} = require('../../datasource');
 
 // Database constructor for Instructor
 const Instructor = sequelize.define('Instructor', {
