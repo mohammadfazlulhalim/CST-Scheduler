@@ -5,10 +5,7 @@ const {DataTypes, sequelize} = require('../../datasource');
 
 // Creating the model
 // See: https://sequelize.org/docs/v6/core-concepts/model-basics/
-/**
- *
- * @type {ModelCtor<Model>}
- */
+
 const Term = sequelize.define('Term', {
     startDate: {
         type: DataTypes.DATEONLY,
@@ -42,7 +39,14 @@ const Term = sequelize.define('Term', {
     termNumber: {
         type: DataTypes.INTEGER,
         validate: {
-            // https://sequelize.org/docs/v6/core-concepts/validations-and-constraints/
+            min: {
+                args: 1,
+                msg: 'Term number must be between 1 and 6',
+            },
+            // max: {
+            //     args: 6,
+            //     msg: 'Term number must be between 1 and 6',
+            // }
         }
     }
 });
@@ -50,4 +54,4 @@ const Term = sequelize.define('Term', {
 // Now need to keep it in sync with the database
 
 
-module.exports = {Term, sequelize};
+module.exports = Term;

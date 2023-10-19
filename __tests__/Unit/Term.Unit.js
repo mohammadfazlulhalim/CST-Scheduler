@@ -1,5 +1,5 @@
 // Importing the ORM object
-const Term = require('../../private/javascript/Term.js').Term;
+const Term = require('../../private/javascript/Term.js');
 const {sequelize}= require('../../datasource');
 //const {Sequelize} = require('sequelize');
 
@@ -11,7 +11,7 @@ describe('startDate', () => {
     beforeAll(async () => {
         try {
             await sequelize.sync();
-            console.log('Terms table created successfully');
+            //console.log('Terms table created successfully');
 
         } catch (error) {
             console.error('Error creating Term table: ', error);
@@ -122,7 +122,7 @@ describe('termNumber', () => {
     beforeAll(async () => {
         try {
             await sequelize.sync();
-            console.log('Terms table created successfully');
+            //console.log('Terms table created successfully');
 
         } catch (error) {
             console.error('Error creating Term table: ', error);
@@ -138,7 +138,7 @@ describe('termNumber', () => {
         // For an accept, it will be easy
         //  1. Call constructor with arguments
         term1.termNumber =1;
-        await Term.create(term1);
+        await Term.create({startDate: '2023-08-01', endDate: '2023-12-01', termNumber: 1});
         //  2. Check that object is created and has valid info
         expect(term1).toBeDefined();
         expect(term1.termNumber).toBe(1);
@@ -150,23 +150,43 @@ describe('termNumber', () => {
 
     test('testThatTermBelowOneFail', async () => {
         // For a reject, we need to catch the error message
-        term1.termNumber =0;
+        term1.termNumber =1;
+        let bCaughtErr = false;
         try {
-            await Term.create(term1);
+            // Need to clean this up
+            await Term.create({startDate: '2023-08-01', endDate: '2023-12-01', termNumber: 0});
         } catch (err) {
+            bCaughtErr = true;
             expect(err.errors.length).toBe(1);
             expect(err.errors[0].message).toBe('Term number must be between 1 and 6');
+        }
 
-            //expect(error.message).toBe('Term number must be between 1 and 6');
+        if (!bCaughtErr) {
+            expect(1).toBe(2);
         }
 
     });
 
-    // test('testThatTermHighNumberPass', () => {
+    test('testThatTermHighNumberPass', async () => {
+        term1.termNumber =6;
+        await Term.create(term1);
+        //  2. Check that object is created and has valid info
+        expect(term1).toBeDefined();
+        expect(term1.termNumber).toBe(6);
+
+    });
+
+    // test('testThatTermAboveSixFail', async () => {
+    //     term1.termNumber =7;
+    //     try {
+    //         await Term.create(term1);
+    //         fail('The validator did not throw errors');
+    //     } catch (err) {
+    //         expect(err.errors.length).toBe(1);
+    //         expect(err.errors[0].message).toBe('Term number must be between 1 and 6');
     //
-    // });
-    //
-    // test('testThatTermAboveSixFail', () => {
+    //         //expect(error.message).toBe('Term number must be between 1 and 6');
+    //     }
     //
     // });
 
