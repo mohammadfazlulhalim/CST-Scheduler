@@ -1,4 +1,16 @@
-const CourseOffering = require('private/javascript/CourseOffering');
+const CourseOffering = require('../private/javascript/CourseOffering');
+
+/**
+ * This function clears the courseOffering table if it exists and fills it with 15 course offerings.
+ */
+async function fillCourseOfferingTable() {
+  // clear the db table
+  await CourseOffering.sync({force: true});
+
+  // create 15 offerings
+  await createCourseOfferings(15);
+}
+
 
 /**
  * Creates a bunch of course offerings to add to the database.
@@ -22,3 +34,5 @@ async function createCourseOfferings(amount) {
     });
   }
 }
+
+module.exports = fillCourseOfferingTable;

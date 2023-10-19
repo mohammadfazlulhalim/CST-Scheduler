@@ -57,9 +57,10 @@ describe('group', () => {
     testUser.group = 'a';
     try {
       await CourseOffering.create(testUser);
+      fail();
     } catch (err) {
+      expect(err.message).toBe('Validation error: Course Offering group can only contain uppercase letters');
       expect(err.errors.length).toBe(1);
-      expect(err.errors[0].message).toBe('Course Offering group can only contain uppercase letters');
     }
   });
 
@@ -67,9 +68,10 @@ describe('group', () => {
     testUser.group = 'A1';
     try {
       await CourseOffering.create(testUser);
+      fail();
     } catch (err) {
+      expect(err.message).toBe('Validation error: Course offering group can only be 0 or 1 character long');
       expect(err.errors.length).toBe(1);
-      expect(err.errors[0].message).toBe('Course offering group can only be 0 or 1 character long');
     }
   });
 
@@ -77,9 +79,10 @@ describe('group', () => {
     testUser.group = '!';
     try {
       await CourseOffering.create(testUser);
+      fail();
     } catch (err) {
+      expect(err.message).toBe('Validation error: Course Offering group can only contain letters and numbers');
       expect(err.errors.length).toBe(1);
-      expect(err.errors[0].message).toBe('Course Offering group can only contain letters and numbers');
     }
   });
 });
