@@ -1,9 +1,11 @@
 const {Sequelize, DataTypes} = require('sequelize');
 
-const sequelize = new Sequelize('sqlite:./private/database/scheduler.db');
-// const sequelizeTesting = new Sequelize('sqlite::memory:');
-const sequelizeTesting = new Sequelize({
-  dialect: 'sqlite',
-  storage: ':memory:',
-});
-module.exports = {Sequelize, DataTypes, sequelize, sequelizeTesting};
+let connectionString;
+connectionString = 'sqlite:./private/database/scheduler.db';
+if (process.env.TESTING_MODE==='testing') {
+  connectionString = 'sqlite::memory:';
+}
+
+const sequelize = new Sequelize(connectionString);
+
+module.exports = {Sequelize, DataTypes, sequelize};

@@ -1,8 +1,5 @@
 const CourseOffering = require('../../private/javascript/CourseOffering');
 
-// point Sequelize to use an in-memory DB - use environment variable instead of this in the future
-CourseOffering.sequelize = require('../../dataSource').sequelizeTesting;
-
 // tests for the 'group' field
 describe('group', () => {
   let testUser;
@@ -126,7 +123,7 @@ async function createCourseOfferings(amount) {
     // randomize the group number
     const random = Math.floor(Math.random() * viableGroups.length);
     await CourseOffering.create({
-      courseCode: 'COSA 280',
+      courseCode: 'COSA280',
       termNumber: 4,
       group: viableGroups[random],
     });
