@@ -29,25 +29,8 @@ const CourseOffering = sequelize.define('CourseOffering', {
       },
     },
   },
-
-  // link the whole object here, not just the ID
-  // primaryInstructorID: {
-  //   type: DataTypes.STRING,
-  // },
-  //
-  // secondaryInstructorID: {
-  //   type: DataTypes.STRING,
-  // },
 }, {
   tableName: 'CourseOfferings',
 });
-
-/**
- * This function returns all course offerings in the database.
- *
- * @return {Promise<CourseOffering[]>}  - All course offerings in the database
- */
-CourseOffering.getAllOfferings = async function() {
-};
 
 module.exports = CourseOffering;

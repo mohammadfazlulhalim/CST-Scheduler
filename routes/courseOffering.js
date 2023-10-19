@@ -3,9 +3,14 @@ const router = express.Router();
 
 const CourseOffering = require('../private/javascript/CourseOffering');
 
-// GET handler hor http://localhost:3000/
+// GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
-  const courseOfferings = await CourseOffering.findAll();
+  let courseOfferings;
+  try {
+    courseOfferings = await CourseOffering.findAll({order: ['courseCode']});
+  } catch (err) {
+    courseOfferings = undefined;
+  }
   res.render('courseOffering', {
     title: 'Course Offerings',
     offerings: courseOfferings,
