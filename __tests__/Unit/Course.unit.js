@@ -7,23 +7,17 @@
 
 
 const Course = require("../../private/javascript/Course");
-Course.sequelize.storage = ':memory:'; // borrowed from story33
-
-
-// for storing Course{} results
-let courseInstance;
+const {sequelize}= require('../../datasource');
 
 
 // --------------------------
 // series of tests inspired by story33
 
 
+// for storing Course{} results
+let courseInstance;
+
 // ensure that databases are created successfully
-
-
-
-describe ('testCourseModel', () => {
-
     async function establishDatabaseTables() {
         try {
             await Course.sync();
@@ -32,10 +26,22 @@ describe ('testCourseModel', () => {
         }
     }
 
+describe ('testCourseModel', () => {
+
+
+    beforeAll( async () => {
+        try {
+            await sequelize.sync();
+        } catch (e) {
+
+        }
+    });
+
     beforeEach(async () => {
         // HARDCODED FOR NOW...
         try {
             const course =  {
+                courseCode: "CSEC280",
                 courseName: "Security 1",
                 courseNumCredits: 4,
                 courseNumHoursPerWeek: 60,
@@ -161,8 +167,7 @@ describe ('testCourseModel', () => {
             await courseInstance.save();
         } catch (e) {
             expect(e.errors[0].message)
-                .toBe("Error: Enter a whole number between " +
-                    "0 and 99 as a valid number of credits.")
+                .toBe("Error: Enter a whole number between 0 and 6 as a valid number of credits.")
         }
     })
 
@@ -177,8 +182,7 @@ describe ('testCourseModel', () => {
             await courseInstance.save();
         } catch (e) {
             expect(e.errors[0].message)
-                .toBe("Error: Enter a whole number between " +
-                    "0 and 99 as a valid number of credits.")
+                .toBe("Error: Enter a whole number between 0 and 6 as a valid number of credits.")
         }
     })
 
@@ -193,8 +197,7 @@ describe ('testCourseModel', () => {
             await courseInstance.save();
         } catch (e) {
             expect(e.errors[0].message)
-                .toBe("Error: Enter a whole number between " +
-                    "0 and 99 as a valid number of credits.")
+                .toBe("Error: Enter a whole number between 0 and 6 as a valid number of credits.")
         }
     })
 
