@@ -25,6 +25,11 @@ const Course = sequelize.define ('Course', {
     courseNumCredits: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            notNull: {
+                message: "Error: Course Name must have 1 to 100 characters."
+            }
+        },
         min: 0,
         max: 6,
         message: "Error: Enter a whole number between 0 and 6 as a valid number of credits."
@@ -32,12 +37,17 @@ const Course = sequelize.define ('Course', {
     courseNumHoursPerWeek: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            notNull: {
+                message: "Error: Course Name must have 1 to 100 characters."
+            }
+        },
         isInt: {
-            message: "Error: Enter a whole number between 1 and 168 as a valid number of credits."
+            message: "Error: Enter a whole number between 1 and 168 as a valid number of hours."
         },
         min: 1,
         max: 168,
-        message: "Error: Enter a whole number between 1 and 168 as a valid number of credits."
+        message: "Error: Enter a whole number between 1 and 168 as a valid number of hours."
     }
 
 })
