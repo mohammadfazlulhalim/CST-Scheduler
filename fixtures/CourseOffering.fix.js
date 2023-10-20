@@ -24,7 +24,7 @@ async function createCourseOfferings(amount) {
 
   // create valid entries
   for (let i = 0; i < amount; i++) {
-    // randomize the group number
+    // randomize the group number & course code
     const randomGroup = Math.floor(Math.random() * viableGroups.length);
     const randomCourse = Math.floor(Math.random() * viableCourseCodes.length);
     await CourseOffering.create({
