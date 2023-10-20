@@ -8,7 +8,7 @@ describe('group', () => {
     // drop the table and re-create it
     await CourseOffering.sync({force: true});
     testUser = {
-      courseCode: 'COSA 280',
+      courseCode: 'COSA280',
       termNumber: 4,
       group: 'A',
     };
@@ -57,7 +57,7 @@ describe('group', () => {
     testUser.group = 'a';
     try {
       await CourseOffering.create(testUser);
-      fail();
+      fail(); // throws an error to force the expects to run that are only inside the catch
     } catch (err) {
       expect(err.message).toBe('Validation error: Course Offering group can only contain uppercase letters');
       expect(err.errors.length).toBe(1);

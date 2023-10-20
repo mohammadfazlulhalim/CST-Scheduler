@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "test": "node set-env.js",
-    "load fixtures": "node fixtures/loadAll.fix.js"
+    "loaddb": "node fixtures/loadAll.fix.js"
   },
   "dependencies": {
     "bootstrap": "^5.3.2",
