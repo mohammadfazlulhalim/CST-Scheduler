@@ -1,11 +1,9 @@
 // Importing the ORM object
 const Term = require('../../private/javascript/Term.js');
 const {sequelize}= require('../../datasource');
-// const {DATE, DATEONLY} = require('sequelize');
-// const {Sequelize} = require('sequelize');
 
-// Term.sequelize = new Sequelize('sqlite:memory');
-
+// This describe checks validators on start dates based on what term number it is
+// It tests if it accepts valid start dates and rejects invalid start dates
 describe('startDate', () => {
   let term1;
   let term4;
@@ -57,9 +55,7 @@ describe('startDate', () => {
     let bCaughtErr = false;
     try {
       await Term.create({termNumber: 1, startDate: '2023-07-01', endDate: '2023-12-01'});
-      console.log('no thrown error');
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term 1 must start in August or September');
@@ -79,7 +75,6 @@ describe('startDate', () => {
     expect(term4).toBeTruthy();
     expect(term4.startDate).toBe('2023-08-01');
 
-    // Check for no errors
   });
 
   test('testThatTerm4StartDateInSeptemberPass', async () => {
@@ -94,9 +89,7 @@ describe('startDate', () => {
     let bCaughtErr = false;
     try {
       await Term.create({termNumber: 4, startDate: '2023-07-01', endDate: '2023-12-01'});
-      console.log('no thrown error');
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term 4 must start in August or September');
@@ -123,9 +116,7 @@ describe('startDate', () => {
       let bCaughtErr = false;
       try {
         await Term.create({termNumber: 2, startDate: '2023-12-01', endDate: '2023-04-01'});
-        console.log('no thrown error');
       } catch (err) {
-        console.log('thrown error: ' + err);
         bCaughtErr = true;
         expect(err.errors.length).toBe(1);
         expect(err.errors[0].message).toBe('Term 2 must start in January');
@@ -151,9 +142,7 @@ describe('startDate', () => {
     let bCaughtErr = false;
     try {
       await Term.create({termNumber: 5, startDate: '2023-12-01', endDate: '2023-04-01'});
-      console.log('no thrown error');
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term 5 must start in January');
@@ -178,9 +167,7 @@ describe('startDate', () => {
       let bCaughtErr = false;
       try {
         await Term.create({termNumber: 3, startDate: '2023-04-01', endDate: '2023-05-31'});
-        console.log('no thrown error');
       } catch (err) {
-        console.log('thrown error: ' + err);
         bCaughtErr = true;
         expect(err.errors.length).toBe(1);
         expect(err.errors[0].message).toBe('Term 3 must start in May');
@@ -203,9 +190,7 @@ describe('startDate', () => {
     let bCaughtErr = false;
     try {
       await Term.create({termNumber: 6, startDate: '2023-04-01', endDate: '2023-05-31'});
-      console.log('no thrown error');
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term 6 must start in May');
@@ -218,13 +203,14 @@ describe('startDate', () => {
 
 });
 
+// This describe makes sure that only numbers 1-6 inclusive are allowed for term numbers
+// and that term numbers above 6 and below 1 are rejected
 describe('termNumber', () => {
   let term;
 
   beforeAll(async () => {
     try {
       await sequelize.sync();
-      // console.log('Terms table created successfully');
     } catch (error) {
       console.error('Error creating Term table: ', error);
     }
@@ -244,8 +230,6 @@ describe('termNumber', () => {
     expect(term).toBeDefined();
     expect(term.termNumber).toBe(1);
 
-    // Check for no errors
-    // expect(term1.validate()).resolves.toBe(undefined);
   });
 
   test('testThatTermBelowOneFail', async () => {
@@ -281,8 +265,6 @@ describe('termNumber', () => {
       await Term.create({termNumber: term.termNumber, startDate: '2023-09-01', endDate: '2023-12-01'});
     } catch (err) {
       bCaughtErr = true;
-      // console.log('error 1 is : ' + err.errors[0].message);
-      // console.log('error 2 is : ' + err.errors[1].message);
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term number must be between 1 and 6');
     }
@@ -293,6 +275,8 @@ describe('termNumber', () => {
   });
 });
 
+// This describe checks validators on end dates based on what term number it is
+// It tests if it accepts valid end dates and rejects invalid end dates
 describe('endDate', () => {
   let term1;
   let term4;
@@ -304,7 +288,6 @@ describe('endDate', () => {
   beforeAll(async () => {
     try {
       await sequelize.sync();
-      // console.log('Terms table created successfully');
     } catch (error) {
       console.error('Error creating Term table: ', error);
     }
@@ -333,7 +316,6 @@ describe('endDate', () => {
     try {
       await Term.create({termNumber: 1, startDate: '2023-09-01', endDate: '2023-01-01'});
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term 1 must end in December');
@@ -357,7 +339,6 @@ describe('endDate', () => {
     try {
       await Term.create({termNumber: 4, startDate: '2023-09-01', endDate: '2023-01-01'});
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term 4 must end in December');
@@ -381,7 +362,6 @@ describe('endDate', () => {
     try {
       await Term.create({termNumber: 2, startDate: '2023-01-01', endDate: '2023-05-01'});
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term 2 must end in April');
@@ -405,7 +385,6 @@ describe('endDate', () => {
     try {
       await Term.create({termNumber: 5, startDate: '2023-01-01', endDate: '2023-05-01'});
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term 5 must end in April');
@@ -435,7 +414,6 @@ describe('endDate', () => {
     try {
       await Term.create({termNumber: 3, startDate: '2023-05-01', endDate: '2023-07-01'});
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term 3 must end in May or June');
@@ -466,7 +444,6 @@ describe('endDate', () => {
     try {
       await Term.create({termNumber: 6, startDate: '2023-05-01', endDate: '2023-07-01'});
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term 6 must end in May or June');
@@ -479,13 +456,18 @@ describe('endDate', () => {
   });
 });
 
+
+// this describe checks validators on end and start dates to make sure that
+// the end date happens after the start date
+// Since the start and end months already make sure the end month is after the start month
+// we just need to check based on year, and some special validation on terms 3&6 since they can
+// start and end in May so we need to check dates
 describe('termStartEndDate', () => {
   let term;
 
   beforeAll(async () => {
     try {
       await sequelize.sync();
-      // console.log('Terms table created successfully');
     } catch (error) {
       console.error('Error creating Term table: ', error);
     }
@@ -509,7 +491,6 @@ describe('termStartEndDate', () => {
     try {
       await Term.create({termNumber: 1, startDate: '2023-09-01', endDate: '2022-12-01'});
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('End date must be after start date');
@@ -535,7 +516,6 @@ describe('termStartEndDate', () => {
     try {
       await Term.create({termNumber: 3, startDate: '2023-05-31', endDate: '2023-05-01'});
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('End date must be after start date');
@@ -561,7 +541,6 @@ describe('termStartEndDate', () => {
     try {
       await Term.create({termNumber: 6, startDate: '2023-05-31', endDate: '2023-05-01'});
     } catch (err) {
-      console.log('thrown error: ' + err);
       bCaughtErr = true;
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('End date must be after start date');
@@ -571,9 +550,4 @@ describe('termStartEndDate', () => {
       expect(1).toBe(2);
     }
   });
-
-
-
-
-
 });
