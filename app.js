@@ -3,12 +3,10 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-// const {Sequelize, DataTypes} = require('sequelize');
-
-// const sequelize=new Sequelize('sqlite:./private/database/scheduler.db')
 
 const indexRouter = require('./routes/index');
 const termRouter = require('./routes/term');
+const courseOfferingRouter = require('./routes/courseOffering');
 
 const app = express();
 
@@ -25,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routers
 app.use('/', indexRouter);
 app.use('/Term/', termRouter);
+app.use('/course-offering', courseOfferingRouter);
 
 // bootswatch
 app.use('/bw', express.static(__dirname + '/node_modules/bootswatch/dist'));
