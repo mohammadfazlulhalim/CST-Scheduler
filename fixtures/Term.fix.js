@@ -3,10 +3,9 @@ const Term = require('../private/javascript/Term');
 /**
  * This clears the table for Term and then recreates the table
  * with valid entries for all six terms
- * @returns {Promise<void>}
+ * @return {Promise<void>}
  */
 async function fillTermTable() {
-
   // Clear table
   await Term.sync({force: true});
 

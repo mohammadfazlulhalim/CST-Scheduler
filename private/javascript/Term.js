@@ -1,5 +1,5 @@
 // Documentation for sequelize: https://sequelize.org/
-const {DataTypes, sequelize} = require('../../datasource');
+const {DataTypes, sequelize} = require('../../dataSource');
 
 // Creating the model
 // See: https://sequelize.org/docs/v6/core-concepts/model-basics/
@@ -43,7 +43,6 @@ const Term = sequelize.define('Term', {
           if (monthVal !== '01') {
             throw new Error('Term ' + this.termNumber + ' must start in January');
           }
-
         }
         // validators for term 3 & 6 as they run the same time
         if (this.termNumber === 3 || this.termNumber === 6) {

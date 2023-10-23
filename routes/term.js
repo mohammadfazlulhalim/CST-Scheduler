@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Term = require('../private/javascript/Term');
-
 router.get('/', async function(req, res, next) {
   // Declaring the array
   let termEntries;
@@ -18,7 +17,6 @@ router.get('/', async function(req, res, next) {
     title: 'Term Listings',
     termEntries,
   });
-
 });
 
 module.exports = router;
