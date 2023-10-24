@@ -1,5 +1,7 @@
 // Documentation for sequelize: https://sequelize.org/
 const {DataTypes, sequelize} = require('../../dataSource');
+const termNumberUpperLimit = 6;
+const termNumberLowerLimit = 1;
 
 // Creating the model
 // See: https://sequelize.org/docs/v6/core-concepts/model-basics/
@@ -10,12 +12,12 @@ const Term = sequelize.define('Term', {
     // Checking that term is between 1-6 inclusive
     validate: {
       min: {
-        args: 1,
-        msg: 'Term number must be between 1 and 6',
+        args: termNumberLowerLimit,
+        msg: 'Term number must be between ' + termNumberLowerLimit + ' and ' + termNumberUpperLimit,
       },
       max: {
-        args: 6,
-        msg: 'Term number must be between 1 and 6',
+        args: termNumberUpperLimit,
+        msg: 'Term number must be between ' + termNumberLowerLimit + ' and ' + termNumberUpperLimit,
       },
     },
   },
