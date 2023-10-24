@@ -7,6 +7,10 @@
 node_modules/
 dist/
 
+#DB files
+*.db
+*.sqlite
+
 # Compiled Java class files
 *.class
 
