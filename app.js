@@ -6,6 +6,8 @@ const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const courseOfferingRouter = require('./routes/courseOffering');
+// story34 view courses
+const viewCoursesRouter = require('./routes/course');
 
 const app = express();
 
@@ -22,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routers
 app.use('/', indexRouter);
 app.use('/course-offering', courseOfferingRouter);
+app.use('/course', viewCoursesRouter); // story34 view courses
 
 // bootswatch
 app.use('/bw', express.static(__dirname + '/node_modules/bootswatch/dist'));

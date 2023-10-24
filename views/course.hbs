@@ -1,1 +1,29 @@
-<!-- needs elements -->
+<div class="container">
+    <h1>{{title}}</h1>
+    {{#if courses}}
+        <table class="table table-striped">
+            <thead class="table-primary">
+            <tr>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Course Credits</th>
+                <th>Course Hours</th>
+            </tr>
+            </thead>
+            {{#each courses}}
+                <tr>
+                    <td>{{this.courseCode}}</td>
+                    <td>{{this.courseName}}</td>
+                    <td class="text-center">{{this.courseNumCredits}}</td>
+                    <td class="text-center">{{this.courseNumHours}}</td>
+                </tr>
+            {{/each}}
+        </table>
+    {{else}}
+<!--        just a simple message for now -->
+        <p>No courses listed</p>
+
+    {{/if}}
+
+    <a href="http://localhost:3000"><button class="btn btn-success">Return Home</button></a>
+</div>
