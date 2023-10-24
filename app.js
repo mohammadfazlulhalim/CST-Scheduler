@@ -43,4 +43,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = {app, Sequelize, DataTypes, sequelize};
+module.exports = app;

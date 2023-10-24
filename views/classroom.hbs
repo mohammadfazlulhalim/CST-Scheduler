@@ -1,10 +1,11 @@
-{{#if classrooms.length}}
-    <ul>
+<h1>{{title}}</h1>
+<ul>
+    {{#if classroomList.length}}
         {{#each classroomList}}
             <li>{{this.roomNumber}}</li>
         {{/each}}
-    </ul>
-{{else}}
-    <p>No classrooms in the database.</p>
-{{/if}}
-
+    {{else}}
+        <li>No classrooms in Database</li>
+    {{/if}}
+</ul>
+<a class="btn btn-outline-success" href="/">Go Back</a>

@@ -7,15 +7,11 @@ const Classroom = sequelize.define('Classroom', {
     type: DataTypes.STRING, // Can be up to 10 characters
     allowNull: false, // Can't be null
     primaryKey: true,
-    // Validation Rules
     validate: {
       len: {
         args: [1, 10],
         msg: 'The Room Number must be between 1 and 10 characters in length.',
       },
-      // notNull: {
-      //   msg: 'The Room Number cannot be null.',
-      // },
     },
   },
 },

@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const Classroom = require('../private/javascript/Classroom');
-
-let classroomList = [];
-
-// http://localhost:3000/
-router.get('/', (req, res, next) =>{
-  classroomList=Classroom.findAll();
-  res.render('classroom', {
-    classroomList,
-  });
+router.get('/', async (req, res, next) => {
+  let classroomList = [];
+  // Gathering classrooms from database
+  try {
+    classroomList = await Classroom.findAll({
+      order: ['roomNumber'],
+    });
+  } catch (error) { // If there are no classrooms, the list will be empty.
+    console.error('Error:', error);
+  }
+  res.render('classroom', {classroomList, title: 'Classrooms'});
 });
-
-
+module.exports = router;
