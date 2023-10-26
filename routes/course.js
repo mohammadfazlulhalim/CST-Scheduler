@@ -16,6 +16,7 @@ router.get('/', getHandler);
 async function getHandler(req, res, next) {
     let courses;
     try {
+        // read the whole table from scheduler.db -
         courses = await Course.findAll({
             attributes: ['courseCode', 'courseName', 'courseNumCredits', 'courseNumHours'],
             order: [['courseName', 'ASC']],
@@ -23,9 +24,10 @@ async function getHandler(req, res, next) {
         console.log(`COURSES: \n ${courses}`);
     } catch (error) {
         console.log(`courses is undefined`);
+        // send courses=undefined to course.hbs which will then not show a table
         courses = undefined;
     }
-
+    
     res.render('course', {
         title: 'List of Courses',
         courses,

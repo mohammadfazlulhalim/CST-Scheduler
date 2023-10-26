@@ -1,6 +1,8 @@
 <div class="container">
     <h1>{{title}}</h1>
+<!--    Check if courses was sent as undefined or not -->
     {{#if courses}}
+<!--        table for storing course items if they do exist -->
         <table class="table table-striped">
             <thead class="table-primary">
             <tr>
@@ -14,6 +16,7 @@
                 <tr>
                     <td>{{this.courseCode}}</td>
                     <td>{{this.courseName}}</td>
+<!--                 Centering the number elements    -->
                     <td class="text-center">{{this.courseNumCredits}}</td>
                     <td class="text-center">{{this.courseNumHours}}</td>
                 </tr>

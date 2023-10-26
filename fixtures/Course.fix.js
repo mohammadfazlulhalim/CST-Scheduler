@@ -6,8 +6,8 @@ const Course = require('../private/javascript/Course');
  * clears the course table if it exists and fills it 5 courses
  */
 async function fillCourseTable() {
-  await Course.sync({force: true});
 
+  await Course.sync({force: true});
   await createCourses();
 }
 
@@ -15,6 +15,7 @@ async function fillCourseTable() {
  * Create some courses in table
  */
 async function createCourses() {
+  // hardcoded object literal
   const courses = [
     {
       courseCode: 'MATH282',
@@ -35,6 +36,12 @@ async function createCourses() {
       courseNumHours: 75,
     },
     {
+      courseCode: 'SEM283',
+      courseName: 'Seminar',
+      courseNumCredits: 1,
+      courseNumHours: 15,
+    },
+    {
       courseCode: 'COHS280',
       courseName: 'Enterprise Systems Support',
       courseNumCredits: 3,
@@ -48,6 +55,8 @@ async function createCourses() {
     },
   ];
 
+  // loop through courses and create course object entries
+  // as rows in the Course table in scheduler.db
   for (let index = 0; index < courses.length; index++) {
     const course = courses[index];
     await Course.create(course);

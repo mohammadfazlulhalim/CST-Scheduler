@@ -5,6 +5,12 @@
 // https://codesandbox.io/s/jest-sequelize-example-5zglq?file=/src/__tests__/consumer.js
 //
 
+/**
+ * Note that error messages more or less remain the same
+ * one message for the property regardless of error.
+ *
+ */
+
 const {sequelize, DataTypes} = require('../../datasource');
 
 
