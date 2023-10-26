@@ -24,7 +24,7 @@ async function createInstructor(amount) {
 
   // create valid entries
   for (let i = 0; i < firstNames.length; i++) {
-    await CourseOffering.create({
+    await Instructor.create({
       firstName: firstNames[i],
       lastName: lastNames[i],
     });

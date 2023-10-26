@@ -1,7 +1,22 @@
 <h1>Instructors currently in the database</h1>
-<ul>
-    {{#each instructorList}}
-        <li>{{this.firstName}}</li>
-        <li>{{this.lastName}}</li>
-    {{/each}}
-</ul>
+{{#if instructorList}}
+    <table class="table table-bordered">
+        <thead class="table-primary">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+        </tr>
+        </thead>
+        {{#each instructorList}}
+            <tr>
+                <td>{{this.firstName}}</td>
+                <td>{{this.lastName}}</td>
+            </tr>
+        {{/each}}
+    </table>
+{{else}}
+    <p>There are currently no course offerings in the system</p>
+{{/if}}
+
+
+<a href="http://localhost:3000"><button class="btn btn-success">Return Home</button></a>
