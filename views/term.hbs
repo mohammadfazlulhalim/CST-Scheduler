@@ -1,0 +1,28 @@
+<h1>{{title}}</h1>
+<!--If term entries are defined, we add in a table-->
+{{#if termEntries}}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Term Number</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+        </thead>
+        <!--Here is where I loop through my array object and add in a <tr> for each loop, and a <td> for each object-->
+        <tbody >
+        {{#each termEntries}}
+            <tr>
+                <td>{{this.termNumber}}</td>
+                <td>{{this.startDate}}</td>
+                <td>{{this.endDate}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+
+    </table>
+<!--    If term entries are not defined we display an error message telling us no terms are stored-->
+{{else}}
+    <p>There are no terms stored</p>
+{{/if}}
+<a href="http://localhost:3000"><button class="btn btn-success">Return Home</button></a>
