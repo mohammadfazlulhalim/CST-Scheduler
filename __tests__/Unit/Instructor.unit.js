@@ -40,17 +40,20 @@ describe('firstName', () => {
 
   test('testThatFirstNameCanNotBeEmpty', async function() {
     testInstructor.firstName = '';
+    let err, errCount, instructor;
 
     try {
       instructor = await Instructor.create(testInstructor);
     } catch (error) {
       // If validation error is thrown, get error message
       err = error.message;
+      errCount = error.errors.length;
     }
 
     expect(instructor).toBeFalsy; // check that instructor Object is not created
     // check that no errors are thrown
     expect(err).toBe('Validation error: Exception "First Name cannot be empty"');
+    expect(errCount).toBe(1);
 
     if (instructor) { // destroy instructor if created
       await instructor.destroy();
@@ -97,17 +100,20 @@ describe('firstName', () => {
 
   test('testThatFirstNameCanNotBe51Chars', async function() {
     testInstructor.firstName = 'a'.repeat(51); // define first name (51 Chars)
+    let err, errCount, instructor;
 
     try {
       instructor = await Instructor.create(testInstructor);
     } catch (error) {
       // If a validation error is thrown, fail the test with an error message
       err = error.message;
+      errCount = error.errors.length;
     }
 
     expect(instructor).toBeFalsy; // check that instructor Object is not created
     // check that no errors are thrown
     expect(err).toBe('Validation error: Exception "First Name cannot be more than 50 characters"');
+    expect(errCount).toBe(1);
 
     if (instructor) { // destroy instructor if created
       await instructor.destroy();
