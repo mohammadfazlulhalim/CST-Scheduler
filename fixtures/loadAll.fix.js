@@ -2,9 +2,11 @@
 const fillCourseOfferingTable = require('./CourseOffering.fix');
 const fillInstructorTable = require('./Instructor.fix');
 const fillTermTable = require('./Term.fix');
+const fillClassroomTable = require('./Classroom.fix');
 
 // call individual fixture methods here
 fillTermTable();
 fillCourseOfferingTable();
 fillInstructorTable();
+fillClassroomTable();
 

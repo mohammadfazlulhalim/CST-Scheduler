@@ -6,6 +6,7 @@ const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const instructorRouter = require('./routes/instructor');
+const classroomRouter = require('./routes/classroom');
 const termRouter = require('./routes/term');
 const courseOfferingRouter = require('./routes/courseOffering');
 
@@ -26,6 +27,7 @@ app.use('/', indexRouter);
 app.use('/instructor', instructorRouter);
 app.use('/Term/', termRouter);
 app.use('/course-offering', courseOfferingRouter);
+app.use('/classroom', classroomRouter);
 
 // bootswatch
 app.use('/bw', express.static(__dirname + '/node_modules/bootswatch/dist'));
