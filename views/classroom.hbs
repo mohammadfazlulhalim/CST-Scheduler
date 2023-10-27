@@ -1,11 +1,9 @@
 <h1>{{title}}</h1>
-<ul>
-    {{#if classroomList.length}}
-        {{#each classroomList}}
-            <li>{{this.roomNumber}}</li>
-        {{/each}}
-    {{else}}
-        <li>No classrooms in Database</li>
-    {{/if}}
-</ul>
+{{#if classroomList.length}}
+    {{#each classroomList}}
+        <li>{{this.roomNumber}}</li>
+    {{/each}}
+{{else}}
+    <p>There are currently no classrooms in the system</p>
+{{/if}}
 <a class="btn btn-outline-success" href="/">Go Back</a>
