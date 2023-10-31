@@ -45,8 +45,7 @@ const Course = sequelize.define('Course', {
         max: 6,
         message: 'Error: Enter a whole number between 0 and 6 as a valid number of credits.',
     },
-    // "courseNumHoursPerWeek" is misleading - course hours as 45 for example refers to total hours, and not per week.
-    courseNumHours: {
+    courseNumHoursPerWeek: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {

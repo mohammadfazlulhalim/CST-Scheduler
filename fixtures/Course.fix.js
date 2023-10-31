@@ -15,43 +15,44 @@ async function fillCourseTable() {
  * Create some courses in table
  */
 async function createCourses() {
-  // hardcoded object literal
+  // hardcoded list of object literals
+  // property info based on info found on https://saskpolytech.ca/programs-and-courses/programs/Computer-Systems-Technology.aspx#courses
   const courses = [
     {
       courseCode: 'MATH282',
       courseName: 'Mathematics of Computation',
       courseNumCredits: 3,
-      courseNumHours: 45,
+      courseNumHoursPerWeek: 3,
     },
     {
       courseCode: 'COSA280',
       courseName: 'IT Development Project 1',
       courseNumCredits: 3,
-      courseNumHours: 20,
+      courseNumHoursPerWeek: 3,
     },
     {
       courseCode: 'CDBM280',
       courseName: 'Database Management Systems',
       courseNumCredits: 5,
-      courseNumHours: 75,
+      courseNumHoursPerWeek: 5,
     },
     {
       courseCode: 'SEM283',
       courseName: 'Seminar',
       courseNumCredits: 1,
-      courseNumHours: 15,
+      courseNumHoursPerWeek: 1,
     },
     {
       courseCode: 'COHS280',
       courseName: 'Enterprise Systems Support',
       courseNumCredits: 3,
-      courseNumHours: 45,
+      courseNumHoursPerWeek: 3,
     },
     {
       courseCode: 'CWEB280',
       courseName: 'Internet Programming/Web Applications 2',
       courseNumCredits: 6,
-      courseNumHours: 80,
+      courseNumHoursPerWeek: 5,
     },
   ];
 

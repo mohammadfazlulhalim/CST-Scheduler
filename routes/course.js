@@ -18,7 +18,7 @@ async function getHandler(req, res, next) {
     try {
         // read the whole table from scheduler.db -
         courses = await Course.findAll({
-            attributes: ['courseCode', 'courseName', 'courseNumCredits', 'courseNumHours'],
+            attributes: ['courseCode', 'courseName', 'courseNumCredits', 'courseNumHoursPerWeek'],
             order: [['courseName', 'ASC']],
         });
         console.log(`COURSES: \n ${courses}`);

@@ -34,11 +34,12 @@ describe('testCourseModel', () => {
     beforeEach(async () => {
         // HARDCODED FOR NOW...
         try {
+            // CSEC info based on info found on https://saskpolytech.ca/programs-and-courses/programs/Computer-Systems-Technology.aspx#courses
             const course = {
                 courseCode: 'CSEC280',
                 courseName: 'Security 1',
                 courseNumCredits: 4,
-                courseNumHours: 60,
+                courseNumHoursPerWeek: 4,
             };
 
             courseInstance = Course.build(course);
@@ -180,7 +181,7 @@ describe('testCourseModel', () => {
     });
 
     test('testNumberOfCreditsInteger', async () => {
-        courseInstance.courseNumHours = 900;
+        courseInstance.courseNumHoursPerWeek = 900;
 
         try {
             await courseInstance.save();
@@ -194,12 +195,12 @@ describe('testCourseModel', () => {
 
 
     test('testNumberOfHoursValid', async () => {
-        courseInstance.courseNumHours = 60;
+        courseInstance.courseNumHoursPerWeek = 60;
 
         try {
             await courseInstance.save();
             const updatedCourse = await Course.findOne({
-                where: {courseNumHours: 60},
+                where: {courseNumHoursPerWeek: 60},
             });
             expect(updatedCourse).toBeTruthy();
         } catch (e) {
@@ -209,7 +210,7 @@ describe('testCourseModel', () => {
 
     // catch error once it crosses upper bound for num hours
     test('testNumberOfHoursValueTooHigh', async () => {
-        courseInstance.courseNumHours = 169;
+        courseInstance.courseNumHoursPerWeek = 169;
 
         try {
             await courseInstance.save();
@@ -223,7 +224,7 @@ describe('testCourseModel', () => {
 
 
     test('testNumberOfHoursErrorNegative', async () => {
-        courseInstance.courseNumHours = -45;
+        courseInstance.courseNumHoursPerWeek = -45;
 
         try {
             await courseInstance.save();
@@ -237,7 +238,7 @@ describe('testCourseModel', () => {
 
 
     test('testNumberOfHoursCatchString', async () => {
-        courseInstance.courseNumHours = 'Sixty';
+        courseInstance.courseNumHoursPerWeek = 'Sixty';
 
         try {
             await courseInstance.save();
@@ -250,7 +251,7 @@ describe('testCourseModel', () => {
     });
 
     test('testNumberOfHoursCatchNonInteger', async () => {
-        courseInstance.courseNumHours = 30.25;
+        courseInstance.courseNumHoursPerWeek = 30.25;
 
         try {
             await courseInstance.save();
