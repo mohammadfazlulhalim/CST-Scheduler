@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
+const instructorRouter = require('./routes/instructor');
+const classroomRouter = require('./routes/classroom');
 const termRouter = require('./routes/term');
 const courseOfferingRouter = require('./routes/courseOffering');
 // story34 view courses
@@ -24,9 +26,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // routers
 app.use('/', indexRouter);
+app.use('/instructor', instructorRouter);
 app.use('/Term/', termRouter);
 app.use('/course-offering', courseOfferingRouter);
 app.use('/course', viewCoursesRouter); // story34 view courses
+app.use('/classroom', classroomRouter);
 
 // bootswatch
 app.use('/bw', express.static(__dirname + '/node_modules/bootswatch/dist'));
@@ -47,5 +51,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// module.exports = {app, Sequelize, DataTypes, sequelize};
 module.exports = app;
