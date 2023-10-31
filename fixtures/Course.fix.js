@@ -15,7 +15,7 @@ async function fillCourseTable() {
  * Create some courses in table
  */
 async function createCourses() {
-  // hardcoded list of object literals
+  // hardcoded list of course object literals
   // property info based on info found on https://saskpolytech.ca/programs-and-courses/programs/Computer-Systems-Technology.aspx#courses
   const courses = [
     {
