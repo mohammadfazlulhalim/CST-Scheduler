@@ -6,45 +6,37 @@ const {sequelize}= require('../../datasource');
 // series of tests inspired by story33
 
 
-// for storing Course{} results
-let courseInstance;
-
 // ensure that databases are created successfully
 /**
  * function for checking database tables
  */
-async function establishDatabaseTables() {
-    try {
-        await Course.sync();
-    } catch (e) {
-        console.error(e);
-    }
-}
+
+// async function establishDatabaseTables() {
+//     try {
+//         await Course.sync();
+//     } catch (e) {
+//         console.error(e);
+//     }
+// }
+
+// for storing Course{} results
+let courseInstance;
 
 describe('testCourseModel', () => {
     // another check before the `describe()` is ran
-    beforeAll( async () => {
-        try {
-            await sequelize.sync( {force: true} );
-        } catch (e) {
-            console.error('Error during db sync' );
-        }
-    });
+    let course;
 
     beforeEach(async () => {
-        // HARDCODED FOR NOW...
         try {
             // CSEC info based on info found on https://saskpolytech.ca/programs-and-courses/programs/Computer-Systems-Technology.aspx#courses
-            const course = {
+            await sequelize.sync( {force: true} );
+            course = {
                 courseCode: 'CSEC280',
                 courseName: 'Security 1',
                 courseNumCredits: 4,
                 courseNumHoursPerWeek: 4,
             };
 
-            courseInstance = Course.build(course);
-
-            await establishDatabaseTables();
         } catch (err) {
             console.error(err);
         }
@@ -53,16 +45,16 @@ describe('testCourseModel', () => {
 
     // courseName upper bound test
     test('testCourseNameGoodUpperBound', async () => {
-        console.log(`courseInstance: \n ${courseInstance}`);
 
-        courseInstance.courseName = 'a'.repeat(100);
+        course.courseName = 'a'.repeat(100);
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
             const updatedCourse = await Course.findOne({
                 where: {courseName: 'a'.repeat(100)},
             });
             expect(updatedCourse).toBeTruthy();
+
         } catch (e) {
             console.error(e);
         }
@@ -71,10 +63,10 @@ describe('testCourseModel', () => {
 
     // courseName lower bound test
     test('testCourseNameLowerBound', async () => {
-        courseInstance.courseName = 'a';
+        course.courseName = 'a';
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
             const updatedCourse = await Course.findOne({
                 where: {courseName: 'a'},
             });
@@ -86,11 +78,11 @@ describe('testCourseModel', () => {
 
     // Someone enters empty string for courseName - ""
     test('testCourseNameCatchNothingEntered', async () => {
-        console.log(courseInstance);
-        courseInstance.courseName = '';
+        course.courseName = '';
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
+            fail(); // throws an error to force the expects to run that are only inside the catch
         } catch (e) {
             expect(e.errors.length).toBe(1);
             expect(e.errors[0].message)
@@ -101,12 +93,13 @@ describe('testCourseModel', () => {
 
     test('testCourseNameCatchTooLong', async () => {
         // 101 chars
-        courseInstance.courseName = 'a'.repeat(101);
+        course.courseName = 'a'.repeat(101);
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
+            fail(); // throws an error to force the expects to run that are only inside the catch
         } catch (e) {
-            expect(e.length).toBe(1);
+            expect(e.errors.length).toBe(1);
             expect(e.errors[0].message)
                 .toBe('Error: Course Name must have 1 to 100 characters.');
         }
@@ -115,13 +108,11 @@ describe('testCourseModel', () => {
 
     // upper bound
     test('testNumberOfCreditsGood', async () => {
-        courseInstance.courseNumCredits = 6;
+        course.courseNumCredits = 6;
 
         try {
-            await courseInstance.save();
-            const updatedCourse = await Course.findOne({
-                where: {courseNumCredits: 6},
-            });
+
+            const updatedCourse = await Course.create(course);
             expect(updatedCourse).toBeTruthy();
         } catch (e) {
             console.error(e);
@@ -129,10 +120,11 @@ describe('testCourseModel', () => {
     });
 
     test('testNumberOfCreditsCatchString', async () => {
-        courseInstance.courseNumCredits = 'Four';
+        course.courseNumCredits = 'Four';
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
+            fail(); // throws an error to force the expects to run that are only inside the catch
         } catch (e) {
             expect(e.errors.length).toBe(1);
             expect(e.errors[0].message)
@@ -141,10 +133,11 @@ describe('testCourseModel', () => {
     });
 
     test('testNumberOfCreditsCatchTooHighNumber', async () => {
-        courseInstance.courseNumCredits = 7;
+        course.courseNumCredits = 7;
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
+            fail(); // throws an error to force the expects to run that are only inside the catch
         } catch (e) {
             expect(e.errors.length).toBe(1);
             expect(e.errors[0].message)
@@ -154,10 +147,11 @@ describe('testCourseModel', () => {
 
 
     test('testNumberOfCreditsCatchNegativeVals', async () => {
-        courseInstance.courseNumCredits = -45;
+        course.courseNumCredits = -45;
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
+            fail(); // throws an error to force the expects to run that are only inside the catch
         } catch (e) {
             expect(e.errors.length).toBe(1);
             expect(e.errors[0].message)
@@ -167,10 +161,10 @@ describe('testCourseModel', () => {
 
 
     test('numberOfCreditsTestZeroForPass', async () => {
-        courseInstance.courseNumCredits = 0;
+        course.courseNumCredits = 0;
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
             const updatedCourse = await Course.findOne({
                 where: {courseNumCredits: 0},
             });
@@ -181,24 +175,24 @@ describe('testCourseModel', () => {
     });
 
     test('testNumberOfCreditsInteger', async () => {
-        courseInstance.courseNumHoursPerWeek = 900;
+        course.courseNumCredits = 900;
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
+            fail(); // throws an error to force the expects to run that are only inside the catch
         } catch (e) {
             expect(e.errors.length).toBe(1);
             expect(e.errors[0].message)
-                .toBe('Error: Enter a whole number between 1 and 6 ' +
-                    'as a valid number of credits.');
+                .toBe('Error: Enter a whole number between 0 and 6 as a valid number of credits.');
         }
     });
 
 
     test('testNumberOfHoursValid', async () => {
-        courseInstance.courseNumHoursPerWeek = 60;
+        course.courseNumHoursPerWeek = 60;
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
             const updatedCourse = await Course.findOne({
                 where: {courseNumHoursPerWeek: 60},
             });
@@ -210,10 +204,11 @@ describe('testCourseModel', () => {
 
     // catch error once it crosses upper bound for num hours
     test('testNumberOfHoursValueTooHigh', async () => {
-        courseInstance.courseNumHoursPerWeek = 169;
+        course.courseNumHoursPerWeek = 169;
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
+            fail(); // throws an error to force the expects to run that are only inside the catch
         } catch (e) {
             expect(e.errors.length).toBe(1);
             expect(e.errors[0].message)
@@ -224,10 +219,11 @@ describe('testCourseModel', () => {
 
 
     test('testNumberOfHoursErrorNegative', async () => {
-        courseInstance.courseNumHoursPerWeek = -45;
+        course.courseNumHoursPerWeek = -45;
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
+            fail(); // throws an error to force the expects to run that are only inside the catch
         } catch (e) {
             expect(e.errors.length).toBe(1);
             expect(e.errors[0].message)
@@ -238,10 +234,11 @@ describe('testCourseModel', () => {
 
 
     test('testNumberOfHoursCatchString', async () => {
-        courseInstance.courseNumHoursPerWeek = 'Sixty';
+        course.courseNumHoursPerWeek = 'Sixty';
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
+            fail(); // throws an error to force the expects to run that are only inside the catch
         } catch (e) {
             expect(e.errors.length).toBe(1);
             expect(e.errors[0].message)
@@ -251,22 +248,16 @@ describe('testCourseModel', () => {
     });
 
     test('testNumberOfHoursCatchNonInteger', async () => {
-        courseInstance.courseNumHoursPerWeek = 30.25;
+        course.courseNumHoursPerWeek = 30.25;
 
         try {
-            await courseInstance.save();
+            await Course.create(course);
+            fail(); // throws an error to force the expects to run that are only inside the catch
         } catch (e) {
             expect(e.errors.length).toBe(1);
             expect(e.errors[0].message)
                 .toBe('Error: Enter a whole number between 1 and 168 ' +
                     'as a valid number of hours.');
-        }
-    });
-
-
-    afterAll(async () => {
-        if (courseInstance) {
-            await courseInstance.destroy();
         }
     });
 });

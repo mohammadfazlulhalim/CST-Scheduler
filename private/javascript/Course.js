@@ -26,39 +26,45 @@ const Course = sequelize.define('Course', {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            notNull: {
-                message: 'Error: Course Name must have 1 to 100 characters.',
-            },
-        },
-        len: [1, 100], // check if it's inclusive of the range numbers
-        message: 'Error: Course Name must have 1 to 100 characters.',
+            len: {
+                args: [1, 100],
+                msg: 'Error: Course Name must have 1 to 100 characters.',
+            }
+        }
     },
     courseNumCredits: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-            notNull: {
-                message: 'Error: Course Name must have 1 to 100 characters.',
+            isInt: {
+                msg: 'Error: Enter a whole number between 0 and 6 as a valid number of credits.',
+            },
+            min: {
+                args: [0],
+                msg: 'Error: Enter a whole number between 0 and 6 as a valid number of credits.',
+            },
+            max: {
+                args: [6],
+                msg: 'Error: Enter a whole number between 0 and 6 as a valid number of credits.',
             },
         },
-        min: 0,
-        max: 6,
-        message: 'Error: Enter a whole number between 0 and 6 as a valid number of credits.',
     },
     courseNumHoursPerWeek: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-            notNull: {
-                message: 'Error: Enter a whole number between 1 and 168 as a valid number of hours.',
+            isInt: {
+                msg: 'Error: Enter a whole number between 1 and 168 as a valid number of hours.',
             },
-        },
-        isInt: {
-            message: 'Error: Enter a whole number between 1 and 168 as a valid number of hours.',
-        },
-        min: 1,
-        max: 168,
-        message: 'Error: Enter a whole number between 1 and 168 as a valid number of hours.',
+            min: {
+                args: [1],
+                msg: 'Error: Enter a whole number between 1 and 168 as a valid number of hours.',
+            },
+            max: {
+                args: [168],
+                msg: 'Error: Enter a whole number between 1 and 168 as a valid number of hours.',
+            },
+        }
     },
 
 }, {
