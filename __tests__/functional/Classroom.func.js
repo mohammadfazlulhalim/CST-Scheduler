@@ -1,5 +1,6 @@
 const Classroom = require('../../private/javascript/Classroom');
 const {sequelize} = require('../../datasource');
+const {ClassroomController} = require('../../routes/classroom')
 
 describe('create', ()=>{
   let classroomInstance;
@@ -16,7 +17,7 @@ describe('create', ()=>{
 
   // Valid classroom
   beforeEach(async () => {
-    classroomInstance = await Classroom.create({roomNumber: '239A'});
+    classroomInstance = await ClassroomController({roomNumber: '239A'});
   });
 
 

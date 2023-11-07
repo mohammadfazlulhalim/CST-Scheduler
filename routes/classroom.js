@@ -13,4 +13,10 @@ router.get('/', async (req, res, next) => {
   }
   res.render('classroom', {classroomList, title: 'Classrooms'});
 });
-module.exports = router;
+
+function createClassroom()
+{
+
+}
+
+module.exports = {router, createClassroom} ;
