@@ -1,4 +1,5 @@
 const Instructor = require('../../private/javascript/Instructor');
+const testConst = require('../../private/javascript/constants').testConst;
 
 /**
  * These are tests for the firstName attribute of Instructor
@@ -9,10 +10,7 @@ describe('firstName', () => {
   let err = '';
   beforeAll(async function() {
     await Instructor.sync({force: true}); // wipes instructor table if it exists
-    testInstructor = {
-      firstName: 'Sally',
-      lastName: 'Sutherland',
-    };
+    testInstructor = testConst.instructor1;
   });
 
   beforeEach(async function() {

@@ -1,4 +1,5 @@
 const CourseOffering = require('../../private/javascript/CourseOffering');
+const testConst = require('../../private/javascript/constants').testConst;
 
 // tests for the 'group' field
 describe('group', () => {
@@ -7,11 +8,7 @@ describe('group', () => {
   beforeEach(async function() {
     // drop the table and re-create it
     await CourseOffering.sync({force: true});
-    testUser = {
-      courseCode: 'COSA280',
-      termNumber: 4,
-      group: 'A',
-    };
+    testUser = testConst.courseOffering1;
   });
 
   test('testThatGroupWithOneLetterIsValid', async function() {
