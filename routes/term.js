@@ -19,4 +19,8 @@ router.get('/', async function(req, res, next) {
   });
 });
 
-module.exports = router;
+const createTerm = async (term) => {
+
+};
+
+module.exports = {router, createTerm};
