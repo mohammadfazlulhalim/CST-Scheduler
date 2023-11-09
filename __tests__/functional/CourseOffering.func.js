@@ -1,5 +1,10 @@
 const CourseOffering = require('../../private/javascript/CourseOffering');
 const testConst = require('../../constants').testConst;
+const {
+    createCourseOffering,
+    updateCourseOffering,
+    deleteCourseOffering
+}  = require('../../routes/courseOfferingRouter');
 
 escribe('group', () => {
     let testUser;

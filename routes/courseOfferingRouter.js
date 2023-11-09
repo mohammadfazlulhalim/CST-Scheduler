@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const CourseOffering = require('../private/javascript/CourseOffering');
+const CourseOfferingRouter = require('../private/javascript/CourseOffering');
 
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
@@ -9,7 +9,7 @@ router.get('/', async function(req, res, next) {
 
   // retrieve all course offerings from the database
   try {
-    courseOfferings = await CourseOffering.findAll({order: ['courseCode']});
+    courseOfferings = await CourseOfferingRouter.findAll({order: ['courseCode']});
   } catch (err) {
     // if unable to retrieve from database; e.g., no records exist
     courseOfferings = undefined;
@@ -22,4 +22,16 @@ router.get('/', async function(req, res, next) {
   });
 });
 
-module.exports = router;
+function createCourseOffering(createCO){
+
+}
+
+function updateCourseOffering(updateCO){
+
+}
+
+function deleteCourseOffering(deleteCO){
+
+}
+
+module.exports = {router, createCourseOffering, updateCourseOffering, deleteCourseOffering};

@@ -8,7 +8,7 @@ const indexRouter = require('./routes/index');
 const instructorRouter = require('./routes/instructor');
 const classroomRouter = require('./routes/classroom');
 const termRouter = require('./routes/term');
-const courseOfferingRouter = require('./routes/courseOffering');
+const courseOfferingRouter = require('./routes/courseOfferingRouter');
 // story34 view courses
 const viewCoursesRouter = require('./routes/course');
 

@@ -5,6 +5,10 @@ const {sequelize, DataTypes} = require('../../dataSource');
  */
 const CourseOffering = sequelize.define('CourseOffering', {
 
+  name: {
+    type: DataTypes.STRING,
+  },
+
   //Dates - YYYY-MM-DD
   startDate: {
     type: DataTypes.STRING,
