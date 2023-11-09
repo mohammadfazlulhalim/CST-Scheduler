@@ -14,9 +14,31 @@ router.get('/', async (req, res, next) => {
   res.render('classroom', {classroomList, title: 'Classrooms'});
 });
 
-function createClassroom()
+router.post('/', async(req, res, next) =>{
+
+})
+
+router.put('/', async(req, res, next) =>{
+
+})
+
+router.delete('/', async(req, res, next) =>{
+
+})
+
+async function createClassroom()
 {
 
 }
 
-module.exports = {router, createClassroom} ;
+async function updateClassroom()
+{
+
+}
+
+async function deleteClassroom()
+{
+
+}
+
+module.exports = {router, createClassroom, updateClassroom, deleteClassroom} ;
