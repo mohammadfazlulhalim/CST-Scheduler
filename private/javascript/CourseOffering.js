@@ -4,12 +4,14 @@ const {sequelize, DataTypes} = require('../../dataSource');
  * This class stores objects that represent course offerings to be used in the CST Scheduler.
  */
 const CourseOffering = sequelize.define('CourseOffering', {
-  courseCode: {
+
+  //Dates - YYYY-MM-DD
+  startDate: {
     type: DataTypes.STRING,
   },
 
-  termNumber: {
-    type: DataTypes.INTEGER,
+  endDate: {
+    type: DataTypes.STRING,
   },
 
   group: {

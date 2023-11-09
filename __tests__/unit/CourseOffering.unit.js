@@ -1,5 +1,5 @@
 const CourseOffering = require('../../private/javascript/CourseOffering');
-const testConst = require('../../private/javascript/constants').testConst;
+const testConst = require('../../constants').testConst;
 
 // tests for the 'group' field
 describe('group', () => {

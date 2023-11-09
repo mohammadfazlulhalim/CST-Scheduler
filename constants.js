@@ -5,8 +5,8 @@ const testConst = {
         Specialty: 'Excel',
     },
     courseOffering1: {
-        courseCode: 'COSA280',
-        termNumber: 4,
+        startDate: '2023-09-01',
+        termNumber: '2023-12-15',
         group: 'A',
     },
 };

@@ -1,5 +1,5 @@
 const Instructor = require('../../private/javascript/Instructor');
-const testConst = require('../../private/javascript/constants').testConst;
+const testConst = require('../../constants').testConst;
 
 /**
  * These are tests for the firstName attribute of Instructor
