@@ -23,4 +23,12 @@ const createTerm = async (term) => {
 
 };
 
-module.exports = {router, createTerm};
+const deleteTerm = async (term) => {
+
+};
+
+const updateTerm = async (term) => {
+
+};
+
+module.exports = {router, createTerm, deleteTerm, updateTerm};

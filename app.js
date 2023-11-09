@@ -7,7 +7,7 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const instructorRouter = require('./routes/instructor');
 const classroomRouter = require('./routes/classroom');
-const termRouter = require('./routes/term');
+const termRouter = require('./routes/term').router;
 const courseOfferingRouter = require('./routes/courseOffering');
 // story34 view courses
 const viewCoursesRouter = require('./routes/course');
