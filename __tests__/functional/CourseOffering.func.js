@@ -5,18 +5,24 @@ const {
     updateCourseOffering,
     deleteCourseOffering
 }  = require('../../routes/courseOfferingRouter');
+const request = require('supertest');
+const app = require('../../app');
 
-escribe('group', () => {
-    let testUser;
+
+describe('Functional Course Offering', () => {
+    let testCourseOffer;
     // set up a valid user
     beforeEach(async function() {
         // drop the table and re-create it
         await CourseOffering.sync({force: true});
-        testUser = testConst.courseOffering1;
+        testCourseOffer = testConst.courseOffering1;
     });
 
-    test('testThatGroupWithOneLetterIsValid', async function() {
-        const groupLetter = 'A';
+    test('testThatCourseOfferingIsCreated', async function() {
+
+        const res = await request(app).post('/CourseOffering').send(
+            testCourseOffer
+        )
         testUser.group = groupLetter;
         const courseOffering = await CourseOffering.create(testUser);
 
