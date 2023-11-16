@@ -35,6 +35,24 @@ const CourseOffering = sequelize.define('CourseOffering', {
       },
     },
   },
+
+  courseID: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Course,
+      key: 'id'
+    }
+  },
+
+  courseID: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Course,
+      key: 'id'
+    }
+  },
+
+
 }, {
   tableName: 'CourseOfferings',
 });

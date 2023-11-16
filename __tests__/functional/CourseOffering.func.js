@@ -11,6 +11,7 @@ const app = require('../../app');
 
 describe('Functional Course Offering', () => {
     let testCourseOffer;
+    let testNewCO
     // set up a valid user
     beforeEach(async function() {
         // drop the table and re-create it
@@ -19,19 +20,24 @@ describe('Functional Course Offering', () => {
     });
 
     test('testThatCourseOfferingIsCreated', async function() {
-
         const res = await request(app).post('/CourseOffering').send(
             testCourseOffer
         )
-        testUser.group = groupLetter;
-        const courseOffering = await CourseOffering.create(testUser);
+        expect(res.statusCode).toBe(201);
+        expect(res.body).toHaveProperty('id');
 
-        expect(courseOffering).toBeTruthy();
-        expect(courseOffering.group).toBe(groupLetter);
+        let tempID = res.body.id;
+        testNewCO = CourseOffering.findOne(tempID);
 
-        // if valid, validate() returns the object it was validating
-        // if invalid, it returns errors
-        expect(await courseOffering.validate()).toBe(courseOffering);
+        expect(testNewCO.startDate).toBe(testCourseOffer.startDate);
+        expect(testNewCO.endDate).toBe(testCourseOffer.endDate);
+        expect(testNewCO.group).toBe(testCourseOffer.group);
+        expect(testNewCO.name).toBe(testCourseOffer.name);
+        expect(testNewCO.startDate).toBe(testCourseOffer.startDate);
+        expect(testNewCO.startDate).toBe(testCourseOffer.startDate);
+        expect(testNewCO.startDate).toBe(testCourseOffer.startDate);
+        expect(testNewCO.startDate).toBe(testCourseOffer.startDate);
+
     });
 
 });
