@@ -28,17 +28,18 @@ router.delete('/', async(req, res, next) =>{
 
 async function createClassroom()
 {
+  return {};
 
 }
 
 async function updateClassroom()
 {
-
+  return {};
 }
 
 async function deleteClassroom()
 {
-
+  return {};
 }
 
 module.exports = {router, createClassroom, updateClassroom, deleteClassroom} ;
