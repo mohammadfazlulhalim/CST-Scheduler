@@ -1,6 +1,8 @@
 const Classroom = require('../../private/javascript/Classroom');
 const {sequelize} = require('../../datasource');
 const {ClassroomController} = require('../../routes/classroom')
+const request = require('supertest')
+const app = require('../../app')
 
 describe('create', ()=>{
   let classroomInstance;
@@ -22,15 +24,20 @@ describe('create', ()=>{
   });
 
   test('testThatValidRoomIsAddedToDatabase', async() => {
-    const createResult = await ClassroomController.createClassroom(classroomInstance);
-    expect(Classroom.findByPk(createResult.pk)).toBeDefined();
+    const res = await request(app)
+      .post('/classroom')
+      .send(classroomInstance)
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty('post')
   });
 
   test('testThatInValidRoomIsAddedToDatabase', async() =>{
     classroomInstance.roomNumber = '12345678901';
-    const createResult = await ClassroomController.createClassroom(classroomInstance);
-    expect(createResult.roomNumberErr).toBe('error message');
-    expect(Classroom.findByPk(createResult.pk)).toBeUndefined();
+    const res = await request(app)
+      .post('/classroom')
+      .send(classroomInstance)
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty('post')
   })
 })
 
@@ -54,16 +61,22 @@ describe('update', ()=>{
 
   test('testThatValidRoomIsUpdatedInDatabase', async() => {
     classroomInstance.roomNumber = '239B';
-    const updateResult = await ClassroomController.updateClassroom(classroomInstance);
-    expect(Classroom.findByPk(updateResult.id).roomNumber).toBe('239B');
+    const res = await request(app)
+      .update('/classroom')
+      .send(classroomInstance)
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty('update')
+
 
   });
 
   test('testThatInValidRoomIsNotUpdatedDatabase', async() =>{
     classroomInstance.roomNumber = '12345678901';
-    const updateResult = await ClassroomController.updateClassroom(classroomInstance);
-    expect(updateResult.roomNumberErr).toBe('error message');
-    expect(Classroom.findByPk(updateResult.id).roomNumber).toBe('239A');
+    const res = await request(app)
+      .update('/classroom')
+      .send(classroomInstance)
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty('update')
   })
 })
 
@@ -86,7 +99,10 @@ describe('delete', ()=>{
   });
 
   test('testThatRoomIsDeletedInDatabase', async() => {
-    const deleteResult = await ClassroomController.deleteClassroom(classroomInstance)
-    expect(Classroom.findByPk(deleteResult.pk)).toBeUndefined();
+    const res = await request(app)
+      .delete('/classroom')
+      .send(classroomInstance)
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty('delete')
   });
 })
