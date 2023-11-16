@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routers
 app.use('/', indexRouter);
 app.use('/instructor', instructorRouter);
-app.use('/Term/', termRouter);
+app.use('/term/', termRouter);
 app.use('/course-offering', courseOfferingRouter);
 app.use('/course', viewCoursesRouter); // story34 view courses
 app.use('/classroom', classroomRouter);

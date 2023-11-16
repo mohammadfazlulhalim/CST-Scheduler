@@ -16,7 +16,9 @@ describe('Terms in database', () => {
 
   test('testThatValidTermPostAddsToList', async () => {
     // create a valid term in the database
-    await supertest(app).post('/term').send(testTerm).expect(201); // expect success: created
+    const res = await supertest(app).post('/term').send(testTerm).expect(201); // expect 201: created
+    console.log('response body:');
+    console.log(res.body);
     // find the newly added term to ensure it exists in the database
     const foundTerm = await Term.findOne({where: {
       termNumber: testTerm.termNumber,
@@ -32,7 +34,7 @@ describe('Terms in database', () => {
     // change term number so that the term object is invalid
     testTerm.termNumber = 3;
     // attempt to create the term in the database
-    await supertest(app).post('/term').send(testTerm).expect('422'); // expect 422: unprocessable entity
+    await supertest(app).post('/term').send(testTerm).expect(422); // expect 422: unprocessable entity
     // since no term should have been added to the database, the number of terms should remain the same
     const newNumTerms = (await Term.findAll()).length;
     expect(newNumTerms).toBe(oldNumTerms);
