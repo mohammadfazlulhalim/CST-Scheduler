@@ -2,7 +2,7 @@
 const Term = require('../../private/javascript/Term.js');
 const supertest = require('supertest');
 const app = require('../../app');
-const constants = require('../../private/javascript/constants');
+const constants = require('../../constants');
 
 // this set of tests ensures that Term objects are handled within the database properly
 describe('Terms in database', () => {
@@ -12,7 +12,7 @@ describe('Terms in database', () => {
   beforeEach(async () => {
     // drop the table and re-create it
     await Term.sync({force: true});
-    testTerm = constants.validTerms[0];
+    testTerm = constants.testConst.validTerms[0];
   });
 
   test('testThatValidTermPostAddsToEmptyList', async () => {
@@ -22,7 +22,7 @@ describe('Terms in database', () => {
 
   test('testThatValidTermPostAddsToPopulatedList', async () => {
     // create a few valid terms in the database
-    for (const term of constants.validTerms) {
+    for (const term of constants.testConst.validTerms) {
       await Term.create(term);
     }
 
@@ -43,7 +43,6 @@ describe('Terms in database', () => {
     expect(newNumTerms).toBe(oldNumTerms);
   });
 
-  // TODO: rename this one to be DeletesLastItem, add one for populated list
   test('testThatValidTermDeleteRemovesFromEmptyList', async () => {
     // do the DELETE test without any Terms in the database
     await testDelete(testTerm);
@@ -51,7 +50,7 @@ describe('Terms in database', () => {
 
   test('testThatValidTermDeleteRemovesFromPopulatedList', async () => {
     // create a few valid terms in the database
-    for (const term of constants.validTerms) {
+    for (const term of constants.testConst.validTerms) {
       await Term.create(term);
     }
     // do the DELETE test now that there are some Terms in the database
@@ -138,16 +137,16 @@ const testPost = async function(testTerm) {
  * @param {Object} testTerm - The term to DELETE
  */
 const testDelete = async function(testTerm) {
-  // store initial number of terms to compare against later
-  const oldNumTerms = (await Term.findAll()).length;
-  // create a new term to delete, then promptly delete it
+  // create a new term to delete
   // testTerm does not have an ID, so use newTerm instead
   const newTerm = await Term.create(testTerm);
+  // store initial number of terms to compare against later
+  const oldNumTerms = (await Term.findAll()).length;
   // delete the term
   await supertest(app).delete('/term').send(newTerm).expect(200); // expect 200: OK
 
   // If the term was deleted successfully, the number of terms in the database should
-  // remain the same as it was before the 'create' statement
+  // be one less than the count after the 'create' statement
   const newNumTerms = (await Term.findAll()).length;
-  expect(newNumTerms).toBe(oldNumTerms);
+  expect(newNumTerms).toBe(oldNumTerms - 1);
 };

@@ -1,5 +1,5 @@
 const Term = require('../private/javascript/Term');
-const constants = require('../private/javascript/constants');
+const constants = require('../constants');
 
 /**
  * This clears the table for Term and then recreates the table
