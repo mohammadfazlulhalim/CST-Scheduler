@@ -57,6 +57,8 @@ describe('startDate', () => {
       await Term.create({termNumber: 1, startDate: '2023-07-01', endDate: '2023-12-01'});
     } catch (err) {
       bCaughtErr = true;
+      console.log('---------------HERE IS MY ERROR OUTPUT--------------')
+      console.log(err.errors);
       expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term 1 must start in August or September');
     }

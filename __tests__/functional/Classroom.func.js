@@ -11,9 +11,8 @@ describe('create', ()=>{
   beforeAll(async () => {
     try {
       await sequelize.sync();
-      console.log('Classroom table created successfully');
     } catch (error) {
-      console.error('Error creating Classroom table:', error);
+      console.error('Error creating Classroom table: ', error);
     }
   });
 
@@ -68,9 +67,8 @@ describe('update', ()=>{
   beforeAll(async () => {
     try {
       await sequelize.sync();
-      console.log('Classroom table created successfully');
     } catch (error) {
-      console.error('Error creating Classroom table:', error);
+      console.error('Error creating Classroom table: ', error);
     }
   });
 
@@ -131,9 +129,8 @@ describe('delete', ()=>{
   beforeAll(async () => {
     try {
       await sequelize.sync();
-      console.log('Classroom table created successfully');
     } catch (error) {
-      console.error('Error creating Classroom table:', error);
+      console.error('Error creating Classroom table: ', error);
     }
   });
 
