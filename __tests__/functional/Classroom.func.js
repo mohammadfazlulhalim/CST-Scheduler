@@ -19,7 +19,6 @@ describe('create', ()=>{
 
   // Valid classroom
   beforeEach(async () => {
-    // classroomInstance = await ClassroomController({roomNumber: '239A'});
     classroomInstance = {roomNumber: '239A'};
   });
 
@@ -35,9 +34,6 @@ describe('create', ()=>{
     const addedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}});
     expect(addedClassroom).toBeDefined();
     expect(addedClassroom.roomNumber).toBe(classroomInstance.roomNumber);
-
-
-
   });
   test('testThatValidRoomIsAddedToDatabase', async() => {
     classroomInstance.roomNumber = '239B';
@@ -97,8 +93,6 @@ describe('update', ()=>{
     const changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}});
     expect(changedlassroom).toBeDefined();
     expect(changedClassroom.roomNumber).toBe(classroomInstance.roomNumber);
-
-
   });
 
   test('testThatInValidRoomIsNotUpdatedDatabase', async() =>{
@@ -110,10 +104,10 @@ describe('update', ()=>{
     expect(res.body).toHaveProperty('put')
 
     let changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}})
-    expect(changedlassroom).toBeNull();
+    expect(changedClassroom).toBeNull();
     expect(changedClassroom.roomNumber).not.toBe(classroomInstance.roomNumber);
     changedClassroom = await Classroom.findOne({where: {roomNumber: '239A'}})
-    expect(changedlassroom).toBeDefined();
+    expect(changedClassroom).toBeDefined();
   })
   test('testThatUnknownRoomErrorsWhenUpdated', async() =>{
     classroomInstance.id = 99;
@@ -124,7 +118,7 @@ describe('update', ()=>{
     expect(res.body).toHaveProperty('put')
 
     const changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}})
-    expect(changedlassroom).toBeNull();
+    expect(changedClassroom).toBeNull();
 
   })
 })
