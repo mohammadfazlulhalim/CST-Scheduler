@@ -1,5 +1,6 @@
 const Instructor = require('../private/javascript/Instructor');
 
+
 /**
  * This function clears the courseOffering table if it exists and fills it with 15 course offerings.
  */
