@@ -9,6 +9,7 @@ const express = require('express');
 const supertest = require('supertest');
 const router= require('../../routes/Program');
 const app = express();
+const testConst= require('../../constants').testConst;
 
 app.use(express.json());
 app.use('/', router);
@@ -29,7 +30,8 @@ describe('ProgramCRUDTesting', () => {
 
   // Valid program setup
   beforeEach(async () => {
-    programInstance = {programAbbreviation: 'CST', programName: 'Computer Systems Technology'};
+    //programInstance = {programAbbreviation: 'CST', programName: 'Computer Systems Technology'};
+    programInstance=testConst.program1;
   });
 
   describe('POST /', () => {
@@ -175,6 +177,47 @@ describe('ProgramCRUDTesting', () => {
       // Check that the database is empty after deletion
       const programs = await Program.findAll();
       expect(programs.length).toBe(0);
+    });
+
+
+    test('testThatDeletingFirstProgramInListLeavesListEmpty', async () => {
+      // Make sure there is only one program in the database
+      await Program.destroy({where: {}});
+      await supertest(app).post('/program').send(programInstance);
+
+      // Delete the program
+      const response = await supertest(app).delete('/program');
+      expect(response.status).toBe(204);
+
+      // Check that the database is empty after deleting the first program
+      const programs = await Program.findAll();
+      expect(programs.length).toBe(0);
+    });
+
+
+    test('testThatDeletingLastProgramInListLeavesListEmpty', async () => {
+      // Make sure there is only one program in the database
+      await Program.destroy({where: {}});
+      await supertest(app).post('/program').send(programInstance);
+
+      // Delete the program
+      const response = await supertest(app).delete('/program');
+      expect(response.status).toBe(204);
+
+      // Check that the database is empty after deleting the last program
+      const programsBefore = await Program.findAll();
+      expect(programsBefore.length).toBe(0);
+
+      // Add a new program
+      await supertest(app).post('/program').send(programInstance);
+
+      // Delete the newly added program
+      const secondDeleteResponse = await supertest(app).delete('/program');
+      expect(secondDeleteResponse.status).toBe(204);
+
+      // Check that the database is empty after deleting the last program
+      const programsAfter = await Program.findAll();
+      expect(programsAfter.length).toBe(0);
     });
   });
 });

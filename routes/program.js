@@ -4,10 +4,21 @@
  */
 const express = require('express');
 const router = express.Router();
+const Program = require('../private/javascript/Program');
 
 // Reading the programs
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
+  let programList;
 
+  try {
+    programList = await Program.findAll({});
+  } catch (err) {
+    programList = undefined;
+  }
+
+  res.render('program', {
+
+  });
 });
 
 // Creating a new program
