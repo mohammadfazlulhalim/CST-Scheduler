@@ -1,4 +1,8 @@
 const {sequelize, DataTypes} = require('../../dataSource');
+const Course = require('../javascript/Course');
+const Term = require('../javascript/Term');
+const Instructor = require('../javascript/Instructor');
+const Program = require('../javascript/Program')
 
 /**
  * This class stores objects that represent course offerings to be used in the CST Scheduler.
@@ -44,10 +48,26 @@ const CourseOffering = sequelize.define('CourseOffering', {
     }
   },
 
-  courseID: {
+  termID: {
     type: DataTypes.INTEGER,
     references: {
-      model: Course,
+      model: Term,
+      key: 'id'
+    }
+  },
+
+  instructorID: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Instructor,
+      key: 'id'
+    }
+  },
+
+  programID: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Program,
       key: 'id'
     }
   },
