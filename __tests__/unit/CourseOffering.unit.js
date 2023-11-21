@@ -1,20 +1,38 @@
+const Course = require('../../private/javascript/Course');
+const Term = require('../../private/javascript/Term');
+const Instructor = require('../../private/javascript/Instructor');
+const Program = require('../../private/javascript/Program');
 const CourseOffering = require('../../private/javascript/CourseOffering');
 const testConst = require('../../constants').testConst;
 
 // tests for the 'group' field
 describe('group', () => {
-  let testUser;
+  let testCourse;
+  let testTerm;
+  let testInstructor;
+  let testProgram;
+  let testCourseOffering;
+  beforeAll(async function() {
+    await Course.sync({force: true});
+    await Term.sync({force: true});
+    await Instructor.sync({force: true});
+    await Program.sync({force: true});
+    await CourseOffering.sync({force: true});
+  })
   // set up a valid user
   beforeEach(async function() {
     // drop the table and re-create it
-    await CourseOffering.sync({force: true});
-    testUser = testConst.courseOffering1;
+    testCourse = testConst.course1;
+    testTerm = testConst.term1;
+    testInstructor = testConst.instructor1;
+    testProgram = testConst.program1;
+    testCourseOffering = testConst.courseOffering1;
   });
 
   test('testThatGroupWithOneLetterIsValid', async function() {
     const groupLetter = 'A';
-    testUser.group = groupLetter;
-    const courseOffering = await CourseOffering.create(testUser);
+    testCourseOffering.group = groupLetter;
+    const courseOffering = await CourseOffering.create(testCourseOffering);
 
     expect(courseOffering).toBeTruthy();
     expect(courseOffering.group).toBe(groupLetter);
@@ -26,8 +44,8 @@ describe('group', () => {
 
   test('testThatGroupWithOneNumberIsValid', async function() {
     const groupNumber = 1;
-    testUser.group = groupNumber;
-    const courseOffering = await CourseOffering.create(testUser);
+    testCourseOffering.group = groupNumber;
+    const courseOffering = await CourseOffering.create(testCourseOffering);
 
     expect(courseOffering).toBeTruthy();
     expect(courseOffering.group).toBe(groupNumber);
@@ -39,8 +57,8 @@ describe('group', () => {
 
   test('testThatNullGroupIsValid', async function() {
     const groupNumber =
-    testUser.group = null;
-    const courseOffering = await CourseOffering.create(testUser);
+    testCourseOffering.group = null;
+    const courseOffering = await CourseOffering.create(testCourseOffering);
 
     expect(courseOffering).toBeTruthy();
     expect(courseOffering.group).toBe(groupNumber);
@@ -51,9 +69,9 @@ describe('group', () => {
   });
 
   test('testThatLowercaseLetterGroupIsInvalid', async function() {
-    testUser.group = 'a';
+    testCourseOffering.group = 'a';
     try {
-      await CourseOffering.create(testUser);
+      await CourseOffering.create(testCourseOffering);
       fail(); // throws an error to force the expects to run that are only inside the catch
     } catch (err) {
       expect(err.message).toBe('Validation error: Course Offering group can only contain uppercase letters');
@@ -62,9 +80,9 @@ describe('group', () => {
   });
 
   test('testThatGroupWithMultipleCharactersIsInvalid', async function() {
-    testUser.group = 'A1';
+    testCourseOffering.group = 'A1';
     try {
-      await CourseOffering.create(testUser);
+      await CourseOffering.create(testCourseOffering);
       fail();
     } catch (err) {
       expect(err.message).toBe('Validation error: Course offering group can only be 0 or 1 character long');
@@ -73,9 +91,9 @@ describe('group', () => {
   });
 
   test('testThatGroupWithSpecialCharactersIsInvalid', async function() {
-    testUser.group = '!';
+    testCourseOffering.group = '!';
     try {
-      await CourseOffering.create(testUser);
+      await CourseOffering.create(testCourseOffering);
       fail();
     } catch (err) {
       expect(err.message).toBe('Validation error: Course Offering group can only contain letters and numbers');
@@ -117,15 +135,14 @@ describe('findAll()', () => {
 async function createCourseOfferings(amount) {
   // list of viable groups
   const viableGroups = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0'.split(' ');
-
+  let testCourseOffering = testConst.courseOffering1;
   // create valid entries
   for (let i = 0; i < amount; i++) {
     // randomize the group number
     const random = Math.floor(Math.random() * viableGroups.length);
-    await CourseOffering.create({
-      courseCode: 'COSA280',
-      termNumber: 4,
-      group: viableGroups[random],
-    });
+    testCourseOffering.group = viableGroups[random];
+    await CourseOffering.create(
+      testCourseOffering
+    );
   }
 }

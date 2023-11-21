@@ -29,14 +29,14 @@ describe('Functional Course Offering', () => {
         await Program.sync({force: true});
         await CourseOffering.sync({force: true});
         testCourse= testConst.course1;
-        testTerm= testConst.;
-        testInstructor= testConst.courseOffering1;
-        testProgram= testConst.courseOffering1;
+        testTerm= testConst.term1;
+        testInstructor= testConst.instructor1;
+        testProgram= testConst.program1;
         testCourseOffer = testConst.courseOffering1;
     });
 
     test('testThatCourseOfferingIsCreated', async function() {
-        const res = await request(app).post('/CourseOffering').send(
+        const res = await request(app).post('/courseOffering').send(
             testCourseOffer
         )
         expect(res.statusCode).toBe(201);

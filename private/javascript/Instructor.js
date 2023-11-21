@@ -1,4 +1,5 @@
 const {DataTypes, sequelize} = require('../../datasource');
+const CourseOffering = require('../javascript/CourseOffering')
 
 // Database constructor for Instructor
 const Instructor = sequelize.define('Instructor', {
@@ -23,5 +24,7 @@ const Instructor = sequelize.define('Instructor', {
   tableName: 'Instructor',
 });
 
+//Associates with CourseOffering
+Instructor.hasMany(CourseOffering);
 
 module.exports = Instructor;

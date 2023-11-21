@@ -30,7 +30,7 @@ app.use(superTest);
 app.use('/', indexRouter);
 app.use('/instructor', instructorRouter);
 app.use('/Term/', termRouter);
-app.use('/course-offering', courseOfferingRouter);
+app.use('/courseOffering', courseOfferingRouter.router);
 app.use('/course', viewCoursesRouter); // story34 view courses
 app.use('/classroom', classroomRouter);
 

@@ -2,6 +2,7 @@
  * This file describes/defines what the object of Program is allowed to be.- Christeen Shlimoon
  */
 const {sequelize, DataTypes} = require('../../dataSource');
+const CourseOffering = require('../javascript/CourseOffering')
 
 // This is defining the program object
 const Program = sequelize.define('Program', {
@@ -79,4 +80,7 @@ const Program = sequelize.define('Program', {
         // where all program objects will be stored is the table Program
         tableName: 'Program',
     });
+    //Associates with CourseOffering
+    Program.hasMany(CourseOffering);
+
 module.exports=Program;

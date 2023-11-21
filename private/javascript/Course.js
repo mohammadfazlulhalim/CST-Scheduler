@@ -12,6 +12,7 @@
  */
 
 const {sequelize, DataTypes} = require('../../datasource');
+const CourseOffering = require('../javascript/CourseOffering')
 
 
 // MODEL STUB START
@@ -70,6 +71,8 @@ const Course = sequelize.define('Course', {
 }, {
     tableName: 'Courses',
 });
+
+Course.hasMany(CourseOffering);
 
 
 module.exports = Course;
