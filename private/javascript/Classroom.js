@@ -6,7 +6,6 @@ const Classroom = sequelize.define('Classroom', {
   roomNumber: {
     type: DataTypes.STRING, // Can be up to 10 characters
     allowNull: false, // Can't be null
-    primaryKey: true,
     validate: {
       len: {
         args: [1, 10],

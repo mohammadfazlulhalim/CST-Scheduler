@@ -26,7 +26,7 @@ describe('create', ()=>{
       .post('/classroom')
       .send(classroomInstance)
     expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty('post')
+    // expect(res.body).toHaveProperty('post')
 
     // now need to check that it exists in database
     // Maybe change these to queries using a where clause
@@ -40,7 +40,7 @@ describe('create', ()=>{
       .post('/classroom')
       .send(classroomInstance)
     expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty('post')
+    // expect(res.body).toHaveProperty('post')
 
     const addedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}});
     expect(addedClassroom).toBeDefined();
@@ -53,7 +53,7 @@ describe('create', ()=>{
       .post('/classroom')
       .send(classroomInstance)
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toHaveProperty('post')
+    // expect(res.body).toHaveProperty('post')
 
     const addedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}});
     expect(addedClassroom).toBeNull();

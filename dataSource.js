@@ -6,7 +6,7 @@ if (process.env.TESTING_MODE==='testing') {
   connectionString = 'sqlite::memory:';
 }
 
-const sequelize = new Sequelize(connectionString);
+const sequelize = new Sequelize(connectionString, {logging: false});
 
 
 module.exports = {Sequelize, DataTypes, sequelize};

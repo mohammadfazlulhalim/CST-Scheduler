@@ -8,7 +8,7 @@ describe('testThatRoomNumber', () => {
   beforeAll(async () => {
     try {
       await sequelize.sync();
-      console.log('Classroom table created successfully');
+      // console.log('Classroom table created successfully');
     } catch (error) {
       console.error('Error creating Classroom table:', error);
     }
