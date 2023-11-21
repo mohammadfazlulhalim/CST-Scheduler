@@ -11,13 +11,13 @@ router.get('/', async function(req, res, next) {
   let programList;
 
   try {
-    programList = await Program.findAll({});
+    programList= await Program.findAll({order: ['programName']});
   } catch (err) {
     programList = undefined;
   }
 
   res.render('program', {
-
+    program: programList,
   });
 });
 

@@ -15,16 +15,16 @@ async function fillProgramTable() {
 /**
  * Create some programs in the table
  */
-async function createCourses() {
+async function createProgram() {
 // list of viable groups
   const programName = ['Computer Systems Technology', 'Computer Networking Technician', 'Early Childhood Education'];
-  const programAbbr = ['CST', 'CNT', 'ECE'];
+  const programAbbreviation = ['CST', 'CNT', 'ECE'];
 
   // create valid entries
   for (let i = 0; i < programName.length; i++) {
     await ProgramFix.create({
       programName: programName[i],
-      programAbbreviation: programAbbr[i],
+      programAbbreviation: programAbbreviation[i],
     });
   }
 }
