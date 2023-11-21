@@ -10,6 +10,7 @@ const Program = sequelize.define('Program', {
   programAbbreviation: {
     type: DataTypes.STRING(10),
     allowNull: false,
+    unique: true, // Enforce uniqueness for programAbbreviation
     // validations for programAbbreviation
     validate: {
 

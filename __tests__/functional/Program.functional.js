@@ -37,7 +37,7 @@ describe('ProgramCRUDTesting', () => {
       const response = await supertest(app).post('/program').send(programInstance);
       expect(response.status).toBe(201);
 
-      // Optionally, you can check the response body or database for the created program
+      // check the response body or database for the created program
       const createdProgram = await Program.findOne({where: {programAbbreviation: 'CST'}});
       expect(createdProgram).toBeDefined();
       expect(createdProgram.programName).toBe('Computer Systems Technology');
@@ -54,6 +54,22 @@ describe('ProgramCRUDTesting', () => {
       // check that no program is created in the database
       const nonExistentProgram = await Program.findOne({where: {programAbbreviation: 'CST'}});
       expect(nonExistentProgram).toBeNull();
+    });
+
+
+    test('testThatDuplicateProgramAbbreviationIsNotAddedToDataBase', async () => {
+      // Create a program first
+      await supertest(app).post('/program').send(programInstance);
+
+      // Attempt to create a program with the same abbreviation
+      const response = await supertest(app).post('/program').send(programInstance);
+
+      // Expect a 400 Bad Request status code due to uniqueness constraint violation
+      expect(response.status).toBe(400);
+
+      // check that there is still only one program in the database
+      const programs = await Program.findAll({where: {programAbbreviation: 'CST'}});
+      expect(programs.length).toBe(1);
     });
   });
 
@@ -115,6 +131,50 @@ describe('ProgramCRUDTesting', () => {
       // Optionally, you can check the database for the deleted program
       const deletedProgram = await Program.findOne({where: {programAbbreviation: 'CST'}});
       expect(deletedProgram).toBeNull();
+    });
+
+
+    test('testThatValidProgramIAddedToDataBaseInEmptyList', async () => {
+      // Make sure there are no existing programs
+      await Program.destroy({where: {}});
+
+      const response = await supertest(app).post('/program').send(programInstance);
+      expect(response.status).toBe(201);
+
+      // Check that the response body or database contains the created program
+      const createdProgram = await Program.findOne({where: {programAbbreviation: 'CST'}});
+      expect(createdProgram).toBeDefined();
+      expect(createdProgram.programName).toBe('Computer Systems Technology');
+    });
+
+
+    test('testThatDeletingNonexistentProgramReturns404', async () => {
+      // Make sure there are no existing programs
+      await Program.destroy({where: {}});
+
+      // Send a DELETE request for a program that doesn't exist
+      const response = await supertest(app).delete('/program');
+
+      // Expect a 404 Not Found status code
+      expect(response.status).toBe(404);
+
+      // Check that the database remains empty
+      const programs = await Program.findAll();
+      expect(programs.length).toBe(0);
+    });
+
+    test('testThatValidProgramIsDeletedFromDataBaseAndListIsLeftEmpty', async () => {
+      // Make sure there is only one program in the database
+      await Program.destroy({where: {}});
+      await supertest(app).post('/program').send(programInstance);
+
+      // Delete the program
+      const response = await supertest(app).delete('/program');
+      expect(response.status).toBe(204);
+
+      // Check that the database is empty after deletion
+      const programs = await Program.findAll();
+      expect(programs.length).toBe(0);
     });
   });
 });
