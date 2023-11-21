@@ -12,7 +12,7 @@ describe('Terms in database', () => {
   beforeEach(async () => {
     // drop the table and re-create it
     await Term.sync({force: true});
-    testTerm = constants.testConst.validTerms[0];
+    testTerm = {...constants.testConst.validTerms[0]};
   });
 
   test('testThatValidTermPostAddsToEmptyList', async () => {
@@ -57,9 +57,9 @@ describe('Terms in database', () => {
     await testDelete(testTerm);
   });
 
-  test('testThatInvalidTermDeleteDoesNotRemoveFromList', async () => {
+  test('testThatNonExistentTermCannotBeDeleted', async () => {
     const oldNumTerms = (await Term.findAll()).length;
-    testTerm.id = 1;
+    testTerm.id = 2;
     // try to delete a non-existent term
     await supertest(app).delete('/term').send(testTerm).expect(404); // expect 404: not found
     const newNumTerms = (await Term.findAll()).length;
@@ -72,7 +72,7 @@ describe('Terms in database', () => {
     // store initial number of terms to compare against later
     const oldNumTerms = (await Term.findAll()).length;
     // update the newly added term
-    await supertest(app).put('/term').send({
+    const res = await supertest(app).put('/term').send({
       id: termToUpdate.id,
       startDate: testTerm.startDate,
       endDate: '2023-12-15',
@@ -81,6 +81,9 @@ describe('Terms in database', () => {
     // ensure it didn't add a new term
     const newNumTerms = (await Term.findAll()).length;
     expect(newNumTerms).toBe(oldNumTerms);
+    // expect that the end date was actually changed
+    const newTerm = await Term.findOne({where: {id: res.get('id')}});
+    expect(newTerm.endDate).toBe('2023-12-15');
   });
 
   test('testThatInvalidTermPutDoesNotUpdateList', async () => {
@@ -98,6 +101,7 @@ describe('Terms in database', () => {
     // ensure it didn't add a new term
     const newNumTerms = (await Term.findAll()).length;
     expect(newNumTerms).toBe(oldNumTerms);
+    // TODO: expect the end date to not have changed
   });
 
   test('testThatNonExistentTermCannotBeUpdated', async () => {
@@ -139,6 +143,8 @@ const testPost = async function(testTerm) {
 const testDelete = async function(testTerm) {
   // create a new term to delete
   // testTerm does not have an ID, so use newTerm instead
+  console.log('testTerm (DELETE):');
+  console.log(testTerm);
   const newTerm = await Term.create(testTerm);
   // store initial number of terms to compare against later
   const oldNumTerms = (await Term.findAll()).length;
