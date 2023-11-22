@@ -3,10 +3,11 @@ const Term = require('../../private/javascript/Term');
 const Instructor = require('../../private/javascript/Instructor');
 const Program = require('../../private/javascript/Program');
 const CourseOffering = require('../../private/javascript/CourseOffering');
+const Associations = require('../../private/javascript/Associations');
 const testConst = require('../../constants').testConst;
 
 // tests for the 'group' field
-describe('group', () => {
+describe('courseOfferingUnit', () => {
   let testCourse;
   let testTerm;
   let testInstructor;
@@ -18,6 +19,8 @@ describe('group', () => {
     await Instructor.sync({force: true});
     await Program.sync({force: true});
     await CourseOffering.sync({force: true});
+
+    Associations.addAssociations();
   })
   // set up a valid user
   beforeEach(async function() {

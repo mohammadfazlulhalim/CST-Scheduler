@@ -1,5 +1,4 @@
 const {Sequelize, DataTypes} = require('sequelize');
-const Associations = require('/private/javascript/Associations');
 
 let connectionString;
 connectionString = 'sqlite:./private/database/scheduler.db';
