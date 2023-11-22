@@ -80,7 +80,5 @@ const Program = sequelize.define('Program', {
         // where all program objects will be stored is the table Program
         tableName: 'Program',
     });
-    //Associates with CourseOffering
-    Program.hasMany(CourseOffering);
 
 module.exports=Program;

@@ -24,7 +24,4 @@ const Instructor = sequelize.define('Instructor', {
   tableName: 'Instructor',
 });
 
-//Associates with CourseOffering
-Instructor.hasMany(CourseOffering);
-
 module.exports = Instructor;

@@ -77,10 +77,5 @@ const CourseOffering = sequelize.define('CourseOffering', {
   tableName: 'CourseOfferings',
 });
 
-//Associates with all foreign keys
-CourseOffering.belongsTo(Course);
-CourseOffering.belongsTo(Term);
-CourseOffering.belongsTo(Instructor);
-CourseOffering.belongsTo(Program);
 
 module.exports = CourseOffering;

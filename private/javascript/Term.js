@@ -2,7 +2,6 @@
 const {DataTypes, sequelize} = require('../../dataSource');
 const termNumberUpperLimit = 6;
 const termNumberLowerLimit = 1;
-const CourseOffering = require('../javascript/CourseOffering')
 
 // Creating the model
 // See: https://sequelize.org/docs/v6/core-concepts/model-basics/
@@ -117,7 +116,5 @@ const Term = sequelize.define('Term', {
   },
 });
 
-  //Associates with CourseOffering
-  Term.hasMany(CourseOffering);
 
 module.exports = Term;
