@@ -56,13 +56,13 @@ const Program = sequelize.define('Program', {
         msg: 'The programs name length ranges from 2-50',
       },
       // the name must be written with alphabitcal names only
-      isAlpha: {
-        args: true,
-        msg: 'The programs name must be alphabetical',
-      },
+      // isAlpha: {
+      //   args: true,
+      //   msg: 'The programs name must be alphabetical',
+      // },
       // the name follows the form of mix of capital and lower case letters ranging from 2 - 50 characters in length
       is: {
-        args: /^[A-Za-z]{2,50}$/i,
+        args: /^[a-zA-Z\s]{2,50}$/i,
         msg: 'The programs name is written with alphabetical characters ranging from lengths 2-50.',
       },
       // the name cannot be null

@@ -3,20 +3,46 @@
  * @type {NonConstructor<Model> | {new(): Model<any, TModelAttributes>} | {}}
  */
 const Program = require('../../private/javascript/Program');
+const {sequelize} = require('../../dataSource');
+// const {sequelize} = require('../../dataSource');
 
 // The pre test setup
 describe('Program Model Validation', () => {
+  let validProgram;
+  // beforeAll(async () => {
+  //   await Program.sync({force: true});
+  // });
   beforeAll(async () => {
-    await Program.sync({force: true});
+    try {
+      await sequelize.sync({force: true});
+      console.log('Program table created successfully');
+    } catch (error) {
+      console.error('Error creating Program table:', error);
+    }
+
+    // beforeAll(async () => {
+    //   try {
+    //     await Program.sync({force: true});
+    //   } catch (error) {
+    //     console.error('Error syncing model:', error);
+    //   }
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     validProgram = {programAbbreviation: 'CST', programName: 'Computer Systems Technology'};
   });
 
   // Passing tests
   test('programCodeAbbreviationIs2-10AlphabeticalCharactersInLengthAndAllUppercase', async () => {
-    const program = await Program.create(validProgram);
+    let program;
+    try {
+      program = await Program.create(validProgram);
+    } catch (err) {
+      console.log(err);
+      fail();
+    }
+
+
     expect(program.programAbbreviation).toBe('CST');
     expect(program.programName).toBe('Computer Systems Technology');
   });
@@ -32,7 +58,7 @@ describe('Program Model Validation', () => {
 
   test('programAbbreviationIsNull', async () => {
     validProgram.programAbbreviation = null;
-    validProgram.programName= 'Computer Systems Technology';
+    validProgram.programName = 'Computer Systems Technology';
     try {
       await Program.create(validProgram);
     } catch (err) {
@@ -42,7 +68,7 @@ describe('Program Model Validation', () => {
 
   test('programAbbreviationLengthIsLessThan2ButNotNull', async () => {
     validProgram.programAbbreviation = 'A';
-    validProgram.programName= 'Computer Systems Technology';
+    validProgram.programName = 'Computer Systems Technology';
     try {
       await Program.create(validProgram);
     } catch (err) {
@@ -52,7 +78,7 @@ describe('Program Model Validation', () => {
 
   test('programAbbreviationLengthIsMoreThan10Characters', async () => {
     validProgram.programAbbreviation = 'CSSSSSTTTTTTT';
-    validProgram.programName= 'Computer Systems Technology';
+    validProgram.programName = 'Computer Systems Technology';
     try {
       await Program.create(validProgram);
     } catch (err) {
@@ -62,7 +88,7 @@ describe('Program Model Validation', () => {
 
   test('programAbbreviationIsWrittenWithAMixOfLowerCaseAndUpperCase', async () => {
     validProgram.programAbbreviation = 'csT';
-    validProgram.programName= 'Computer Systems Technology';
+    validProgram.programName = 'Computer Systems Technology';
     try {
       await Program.create(validProgram);
     } catch (err) {
@@ -72,7 +98,7 @@ describe('Program Model Validation', () => {
 
   test('programAbbreviationIsWrittenWithANon-AlphabeticaCharacters', async () => {
     validProgram.programAbbreviation = 'CST2023';
-    validProgram.programName= 'Computer Systems Technology';
+    validProgram.programName = 'Computer Systems Technology';
     try {
       await Program.create(validProgram);
     } catch (err) {
@@ -82,7 +108,7 @@ describe('Program Model Validation', () => {
 
   test('programNameLengthIsLessThan2', async () => {
     validProgram.programAbbreviation = 'CST';
-    validProgram.programName= 'C';
+    validProgram.programName = 'C';
     try {
       await Program.create(validProgram);
     } catch (err) {
@@ -92,7 +118,7 @@ describe('Program Model Validation', () => {
 
   test('programNameLengthIsMoreThan50', async () => {
     validProgram.programAbbreviation = 'CST';
-    validProgram.programName= 'Computer Systems Technology Plus More To Be Learned On The Way';
+    validProgram.programName = 'Computer Systems Technology Plus More To Be Learned On The Way';
     try {
       await Program.create(validProgram);
     } catch (err) {
@@ -102,7 +128,7 @@ describe('Program Model Validation', () => {
 
   test('programNameIsNull', async () => {
     validProgram.programAbbreviation = 'CST';
-    validProgram.programName= null;
+    validProgram.programName = null;
     try {
       await Program.create(validProgram);
     } catch (err) {
@@ -110,23 +136,25 @@ describe('Program Model Validation', () => {
     }
   });
 
-  test('programNameContainsNon-AlphabticalCharacters', async () => {
-    validProgram.programAbbreviation = 'CST';
-    validProgram.programName= 'Comput3r Systems Technology! ';
-    try {
-      await Program.create(validProgram);
-    } catch (err) {
-      expect(err.errors[0].message).toBe('The programs name must be alphabetical');
-    }
-  });
+  // test('programNameContainsNon-AlphabticalCharacters', async () => {
+  //   validProgram.programAbbreviation = 'CST';
+  //   validProgram.programName = 'Comput3r Systems Technology! ';
+  //   try {
+  //     await Program.create(validProgram);
+  //   } catch (err) {
+  //     expect(err.errors[0].message).toBe('The programs name must be alphabetical');
+  //   }
+  // });
 
   test('programNameContainsNon-AlphabticalCharacters', async () => {
     validProgram.programAbbreviation = 'CST';
-    validProgram.programName= 'Comput3r Systems Technology! ';
+    validProgram.programName = 'Comput3r Systems Technology! ';
     try {
       await Program.create(validProgram);
     } catch (err) {
-      expect(err.errors[0].message).toBe('The programs name must be alphabetical');
+      // eslint-disable-next-line max-len
+      expect(err.errors[0].message).toBe('The programs name is written with alphabetical characters ranging from lengths 2-50.');
     }
   });
 });
+
