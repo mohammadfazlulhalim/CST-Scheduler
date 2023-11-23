@@ -11,7 +11,7 @@ async function fillTermTable() {
   await Term.sync({force: true});
 
   // Fill with the six terms, with valid start and end dates
-  for (const term of constants.validTerms) {
+  for (const term of constants.testConst.validTerms) {
     await Term.create(term);
   }
 }

@@ -68,13 +68,15 @@ describe('Terms in database', () => {
 
   test('testThatValidTermPutUpdatesList', async () => {
     // create a new term to update
-    const termToUpdate = Term.create(testTerm);
+    const termToUpdate = (await Term.create(testTerm)).dataValues;
+    console.log('valid:');
+    console.log(termToUpdate);
     // store initial number of terms to compare against later
     const oldNumTerms = (await Term.findAll()).length;
     // update the newly added term
     const res = await supertest(app).put('/term').send({
       id: termToUpdate.id,
-      startDate: testTerm.startDate,
+      startDate: termToUpdate.startDate,
       endDate: '2023-12-15',
       termNumber: termToUpdate.termNumber,
     }).expect(200); // expect 200: OK
@@ -88,11 +90,13 @@ describe('Terms in database', () => {
 
   test('testThatInvalidTermPutDoesNotUpdateList', async () => {
     // create a new term to update
-    const termToUpdate = Term.create(testTerm);
+    const termToUpdate = (await Term.create(testTerm)).dataValues;
+    console.log('invalid:');
+    console.log(termToUpdate);
     // store initial number of terms to compare against later
     const oldNumTerms = (await Term.findAll()).length;
     // try to update the newly added term
-    const res = await supertest(app).put('/term').send({
+    await supertest(app).put('/term').send({
       id: termToUpdate.id,
       startDate: termToUpdate.startDate,
       endDate: '2024-01-01',
@@ -102,13 +106,15 @@ describe('Terms in database', () => {
     const newNumTerms = (await Term.findAll()).length;
     expect(newNumTerms).toBe(oldNumTerms);
     // expect the end date to not have changed
-    const startDate = Term.findOne({where: {id: res.get('id')}}).dataValues.startDate;
+    const startDate = Term.findOne({where: {id: termToUpdate.id}}).dataValues.startDate;
     expect(startDate).toBe(testTerm.startDate);
   });
 
   test('testThatNonExistentTermCannotBeUpdated', async () => {
     // create a new term to update
-    const termToUpdate = Term.create(testTerm);
+    const termToUpdate = (await Term.create(testTerm)).dataValues;
+    console.log('non-existent');
+    console.log(termToUpdate);
     // store initial number of terms to compare against later
     const oldNumTerms = (await Term.findAll()).length;
     // try to update the newly added term
@@ -146,8 +152,6 @@ const testDelete = async function(testTerm) {
   // create a new term to delete
   // testTerm does not have an ID, so use newTerm instead
   const newTerm = (await Term.create(testTerm)).dataValues; // data values is what actually contains the fields
-  console.log('newTerm DELETE:');
-  console.log(newTerm);
   // store initial number of terms to compare against later
   const oldNumTerms = (await Term.findAll()).length;
   // delete the term

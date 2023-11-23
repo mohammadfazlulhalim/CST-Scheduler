@@ -84,13 +84,9 @@ router.put('/', async function(req, res, next) {
  */
 const createTerm = async (term) => {
   try {
-    return await Term.create(term);
+    return (await Term.create(term)).dataValues;
   } catch (err) {
-    const violations = {};
-    for (const error of err.errors) {
-      violations[error.property] = error.message;
-    }
-    return violations;
+    return mapErrors(err);
   }
 };
 
@@ -116,9 +112,19 @@ const deleteTerm = async (term) => {
  */
 const updateTerm = async (term) => {
   try {
-    await Term.update();
+    console.log('in updateTerm:');
+    const result = await Term.update({
+      startDate: term.startDate,
+      endDate: term.endDate,
+      termNumber: term.termNumber,
+    }, {
+      where: {id: term.id},
+    })[0];
+    console.log('in updateTerm:');
+    console.log(result);
+    return result;
   } catch (err) {
-
+    return mapErrors(err);
   }
 };
 
@@ -134,6 +140,15 @@ const readAllTerms = async () => {
     // and instead a sentence declaring no term entries found is displayed
     return undefined;
   }
+};
+
+const mapErrors = (err) => {
+  console.log(err);
+  const violations = {};
+  for (const error of err.errors) {
+    violations[error.property] = error.message;
+  }
+  return violations;
 };
 
 module.exports = {router, createTerm, deleteTerm, updateTerm};
