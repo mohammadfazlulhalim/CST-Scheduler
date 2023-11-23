@@ -64,14 +64,14 @@ router.put('/', async function(req, res, next) {
     endDate: req.body.endDate,
   });
   let violations;
-  if (!result.startDate || !result.endDate) {
+  if (result.invalidKey) {
+    // if the invalidKey message is defined, then a non-existent term is trying to update
+    res.status(404);
+    violations = result;
+  } else if (!result.startDate || !result.endDate) {
     // if the term does not have a start/end date, that means it's invalid and errors were sent back
     res.status(422);
     violations = result;
-  } else {
-    // update was successful
-    // put the ID in the response so tests can access it
-    res.set('id', result.id);
   }
   const termLists = await readAllTerms();
   res.render('term', {termEntries: termLists, err: violations});
@@ -80,12 +80,13 @@ router.put('/', async function(req, res, next) {
 /**
  * Attempts to create the given term in the database
  * @param {Object} term  - An object literal with the desired term to create
- * @return {Promise<{}|Model<any, TModelAttributes>>} - the created term if successful, a list of errors if not
+ * @return {Promise<any>} - the created term if successful, a list of errors if not
  */
 const createTerm = async (term) => {
   try {
     return (await Term.create(term)).dataValues;
   } catch (err) {
+    // return formatted errors
     return mapErrors(err);
   }
 };
@@ -108,23 +109,26 @@ const deleteTerm = async (term) => {
 /**
  * Attempts to update the given term in the database.
  * @param {Object} term     - The term to update
- * @return {Promise<void>}  - The updated term if successful, a list of errors otherwise
+ * @return {Promise<any>}  - The updated term if successful, a list of errors otherwise
  */
 const updateTerm = async (term) => {
-  try {
-    console.log('in updateTerm:');
-    const result = await Term.update({
-      startDate: term.startDate,
-      endDate: term.endDate,
-      termNumber: term.termNumber,
-    }, {
-      where: {id: term.id},
-    })[0];
-    console.log('in updateTerm:');
-    console.log(result);
-    return result;
-  } catch (err) {
-    return mapErrors(err);
+  // find the term to update
+  const termToUpdate = await Term.findByPk(term.id);
+  if (termToUpdate) {
+    // only try to update the term if it already exists
+    try {
+      return await termToUpdate.update({
+        termNumber: term.termNumber,
+        startDate: term.startDate,
+        endDate: term.endDate,
+      });
+    } catch (err) {
+      // return formatted validation errors when invalid
+      return mapErrors(err);
+    }
+  } else {
+    // if not found, return an invalid key error message
+    return {invalidKey: 'Could not find an existing term to update'};
   }
 };
 
@@ -142,8 +146,12 @@ const readAllTerms = async () => {
   }
 };
 
+/**
+ * Given an error object, this function maps it to a more presentable format for the hbs template.
+ * @param {Object} err  - An object representing errors
+ * @return {{}}         - Formatted error object
+ */
 const mapErrors = (err) => {
-  console.log(err);
   const violations = {};
   for (const error of err.errors) {
     violations[error.property] = error.message;

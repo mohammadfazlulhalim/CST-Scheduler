@@ -69,12 +69,10 @@ describe('Terms in database', () => {
   test('testThatValidTermPutUpdatesList', async () => {
     // create a new term to update
     const termToUpdate = (await Term.create(testTerm)).dataValues;
-    console.log('valid:');
-    console.log(termToUpdate);
     // store initial number of terms to compare against later
     const oldNumTerms = (await Term.findAll()).length;
     // update the newly added term
-    const res = await supertest(app).put('/term').send({
+    await supertest(app).put('/term').send({
       id: termToUpdate.id,
       startDate: termToUpdate.startDate,
       endDate: '2023-12-15',
@@ -84,15 +82,13 @@ describe('Terms in database', () => {
     const newNumTerms = (await Term.findAll()).length;
     expect(newNumTerms).toBe(oldNumTerms);
     // expect that the end date was actually changed
-    const newTerm = await Term.findOne({where: {id: res.get('id')}});
+    const newTerm = await Term.findByPk(termToUpdate.id);
     expect(newTerm.endDate).toBe('2023-12-15');
   });
 
   test('testThatInvalidTermPutDoesNotUpdateList', async () => {
     // create a new term to update
     const termToUpdate = (await Term.create(testTerm)).dataValues;
-    console.log('invalid:');
-    console.log(termToUpdate);
     // store initial number of terms to compare against later
     const oldNumTerms = (await Term.findAll()).length;
     // try to update the newly added term
@@ -106,15 +102,13 @@ describe('Terms in database', () => {
     const newNumTerms = (await Term.findAll()).length;
     expect(newNumTerms).toBe(oldNumTerms);
     // expect the end date to not have changed
-    const startDate = Term.findOne({where: {id: termToUpdate.id}}).dataValues.startDate;
+    const startDate = (await Term.findByPk(termToUpdate.id)).dataValues.startDate;
     expect(startDate).toBe(testTerm.startDate);
   });
 
   test('testThatNonExistentTermCannotBeUpdated', async () => {
     // create a new term to update
     const termToUpdate = (await Term.create(testTerm)).dataValues;
-    console.log('non-existent');
-    console.log(termToUpdate);
     // store initial number of terms to compare against later
     const oldNumTerms = (await Term.findAll()).length;
     // try to update the newly added term
