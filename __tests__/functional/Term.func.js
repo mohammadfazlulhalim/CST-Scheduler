@@ -92,16 +92,18 @@ describe('Terms in database', () => {
     // store initial number of terms to compare against later
     const oldNumTerms = (await Term.findAll()).length;
     // try to update the newly added term
-    await supertest(app).put('/term').send({
+    const res = await supertest(app).put('/term').send({
       id: termToUpdate.id,
-      startDate: testTerm.startDate,
+      startDate: termToUpdate.startDate,
       endDate: '2024-01-01',
       termNumber: termToUpdate.termNumber,
     }).expect(422); // expect 422: unprocessable entity
     // ensure it didn't add a new term
     const newNumTerms = (await Term.findAll()).length;
     expect(newNumTerms).toBe(oldNumTerms);
-    // TODO: expect the end date to not have changed
+    // expect the end date to not have changed
+    const startDate = Term.findOne({where: {id: res.get('id')}}).dataValues.startDate;
+    expect(startDate).toBe(testTerm.startDate);
   });
 
   test('testThatNonExistentTermCannotBeUpdated', async () => {
@@ -143,9 +145,9 @@ const testPost = async function(testTerm) {
 const testDelete = async function(testTerm) {
   // create a new term to delete
   // testTerm does not have an ID, so use newTerm instead
-  console.log('testTerm (DELETE):');
-  console.log(testTerm);
-  const newTerm = await Term.create(testTerm);
+  const newTerm = (await Term.create(testTerm)).dataValues; // data values is what actually contains the fields
+  console.log('newTerm DELETE:');
+  console.log(newTerm);
   // store initial number of terms to compare against later
   const oldNumTerms = (await Term.findAll()).length;
   // delete the term

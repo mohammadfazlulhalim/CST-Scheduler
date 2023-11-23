@@ -7,6 +7,11 @@ const termNumberLowerLimit = 1;
 // See: https://sequelize.org/docs/v6/core-concepts/model-basics/
 
 const Term = sequelize.define('Term', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
   termNumber: {
     type: DataTypes.INTEGER,
     // Checking that term is between 1-6 inclusive
