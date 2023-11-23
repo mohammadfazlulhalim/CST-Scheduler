@@ -17,7 +17,7 @@ router.post('/', async(req, res, next) =>{
   if (response.success==='Success') {
     res.statusCode = 201;
   } else {
-    res.statusCode = 400;
+    res.statusCode = 422;
   }
 
   res.render('classroom');
@@ -25,7 +25,20 @@ router.post('/', async(req, res, next) =>{
 })
 
 router.put('/', async(req, res, next) =>{
-  res.statusCode = 404;
+  // console.log('req.body is: ' + JSON.stringify(req.body));
+  const courseTempObj = {
+    id: req.body.dataValues.id?req.body.dataValues.id:'',
+    roomNumber: req.body.dataValues.roomNumber?req.body.dataValues.roomNumber:'',
+    location: req.body.dataValues.location?req.body.dataValues.location:'',
+  };
+  // console.log('courseTempObj is: ' + JSON.stringify(courseTempObj));
+  const response = await updateClassroom(courseTempObj)
+  if (response.success==='Success') {
+    res.statusCode = 200;
+  } else {
+    res.statusCode = 422;
+  }
+
   res.render('classroom');
 })
 
@@ -45,27 +58,51 @@ async function createClassroom(classroomObj)
   } catch(err) {
     // Need to output these so that each attribute gets pproper error message
     // Figure out the output of error messages
-    // console.log('Printing errors for ' + classroomObj.roomNumber)
-    // console.log('err.errors: ' + JSON.stringify(err.errors));
     err.errors.forEach((element) => {
 
       const objectProp = element.path;
       createResponse[objectProp] = element.message;
     })
   }
-  console.log('Create response for: ' + classroomObj.roomNumber);
-  console.log('Response: ' + JSON.stringify(createResponse));
   return createResponse;
 }
 
 async function updateClassroom(classroomObj)
 {
-  return {};
+  const updateResponse = {};
+  const currentEntry = await Classroom.findByPk(classroomObj.id);
+
+  // console.log('Update on: ' + classroomObj.roomNumber);
+  // console.log('Object is: ' + JSON.stringify(classroomObj));
+  // console.log('Current entry is: ' + JSON.stringify(currentEntry));
+
+  try {
+    const response = await currentEntry.update({roomNumber: classroomObj.roomNumber});
+    updateResponse.success = 'Success';
+    updateResponse.pk = response.id?response.id:'Response does not have ID';
+  } catch(err) {
+    // Console.log('Caught errors for ' + JSON.stringify(classroomObj));
+    // Console.log('Errors are ' + JSON.stringify(err.errors));
+    err.errors.forEach((element) => {
+      const objectProp = element.path;
+      updateResponse[objectProp] = element.message;
+    })
+  }
+
+  return updateResponse;
 }
 
 async function deleteClassroom(classroomObj)
 {
-  return {};
+  const deleteResponse = {};
+
+  try {
+
+  } catch(err) {
+
+  }
+
+  return deleteResponse;
 }
 
 module.exports = {router, createClassroom, updateClassroom, deleteClassroom} ;

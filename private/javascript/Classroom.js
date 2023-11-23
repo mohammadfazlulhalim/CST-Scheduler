@@ -3,6 +3,12 @@ const {DataTypes, sequelize} = require('../../datasource');
 // Define Classroom Model
 const Classroom = sequelize.define('Classroom', {
   // RoomNumber Attribute
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+
   roomNumber: {
     type: DataTypes.STRING, // Can be up to 10 characters
     allowNull: false, // Can't be null

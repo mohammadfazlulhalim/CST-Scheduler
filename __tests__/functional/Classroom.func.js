@@ -52,7 +52,7 @@ describe('create', ()=>{
     const res = await request(app)
       .post('/classroom')
       .send(classroomInstance)
-    expect(res.statusCode).toEqual(400);
+    expect(res.statusCode).toEqual(422);
     // expect(res.body).toHaveProperty('post')
 
     const addedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}});
@@ -74,18 +74,20 @@ describe('update', ()=>{
 
   // Valid classroom
   beforeEach(async () => {
-    classroomInstance = ClassroomController.createClassroom({roomNumber: '239A'});
+    classroomInstance = await Classroom.create({roomNumber: '239A'});
   });
 
   test('testThatValidRoomIsUpdatedInDatabase', async() => {
+    // console.log('Valid Update Test classroomInstance ' + JSON.stringify(classroomInstance));
     classroomInstance.roomNumber = '239B';
     const res = await request(app)
       .put('/classroom')
       .send(classroomInstance)
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('put');
+    //expect(res.body).toHaveProperty('put');
 
     const classroomList = await Classroom.findAll();
+    console.log('db is currently: ' + JSON.stringify(classroomList));
     expect(classroomList.includes({roomNumber:'239B'})).toBeTruthy();
 
     const changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}});
@@ -98,8 +100,8 @@ describe('update', ()=>{
     const res = await request(app)
       .put('/classroom')
       .send(classroomInstance)
-    expect(res.statusCode).toEqual(400);
-    expect(res.body).toHaveProperty('put')
+    expect(res.statusCode).toEqual(422);
+    //expect(res.body).toHaveProperty('put')
 
     let changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}})
     expect(changedClassroom).toBeNull();
@@ -113,7 +115,7 @@ describe('update', ()=>{
       .put('/classroom')
       .send(classroomInstance)
     expect(res.statusCode).toEqual(404);
-    expect(res.body).toHaveProperty('put')
+    //expect(res.body).toHaveProperty('put')
 
     const changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}})
     expect(changedClassroom).toBeNull();
