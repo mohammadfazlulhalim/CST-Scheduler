@@ -19,5 +19,5 @@ addAssociations = () => {
 
 
 //This exports all the updated models
-module.exports = {Course, Term, Instructor, Program, CourseOffering, addAssociations};
+module.exports = {addAssociations};
 

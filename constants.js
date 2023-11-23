@@ -14,6 +14,16 @@ const testConst = {
         instructorID: 1,
         programID: 1,
     },
+    courseOffering2: {
+        name: 'Seminar',
+        startDate: '2023-09-01',
+        endDate: '2023-12-15',
+        group: 'B',
+        courseID: 1,
+        termID: 1,
+        instructorID: 1,
+        programID: 1,
+    },
     course1: {
         courseCode: 'CSEC280',
         courseName: 'Security 1',

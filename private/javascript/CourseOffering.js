@@ -40,38 +40,6 @@ const CourseOffering = sequelize.define('CourseOffering', {
     },
   },
 
-  // courseID: {
-  //   type: DataTypes.INTEGER,
-  //   references: {
-  //     model: Course,
-  //     key: 'id'
-  //   }
-  // },
-  //
-  // termID: {
-  //   type: DataTypes.INTEGER,
-  //   references: {
-  //     model: Term,
-  //     key: 'id'
-  //   }
-  // },
-  //
-  // instructorID: {
-  //   type: DataTypes.INTEGER,
-  //   references: {
-  //     model: Instructor,
-  //     key: 'id'
-  //   }
-  // },
-  //
-  // programID: {
-  //   type: DataTypes.INTEGER,
-  //   references: {
-  //     model: Program,
-  //     key: 'id'
-  //   }
-  // },
-  //
 
 }, {
   tableName: 'CourseOfferings',

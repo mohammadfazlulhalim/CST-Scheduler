@@ -22,14 +22,26 @@ router.get('/', async function(req, res, next) {
   });
 });
 
+/**
+ * Creates a course offering in the database, returns course offering
+ * @param createCO
+ */
 function createCourseOffering(createCO){
 
 }
 
+/**
+ * Updates an entry in course offering table, return updates course offering
+ * @param updateCO
+ */
 function updateCourseOffering(updateCO){
 
 }
 
+/**
+ * deletes a course offering from the database, void return
+ * @param deleteCO
+ */
 function deleteCourseOffering(deleteCO){
 
 }
