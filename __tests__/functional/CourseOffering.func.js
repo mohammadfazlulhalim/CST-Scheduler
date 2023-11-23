@@ -167,7 +167,7 @@ describe('Functional Course Offering', () => {
         //fail to delete from database
         const res = await SuperTest(app)
             .delete('/courseOffering')
-            .send(testCourseOffering1).expect(404);
+            .send(testCourseOffering2).expect(404);
 
         //expects to Get error from the database
         try {
@@ -213,7 +213,7 @@ const testPut = async function(testCO) {
     //posts offering to router, expects return code
     const res = await SuperTest(app)
         .put('/courseOffering')
-        .send(testCO).expect(201);
+        .send(testCO).expect(200);
 
     //expects to find the updated offering in database, and for it to be changed
     const foundCO = await CourseOffering.findOne({where: {id: parseInt(res.get('id'))}});
