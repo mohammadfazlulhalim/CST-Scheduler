@@ -2,7 +2,16 @@ const express = require('express');
 const router = express.Router();
 const Classroom = require('../private/javascript/Classroom');
 router.get('/', async (req, res, next) => {
-  // Need to create the temp object to pass to createClassroom method
+  let classroomList = [];
+  // Gathering classrooms from database
+  try {
+    classroomList = await Classroom.findAll({
+      order: ['roomNumber'],
+    });
+  } catch (error) { // If there are no classrooms, the list will be empty.
+    console.error('Error:', error);
+  }
+  res.render('classroom', {classroomList, title: 'Classrooms'});
 });
 
 router.post('/', async (req, res, next) => {
@@ -59,11 +68,12 @@ router.delete('/', async (req, res, next) => {
 async function createClassroom(classroomObj) {
   const createResponse = {};
   try {
-    const response = await Classroom.create({roomNumber: classroomObj.roomNumber});
+    const response = await Classroom.create({roomNumber: classroomObj.roomNumber, location: classroomObj.location});
     createResponse.success = 'Success';
     createResponse.pk = response.id ? response.id : 'Response does not have ID';
 
   } catch (err) {
+    //console.log('Error is: ' + JSON.stringify(err));
     // Need to output these so that each attribute gets pproper error message
     err.errors.forEach((element) => {
 
@@ -82,7 +92,7 @@ async function updateClassroom(classroomObj) {
   //checking we have a valid primary key
   if (await Classroom.findByPk(classroomObj.id) != null) {
     try {
-      const response = await currentEntry.update({roomNumber: classroomObj.roomNumber});
+      const response = await currentEntry.update({roomNumber: classroomObj.roomNumber, location: classroomObj.location});
       updateResponse.success = 'Success';
       updateResponse.pk = response.id ? response.id : 'Response does not have ID';
     } catch (err) {

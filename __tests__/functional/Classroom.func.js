@@ -3,6 +3,7 @@ const {sequelize} = require('../../datasource');
 const ClassroomController = require('../../routes/classroom')
 const request = require('supertest')
 const app = require('../../app')
+const {createClassroom, updateClassroom} = require('../../routes/classroom');
 
 describe('create', ()=>{
   let classroomInstance;
@@ -18,7 +19,7 @@ describe('create', ()=>{
 
   // Valid classroom
   beforeEach(async () => {
-    classroomInstance = {roomNumber: '239A'};
+    classroomInstance = {roomNumber: '239A', location: 'Saskatoon Main Campus'};
   });
 
   test('testThatValidRoomIsAddedToEmptyDatabase', async() => {
@@ -80,8 +81,8 @@ describe('update', ()=>{
       truncate: true
     });
     // creating an object literal with valid db properties, so that when I modify attributes it does not call validation
-    const classTemp = await ClassroomController.createClassroom({roomNumber: '239A'});
-    classroomInstance = {id: classTemp.pk, roomNumber: '239a'};
+    const classTemp = await ClassroomController.createClassroom({roomNumber: '239A', location: 'Saskatoon Main Campus'});
+    classroomInstance = {id: classTemp.pk, roomNumber: '239a', location: 'Saskatoon Main Campus'};
   });
 
   test('testThatValidRoomIsUpdatedInDatabase', async() => {
@@ -89,6 +90,7 @@ describe('update', ()=>{
     const intialCountSize = classroomList.length;
 
     classroomInstance.roomNumber = '239B';
+    classroomInstance.location = 'Regina Campus';
     const res = await request(app)
       .put('/classroom')
       .send(classroomInstance)
@@ -101,6 +103,7 @@ describe('update', ()=>{
     const changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}});
     expect(changedClassroom).toBeDefined();
     expect(changedClassroom.roomNumber).toBe(classroomInstance.roomNumber);
+    expect(changedClassroom.location).toBe(classroomInstance.location);
     expect(classroomList.length).toEqual(intialCountSize);
   });
 
@@ -189,4 +192,75 @@ describe('delete', ()=>{
     expect(res.statusCode).toEqual(404);
     // expect(res.body).toHaveProperty('delete')
   });
+})
+
+// Tests to check my wrapper emthods are returning properly formatted error messatgtes
+describe('wrapperMethodsErrorTests', ()=>{
+  let classroomInstance1;
+  let classroomInstance2;
+  let classroomInstance3;
+  let response;
+
+  // Before all tests, create the Classroom table in the database
+  beforeAll(async () => {
+    try {
+      await sequelize.sync();
+    } catch (error) {
+      console.error('Error creating Classroom table: ', error);
+    }
+  });
+
+  // Valid classroom
+  beforeEach(async () => {
+    // clearing the database before each test
+    await Classroom.destroy ({
+      where: {},
+      truncate: true
+    });
+    // creating an object literal with valid db properties, so that when I modify attributes it does not call validation
+    let classTemp = await ClassroomController.createClassroom({roomNumber: '239A', location: 'Saskatoon Main'});
+    classroomInstance1 = {id: classTemp.pk, roomNumber: '239A', location: 'Saskatoon Main'};
+    classTemp = await ClassroomController.createClassroom({roomNumber: '239B', location: 'Saskatoon Main'});
+    classroomInstance2 =  {id: classTemp.pk, roomNumber: '239B', location: 'Saskatoon Main'};
+    classTemp = await ClassroomController.createClassroom({roomNumber: '239C', location: 'Saskatoon Main'});
+    classroomInstance3 =  {id: classTemp.pk, roomNumber: '239B', location: 'Saskatoon Main'};
+  });
+
+  test('createClassroomErrorMessages', async ()=>{
+    // just roomNumber
+    classroomInstance1.roomNumber='12345678901';
+    response = await createClassroom(classroomInstance1);
+    expect(response.roomNumber).toBeDefined();
+    expect(response.location).not.toBeDefined();
+    // just location
+    classroomInstance2.location='A';
+    response = await createClassroom(classroomInstance2);
+    expect(response.roomNumber).not.toBeDefined();
+    expect(response.location).toBeDefined();
+    // both
+    classroomInstance3.roomNumber='12345678901';
+    classroomInstance3.location='A';
+    response = await createClassroom(classroomInstance3);
+    expect(response.roomNumber).toBeDefined();
+    expect(response.location).toBeDefined();
+  })
+
+  test('updateClassroomErrorMessages', async ()=>{
+    // just roomNumber
+    classroomInstance1.roomNumber='12345678901';
+    response = await updateClassroom(classroomInstance1);
+    expect(response.roomNumber).toBeDefined();
+    expect(response.location).not.toBeDefined();
+    // just location
+    classroomInstance2.location='A';
+    response = await updateClassroom(classroomInstance2);
+    expect(response.roomNumber).not.toBeDefined();
+    expect(response.location).toBeDefined();
+    // both
+    classroomInstance3.roomNumber='12345678901';
+    classroomInstance3.location='A';
+    response = await updateClassroom(classroomInstance3);
+    expect(response.roomNumber).toBeDefined();
+    expect(response.location).toBeDefined();
+  })
 })

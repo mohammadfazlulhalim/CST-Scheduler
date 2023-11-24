@@ -13,6 +13,16 @@ const Classroom = sequelize.define('Classroom', {
       },
     },
   },
+  // location attribute
+  location: {
+    type: DataTypes.STRING,
+    validate: {
+      len: {
+        args: [2, 50],
+        msg: 'The location must be between 2 and 50 characters in length.',
+      },
+    },
+  },
 },
 {
   freezeTableName: true, // Freeze table sets the table name to the object name.

@@ -1,7 +1,7 @@
 <h1>{{title}}</h1>
 {{#if classroomList.length}}
     {{#each classroomList}}
-        <li>{{this.roomNumber}}</li>
+        <li>Room number: {{this.roomNumber}} Location: {{this.location}}</li>
     {{/each}}
 {{else}}
     <p>There are currently no classrooms in the system</p>
