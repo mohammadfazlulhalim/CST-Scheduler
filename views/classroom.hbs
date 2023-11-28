@@ -1,9 +1,36 @@
 <h1>{{title}}</h1>
-{{#if classroomList.length}}
-    {{#each classroomList}}
-        <li>Room number: {{this.roomNumber}} Location: {{this.location}}</li>
-    {{/each}}
+{{#if classroomList}}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Room Number</th>
+            <th>Location</th>
+        </tr>
+        </thead>
+        <!--Here is where I loop through my array object and add in a <tr> for each loop, and a <td> for each object-->
+        <tbody>
+        {{#each classroomList}}
+        <tr>
+            <td>{{this.roomNumber}}</td>
+            <td>{{this.location}}</td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
 {{else}}
     <p>There are currently no classrooms in the system</p>
 {{/if}}
+<!--Need to setup the modal for the create here-->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+    Create
+</button>
+<div class="modal-fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Modal</h3>
+            </div>
+        </div>
+    </div>
+</div>
 <a class="btn btn-outline-success" href="/">Go Back</a>
