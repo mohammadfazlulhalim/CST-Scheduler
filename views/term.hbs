@@ -37,11 +37,16 @@
                 <form action="/term" method="POST">
                     <div class="modal-body">
                         <label for="cTermNumber">Term Number:</label>
-                        <input type="text" class="form-control" id="cTermNumber" name="termNumber">
+                        <input type="text" class="form-control {{#if err.termNumber}}is-invalid{{/if}}" id="cTermNumber" name="termNumber">
+                        <div class="invalid-feedback">{{err.termNumber}}</div>
+
                         <label for="cStartDate">Start Date:</label>
-                        <input type="date" class="form-control" id="cStartDate" name="startDate">
+                        <input type="date" class="form-control {{#if err.startDate}}is-invalid{{/if}}" id="cStartDate" name="startDate">
+                        <div class="invalid-feedback">{{err.startDate}}</div>
+
                         <label for="cEndDate">End Date:</label>
-                        <input type="date" class="form-control" id="cEndDate" name="endDate">
+                        <input type="date" class="form-control {{#if err.endDate}}is-invalid{{/if}}" id="cEndDate" name="endDate">
+                        <div class="invalid-feedback">{{err.endDate}}</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -59,6 +64,10 @@
 {{/if}}
 
 <a href="http://localhost:3000"><button class="btn btn-success">Return Home</button></a>
+
+<!-- Debug paragraph -->
+<p id="debug"></p>
+
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -67,23 +76,31 @@
 <script>
     "use strict";
 
-    $(() => {
-        // create handler
-        $("#createTerm").click(async () => {
-            alert("Hello");
+        // create handler; needs to be reassigned after html loads again
+        $("#createTerm").click(handleCreateTerm);
+
+        async function handleCreateTerm() {
+            // alert("Hello");
             const response = await fetch("http://localhost:3000/term", {
-              method: "POST",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: JSON.stringify({
-                  termNumber: $("#cTermNumber").val(),
-                  startDate: $("#cStartDate").val(),
-                  endDate: $("#cEndDate").val(),
-              }),
+                    termNumber: $("#cTermNumber").val(),
+                    startDate: $("#cStartDate").val(),
+                    endDate: $("#cEndDate").val(),
+                }),
             });
 
-        });
-    });
+            const data = await response.text();
+            document.documentElement.innerHTML = data;
+            $("#createTerm").click(handleCreateTerm);
+            const modal = $("#addModal");
+            modal.modal();
+            if (!response.ok) {
+                modal.modal("show");
+            }
+        }
 </script>
