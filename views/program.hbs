@@ -33,14 +33,19 @@
                             </div>
                             <div class="modal-body">
                                 <!-- Use a form for editing -->
-                                <form action="/program/{{@index}}" method="POST">
+                                <form action="/program/edit" method="POST">
                                     <label for="editName{{@index}}">Program Name:</label>
-                                    <input type="text" class="form-control" id="editName{{@index}}" name="editName" value="{{this.programName}}">
+                                    <input type="text" class="form-control {{#if errMsg.programAbbreviation}}is-invalid{{/if}}" id="editName{{@index}}" name="editName" value="{{this.programName}}">
+                                    <div class="invalid-feedback">{{errMsg.programAbbreviation}}</div>
+
                                     <label for="editAbbr{{@index}}">Program Abbreviation:</label>
-                                    <input type="text" class="form-control" id="editAbbr{{@index}}" name="editAbbr" value="{{this.programAbbreviation}}">
+                                    <input type="text" class="form-control {{#if errMsg.programAbbreviation}}is-invalid{{/if}}" id="editAbbr{{@index}}" name="editAbbr" value="{{this.programAbbreviation}}">
+                                    <div class="invalid-feedback">{{errMsg.programAbbreviation}}</div>
+
+                                    <input type="text" class="form-control" id="editAbbr{{@index}}" name="editID" value="{{this.id}}" hidden>
                                     <div class="mt-3 d-flex justify-content-end">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-outline-primary">Save changes</button>
+                                        <button type="submit" class="btn btn-outline-info">Save changes</button>
                                     </div>
                                 </form>
                         </div>
@@ -63,7 +68,10 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-danger">Delete</button>
+                                <form action="/program/delete" method="POST">
+                                    <input type="text" value="{{this.id}}" name="progID" id="progID" hidden>
+                                <button type="submit" class="btn btn-outline-danger">Delete</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -86,6 +94,11 @@
         <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">Add new Program</button>
     </div>
 </div>
+<div>
+    {{#each errMsg.error}}
+        {{this}}
+    {{/each}}
+</div>
 <!-- Add Modal -->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -96,24 +109,29 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <form action="/program/add" method="POST">
             <div class="modal-body">
                 <!-- Add form elements for editing here -->
 
                 <label for="addName">Program Name:</label>
-                <input type="text" class="form-control" id="addName">
+                <input type="text" class="form-control" id="addName" name="addName">
                 <label for="addAbbr">Program Abbreviation:</label>
-                <input type="text" class="form-control" id="addAbbr">
+                <input type="text" class="form-control" id="addAbbr" name="addAbbr">
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-outline-primary">Add</button>
+                <button type="submit" class="btn btn-outline-success">Add</button>
             </div>
+            </form>
         </div>
+
     </div>
 </div>
+
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 

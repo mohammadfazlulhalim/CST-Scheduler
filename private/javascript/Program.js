@@ -7,6 +7,11 @@ const {sequelize, DataTypes} = require('../../dataSource');
 const Program = sequelize.define('Program', {
   // The program object has the following attributes
   // programAbbreviation is a string that should shorten the programs name
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   programAbbreviation: {
     type: DataTypes.STRING(10),
     allowNull: false,
