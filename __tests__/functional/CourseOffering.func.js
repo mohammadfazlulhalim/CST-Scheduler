@@ -41,7 +41,7 @@ describe('Functional Course Offering', () => {
 
     //destroy course offering table after each test
     afterEach(async function() {
-        await CourseOffering.destroy({ truncate : true, cascade: false });
+        await CourseOffering.destroy();
     })
 
     //test that course Offering is successfully added to empty darabase
