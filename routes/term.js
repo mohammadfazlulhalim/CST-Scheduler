@@ -15,17 +15,18 @@ router.get('/', async function(req, res, next) {
  */
 router.post('/', async function(req, res, next) {
   // attempt to create the given term
+  console.log('POST: ' + JSON.stringify(req.body));
   const result = await createTerm({
     termNumber: req.body.termNumber,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
   });
   let violations;
-  if (!result.startDate || !result.endDate) {
+  if (!result.startDate && !result.endDate) {
     // if the term does not have a start/end date, that means it's invalid and errors were sent back
     res.status(422);
     // send error messages to the hbs template
-    violations = result;
+    violations = result.error;
   } else {
     // creation was successful
     res.status(201);
@@ -71,7 +72,7 @@ router.put('/', async function(req, res, next) {
   } else if (!result.startDate || !result.endDate) {
     // if the term does not have a start/end date, that means it's invalid and errors were sent back
     res.status(422);
-    violations = result;
+    violations = result.error;
   }
   const termLists = await readAllTerms();
   res.render('term', {termEntries: termLists, err: violations});
@@ -124,7 +125,9 @@ const updateTerm = async (term) => {
       });
     } catch (err) {
       // return formatted validation errors when invalid
-      return mapErrors(err);
+      const errors = mapErrors(err);
+      console.log('updateErrors:\n' + JSON.stringify(errors));
+      return errors;
     }
   } else {
     // if not found, return an invalid key error message
@@ -152,9 +155,10 @@ const readAllTerms = async () => {
  * @return {{}}         - Formatted error object
  */
 const mapErrors = (err) => {
-  const violations = {};
+  const violations = {error: {}};
   for (const error of err.errors) {
-    violations[error.property] = error.message;
+    console.log('maperrors:\n' + JSON.stringify(error));
+    violations.error[error.path] = error.message;
   }
   return violations;
 };

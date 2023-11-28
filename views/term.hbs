@@ -21,8 +21,69 @@
         </tbody>
 
     </table>
+
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">New</button>
+
+    <!-- Add Modal -->
+    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Create New Term</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/term" method="POST">
+                    <div class="modal-body">
+                        <label for="cTermNumber">Term Number:</label>
+                        <input type="text" class="form-control" id="cTermNumber" name="termNumber">
+                        <label for="cStartDate">Start Date:</label>
+                        <input type="date" class="form-control" id="cStartDate" name="startDate">
+                        <label for="cEndDate">End Date:</label>
+                        <input type="date" class="form-control" id="cEndDate" name="endDate">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="createTerm" class="btn btn-outline-success">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
 <!--    If term entries are not defined we display an error message telling us no terms are stored-->
 {{else}}
     <p>There are no terms stored</p>
 {{/if}}
+
 <a href="http://localhost:3000"><button class="btn btn-success">Return Home</button></a>
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- My own handlers for the form submits -->
+<script>
+    "use strict";
+
+    $(() => {
+        // create handler
+        $("#createTerm").click(async () => {
+            alert("Hello");
+            const response = await fetch("http://localhost:3000/term", {
+              method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({
+                  termNumber: $("#cTermNumber").val(),
+                  startDate: $("#cStartDate").val(),
+                  endDate: $("#cEndDate").val(),
+              }),
+            });
+
+        });
+    });
+</script>
