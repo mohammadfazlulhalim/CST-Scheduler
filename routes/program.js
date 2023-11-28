@@ -23,7 +23,7 @@ router.get('/', async function(req, res, next) {
 });
 
 // Creating a new program
-router.post('/add', async function(req, res, next) {
+router.post('/create', async function(req, res, next) {
   const newName = req.body.addName;
   const newAbbr = req.body.addAbbr;
   let errors;
@@ -32,22 +32,8 @@ router.post('/add', async function(req, res, next) {
   // if (true) {
   // Check if the program with the given name already exists
 
-  console.log('before the try');
-  try {
-    // const existingProgram = await Program.findOne({where: {programName: newName}});
-    console.log('in the try');
-    // Program doesn't exist, so add it
-    const newProgram = await Program.create({
-      programName: newName,
-      programAbbreviation: newAbbr,
-    });
 
-    console.log('Program added successfully:', newProgram.toJSON());
-  } catch (err) {
-    console.log('in the catch');
-    errors = mapErrors(err);
-    console.log(errors);
-  }
+  createProgram(newName, newAbbr);
   // } else {
   //   // Program already exists, handle the error or notify the user
   //   console.log('Program with the same name already exists:', existingProgram.toJSON());
@@ -62,7 +48,7 @@ router.post('/add', async function(req, res, next) {
 });
 
 // Update an existing program
-router.post('/edit', async function(req, res, next) {
+router.post('/update', async function(req, res, next) {
   const newName = req.body.editName;
   const newAbbr = req.body.editAbbr;
   const id=req.body.editID;
@@ -73,18 +59,7 @@ router.post('/edit', async function(req, res, next) {
   const programToUpdate = await Program.findByPk(id);
   console.log('id is '+id);
 
-  if (programToUpdate) {
-    try {
-      // errors = await programToUpdate.validate();
-
-      programToUpdate.programName = newName;
-      programToUpdate.programAbbreviation = newAbbr;
-      await programToUpdate.update({programName: newName, programAbbreviation: newAbbr});
-    } catch (err) {
-      errors=mapErrors(err);
-      console.log(errors);
-    }
-  }
+  updateProgram(programToUpdate, newName, newAbbr);
   const programList=await FindAllPrograms();
   res.render('program', {
     // get list of programs
@@ -96,22 +71,11 @@ router.post('/edit', async function(req, res, next) {
 });
 
 
-// deleting an existing program
-router.delete('/', async function(req, res, next) {
-
-});
-
 router.post('/delete', async function(req, res, next) {
   const deleteProg = req.body.progID;
   let errors;
   const programToDelete = await Program.findByPk(deleteProg);
-
-  try {
-    await programToDelete.destroy();
-  } catch (err) {
-    errors = mapErrors(err);
-    console.error(errors);
-  }
+  deleteProgram(programToDelete);
   const programList = await FindAllPrograms();
   res.render('program', {
     errMsg: errors,
@@ -137,22 +101,52 @@ async function FindAllPrograms() {
 /**
  * This methods purpose will help with the creation of a program to simplify the router.post
  */
-function createProgram() {
+async function createProgram(newName, newAbbr) {
+  try {
+    // const existingProgram = await Program.findOne({where: {programName: newName}});
+    console.log('in the try');
+    // Program doesn't exist, so add it
+    const newProgram = await Program.create({
+      programName: newName,
+      programAbbreviation: newAbbr,
+    });
 
+    console.log('Program added successfully:', newProgram.toJSON());
+  } catch (err) {
+    console.log('in the catch');
+    errors = mapErrors(err);
+    console.log(errors);
+  }
 }
 
 /**
  * This methods purpose will help with the deletion of a program to simplify the router.delete
  */
-function deleteProgram(programAbbreviation) {
-
+async function deleteProgram(programToDelete) {
+  try {
+    await programToDelete.destroy();
+  } catch (err) {
+    errors = mapErrors(err);
+    console.error(errors);
+  }
 }
 
 /**
  * This methods purpose will help with the updating of a program to simplify the router.put
  */
-function updateProgram(programAbbreviation) {
+async function updateProgram(programToUpdate, newName, newAbbr) {
+  if (programToUpdate) {
+    try {
+      // errors = await programToUpdate.validate();
 
+      programToUpdate.programName = newName;
+      programToUpdate.programAbbreviation = newAbbr;
+      await programToUpdate.update({programName: newName, programAbbreviation: newAbbr});
+    } catch (err) {
+      errors = mapErrors(err);
+      console.log(errors);
+    }
+  }
 }
 
 const mapErrors=(err)=>{

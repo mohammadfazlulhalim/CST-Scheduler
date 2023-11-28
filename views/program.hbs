@@ -33,7 +33,7 @@
                             </div>
                             <div class="modal-body">
                                 <!-- Use a form for editing -->
-                                <form action="/program/edit" method="POST">
+                                <form action="/program/update" method="POST">
                                     <label for="editName{{@index}}">Program Name:</label>
                                     <input type="text" class="form-control {{#if errMsg.programAbbreviation}}is-invalid{{/if}}" id="editName{{@index}}" name="editName" value="{{this.programName}}">
                                     <div class="invalid-feedback">{{errMsg.programAbbreviation}}</div>
@@ -89,15 +89,21 @@
     </table>
 </div>
 <div>
+    {{#if errMsg}}
+        <h4><strong>Unable to fulfill request</strong></h4>
+        {{#each errMsg.error}}
+            <li>
+            <ul>{{this}}</ul>
+            </li>
+
+        {{/each}}
+    {{/if}}
+</div>
+<div>
     <a class="btn btn-outline-success" href="/">Go Back</a>
     <div class="float-end">
         <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">Add new Program</button>
     </div>
-</div>
-<div>
-    {{#each errMsg.error}}
-        {{this}}
-    {{/each}}
 </div>
 <!-- Add Modal -->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -109,7 +115,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/program/add" method="POST">
+            <form action="/program/create" method="POST">
             <div class="modal-body">
                 <!-- Add form elements for editing here -->
 
