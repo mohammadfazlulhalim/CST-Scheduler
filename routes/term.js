@@ -34,7 +34,11 @@ router.post('/', async function(req, res, next) {
     res.set('id', result.id);
   }
   const termLists = await readAllTerms();
-  res.render('term', {termEntries: termLists, err: violations});
+  res.render('term', {
+    termEntries: termLists,
+    err: violations,
+    submittedTerm: violations ? req.body : undefined,
+  });
 });
 
 /**

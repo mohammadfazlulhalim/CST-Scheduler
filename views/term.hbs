@@ -37,15 +37,18 @@
                 <form action="/term" method="POST">
                     <div class="modal-body">
                         <label for="cTermNumber">Term Number:</label>
-                        <input type="text" class="form-control {{#if err.termNumber}}is-invalid{{/if}}" id="cTermNumber" name="termNumber">
+                        <input type="text" class="form-control {{#if err.termNumber}}is-invalid{{/if}}" id="cTermNumber"
+                               name="termNumber" value="{{submittedTerm.termNumber}}">
                         <div class="invalid-feedback">{{err.termNumber}}</div>
 
                         <label for="cStartDate">Start Date:</label>
-                        <input type="date" class="form-control {{#if err.startDate}}is-invalid{{/if}}" id="cStartDate" name="startDate">
+                        <input type="date" class="form-control {{#if err.startDate}}is-invalid{{/if}}" id="cStartDate"
+                               name="startDate" value="{{submittedTerm.startDate}}">
                         <div class="invalid-feedback">{{err.startDate}}</div>
 
                         <label for="cEndDate">End Date:</label>
-                        <input type="date" class="form-control {{#if err.endDate}}is-invalid{{/if}}" id="cEndDate" name="endDate">
+                        <input type="date" class="form-control {{#if err.endDate}}is-invalid{{/if}}" id="cEndDate"
+                               name="endDate" value="{{submittedTerm.endDate}}">
                         <div class="invalid-feedback">{{err.endDate}}</div>
                     </div>
                     <div class="modal-footer">
@@ -80,25 +83,31 @@
         $("#createTerm").click(handleCreateTerm);
 
         async function handleCreateTerm() {
-            // alert("Hello");
+            // send a POST request to the router
             const response = await fetch("http://localhost:3000/term", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: JSON.stringify({
+                    // use the val() method to get the value of a form input
                     termNumber: $("#cTermNumber").val(),
                     startDate: $("#cStartDate").val(),
                     endDate: $("#cEndDate").val(),
                 }),
             });
 
+            // get the HTML text response
             const data = await response.text();
+            // set the whole document's HTML to be the response
             document.documentElement.innerHTML = data;
+            // re-add the click handler
             $("#createTerm").click(handleCreateTerm);
+            // refresh the modal
             const modal = $("#addModal");
-            modal.modal();
+            modal.modal("hide");
+
+            // if the response was not ok, pop up the modal
             if (!response.ok) {
                 modal.modal("show");
             }
