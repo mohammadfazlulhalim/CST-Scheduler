@@ -83,7 +83,7 @@ describe('testCUDInstructor', () => {
   });
 
   /** Test for updating an instructor with invalid information*/
-  test('testUpdatesInstructorWithInvalidInformationBasoaltosntChangeInstructor', async () => {
+  test('testUpdatesInstructorWithInvalidInformationIsntChangeInstructor', async () => {
     // Create an instructor to be updated
     const instructor = await Instructor.create({
       instructorID: 1,
@@ -165,8 +165,8 @@ describe('testCUDInstructor', () => {
     // Create the only instructor in the database
     const instructor = await Instructor.create({
       instructorID: 1,
-      firstName: 'John',
-      lastName: 'Doe',
+      firstName: 'Ernesto',
+      lastName: 'Basoalto',
     });
 
     // Send DELETE request to remove the created instructor
@@ -184,8 +184,8 @@ describe('testCUDInstructor', () => {
     // Create multiple instructors in the database
     const instructorOne = await Instructor.create({
       instructorID: 1,
-      firstName: 'John',
-      lastName: 'Doe',
+      firstName: 'Ernesto',
+      lastName: 'Basoalto',
     });
 
     const instructorTwo = await Instructor.create({
@@ -213,14 +213,14 @@ describe('testCUDInstructor', () => {
     // Create multiple instructors in the database
     const instructorOne = await Instructor.create({
       instructorID: 1,
-      firstName: 'John',
-      lastName: 'Doe',
+      firstName: 'Ernesto',
+      lastName: 'Basoalto',
     });
 
     const instructorTwo = await Instructor.create({
       instructorID: 2,
-      firstName: 'Jane',
-      lastName: 'Smith',
+      firstName: 'Ron',
+      lastName: 'New',
     });
 
     // Send DELETE request to remove the first instructor
