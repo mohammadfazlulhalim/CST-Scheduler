@@ -7,8 +7,8 @@ const fillClassroomTable = require('./Classroom.fix');
 
 // call individual fixture methods here
 fillTermTable();
-fillCourseOfferingTable();
 fillInstructorTable();
 fillClassroomTable();
 fillCourseTable();
+fillCourseOfferingTable();
 

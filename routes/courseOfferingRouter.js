@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const CourseOffering = require('../private/javascript/CourseOffering');
 
 const CourseOfferingRouter = require('../private/javascript/CourseOffering');
 
@@ -23,23 +24,60 @@ router.get('/', async function(req, res, next) {
 });
 
 router.post('/', async function(req, res, next) {
-  createCourseOffering(req.body.);
+  console.log('POST: ' + JSON.stringify(req.body));
+
+  const newCO = {
+    name: req.body.name,
+    startDate: req.body.startDate,
+    endDate: req.body.endDate,
+    group: req.body.group,
+    courseID: req.body.courseID,
+    termID: req.body.termID,
+    instructorID: req.body.instructorID,
+    programID: req.body.programID,
+  }
+  await createCourseOffering(newCO);
+
+  res.redirect('/term');
+});
+
+router.put('/', async function(req, res, next) {
+  console.log('PUT: ' + JSON.stringify(req.body));
+
+  await updateCourseOffering(req.body);
+
+  return null;
+});
+
+router.delete('/', async function(req, res, next) {
+  console.log('DELETE: ' + JSON.stringify(req.body));
+
+  await deleteCourseOffering(req.body);
+
 });
 
 /**
  * Creates a course offering in the database, returns course offering
  * @param createCO
  */
-function createCourseOffering(createCO){
-
+async function createCourseOffering(createCO) {
+  try {
+    return await CourseOffering.create(createCO);
+  } catch (e) {
+    return e;
+  }
 }
 
 /**
  * Updates an entry in course offering table, return updates course offering
  * @param updateCO
  */
-function updateCourseOffering(updateCO){
-
+async function updateCourseOffering(updateCO) {
+  try {
+    return await CourseOffering.update(updateCO);
+  } catch (e) {
+    return e;
+  }
 }
 
 /**
@@ -47,7 +85,15 @@ function updateCourseOffering(updateCO){
  * @param deleteCO
  */
 function deleteCourseOffering(deleteCO){
-
+  try {
+    return CourseOffering.destroy({
+      where: {
+        id: deleteCO.id
+      },
+    })
+  } catch(e) {
+    return e;
+  }
 }
 
 module.exports = {router, createCourseOffering, updateCourseOffering, deleteCourseOffering};

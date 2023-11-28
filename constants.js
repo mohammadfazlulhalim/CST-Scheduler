@@ -37,7 +37,7 @@ const testConst = {
     },
     program1: {
         programAbbreviation: 'CST',
-        programName: 'Computer System Technology',
+        programName: 'Computer',
     }
 };
 
