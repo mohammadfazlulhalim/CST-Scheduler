@@ -5,32 +5,93 @@
         <tr>
             <th>Room Number</th>
             <th>Location</th>
+            <th>Action</th>
         </tr>
         </thead>
         <!--Here is where I loop through my array object and add in a <tr> for each loop, and a <td> for each object-->
         <tbody>
         {{#each classroomList}}
-        <tr>
-            <td>{{this.roomNumber}}</td>
-            <td>{{this.location}}</td>
-        </tr>
+            <tr>
+                <td>{{this.roomNumber}}</td>
+                <td>{{this.location}}</td>
+                <td>
+                    <button type="button" id="edit{{this.id}}">Edit</button>
+                    <button type="button" id="del{{this.id}}">Delete</button>
+                </td>
+
+            </tr>
         {{/each}}
         </tbody>
     </table>
 {{else}}
     <p>There are currently no classrooms in the system</p>
 {{/if}}
-<!--Need to setup the modal for the create here-->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+<!--Modal buttons-->
+<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#createModal">
     Create
 </button>
-<div class="modal-fade" id="createModal" tabindex="-1">
-    <div class="modal-dialog">
+
+<!--Create Modal-->
+<div class="modal fade" id="createModal" role="dialog" tabindex="-1" aria-labelledby="createModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Create Modal</h3>
+                <h4 class="modal-title" id="createModalLabel">Input New Classroom</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+
+            </div>
+            <div class="modal-body">
+                <form action="/classroom" method="POST">
+                    <label for="cRoomNumber">Room number:</label>
+                    <input type="text" class="form-control" id="cRoomNumber" name="roomNumber">
+                    <label for="cLocation">Location:</label>
+                    <input type="text" class="form-control" id="cLocation" name="location">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="createClassroom" class="btn btn-secondary">Create</button>
             </div>
         </div>
     </div>
 </div>
 <a class="btn btn-outline-success" href="/">Go Back</a>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    'use strict';
+
+    $(() => {
+        // create btn handler
+        $('#createClassroom').click(async () => {
+          alert("Saving...");
+            const response = await fetch('http://localhost:3000/classroom', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({
+                    roomNumber: $('#cRoomNumber').val(),
+                    location: $('#cLocation').val(),
+                }),
+            });
+            console.log(response);
+            // Here I need to do the processing to handle erros and display errors
+            // or close the modal
+
+
+            const data = await response.text();
+
+
+            // modal.modal();
+
+
+
+
+        });
+    });
+</script>
