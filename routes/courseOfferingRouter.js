@@ -22,6 +22,13 @@ router.get('/', async function(req, res, next) {
   });
 });
 
+router.post('/', async function(req, res, next) {
+  createCourseOffering(req.body.)
+
+
+
+});
+
 /**
  * Creates a course offering in the database, returns course offering
  * @param createCO
