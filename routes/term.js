@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Term = require('../private/javascript/Term');
 const {sequelize} = require('../dataSource');
+const termConstraints = require('../constants').termConstraints;
 router.get('/', async function(req, res, next) {
   // Declaring the array
   const termLists = await readAllTerms();
@@ -41,6 +42,8 @@ router.post('/', async function(req, res, next) {
     termEntries: termLists,
     err: violations,
     submittedTerm: violations ? req.body : undefined,
+    maxTerms: termConstraints.termNumberUpperLimit,
+    minTerms: termConstraints.termNumberLowerLimit,
   });
 });
 
@@ -94,20 +97,11 @@ router.put('/', async function(req, res, next) {
  */
 const createTerm = async (term) => {
   try {
-    console.log('TermNumber: ' + parseInt(term.termNumber));
-    const termToCreate = await Term.create({
+    return await Term.create({
       termNumber: parseInt(term.termNumber),
       startDate: term.startDate,
       endDate: term.endDate,
     });
-    console.log('Term to Create: ' + JSON.stringify(termToCreate));
-    return termToCreate;
-
-    // return await Term.create({
-    //   termNumber: parseInt(term.termNumber),
-    //   startDate: term.startDate,
-    //   endDate: term.endDate,
-    // });
   } catch (err) {
     // return formatted errors
     return mapErrors(err);
