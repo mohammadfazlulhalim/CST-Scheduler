@@ -6,6 +6,7 @@ const termNumberLowerLimit = 1;
 // Creating the model
 // See: https://sequelize.org/docs/v6/core-concepts/model-basics/
 
+// TODO: do not allow any term fields to be null
 const Term = sequelize.define('Term', {
   id: {
     type: DataTypes.INTEGER,

@@ -541,3 +541,5 @@ describe('termStartEndDate', () => {
     }
   });
 });
+
+// TODO: do not allow any term fields to be null

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Term = require('../private/javascript/Term');
+const {sequelize} = require('../dataSource');
 router.get('/', async function(req, res, next) {
   // Declaring the array
   const termLists = await readAllTerms();
@@ -14,6 +15,7 @@ router.get('/', async function(req, res, next) {
  * POST handler for http://localhost:3000/term
  */
 router.post('/', async function(req, res, next) {
+  await sequelize.sync();
   // attempt to create the given term
   console.log('POST: ' + JSON.stringify(req.body));
   const result = await createTerm({
@@ -21,8 +23,9 @@ router.post('/', async function(req, res, next) {
     startDate: req.body.startDate,
     endDate: req.body.endDate,
   });
+  console.log('POST result: ' + JSON.stringify(result));
   let violations;
-  if (!result.startDate && !result.endDate) {
+  if (result.error) {
     // if the term does not have a start/end date, that means it's invalid and errors were sent back
     res.status(422);
     // send error messages to the hbs template
@@ -69,15 +72,17 @@ router.put('/', async function(req, res, next) {
     endDate: req.body.endDate,
   });
   let violations;
-  if (result.invalidKey) {
-    // if the invalidKey message is defined, then a non-existent term is trying to update
-    res.status(404);
-    violations = result;
-  } else if (!result.startDate || !result.endDate) {
-    // if the term does not have a start/end date, that means it's invalid and errors were sent back
-    res.status(422);
+  if (result.error) {
+    if (result.error.invalidKey) {
+      // if the invalidKey message is defined, then a non-existent term is trying to update
+      res.status(404);
+    } else {
+      // if the term does not have a start/end date, that means it's invalid and errors were sent back
+      res.status(422);
+    }
     violations = result.error;
   }
+
   const termLists = await readAllTerms();
   res.render('term', {termEntries: termLists, err: violations});
 });
@@ -89,7 +94,11 @@ router.put('/', async function(req, res, next) {
  */
 const createTerm = async (term) => {
   try {
-    return (await Term.create(term)).dataValues;
+    return await Term.create({
+      termNumber: parseInt(term.termNumber),
+      startDate: term.startDate,
+      endDate: term.endDate,
+    });
   } catch (err) {
     // return formatted errors
     return mapErrors(err);
@@ -135,7 +144,7 @@ const updateTerm = async (term) => {
     }
   } else {
     // if not found, return an invalid key error message
-    return {invalidKey: 'Could not find an existing term to update'};
+    return {error: {invalidKey: 'Could not find an existing term to update'}};
   }
 };
 

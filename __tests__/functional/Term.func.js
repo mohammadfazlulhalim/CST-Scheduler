@@ -35,7 +35,8 @@ describe('Terms in database', () => {
     // store initial number of terms to compare against later
     const oldNumTerms = (await Term.findAll()).length;
     // change term number so that the term object is invalid
-    testTerm.termNumber = 3;
+    // testTerm.termNumber = 3;
+    testTerm.startDate = '2023-07-04';
     // attempt to create the term in the database
     await supertest(app).post('/term').send(testTerm).expect(422); // expect 422: unprocessable entity
     // since no term should have been added to the database, the number of terms should remain the same
