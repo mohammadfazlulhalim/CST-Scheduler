@@ -61,6 +61,8 @@ router.delete('/', async function(req, res, next) {
   res.render('term', {
     termEntries: termLists,
     err: violations,
+    maxTerms: termConstraints.termNumberUpperLimit,
+    minTerms: termConstraints.termNumberLowerLimit,
   });
 });
 
@@ -68,6 +70,7 @@ router.delete('/', async function(req, res, next) {
  * PUT request handler for http://localhost:3000/term
  */
 router.put('/', async function(req, res, next) {
+  console.log('PUT body: ' + JSON.stringify(req.body));
   const result = await updateTerm({
     id: req.body.id,
     termNumber: req.body.termNumber,
@@ -80,6 +83,7 @@ router.put('/', async function(req, res, next) {
       // if the invalidKey message is defined, then a non-existent term is trying to update
       res.status(404);
     } else {
+      console.log('Input errors: ' + JSON.stringify(result));
       // if the term does not have a start/end date, that means it's invalid and errors were sent back
       res.status(422);
     }
@@ -87,7 +91,13 @@ router.put('/', async function(req, res, next) {
   }
 
   const termLists = await readAllTerms();
-  res.render('term', {termEntries: termLists, err: violations});
+  res.render('term', {
+    termEntries: termLists,
+    putErr: violations,
+    putSubmittedTerm: violations ? req.body : undefined,
+    maxTerms: termConstraints.termNumberUpperLimit,
+    minTerms: termConstraints.termNumberLowerLimit,
+  });
 });
 
 /**
@@ -135,7 +145,7 @@ const updateTerm = async (term) => {
     // only try to update the term if it already exists
     try {
       return await termToUpdate.update({
-        termNumber: term.termNumber,
+        termNumber: parseInt(term.termNumber),
         startDate: term.startDate,
         endDate: term.endDate,
       });
