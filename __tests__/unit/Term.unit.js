@@ -1,6 +1,7 @@
 // Importing the ORM object
 const Term = require('../../private/javascript/Term.js');
 const {sequelize} = require('../../dataSource');
+const constants = require('../../constants');
 
 // This describe checks validators on start dates based on what term number it is
 // It tests if it accepts valid start dates and rejects invalid start dates
@@ -233,8 +234,8 @@ describe('termNumber', () => {
       await Term.create({termNumber: term.termNumber, startDate: '2023-09-01', endDate: '2023-12-01'});
     } catch (err) {
       bCaughtErr = true;
-      expect(err.errors.length).toBe(1);
       expect(err.errors[0].message).toBe('Term number must be between 1 and 6');
+      expect(err.errors.length).toBe(1);
     }
 
     if (!bCaughtErr) {
@@ -542,4 +543,43 @@ describe('termStartEndDate', () => {
   });
 });
 
-// TODO: do not allow any term fields to be null
+describe('fields cannot be null', () => {
+  let invalidTerm;
+  beforeEach(async () => {
+    await Term.sync();
+    invalidTerm = {...constants.testConst.validTerms[0]};
+  });
+
+  test('testThatTermNumberCannotBeEmpty', async () => {
+    invalidTerm.termNumber = '';
+    try {
+      await Term.create(invalidTerm);
+      fail();
+    } catch (err) {
+      expect(err.message).toBe('Validation error: Term number cannot be empty');
+      expect(err.errors.length).toBe(1);
+    }
+  });
+
+  test('testThatTermStartDateCannotBeEmpty', async () => {
+    invalidTerm.startDate = '';
+    try {
+      await Term.create(invalidTerm);
+      fail();
+    } catch (err) {
+      expect(err.message).toBe('Validation error: Term start date cannot be empty');
+      expect(err.errors.length).toBe(1);
+    }
+  });
+
+  test('testThatTermEndDateCannotBeEmpty', async () => {
+    invalidTerm.endDate = '';
+    try {
+      await Term.create(invalidTerm);
+      fail();
+    } catch (err) {
+      expect(err.message).toBe('Validation error: Term end date cannot be empty');
+      expect(err.errors.length).toBe(1);
+    }
+  });
+});

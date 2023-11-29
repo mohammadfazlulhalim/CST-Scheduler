@@ -94,11 +94,20 @@ router.put('/', async function(req, res, next) {
  */
 const createTerm = async (term) => {
   try {
-    return await Term.create({
+    console.log('TermNumber: ' + parseInt(term.termNumber));
+    const termToCreate = await Term.create({
       termNumber: parseInt(term.termNumber),
       startDate: term.startDate,
       endDate: term.endDate,
     });
+    console.log('Term to Create: ' + JSON.stringify(termToCreate));
+    return termToCreate;
+
+    // return await Term.create({
+    //   termNumber: parseInt(term.termNumber),
+    //   startDate: term.startDate,
+    //   endDate: term.endDate,
+    // });
   } catch (err) {
     // return formatted errors
     return mapErrors(err);

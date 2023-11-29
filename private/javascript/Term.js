@@ -6,7 +6,6 @@ const termNumberLowerLimit = 1;
 // Creating the model
 // See: https://sequelize.org/docs/v6/core-concepts/model-basics/
 
-// TODO: do not allow any term fields to be null
 const Term = sequelize.define('Term', {
   id: {
     type: DataTypes.INTEGER,
@@ -17,6 +16,13 @@ const Term = sequelize.define('Term', {
     type: DataTypes.INTEGER,
     // Checking that term is between 1-6 inclusive
     validate: {
+      // use a custom validator to get a custom message in the same format as the others
+      customNumberNotNull(value) {
+        if (!value && value !== 0) {
+        // if (value === null || value === undefined || isNaN(parseInt(value))) {
+          throw new Error('Term number cannot be empty');
+        }
+      },
       min: {
         args: termNumberLowerLimit,
         msg: 'Term number must be between ' + termNumberLowerLimit + ' and ' + termNumberUpperLimit,
@@ -32,6 +38,9 @@ const Term = sequelize.define('Term', {
     validate: {
       // Checking that start date is valid based on term number
       customTermStartDates(value) {
+        if (value === null || value === undefined || value === '') {
+          throw new Error('Term start date cannot be empty');
+        }
         // splitting the date into an array so we can access just the month
         // Group standard for dates will be 'YYYY-MM-DD'
         const dateArray = value.split('-');
@@ -67,6 +76,9 @@ const Term = sequelize.define('Term', {
     validate: {
       // custom validator that checks that the ending month is valid
       customEndDates(value) {
+        if (value === null || value === undefined || value === '') {
+          throw new Error('Term end date cannot be empty');
+        }
         // splitting the date into an array so we can access just the month
         // Group standard for dates will be 'YYYY-MM-DD'
         const dateArray = value.split('-');
@@ -94,9 +106,8 @@ const Term = sequelize.define('Term', {
             throw new Error('Term ' + this.termNumber + ' must end in May or June');
           }
         }
-      },
-      // custom validator that checks that the start date is after the end date
-      checkEndAfterStart(value) {
+
+        // ensure end date comes after start date
         // Splitting the end and start dates into arrays, so that we can compare just on Month, Year, or Day
         // The group standard for dates are 'YYYY-MM-DD'
         const endDateArray = value.split('-');
@@ -118,6 +129,29 @@ const Term = sequelize.define('Term', {
           }
         }
       },
+      // custom validator that checks that the start date is after the end date
+      // checkEndAfterStart(value) {
+      //   // Splitting the end and start dates into arrays, so that we can compare just on Month, Year, or Day
+      //   // The group standard for dates are 'YYYY-MM-DD'
+      //   const endDateArray = value.split('-');
+      //   const startDateArray = this.startDate.split('-');
+      //
+      //   // As all the month validators make sure the months do not overlap, we just need to make sure the year
+      //   // of the end date is not before the year of the start date to make sure end date is after the start date
+      //   if (startDateArray[0] > endDateArray[0]) {
+      //     throw new Error('End date must be after start date');
+      //   }
+      //   // there is a special exception for term 3 and 6, as they can have start and end date in the same month (May)
+      //   if (this.termNumber === 3 || this.termNumber === 6) {
+      //     // Need to check that they are both ending in May
+      //     if (startDateArray[1] === '05' && endDateArray[1] === '05') {
+      //       // If they both end in May, compare the date
+      //       if (startDateArray[2] >= endDateArray[2]) {
+      //         throw new Error('End date must be after start date');
+      //       }
+      //     }
+      //   }
+      // },
     },
   },
 });
