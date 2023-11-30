@@ -132,11 +132,9 @@ async function createClassroom(classroomObj) {
     createResponse.success = 'Success';
     createResponse.pk = response.id ? response.id : 'Response does not have ID';
   } catch (err) {
-    // console.log('Error is: ' + JSON.stringify(err));
     // Need to output these so that each attribute gets proper error message
     createResponse.error ={};
     err.errors.forEach((element) => {
-      // console.log(JSON.stringify(element));
       const objectProp = element.path;
       createResponse.error[objectProp] = element.message;
     });
