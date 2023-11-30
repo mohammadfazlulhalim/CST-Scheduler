@@ -1,9 +1,9 @@
 const Classroom = require('../../private/javascript/Classroom');
 const {sequelize} = require('../../datasource');
-const ClassroomController = require('../../routes/classroom')
+const ClassroomController = require('../../routes/classroomRouter')
 const request = require('supertest')
 const app = require('../../app')
-const {createClassroom, updateClassroom} = require('../../routes/classroom');
+const {createClassroom, updateClassroom} = require('../../routes/classroomRouter');
 
 describe('create', ()=>{
   let classroomInstance;

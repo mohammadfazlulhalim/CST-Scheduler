@@ -15,9 +15,13 @@
                 <td id="{{this.id}}roomNumber">{{this.roomNumber}}</td>
                 <td id="{{this.id}}location">{{this.location}}</td>
                 <td>
-                    <button type="button" id="edit{{this.id}}" class="btn editButton" data-toggle="modal" data-target="#updateModal">Edit
+                    <!--                    These are the buttons for update/delete-->
+                    <button type="button" id="edit{{this.id}}" class="btn editButton" data-toggle="modal"
+                            data-target="#updateModal">Edit
                     </button>
-                    <button type="button" id="del{{this.id}}" class="btn delButton" data-toggle="modal" data-target="#delModal">Delete</button>
+                    <button type="button" id="del{{this.id}}" class="btn delButton" data-toggle="modal"
+                            data-target="#delModal">Delete
+                    </button>
                 </td>
 
             </tr>
@@ -27,7 +31,7 @@
 {{else}}
     <p>There are currently no classrooms in the system</p>
 {{/if}}
-<!--Modal buttons-->
+<!--Button to pop up the create modal-->
 <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#createModal">
     Create
 </button>
@@ -40,6 +44,7 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="createModalLabel">Input New Classroom</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -56,20 +61,21 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" id="createClassroom" class="btn btn-secondary">Create</button>
+                <button type="button" id="createClassroom" class="btn btn-secondary">Add</button>
             </div>
         </div>
     </div>
 </div>
 
-<!--Edit modal-->
-<div class="modal fade" id="updateModal" role="dialog" tabindex="-1" aria-labelledby="editModalLabel"
+<!--Update modal-->
+<div class="modal fade" id="updateModal" role="dialog" tabindex="-1" aria-labelledby="updateModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="editModalLabel">Edit Classroom</h4>
+                <h4 class="modal-title" id="updateModalLabel">Edit Classroom</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
 
             </div>
@@ -83,12 +89,12 @@
                     <input type="text" class="form-control {{#if err.location}}is-invalid{{/if}}" id="eLocation"
                            name="location" value="{{putClassroom.location}}">
                     <div class="invalid-feedback">{{err.location}}</div>
-                    <input type="text" id="editID" name="id" hidden />
+                    <input type="text" id="updateID" name="id" hidden/>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" id="editClassroom" class="btn btn-secondary">Save</button>
+                <button type="button" id="editClassroom" class="btn btn-secondary">Save Changes</button>
             </div>
         </div>
     </div>
@@ -101,17 +107,18 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="delModalLabel">Delete Classroom</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
 
             </div>
             <div class="modal-body">
                 <p>Are you sure you want to delete Room:
-                <input type="text" id="delConfirmMsg" />
-                    <input type="text" id="delID" name="id" hidden /></p>
+                    <input type="text" id="delConfirmMsg"/>
+                    <input type="text" id="delID" name="id" hidden/></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" id="delClassroom" class="btn btn-secondary">Confirm</button>
+                <button type="button" id="delClassroom" class="btn btn-secondary">Delete</button>
             </div>
         </div>
     </div>
@@ -125,68 +132,86 @@
 
     linkButtonFunctions();
 
+    /**
+     * This function connects buttons to proper event handlers
+     */
     function linkButtonFunctions() {
         $('#createClassroom').click(createClassroom);
         $('#editClassroom').click(editClassroom);
-        $(".editButton").click(function() {
-          loadEditModal(this.id.replace("edit",""))
+        $('.editButton').click(function() {
+            loadEditModal(this.id.replace('edit', ''));
         });
         $('#delClassroom').click(delClassroom);
-        $(".delButton").click(function() {
-          loadDelModal(this.id.replace("del",""))
+        $('.delButton').click(function() {
+            loadDelModal(this.id.replace('del', ''));
         });
     }
 
 
-    // create btn handler
+    /**
+     * This method calls the API to create the classroom from user input
+     * on the modal, and reloads list of classrooms if successful or displays
+     * error if it is not successful and which values do not pass validators
+     * @returns {Promise<void>}
+     */
     async function createClassroom() {
-        // alert('Saving...');
+        // Calling the API POST
         const response = await fetch('http://localhost:3000/classroom', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify({
                 roomNumber: $('#cRoomNumber').val(),
                 location: $('#cLocation').val(),
             }),
         });
-        // console.log('Response:');
-        // console.log(response);
 
+        // data will store the HTML information to reload the page
         const data = await response.text();
-        const modal = "#createModal";
+        // storing the modal ID, so that it can be called from loadResponse
+        const modal = '#createModal';
 
         loadResponse(modal, data, !response.ok);
     };
 
+    /**
+     * This method calls the API to update the classroom from user input
+     * on the modal, and reloads list of classrooms if successful or displays
+     * error if it is not successful and which values do not pass validators
+     * @returns {Promise<void>}
+     */
     async function editClassroom() {
-      const id = $("#editID").val();
+        const id = $('#updateID').val();
+        const roomNumber = $('#eRoomNumber').val()
+        const location = $('#eLocation').val()
 
+        // Calling the API PUT
         const response = await fetch('http://localhost:3000/classroom', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify({
-                roomNumber: $('#eRoomNumber').val(),
-                location: $('#eLocation').val(),
+                roomNumber,
+                location,
                 id,
             }),
         });
 
         const data = await response.text();
-        const modal = "#updateModal";
+        const modal = '#updateModal';
 
         loadResponse(modal, data, !response.ok);
-
-        loadEditModal(id);
     };
 
+    /**
+     * This method asks for confirmation on delete, and then deletes
+     * the selected classroom from the database
+     * @returns {Promise<void>}
+     */
     async function delClassroom() {
-      const id = $("#delID").val();
+        const id = $('#delID').val();
 
         const response = await fetch('http://localhost:3000/classroom', {
             method: 'DELETE',
@@ -202,7 +227,7 @@
         });
 
         const data = await response.text();
-        const modal = "#delModal";
+        const modal = '#delModal';
 
         loadResponse(modal, data, !response.ok);
 
@@ -210,30 +235,46 @@
 
     };
 
+    /**
+     * This method loads the response from the
+     * database, and displays updated table if there is no errors
+     * or loads the modal displaying errors
+     * @param modalID
+     * @param data
+     * @param hasErrs
+     */
     function loadResponse(modalID, data, hasErrs) {
-        // console.log('Data is: ' + data);
         document.documentElement.innerHTML = data;
 
         linkButtonFunctions();
 
         const modal = $(modalID);
-        modal.modal("hide");
+        modal.modal('hide');
 
         if (hasErrs) {
-          // alert("Showing: " + modal);
-            modal.modal("show");
+            modal.modal('show');
         }
     };
 
+    /**
+     * This method enters the data from selected entry
+     * into the edit form on the modal
+     * @param idToEdit
+     */
     function loadEditModal(idToEdit) {
-      // alert('Clicked on edit');
-      $("#eRoomNumber").val($(`#${idToEdit}roomNumber`).text());
-      $("#eLocation").val($(`#${idToEdit}location`).text());
-      $("#editID").val(idToEdit);
+        $('#eRoomNumber').val($(`#${idToEdit}roomNumber`).text());
+        $('#eLocation').val($(`#${idToEdit}location`).text());
+        $('#updateID').val(idToEdit);
     };
 
+    /**
+     * This method displays the data from selected entry
+     * into the delete confirm modal
+     * @param idToDelete
+     */
     function loadDelModal(idToDelete) {
-      $("#delID").val(idToDelete)
-      $("#delConfirmMsg").val($(`#${idToDelete}roomNumber`).text());
+        $('#delID').val(idToDelete);
+        $('#delConfirmMsg').val($(`#${idToDelete}roomNumber`).text());
     };
+
 </script>

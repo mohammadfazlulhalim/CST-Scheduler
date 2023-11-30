@@ -14,6 +14,9 @@ const getClassrooms = async () => {
   }
 };
 
+/**
+ * Returns a list of classrooms retreived from the database to be displayed
+ */
 router.get('/', async (req, res, next) => {
   const classroomList = await getClassrooms();
   // console.log('Returned classrooms');
@@ -21,6 +24,12 @@ router.get('/', async (req, res, next) => {
   res.render('classroom', {classroomList, title: 'Classrooms'});
 });
 
+/**
+ * This route uses req.body to save the classroom info inputted
+ * to create a new classroom in the database
+ * returns 201 if it is created
+ * returns 422 if it does not pass validation
+ */
 router.post('/', async (req, res, next) => {
   await sequelize.sync();
   const courseTempObj = {
@@ -47,6 +56,13 @@ router.post('/', async (req, res, next) => {
   });
 });
 
+/**
+ * This route uses req.body to save the classroom info inputted
+ * to update an existing in the database
+ * returns 200 if it is save
+ * returns 422 if it does not pass validation
+ * returns 404 if the classroom to update does not exist
+ */
 router.put('/', async (req, res, next) => {
   const courseTempObj = {
     id: req.body.id ? req.body.id : '',
@@ -73,6 +89,12 @@ router.put('/', async (req, res, next) => {
   });
 });
 
+/**
+ * This route uses req.body to save the classroom info inputted
+ * to create a new classroom in the database
+ * returns 200 if it is deleted
+ * returns 404 if the passed in classroom does not exist
+ */
 router.delete('/', async (req, res, next) => {
   const courseTempObj = {
     id: req.body.id ? req.body.id : '',
@@ -98,6 +120,11 @@ router.delete('/', async (req, res, next) => {
   });
 });
 
+/**
+ * This helper method calls the database to handle create
+ * @param classroomObj object literal containing classroom information to create
+ * @returns {Promise<{}>} object literal containing primary key of classroom created, success message and error messages
+ */
 async function createClassroom(classroomObj) {
   let createResponse = {};
   try {
@@ -118,6 +145,11 @@ async function createClassroom(classroomObj) {
   return createResponse;
 }
 
+/**
+ * This helper method calls the database to handle update
+ * @param classroomObj object literal containing classroom information to update
+ * @returns {Promise<{}>} object literal containing primary key of classroom updated, success message and error messages
+ */
 async function updateClassroom(classroomObj) {
   const updateResponse = {};
   const currentEntry = await Classroom.findByPk(classroomObj.id);
@@ -131,7 +163,6 @@ async function updateClassroom(classroomObj) {
     } catch (err) {
       updateResponse.error ={};
       err.errors.forEach((element) => {
-        console.log(JSON.stringify(element));
         const objectProp = element.path;
         updateResponse.error[objectProp] = element.message;
       });
@@ -143,6 +174,11 @@ async function updateClassroom(classroomObj) {
   return updateResponse;
 }
 
+/**
+ * This helper method calls the database to handle delete
+ * @param classroomObj object literal containing classroom information to delete
+ * @returns {Promise<{}>} object literal containing primary key of classroom delete, success message and error messages
+ */
 async function deleteClassroom(classroomObj) {
   const deleteResponse = {};
 
