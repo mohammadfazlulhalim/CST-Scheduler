@@ -12,13 +12,12 @@
         <tbody>
         {{#each classroomList}}
             <tr>
-                <td>{{this.roomNumber}}</td>
-                <td>{{this.location}}</td>
+                <td id="{{this.id}}roomNumber">{{this.roomNumber}}</td>
+                <td id="{{this.id}}location">{{this.location}}</td>
                 <td>
-                    <button type="button" id="edit{{this.id}}edit" class="btn" data-toggle="modal"
-                            data-target="#editModal">Edit
+                    <button type="button" id="edit{{this.id}}" class="btn editButton" data-toggle="modal" data-target="#updateModal">Edit
                     </button>
-                    <button type="button" id="del{{this.id}}">Delete</button>
+                    <button type="button" id="del{{this.id}}" class="btn delButton" data-toggle="modal" data-target="#delModal">Delete</button>
                 </td>
 
             </tr>
@@ -42,7 +41,6 @@
                 <h4 class="modal-title" id="createModalLabel">Input New Classroom</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 </button>
-
             </div>
             <div class="modal-body">
                 <form action="/classroom" method="POST">
@@ -65,7 +63,7 @@
 </div>
 
 <!--Edit modal-->
-<div class="modal fade" id="editModal" role="dialog" tabindex="-1" aria-labelledby="editModalLabel"
+<div class="modal fade" id="updateModal" role="dialog" tabindex="-1" aria-labelledby="editModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -79,17 +77,41 @@
                 <form action="/classroom" method="POST">
                     <label for="eRoomNumber">Room number:</label>
                     <input type="text" class="form-control {{#if err.roomNumber}}is-invalid{{/if}}" id="eRoomNumber"
-                           name="roomNumber">
+                           name="roomNumber" value="{{putClassroom.roomNumber}}">
                     <div class="invalid-feedback">{{err.roomNumber}}</div>
                     <label for="eLocation">Location:</label>
                     <input type="text" class="form-control {{#if err.location}}is-invalid{{/if}}" id="eLocation"
-                           name="location">
+                           name="location" value="{{putClassroom.location}}">
                     <div class="invalid-feedback">{{err.location}}</div>
+                    <input type="text" id="editID" name="id" hidden />
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" id="editClassroom" class="btn btn-secondary">Create</button>
+                <button type="button" id="editClassroom" class="btn btn-secondary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Delete modal-->
+<div class="modal fade" id="delModal" role="dialog" tabindex="-1" aria-labelledby="delModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="delModalLabel">Delete Classroom</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete Room:
+                <input type="text" id="delConfirmMsg" />
+                    <input type="text" id="delID" name="id" hidden /></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" id="delClassroom" class="btn btn-secondary">Confirm</button>
             </div>
         </div>
     </div>
@@ -106,6 +128,13 @@
     function linkButtonFunctions() {
         $('#createClassroom').click(createClassroom);
         $('#editClassroom').click(editClassroom);
+        $(".editButton").click(function() {
+          loadEditModal(this.id.replace("edit",""))
+        });
+        $('#delClassroom').click(delClassroom);
+        $(".delButton").click(function() {
+          loadDelModal(this.id.replace("del",""))
+        });
     }
 
 
@@ -123,30 +152,88 @@
                 location: $('#cLocation').val(),
             }),
         });
-        console.log(response);
+        // console.log('Response:');
+        // console.log(response);
 
         const data = await response.text();
-        const modal = '#addmodal';
+        const modal = "#createModal";
 
         loadResponse(modal, data, !response.ok);
     };
 
     async function editClassroom() {
-        // fetch
-    }
+      const id = $("#editID").val();
+
+        const response = await fetch('http://localhost:3000/classroom', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify({
+                roomNumber: $('#eRoomNumber').val(),
+                location: $('#eLocation').val(),
+                id,
+            }),
+        });
+
+        const data = await response.text();
+        const modal = "#updateModal";
+
+        loadResponse(modal, data, !response.ok);
+
+        loadEditModal(id);
+    };
+
+    async function delClassroom() {
+      const id = $("#delID").val();
+
+        const response = await fetch('http://localhost:3000/classroom', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify({
+                roomNumber: $('#eRoomNumber').val(),
+                location: $('#eLocation').val(),
+                id,
+            }),
+        });
+
+        const data = await response.text();
+        const modal = "#delModal";
+
+        loadResponse(modal, data, !response.ok);
+
+        loadDelModal(id);
+
+    };
 
     function loadResponse(modalID, data, hasErrs) {
-        console.log('Data is: ' + data);
+        // console.log('Data is: ' + data);
         document.documentElement.innerHTML = data;
 
         linkButtonFunctions();
 
         const modal = $(modalID);
-        modal.modal('hide');
+        modal.modal("hide");
 
         if (hasErrs) {
-            modal.modal('show');
+          // alert("Showing: " + modal);
+            modal.modal("show");
         }
+    };
 
-    }
+    function loadEditModal(idToEdit) {
+      // alert('Clicked on edit');
+      $("#eRoomNumber").val($(`#${idToEdit}roomNumber`).text());
+      $("#eLocation").val($(`#${idToEdit}location`).text());
+      $("#editID").val(idToEdit);
+    };
+
+    function loadDelModal(idToDelete) {
+      $("#delID").val(idToDelete)
+      $("#delConfirmMsg").val($(`#${idToDelete}roomNumber`).text());
+    };
 </script>

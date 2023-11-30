@@ -15,7 +15,7 @@ const getClassrooms = async () => {
 };
 
 router.get('/', async (req, res, next) => {
-  const classroomList = await  getClassrooms();
+  const classroomList = await getClassrooms();
   // console.log('Returned classrooms');
   // console.log(JSON.stringify(classroomList));
   res.render('classroom', {classroomList, title: 'Classrooms'});
@@ -31,6 +31,7 @@ router.post('/', async (req, res, next) => {
   let violations;
 
   const response = await createClassroom(courseTempObj);
+
   if (response.success === 'Success') {
     res.statusCode = 201;
   } else {
@@ -40,11 +41,10 @@ router.post('/', async (req, res, next) => {
   const classrooms = await getClassrooms();
 
   res.render('classroom', {
-    classrooms,
+    classroomList: classrooms,
     err: violations,
     submittedClassroom: violations ? req.body : undefined,
   });
-
 });
 
 router.put('/', async (req, res, next) => {
@@ -53,16 +53,24 @@ router.put('/', async (req, res, next) => {
     roomNumber: req.body.roomNumber ? req.body.roomNumber : '',
     location: req.body.location ? req.body.location : '',
   };
+  let violations;
   const response = await updateClassroom(courseTempObj);
   if (response.success === 'Success') {
     res.statusCode = 200;
   } else if (response.invalidKey) {
     res.statusCode = 404;
   } else {
+    violations = response.error;
     res.statusCode = 422;
   }
 
-  res.render('classroom');
+  const classrooms = await getClassrooms();
+
+  res.render('classroom', {
+    classroomList: classrooms,
+    err: violations,
+    putClassroom: violations ? req.body : undefined,
+  });
 });
 
 router.delete('/', async (req, res, next) => {
@@ -71,27 +79,37 @@ router.delete('/', async (req, res, next) => {
     roomNumber: req.body.roomNumber ? req.body.roomNumber : '',
     location: req.body.location ? req.body.location : '',
   };
+  let violations;
+
   const response = await deleteClassroom(courseTempObj);
+  const classrooms = await getClassrooms();
+
   if (response.success === 'Success') {
     res.statusCode = 200;
   } else {
+    violations = response.error;
     res.statusCode = 404;
   }
 
-  res.render('classroom');
+  res.render('classroom', {
+    classroomList: classrooms,
+      err: violations,
+      delClassroom: violations ? req.body : undefined,
+  });
 });
 
 async function createClassroom(classroomObj) {
-  const createResponse = {};
+  let createResponse = {};
   try {
     const response = await Classroom.create({roomNumber: classroomObj.roomNumber, location: classroomObj.location});
     createResponse.success = 'Success';
     createResponse.pk = response.id ? response.id : 'Response does not have ID';
-
   } catch (err) {
-    //console.log('Error is: ' + JSON.stringify(err));
+    // console.log('Error is: ' + JSON.stringify(err));
     // Need to output these so that each attribute gets proper error message
+    createResponse.error ={};
     err.errors.forEach((element) => {
+      // console.log(JSON.stringify(element));
       const objectProp = element.path;
       createResponse.error[objectProp] = element.message;
     });
@@ -104,14 +122,16 @@ async function updateClassroom(classroomObj) {
   const updateResponse = {};
   const currentEntry = await Classroom.findByPk(classroomObj.id);
 
-  //checking we have a valid primary key
+  // checking we have a valid primary key
   if (await Classroom.findByPk(classroomObj.id) != null) {
     try {
       const response = await currentEntry.update({roomNumber: classroomObj.roomNumber, location: classroomObj.location});
       updateResponse.success = 'Success';
       updateResponse.pk = response.id ? response.id : 'Response does not have ID';
     } catch (err) {
+      updateResponse.error ={};
       err.errors.forEach((element) => {
+        console.log(JSON.stringify(element));
         const objectProp = element.path;
         updateResponse.error[objectProp] = element.message;
       });
