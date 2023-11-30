@@ -160,7 +160,7 @@ const updateProgram = async (programToUpdate, newName, newAbbr) => {
   } catch (err) {
     errors = mapErrors(err);
 
-    console.error(errors);
+    //console.error(errors);
     return errors;
   }
 };
@@ -173,7 +173,7 @@ const deleteProgram= async (programToDelete)=>{
     await programToDelete.destroy();
   } catch (err) {
     errors = mapErrors(err);
-    console.error(errors);
+    //console.error(errors);
   }
 };
 
