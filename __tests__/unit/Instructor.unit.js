@@ -38,7 +38,7 @@ describe('firstName', () => {
 
   test('testThatFirstNameCanNotBeEmpty', async function() {
     testInstructor.firstName = '';
-    let err, errCount, instructor;
+    let err; let errCount; let instructor;
 
     try {
       instructor = await Instructor.create(testInstructor);
@@ -98,7 +98,7 @@ describe('firstName', () => {
 
   test('testThatFirstNameCanNotBe51Chars', async function() {
     testInstructor.firstName = 'a'.repeat(51); // define first name (51 Chars)
-    let err, errCount, instructor;
+    let err; let errCount; let instructor;
 
     try {
       instructor = await Instructor.create(testInstructor);

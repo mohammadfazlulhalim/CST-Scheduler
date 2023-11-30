@@ -1,16 +1,27 @@
 // Documentation for sequelize: https://sequelize.org/
 const {DataTypes, sequelize} = require('../../dataSource');
-const termNumberUpperLimit = 6;
-const termNumberLowerLimit = 1;
+const termNumberUpperLimit = require('../../constants').termConstraints.termNumberUpperLimit;
+const termNumberLowerLimit = require('../../constants').termConstraints.termNumberLowerLimit;
 
 // Creating the model
 // See: https://sequelize.org/docs/v6/core-concepts/model-basics/
 
 const Term = sequelize.define('Term', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
   termNumber: {
     type: DataTypes.INTEGER,
     // Checking that term is between 1-6 inclusive
     validate: {
+      // use a custom validator to get a custom message in the same format as the others
+      customNumberNotNull(value) {
+        if (!value && value !== 0) {
+          throw new Error('Term number cannot be empty');
+        }
+      },
       min: {
         args: termNumberLowerLimit,
         msg: 'Term number must be between ' + termNumberLowerLimit + ' and ' + termNumberUpperLimit,
@@ -26,6 +37,9 @@ const Term = sequelize.define('Term', {
     validate: {
       // Checking that start date is valid based on term number
       customTermStartDates(value) {
+        if (value === null || value === undefined || value === '') {
+          throw new Error('Term start date cannot be empty');
+        }
         // splitting the date into an array so we can access just the month
         // Group standard for dates will be 'YYYY-MM-DD'
         const dateArray = value.split('-');
@@ -61,6 +75,9 @@ const Term = sequelize.define('Term', {
     validate: {
       // custom validator that checks that the ending month is valid
       customEndDates(value) {
+        if (value === null || value === undefined || value === '') {
+          throw new Error('Term end date cannot be empty');
+        }
         // splitting the date into an array so we can access just the month
         // Group standard for dates will be 'YYYY-MM-DD'
         const dateArray = value.split('-');
@@ -91,6 +108,10 @@ const Term = sequelize.define('Term', {
       },
       // custom validator that checks that the start date is after the end date
       checkEndAfterStart(value) {
+        // since this is already taken care of, don;t check for it here
+        if (value === null || value === undefined || value === '') {
+          return;
+        }
         // Splitting the end and start dates into arrays, so that we can compare just on Month, Year, or Day
         // The group standard for dates are 'YYYY-MM-DD'
         const endDateArray = value.split('-');
