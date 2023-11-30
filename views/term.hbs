@@ -27,44 +27,6 @@
 
     </table>
 
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">New</button>
-
-    <!-- Add Modal -->
-    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">Create New Term</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="/term" method="POST">
-                    <div class="modal-body">
-                        <label for="cTermNumber">Term Number:</label>
-                        <input type="number" min="{{minTerms}}" max="{{maxTerms}}" class="form-control {{#if err.termNumber}}is-invalid{{/if}}" id="cTermNumber"
-                               name="termNumber" value="{{submittedTerm.termNumber}}">
-                        <div class="invalid-feedback">{{err.termNumber}}</div>
-
-                        <label for="cStartDate">Start Date:</label>
-                        <input type="date" class="form-control {{#if err.startDate}}is-invalid{{/if}}" id="cStartDate"
-                               name="startDate" value="{{submittedTerm.startDate}}">
-                        <div class="invalid-feedback">{{err.startDate}}</div>
-
-                        <label for="cEndDate">End Date:</label>
-                        <input type="date" class="form-control {{#if err.endDate}}is-invalid{{/if}}" id="cEndDate"
-                               name="endDate" value="{{submittedTerm.endDate}}">
-                        <div class="invalid-feedback">{{err.endDate}}</div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" id="createTerm" class="btn btn-outline-success">Create</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- Delete Modal -->
     <div class="modal fade" id="deleteModal" role="dialog" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -135,14 +97,45 @@
     <p>There are no terms stored</p>
 {{/if}}
 
+<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">New</button>
+
+<!-- Add Modal - must be displayed even if no terms exist -->
+<div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Create New Term</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/term" method="POST">
+                <div class="modal-body">
+                    <label for="cTermNumber">Term Number:</label>
+                    <input type="number" min="{{minTerms}}" max="{{maxTerms}}" class="form-control {{#if err.termNumber}}is-invalid{{/if}}" id="cTermNumber"
+                           name="termNumber" value="{{submittedTerm.termNumber}}">
+                    <div class="invalid-feedback">{{err.termNumber}}</div>
+
+                    <label for="cStartDate">Start Date:</label>
+                    <input type="date" class="form-control {{#if err.startDate}}is-invalid{{/if}}" id="cStartDate"
+                           name="startDate" value="{{submittedTerm.startDate}}">
+                    <div class="invalid-feedback">{{err.startDate}}</div>
+
+                    <label for="cEndDate">End Date:</label>
+                    <input type="date" class="form-control {{#if err.endDate}}is-invalid{{/if}}" id="cEndDate"
+                           name="endDate" value="{{submittedTerm.endDate}}">
+                    <div class="invalid-feedback">{{err.endDate}}</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="createTerm" class="btn btn-outline-success">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <a href="http://localhost:3000/administration"><button class="btn btn-success">Go Back</button></a>
-
-<!-- Debug paragraph -->
-<p id="debug"></p>
-
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <!-- My own handlers for the form submits -->
 <script>
@@ -165,7 +158,11 @@
         });
     }
 
-    // create handler; needs to be reassigned after html loads again
+    /**
+     * This function handles what happens when a user clicks the "create" button
+     * in the Create New Term modal
+     * @returns {Promise<void>}
+     */
     async function handleCreateTerm() {
         // send a POST request to the router
         const response = await fetch("http://localhost:3000/term", {
@@ -188,6 +185,11 @@
         loadResponse(modal, data, !response.ok);
     }
 
+    /**
+     * This function handles what happens when a user clicks the "Delete" button
+     * in the Delete Term modal
+     * @returns {Promise<void>}
+     */
     async function handleDeleteTerm() {
         // send a DELETE request to the router
         const response = await fetch("http://localhost:3000/term", {
@@ -208,6 +210,11 @@
         loadResponse(modal, data, !response.ok);
     }
 
+    /**
+     * This function handles what happens when a user clicks the "Save" button
+     * in the Edit Existing Term modal
+     * @returns {Promise<void>}
+     */
     async function handleEditTerm() {
       const id = $("#editID").val();
         // send a PUT request to the router
@@ -235,17 +242,34 @@
         handleEditModal(id);
     }
 
+    /**
+     * This function loads a hidden form input in the delete modal with the ID of the term to delete
+     * @param idToDelete    - The ID of the term to delete
+     */
     function handleDeleteModal(idToDelete) {
         $("#deleteID").val(idToDelete);
     }
 
-    function handleEditModal(idToDelete) {
-        $("#editID").val(idToDelete);
-        $("#eTermNumber").val($(`#${idToDelete}number`).text());
-        $("#eStartDate").val($(`#${idToDelete}start`).text());
-        $("#eEndDate").val($(`#${idToDelete}end`).text());
+    /**
+     * This function loads the form in the Edit Existing Term modal with the information
+     * of the term the user wants to edit
+     * @param idToEdit    - The ID of the term being edited
+     */
+    function handleEditModal(idToEdit) {
+        $("#editID").val(idToEdit);
+        $("#eTermNumber").val($(`#${idToEdit}number`).text());
+        $("#eStartDate").val($(`#${idToEdit}start`).text());
+        $("#eEndDate").val($(`#${idToEdit}end`).text());
     }
 
+    /**
+     * As the server gives responses in HTML, the client needs to be able to parse that data.
+     * This function replaces the HTML of the current page with the new HTML from the server
+     * and pops up the last used modal if there were errors.
+     * @param modalID   - The HTML id of the modal to pop up
+     * @param data      - The HTML response from the server
+     * @param showModal - True to show the modal, false to hide the modal
+     */
     function loadResponse(modalID, data, showModal) {
         // set the whole document's HTML to be the response
         document.documentElement.innerHTML = data;

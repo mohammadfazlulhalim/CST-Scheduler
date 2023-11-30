@@ -18,13 +18,11 @@ router.get('/', async function(req, res, next) {
 router.post('/', async function(req, res, next) {
   await sequelize.sync();
   // attempt to create the given term
-  console.log('POST: ' + JSON.stringify(req.body));
   const result = await createTerm({
     termNumber: req.body.termNumber,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
   });
-  console.log('POST result: ' + JSON.stringify(result));
   let violations;
   if (result.error) {
     // if the term does not have a start/end date, that means it's invalid and errors were sent back
@@ -70,7 +68,6 @@ router.delete('/', async function(req, res, next) {
  * PUT request handler for http://localhost:3000/term
  */
 router.put('/', async function(req, res, next) {
-  console.log('PUT body: ' + JSON.stringify(req.body));
   const result = await updateTerm({
     id: req.body.id,
     termNumber: req.body.termNumber,
@@ -83,7 +80,6 @@ router.put('/', async function(req, res, next) {
       // if the invalidKey message is defined, then a non-existent term is trying to update
       res.status(404);
     } else {
-      console.log('Input errors: ' + JSON.stringify(result));
       // if the term does not have a start/end date, that means it's invalid and errors were sent back
       res.status(422);
     }
@@ -151,9 +147,7 @@ const updateTerm = async (term) => {
       });
     } catch (err) {
       // return formatted validation errors when invalid
-      const errors = mapErrors(err);
-      console.log('updateErrors:\n' + JSON.stringify(errors));
-      return errors;
+      return mapErrors(err);
     }
   } else {
     // if not found, return an invalid key error message
@@ -183,7 +177,6 @@ const readAllTerms = async () => {
 const mapErrors = (err) => {
   const violations = {error: {}};
   for (const error of err.errors) {
-    console.log('maperrors:\n' + JSON.stringify(error));
     violations.error[error.path] = error.message;
   }
   return violations;

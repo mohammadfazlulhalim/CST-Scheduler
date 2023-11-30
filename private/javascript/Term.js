@@ -73,7 +73,6 @@ const Term = sequelize.define('Term', {
   endDate: {
     type: DataTypes.DATEONLY,
     validate: {
-      // TODO: split this back up into multiple functions
       // custom validator that checks that the ending month is valid
       customEndDates(value) {
         if (value === null || value === undefined || value === '') {
@@ -106,8 +105,13 @@ const Term = sequelize.define('Term', {
             throw new Error('Term ' + this.termNumber + ' must end in May or June');
           }
         }
-
-        // ensure end date comes after start date
+      },
+      // custom validator that checks that the start date is after the end date
+      checkEndAfterStart(value) {
+        // since this is already taken care of, don;t check for it here
+        if (value === null || value === undefined || value === '') {
+          return;
+        }
         // Splitting the end and start dates into arrays, so that we can compare just on Month, Year, or Day
         // The group standard for dates are 'YYYY-MM-DD'
         const endDateArray = value.split('-');
