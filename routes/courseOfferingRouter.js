@@ -37,7 +37,19 @@ router.post('/', async function(req, res, next) {
     instructorID: req.body.instructorID,
     programID: req.body.programID,
   }
-  await createCourseOffering(newCO);
+  const retCreate = await createCourseOffering(newCO);
+  let violations;
+  if (retCreate.e) {
+    // if the term does not have a start/end date, that means it's invalid and errors were sent back
+    res.status(422);
+    // send error messages to the hbs template
+    violations = retCreate.error;
+  } else {
+    // creation was successful
+    res.status(201);
+    // put the ID in the response so tests can access it
+    res.set('id', retCreate.id);
+  }
 
   res.redirect('/term');
 });

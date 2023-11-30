@@ -4,11 +4,11 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-const indexRouter = require('./routes/index');
+const indexRouter = require('./routes/indexRouter');
 const instructorRouter = require('./routes/instructor');
 const classroomRouter = require('./routes/classroom');
-const termRouter = require('./routes/term');
-const courseOfferingRouter = require('./routes/courseOffering');
+const termRouter = require('./routes/termRouter');
+const courseOfferingRouter = require('./routes/courseOfferingRouter');
 // story34 view courses
 const viewCoursesRouter = require('./routes/course');
 const adminRouter = require('./routes/administrationRouter');
@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routers
 app.use('/', indexRouter);
 app.use('/instructor', instructorRouter);
-app.use('/Term', termRouter);
+app.use('/term', termRouter.router);
 app.use('/courseOffering', courseOfferingRouter.router);
 app.use('/course', viewCoursesRouter); // story34 view courses
 app.use('/classroom', classroomRouter);
