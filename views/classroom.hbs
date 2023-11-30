@@ -15,7 +15,9 @@
                 <td>{{this.roomNumber}}</td>
                 <td>{{this.location}}</td>
                 <td>
-                    <button type="button" id="edit{{this.id}}">Edit</button>
+                    <button type="button" id="edit{{this.id}}edit" class="btn" data-toggle="modal"
+                            data-target="#editModal">Edit
+                    </button>
                     <button type="button" id="del{{this.id}}">Delete</button>
                 </td>
 
@@ -45,14 +47,49 @@
             <div class="modal-body">
                 <form action="/classroom" method="POST">
                     <label for="cRoomNumber">Room number:</label>
-                    <input type="text" class="form-control" id="cRoomNumber" name="roomNumber">
+                    <input type="text" class="form-control {{#if err.roomNumber}}is-invalid{{/if}}" id="cRoomNumber"
+                           name="roomNumber">
+                    <div class="invalid-feedback">{{err.roomNumber}}</div>
                     <label for="cLocation">Location:</label>
-                    <input type="text" class="form-control" id="cLocation" name="location">
+                    <input type="text" class="form-control {{#if err.location}}is-invalid{{/if}}" id="cLocation"
+                           name="location">
+                    <div class="invalid-feedback">{{err.location}}</div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" id="createClassroom" class="btn btn-secondary">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Edit modal-->
+<div class="modal fade" id="editModal" role="dialog" tabindex="-1" aria-labelledby="editModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editModalLabel">Edit Classroom</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+
+            </div>
+            <div class="modal-body">
+                <form action="/classroom" method="POST">
+                    <label for="eRoomNumber">Room number:</label>
+                    <input type="text" class="form-control {{#if err.roomNumber}}is-invalid{{/if}}" id="eRoomNumber"
+                           name="roomNumber">
+                    <div class="invalid-feedback">{{err.roomNumber}}</div>
+                    <label for="eLocation">Location:</label>
+                    <input type="text" class="form-control {{#if err.location}}is-invalid{{/if}}" id="eLocation"
+                           name="location">
+                    <div class="invalid-feedback">{{err.location}}</div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="editClassroom" class="btn btn-secondary">Create</button>
             </div>
         </div>
     </div>
@@ -64,34 +101,52 @@
 <script>
     'use strict';
 
-    $(() => {
-        // create btn handler
-        $('#createClassroom').click(async () => {
-          alert("Saving...");
-            const response = await fetch('http://localhost:3000/classroom', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: JSON.stringify({
-                    roomNumber: $('#cRoomNumber').val(),
-                    location: $('#cLocation').val(),
-                }),
-            });
-            console.log(response);
-            // Here I need to do the processing to handle erros and display errors
-            // or close the modal
+    linkButtonFunctions();
+
+    function linkButtonFunctions() {
+        $('#createClassroom').click(createClassroom);
+        $('#editClassroom').click(editClassroom);
+    }
 
 
-            const data = await response.text();
-
-
-            // modal.modal();
-
-
-
-
+    // create btn handler
+    async function createClassroom() {
+        // alert('Saving...');
+        const response = await fetch('http://localhost:3000/classroom', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify({
+                roomNumber: $('#cRoomNumber').val(),
+                location: $('#cLocation').val(),
+            }),
         });
-    });
+        console.log(response);
+
+        const data = await response.text();
+        const modal = '#addmodal';
+
+        loadResponse(modal, data, !response.ok);
+    };
+
+    async function editClassroom() {
+        // fetch
+    }
+
+    function loadResponse(modalID, data, hasErrs) {
+        console.log('Data is: ' + data);
+        document.documentElement.innerHTML = data;
+
+        linkButtonFunctions();
+
+        const modal = $(modalID);
+        modal.modal('hide');
+
+        if (hasErrs) {
+            modal.modal('show');
+        }
+
+    }
 </script>

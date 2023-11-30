@@ -230,37 +230,37 @@ describe('wrapperMethodsErrorTests', ()=>{
     // just roomNumber
     classroomInstance1.roomNumber='12345678901';
     response = await createClassroom(classroomInstance1);
-    expect(response.roomNumber).toBeDefined();
-    expect(response.location).not.toBeDefined();
+    expect(response.error.roomNumber).toBeDefined();
+    expect(response.error.location).not.toBeDefined();
     // just location
     classroomInstance2.location='A';
     response = await createClassroom(classroomInstance2);
-    expect(response.roomNumber).not.toBeDefined();
-    expect(response.location).toBeDefined();
+    expect(response.error.roomNumber).not.toBeDefined();
+    expect(response.error.location).toBeDefined();
     // both
     classroomInstance3.roomNumber='12345678901';
     classroomInstance3.location='A';
     response = await createClassroom(classroomInstance3);
-    expect(response.roomNumber).toBeDefined();
-    expect(response.location).toBeDefined();
+    expect(response.error.roomNumber).toBeDefined();
+    expect(response.error.location).toBeDefined();
   })
 
   test('updateClassroomErrorMessages', async ()=>{
     // just roomNumber
     classroomInstance1.roomNumber='12345678901';
     response = await updateClassroom(classroomInstance1);
-    expect(response.roomNumber).toBeDefined();
-    expect(response.location).not.toBeDefined();
+    expect(response.error.roomNumber).toBeDefined();
+    expect(response.error.location).not.toBeDefined();
     // just location
     classroomInstance2.location='A';
     response = await updateClassroom(classroomInstance2);
-    expect(response.roomNumber).not.toBeDefined();
-    expect(response.location).toBeDefined();
+    expect(response.error.roomNumber).not.toBeDefined();
+    expect(response.error.location).toBeDefined();
     // both
     classroomInstance3.roomNumber='12345678901';
     classroomInstance3.location='A';
     response = await updateClassroom(classroomInstance3);
-    expect(response.roomNumber).toBeDefined();
-    expect(response.location).toBeDefined();
+    expect(response.error.roomNumber).toBeDefined();
+    expect(response.error.location).toBeDefined();
   })
 })

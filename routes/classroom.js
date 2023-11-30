@@ -1,33 +1,49 @@
 const express = require('express');
 const router = express.Router();
 const Classroom = require('../private/javascript/Classroom');
-router.get('/', async (req, res, next) => {
-  let classroomList = [];
-  // Gathering classrooms from database
+const {sequelize} = require('../dataSource');
+
+const getClassrooms = async () => {
   try {
-    classroomList = await Classroom.findAll({
+    return await Classroom.findAll({
       order: ['roomNumber'],
     });
   } catch (error) { // If there are no classrooms, the list will be empty.
     console.error('Error:', error);
+    return undefined;
   }
+};
+
+router.get('/', async (req, res, next) => {
+  const classroomList = await  getClassrooms();
+  // console.log('Returned classrooms');
+  // console.log(JSON.stringify(classroomList));
   res.render('classroom', {classroomList, title: 'Classrooms'});
 });
 
 router.post('/', async (req, res, next) => {
+  await sequelize.sync();
   const courseTempObj = {
     roomNumber: req.body.roomNumber ? req.body.roomNumber : '',
     location: req.body.location ? req.body.location : '',
   };
+
+  let violations;
 
   const response = await createClassroom(courseTempObj);
   if (response.success === 'Success') {
     res.statusCode = 201;
   } else {
     res.statusCode = 422;
+    violations = response.error;
   }
+  const classrooms = await getClassrooms();
 
-  res.render('classroom');
+  res.render('classroom', {
+    classrooms,
+    err: violations,
+    submittedClassroom: violations ? req.body : undefined,
+  });
 
 });
 
@@ -74,11 +90,10 @@ async function createClassroom(classroomObj) {
 
   } catch (err) {
     //console.log('Error is: ' + JSON.stringify(err));
-    // Need to output these so that each attribute gets pproper error message
+    // Need to output these so that each attribute gets proper error message
     err.errors.forEach((element) => {
-
       const objectProp = element.path;
-      createResponse[objectProp] = element.message;
+      createResponse.error[objectProp] = element.message;
     });
   }
 
@@ -98,7 +113,7 @@ async function updateClassroom(classroomObj) {
     } catch (err) {
       err.errors.forEach((element) => {
         const objectProp = element.path;
-        updateResponse[objectProp] = element.message;
+        updateResponse.error[objectProp] = element.message;
       });
     }
   } else {
