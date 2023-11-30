@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Term = require('../private/javascript/Term');
+const TermRouter = require('../private/javascript/Term');
 const {sequelize} = require('../dataSource');
 const termConstraints = require('../constants').termConstraints;
 router.get('/', async function(req, res, next) {
   // Declaring the array
   const termLists = await readAllTerms();
   res.render('term', {
-    title: 'Term Listings',
+    title: 'Manage Terms',
     termEntries: termLists,
   });
 });
@@ -42,6 +42,7 @@ router.post('/', async function(req, res, next) {
     submittedTerm: violations ? req.body : undefined,
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
+    title: 'Manage Terms',
   });
 });
 
@@ -53,7 +54,7 @@ router.delete('/', async function(req, res, next) {
   let violations;
   if (result <= 0) {
     res.status(404);
-    violations = {id: 'Term not found; cannot delete'};
+    violations = {id: 'TermRouter not found; cannot delete'};
   }
   const termLists = await readAllTerms();
   res.render('term', {
@@ -61,6 +62,7 @@ router.delete('/', async function(req, res, next) {
     err: violations,
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
+    title: 'Manage Terms',
   });
 });
 
@@ -93,6 +95,7 @@ router.put('/', async function(req, res, next) {
     putSubmittedTerm: violations ? req.body : undefined,
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
+    title: 'Manage Terms',
   });
 });
 
@@ -103,7 +106,7 @@ router.put('/', async function(req, res, next) {
  */
 const createTerm = async (term) => {
   try {
-    return await Term.create({
+    return await TermRouter.create({
       termNumber: parseInt(term.termNumber),
       startDate: term.startDate,
       endDate: term.endDate,
@@ -122,7 +125,7 @@ const createTerm = async (term) => {
 const deleteTerm = async (term) => {
   try {
     // try to delete the term
-    return await Term.destroy({where: {id: term.id}});
+    return await TermRouter.destroy({where: {id: term.id}});
   } catch (err) {
     // if an error occurred, state that 0 rows were deleted
     return 0;
@@ -136,7 +139,7 @@ const deleteTerm = async (term) => {
  */
 const updateTerm = async (term) => {
   // find the term to update
-  const termToUpdate = await Term.findByPk(term.id);
+  const termToUpdate = await TermRouter.findByPk(term.id);
   if (termToUpdate) {
     // only try to update the term if it already exists
     try {
@@ -161,7 +164,7 @@ const updateTerm = async (term) => {
 const readAllTerms = async () => {
   try {
     // Calling the database, for all term entries, ordered by term number
-    return await Term.findAll({order: ['termNumber']});
+    return await TermRouter.findAll({order: ['startDate']});
   } catch (err) {
     // If it is not found, declaring termEntries as undefined so that table will not be viewed on term.hbs
     // and instead a sentence declaring no term entries found is displayed
