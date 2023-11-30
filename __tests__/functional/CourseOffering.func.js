@@ -35,13 +35,14 @@ describe('Functional Course Offering', () => {
 
     //refresh before each test
     beforeEach(async function() {
+        await CourseOffering.sync({force: true});
         testCourseOffering1 = testConst.courseOffering1;
         testCourseOffering2 = testConst.courseOffering2;
     })
 
     //destroy course offering table after each test
     afterEach(async function() {
-        await CourseOffering.destroy();
+        await CourseOffering.destroy({ truncate: true});
     })
 
     //test that course Offering is successfully added to empty darabase

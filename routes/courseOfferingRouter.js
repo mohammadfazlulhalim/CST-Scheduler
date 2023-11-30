@@ -25,6 +25,7 @@ router.get('/', async function(req, res, next) {
 
 router.post('/', async function(req, res, next) {
   console.log('POST: ' + JSON.stringify(req.body));
+  await CourseOffering.sync();
 
   const newCO = {
     name: req.body.name,
