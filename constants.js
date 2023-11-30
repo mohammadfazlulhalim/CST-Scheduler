@@ -10,7 +10,17 @@ const testConst = {
     termNumber: '2023-12-15',
     group: 'A',
   },
+
+  validTerms: [
+    {termNumber: 1, startDate: '2023-08-01', endDate: '2023-12-01'},
+    {termNumber: 2, startDate: '2023-01-01', endDate: '2023-04-01'},
+    {termNumber: 3, startDate: '2023-05-01', endDate: '2023-05-31'},
+    {termNumber: 4, startDate: '2023-08-01', endDate: '2023-12-01'},
+    {termNumber: 5, startDate: '2023-01-01', endDate: '2023-04-01'},
+    {termNumber: 6, startDate: '2023-05-01', endDate: '2023-05-31'},
+  ],
 };
+
 const fixtureConst = {
   instructor1: {
     instructorID: '123',
@@ -41,4 +51,9 @@ const instructorConstraints = {
 };
 
 
-module.exports = {instructorConstraints, testConst, fixtureConst};
+const termConstraints = {
+  termNumberUpperLimit: 6,
+  termNumberLowerLimit: 1,
+};
+
+module.exports = {instructorConstraints, testConst, termConstraints, fixtureConst};
