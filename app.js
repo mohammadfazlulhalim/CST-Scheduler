@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
-const instructorRouter = require('./routes/instructor');
+const instructorRouter = require('./routes/instructor').router;
 const classroomRouter = require('./routes/classroom');
 const termRouter = require('./routes/term');
 const courseOfferingRouter = require('./routes/courseOffering');

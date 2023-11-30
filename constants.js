@@ -33,6 +33,12 @@ const fixtureConst = {
     lastName: 'Basoalto',
   },
 };
+const instructorConstraints = {
+  firstNameUpperLimit: 50,
+  firstNameLowerLimit: 0,
+  lastNameLowerLimit: 0,
+  lastNameUpperLimit: 50,
+};
 
 
-module.exports = {testConst, fixtureConst};
+module.exports = {instructorConstraints, testConst, fixtureConst};
