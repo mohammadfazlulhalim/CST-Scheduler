@@ -5,88 +5,186 @@
 const express = require('express');
 const router = express.Router();
 const Program = require('../private/javascript/Program');
-const {where} = require('sequelize');
+const {sequelize} = require('../dataSource');
 
 // Reading the programs
 router.get('/', async function(req, res, next) {
+  // initialize a list of programs
   let programList;
 
   try {
+    // try to collect the programs and order them
     programList= await Program.findAll({order: ['programName']});
   } catch (err) {
     programList = undefined;
   }
-
+  // render the page
   res.render('program', {
     program: programList,
   });
 });
 
-// Creating a new program
-router.post('/create', async function(req, res, next) {
-  const newName = req.body.addName;
-  const newAbbr = req.body.addAbbr;
-  let errors;
+// Create new programs
+router.post('/', async function(req, res, next) {
+  await sequelize.sync();
+  // attempt to create the given term
+  const result = await createProgram({
+    programName: req.body.programName,
+    programAbbreviation: req.body.programAbbreviation,
 
+  });
 
-  // if (true) {
-  // Check if the program with the given name already exists
+  // initialize errors/violations
+  let violations;
 
-
-  createProgram(newName, newAbbr);
-  // } else {
-  //   // Program already exists, handle the error or notify the user
-  //   console.log('Program with the same name already exists:', existingProgram.toJSON());
-  //   errors = 'Program with the same name already exists.';
-  // }
-  console.log('out of block');
-  const programList = await FindAllPrograms();
+  if (result.error) {
+    // if error occurs, that means it's invalid and errors were sent back
+    res.status(422);
+    // send error messages to the hbs template
+    violations = result.error;
+  } else {
+    // creation was successful
+    res.status(201);
+    // put the ID in the response so tests can access it
+    res.set('id', result.id);
+  }
+  // Gather the list of programs
+  const programLists = await FindAllPrograms();
+  // render the page
   res.render('program', {
-    errMsg: errors,
-    program: programList,
+    program: programLists,
+    err: violations,
+    submittedProgram: violations ? req.body : undefined,
   });
 });
 
-// Update an existing program
-router.post('/update', async function(req, res, next) {
-  const newName = req.body.editName;
-  const newAbbr = req.body.editAbbr;
-  const id=req.body.editID;
-  let errors;
+// Update programs
+router.put('/', async function(req, res, next) {
+  console.log('We r in the put');
+  await sequelize.sync();
+  // From the hbs form gather the data
+  const programID = req.body.progID;
+  const programName = req.body.programName;
+  const programAbbreviation = req.body.programAbbreviation;
 
+  // find if that program exists
+  const programToUpdate = await Program.findByPk(programID);
+  console.log('program to update'+JSON.stringify(programToUpdate));
+  let violations;
+  // if it doesnt exist
+  if (!programToUpdate) {
+    res.status(404);
+  } else {// else update
+    const result = await updateProgram(programToUpdate, programName, programAbbreviation);
+    console.log('We r out of the program to update method'+JSON.stringify(result));
 
-  console.log('you clicked save button');
-  const programToUpdate = await Program.findByPk(id);
-  console.log('id is '+id);
+    // initialize violations
+    // let violations;
+    if (result.error) {
+      // if error that means it's invalid and errors were sent back
+      res.status(422);
+      // send error messages to the hbs template
+      violations = result.error;
+      console.log('our error'+JSON.stringify(violations));
+    } else {
+      // creation was successful
+      res.status(201);
+      // put the ID in the response so tests can access it
+      res.set('id', result.id);
+    }
+  }
 
-  updateProgram(programToUpdate, newName, newAbbr);
-  const programList=await FindAllPrograms();
+  // Gather the programs
+  const programLists = await FindAllPrograms();
+  // render the page
   res.render('program', {
-    // get list of programs
-    // errors
-    errMsg: errors, // got rid of error
-    program: programList,
+    program: programLists,
+    putErr: violations,
+    putSubmittedProgram: violations ? req.body : undefined,
+  });
+});
 
+// Delete program
+router.delete('/', async function(req, res, next) {
+  await sequelize.sync();
+  // Gather data from hbs inputs on form
+  const programPK= req.body.progID;
+  const programToDelete=await Program.findByPk(programPK);
+
+  // Try to delete the program
+  const result= await deleteProgram(programToDelete);
+
+  // Initialize the violations
+  let violations;
+
+  try {
+    if (result.error) {
+    // error, that means it's invalid and errors were sent back
+      res.status(422);
+      // send error messages to the hbs template
+      violations = result.error;
+    } else {
+    // creation was successful
+      res.status(201);
+      // put the ID in the response so tests can access it
+      res.set('id', result.id);
+    }
+  } catch (err) {
+
+  }
+
+  // Gather the programs
+  const programLists = await FindAllPrograms();
+  // Render the page
+  res.render('program', {
+    program: programLists,
+    err: violations,
+    submittedProgram: violations ? req.body : undefined,
   });
 });
 
 
-router.post('/delete', async function(req, res, next) {
-  const deleteProg = req.body.progID;
-  let errors;
-  const programToDelete = await Program.findByPk(deleteProg);
-  deleteProgram(programToDelete);
-  const programList = await FindAllPrograms();
-  res.render('program', {
-    errMsg: errors,
-    program: programList,
-  });
-});
+// ***HELPER  METHODS***
+
+// Update a program helper
+const updateProgram = async (programToUpdate, newName, newAbbr) => {
+  let errors; // Define the errors variable
+
+  try {
+    // Update the program attributes
+    const programUpdated = await programToUpdate.update({
+      programName: newName,
+      programAbbreviation: newAbbr,
+    });
+    return programUpdated;
+  } catch (err) {
+    errors = mapErrors(err);
+
+    console.error(errors);
+    return errors;
+  }
+};
+
+
+// Delete a program helper
+const deleteProgram= async (programToDelete)=>{
+  try {
+    // delete the program
+    await programToDelete.destroy();
+  } catch (err) {
+    errors = mapErrors(err);
+    console.error(errors);
+  }
+};
+
+// Finding all the programs
 // eslint-disable-next-line require-jsdoc
 async function FindAllPrograms() {
+  // initialize a list
   let programList;
 
   try {
+    // find the programs
     programList = await Program.findAll({order: ['programName']});
   } catch (err) {
     programList = undefined;
@@ -95,77 +193,37 @@ async function FindAllPrograms() {
   return programList;
 }
 
-
-// Helper methods for CRUD
-
-/**
- * This methods purpose will help with the creation of a program to simplify the router.post
- */
-async function createProgram(newName, newAbbr) {
+// Create a program helper
+const createProgram = async (program) => {
   try {
-    // const existingProgram = await Program.findOne({where: {programName: newName}});
-    console.log('in the try');
-    // Program doesn't exist, so add it
-    const newProgram = await Program.create({
-      programName: newName,
-      programAbbreviation: newAbbr,
+    // create the program
+    const programToCreate = await Program.create({
+      programName: (program.programName),
+      programAbbreviation: program.programAbbreviation,
+
     });
-
-    console.log('Program added successfully:', newProgram.toJSON());
+    console.log('Term to Create: ' + JSON.stringify(programToCreate));
+    return programToCreate;
   } catch (err) {
-    console.log('in the catch');
-    errors = mapErrors(err);
-    console.log(errors);
+    return mapErrors(err);
   }
-}
+};
 
-/**
- * This methods purpose will help with the deletion of a program to simplify the router.delete
- */
-async function deleteProgram(programToDelete) {
-  try {
-    await programToDelete.destroy();
-  } catch (err) {
-    errors = mapErrors(err);
-    console.error(errors);
-  }
-}
 
-/**
- * This methods purpose will help with the updating of a program to simplify the router.put
- */
-async function updateProgram(programToUpdate, newName, newAbbr) {
-  if (programToUpdate) {
-    try {
-      // errors = await programToUpdate.validate();
+// Mapping errors helper
+const mapErrors = (err) => {
+  const violations = {error: {}};
 
-      programToUpdate.programName = newName;
-      programToUpdate.programAbbreviation = newAbbr;
-      await programToUpdate.update({programName: newName, programAbbreviation: newAbbr});
-    } catch (err) {
-      errors = mapErrors(err);
-      console.log(errors);
-    }
-  }
-}
-
-const mapErrors=(err)=>{
-  // const viol={error: {}};
-  // for (const error of err.errors) {
-  //   viol.error[error.path]=error.message;
-  // }
-  // return viol;
-  const viol = {error: {}};
-
-  if (err && err.errors && typeof err.errors[Symbol.iterator] === 'function') {
+  if (err.errors && typeof err.errors[Symbol.iterator] === 'function') {
     for (const error of err.errors) {
-      viol.error[error.path] = error.message;
+      violations.error[error.path] = error.message;
     }
   } else {
-    // If err.errors is not iterable, add a generic error message
-    viol.error['general'] = 'An unexpected error occurred.';
+    console.error('Error object does not have iterable errors property:', err);
   }
 
-  return viol;
+  return violations;
 };
-module.exports = router;
+
+
+module.exports = {router, createProgram, deleteProgram, updateProgram};

@@ -11,7 +11,7 @@ const termRouter = require('./routes/term');
 const courseOfferingRouter = require('./routes/courseOffering');
 // story34 view courses
 const viewCoursesRouter = require('./routes/course');
-const programRouter = require('./routes/program');
+const programRouter = require('./routes/program').router;
 
 const app = express();
 

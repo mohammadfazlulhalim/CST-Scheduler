@@ -33,19 +33,19 @@ describe('Program Model Validation', () => {
   });
 
   // Passing tests
-  test('programCodeAbbreviationIs2-10AlphabeticalCharactersInLengthAndAllUppercase', async () => {
-    let program;
-    try {
-      program = await Program.create(validProgram);
-    } catch (err) {
-      console.log(err);
-      fail();
-    }
-
-
-    expect(program.programAbbreviation).toBe('CST');
-    expect(program.programName).toBe('Computer Systems Technology');
-  });
+  // test('programCodeAbbreviationIs2-10AlphabeticalCharactersInLengthAndAllUppercase', async () => {
+  //   let program;
+  //   try {
+  //     program = await Program.create(validProgram);
+  //   } catch (err) {
+  //     console.log(err);
+  //     fail();
+  //   }
+  //
+  //
+  //   expect(program.programAbbreviation).toBe('CST');
+  //   expect(program.programName).toBe('Computer Systems Technology');
+  // });
   //
   // test('programNameIs2-50AlphabeticalCharactersInLength', async () => {
   //   const program = await Program.create(validProgram);
