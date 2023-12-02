@@ -59,6 +59,7 @@ router.delete('/', async function(req, res, next) {
   }
   const instructorLists = await readAllInstructors();
   res.render('instructor', {
+    title: 'Instructor List',
     instructorList: instructorLists,
     err: violations,
     submittedInstructor: violations ? req.body : undefined,

@@ -19,6 +19,14 @@ const testConst = {
     {termNumber: 5, startDate: '2023-01-01', endDate: '2023-04-01'},
     {termNumber: 6, startDate: '2023-05-01', endDate: '2023-05-31'},
   ],
+
+  validInstructor: [
+    {instructorID: 1, firstName: 'Bryce', lastName: 'Barrie'},
+    {instructorID: 2, firstName: 'Coralee', lastName: 'Kaban'},
+    {instructorID: 3, firstName: 'Ron', lastName: 'New'},
+    {instructorID: 4, firstName: 'Rick', lastName: 'Caron'},
+  ],
+
 };
 
 const fixtureConst = {
