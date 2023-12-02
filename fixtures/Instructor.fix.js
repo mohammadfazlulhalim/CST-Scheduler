@@ -1,6 +1,5 @@
 const Instructor = require('../private/javascript/Instructor');
-const fixtureConst = require('../constants').fixtureConst;
-
+const constants = require('../constants');
 
 /**
  * This function clears the courseOffering table if it exists and fills it with 15 course offerings.
@@ -25,7 +24,7 @@ async function createInstructor(amount) {
   // const instructorID = ['']
   // const firstNames = ['Ben', 'Bryce', 'Coralee', 'Ernesto'];
   // const lastNames = ['Benson', 'Barrie', 'Kaban', 'Basoalto'];
-  const instrArray = [
+  /*   const instrArray = [
     fixtureConst.instructor1,
     fixtureConst.instructor2,
     fixtureConst.instructor3,
@@ -36,6 +35,10 @@ async function createInstructor(amount) {
     await Instructor.create(
         instrArray[i],
     );
+  } */
+
+  for (const instructor of constants.testConst.validInstructor) {
+    await Instructor.create(instructor);
   }
 }
 

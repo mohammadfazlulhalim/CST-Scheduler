@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Instructor = require('../private/javascript/Instructor');
 const {sequelize} = require('../dataSource');
-const instructorConstraints = require('../constants').instructorConstraints;
 router.get('/', async function(req, res, next) {
   // Declaring the array
   const instructorLists = await readAllInstructors();
@@ -37,13 +36,10 @@ router.post('/', async function(req, res, next) {
   }
   const instructorLists = await readAllInstructors();
   res.render('instructor', {
+    title: 'Instructor List',
     instructorList: instructorLists,
     err: violations,
     submittedInstructor: violations ? req.body : undefined,
-    maxInstructorsFirstName: instructorConstraints.firstNameUpperLimit,
-    minInstructorsFirstName: instructorConstraints.firstNameLowerLimit,
-    minInstructorsLastName: instructorConstraints.lastNameLowerLimit,
-    maxInstructorsLastName: instructorConstraints. lastNameUpperLimit,
   });
 });
 
@@ -63,10 +59,6 @@ router.delete('/', async function(req, res, next) {
     instructorList: instructorLists,
     err: violations,
     submittedInstructor: violations ? req.body : undefined,
-    maxInstructorsFirstName: instructorConstraints.firstNameUpperLimit,
-    minInstructorsFirstName: instructorConstraints.firstNameLowerLimit,
-    minInstructorsLastName: instructorConstraints.lastNameLowerLimit,
-    maxInstructorsLastName: instructorConstraints. lastNameUpperLimit,
   });
 });
 
@@ -93,13 +85,10 @@ router.put('/', async function(req, res, next) {
 
   const instructorLists = await readAllInstructors();
   res.render('instructor', {
+    title: 'Instructor List',
     instructorList: instructorLists,
-    err: violations,
-    submittedInstructor: violations ? req.body : undefined,
-    maxInstructorsFirstName: instructorConstraints.firstNameUpperLimit,
-    minInstructorsFirstName: instructorConstraints.firstNameLowerLimit,
-    minInstructorsLastName: instructorConstraints.lastNameLowerLimit,
-    maxInstructorsLastName: instructorConstraints. lastNameUpperLimit,
+    putErr: violations,
+    putSubmittedInstructor: violations ? req.body : undefined,
   });
 });
 
@@ -111,7 +100,7 @@ router.put('/', async function(req, res, next) {
 const createInstructor = async (instructor) => {
   try {
     return await Instructor.create({
-      instructorID: parseInt(instructor.instructorID),
+      instructorID: instructor.instructorID,
       firstName: instructor.firstName,
       lastName: instructor.lastName,
     });
@@ -129,7 +118,7 @@ const createInstructor = async (instructor) => {
 const deleteInstructor = async (instructor) => {
   try {
     // try to delete the instructor
-    return await Instructor.destroy({where: {instructorID: instructor.instructorID}});
+    return await Instructor.destroy({where: {instructorID: parseInt(instructor.instructorID)}});
   } catch (err) {
     // if an error occurred, state that 0 rows were deleted
     return 0;
@@ -148,6 +137,7 @@ const updateInstructor = async (instructor) => {
     // only try to update the instructor if it already exists
     try {
       return await instructorToUpdate.update({
+        instructorID: instructor.instructorID,
         firstName: instructor.firstName,
         lastName: instructor.lastName,
       });
@@ -160,6 +150,7 @@ const updateInstructor = async (instructor) => {
     return {error: {invalidKey: 'Could not find an existing instructor to update'}};
   }
 };
+
 
 /**
  * Returns all instructor objects in the database.
@@ -182,10 +173,18 @@ const readAllInstructors = async () => {
  */
 const mapErrors = (err) => {
   const violations = {error: {}};
-  for (const error of err.errors) {
-    violations.error[error.path] = error.message;
+
+  if (err.errors && err.errors.length > 0) {
+    for (const error of err.errors) {
+      violations.error[error.path] = error.message;
+    }
+  } else {
+    // If the expected errors structure is not found, handle it accordingly
+    violations.error.general = 'An unexpected error occurred.';
   }
+
   return violations;
 };
+
 
 module.exports = {router, createInstructor, deleteInstructor, updateInstructor};

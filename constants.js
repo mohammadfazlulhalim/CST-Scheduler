@@ -1,8 +1,8 @@
 const testConst = {
   instructor1: {
-    instructorID: '123',
-    firstName: 'Sally',
-    lastName: 'Sutherland',
+    instructorID: '20',
+    firstName: 'Ben',
+    lastName: 'Benson',
   },
   courseOffering1: {
     startDate: '2023-09-01',
@@ -23,32 +23,11 @@ const testConst = {
     {instructorID: 2, firstName: 'Coralee', lastName: 'Kaban'},
     {instructorID: 3, firstName: 'Ron', lastName: 'New'},
     {instructorID: 4, firstName: 'Rick', lastName: 'Caron'},
+    {instructorID: 5, firstName: 'Ernesto', lastName: 'Basoalto'},
   ],
 
 };
 
-const fixtureConst = {
-  instructor1: {
-    instructorID: '123',
-    firstName: 'Ben',
-    lastName: 'Benson',
-  },
-  instructor2: {
-    instructorID: '1',
-    firstName: 'Bryce',
-    lastName: 'Barrie',
-  },
-  instructor3: {
-    instructorID: '13',
-    firstName: 'Coralee',
-    lastName: 'Kaban',
-  },
-  instructor4: {
-    instructorID: '23',
-    firstName: 'Ernesto',
-    lastName: 'Basoalto',
-  },
-};
 const instructorConstraints = {
   firstNameUpperLimit: 50,
   firstNameLowerLimit: 0,
@@ -62,4 +41,4 @@ const termConstraints = {
   termNumberLowerLimit: 1,
 };
 
-module.exports = {instructorConstraints, testConst, termConstraints, fixtureConst};
+module.exports = {instructorConstraints, testConst, termConstraints};
