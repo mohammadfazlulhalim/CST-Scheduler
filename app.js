@@ -15,7 +15,6 @@ const courseOfferingRouter = require('./routes/courseOffering');
 const viewCoursesRouter = require('./routes/course');
 const programRouter = require('./routes/programRouter').router;
 const adminRouter = require('./routes/administrationRouter');
-const adminRouter = require('./routes/administrationRouter');
 
 const app = express();
 
