@@ -35,6 +35,7 @@ router.post('/', async function(req, res, next) {
     res.set('instructorID', result.instructorID);
   }
   const instructorLists = await readAllInstructors();
+
   res.render('instructor', {
     title: 'Instructor List',
     instructorList: instructorLists,
@@ -82,13 +83,15 @@ router.put('/', async function(req, res, next) {
     }
     violations = result.error;
   }
-
+  const putSubmittedInstructor= req.body;
+  console.log(putSubmittedInstructor);
   const instructorLists = await readAllInstructors();
   res.render('instructor', {
     title: 'Instructor List',
     instructorList: instructorLists,
     putErr: violations,
-    putSubmittedInstructor: violations ? req.body : undefined,
+    putSubmittedInstructor,
+
   });
 });
 

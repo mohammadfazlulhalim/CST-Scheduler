@@ -1,8 +1,10 @@
 const Classroom = require('../../private/javascript/Classroom');
 const {sequelize} = require('../../datasource');
-const ClassroomController = require('../../routes/classroomRouter')
-const request = require('supertest')
-const app = require('../../app')
+const ClassroomController = require('../../routes/classroomRouter');
+
+
+const request = require('supertest');
+const app = require('../../app');
 const {createClassroom, updateClassroom} = require('../../routes/classroomRouter');
 
 describe('create', ()=>{
@@ -22,10 +24,10 @@ describe('create', ()=>{
     classroomInstance = {roomNumber: '239A', location: 'Saskatoon Main Campus'};
   });
 
-  test('testThatValidRoomIsAddedToEmptyDatabase', async() => {
+  test('testThatValidRoomIsAddedToEmptyDatabase', async () => {
     const res = await request(app)
-      .post('/classroom')
-      .send(classroomInstance)
+        .post('/classroom')
+        .send(classroomInstance);
     expect(res.statusCode).toEqual(201);
     // expect(res.body).toHaveProperty('post')
 
@@ -35,11 +37,11 @@ describe('create', ()=>{
     expect(addedClassroom).toBeDefined();
     expect(addedClassroom.roomNumber).toBe(classroomInstance.roomNumber);
   });
-  test('testThatValidRoomIsAddedToDatabase', async() => {
+  test('testThatValidRoomIsAddedToDatabase', async () => {
     classroomInstance.roomNumber = '239B';
     const res = await request(app)
-      .post('/classroom')
-      .send(classroomInstance)
+        .post('/classroom')
+        .send(classroomInstance);
     expect(res.statusCode).toEqual(201);
     // expect(res.body).toHaveProperty('post')
 
@@ -48,18 +50,18 @@ describe('create', ()=>{
     expect(addedClassroom.roomNumber).toBe(classroomInstance.roomNumber);
   });
 
-  test('testThatInValidRoomIsAddedToDatabase', async() =>{
+  test('testThatInValidRoomIsAddedToDatabase', async () =>{
     classroomInstance.roomNumber = '12345678901';
     const res = await request(app)
-      .post('/classroom')
-      .send(classroomInstance)
+        .post('/classroom')
+        .send(classroomInstance);
     expect(res.statusCode).toEqual(422);
     // expect(res.body).toHaveProperty('post')
 
     const addedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}});
     expect(addedClassroom).toBeNull();
-  })
-})
+  });
+});
 
 describe('update', ()=>{
   let classroomInstance;
@@ -76,29 +78,29 @@ describe('update', ()=>{
   // Valid classroom
   beforeEach(async () => {
     // clearing the database before each test
-    await Classroom.destroy ({
+    await Classroom.destroy({
       where: {},
-      truncate: true
+      truncate: true,
     });
     // creating an object literal with valid db properties, so that when I modify attributes it does not call validation
     const classTemp = await ClassroomController.createClassroom({roomNumber: '239A', location: 'Saskatoon Main Campus'});
     classroomInstance = {id: classTemp.pk, roomNumber: '239a', location: 'Saskatoon Main Campus'};
   });
 
-  test('testThatValidRoomIsUpdatedInDatabase', async() => {
+  test('testThatValidRoomIsUpdatedInDatabase', async () => {
     let classroomList = await Classroom.findAll();
     const intialCountSize = classroomList.length;
 
     classroomInstance.roomNumber = '239B';
     classroomInstance.location = 'Regina Campus';
     const res = await request(app)
-      .put('/classroom')
-      .send(classroomInstance)
+        .put('/classroom')
+        .send(classroomInstance);
     expect(res.statusCode).toEqual(200);
-    //expect(res.body).toHaveProperty('put');
+    // expect(res.body).toHaveProperty('put');
 
     classroomList = await Classroom.findAll();
-    //expect(classroomList.includes({roomNumber:'239B'})).toBeTruthy();
+    // expect(classroomList.includes({roomNumber:'239B'})).toBeTruthy();
 
     const changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}});
     expect(changedClassroom).toBeDefined();
@@ -107,33 +109,32 @@ describe('update', ()=>{
     expect(classroomList.length).toEqual(intialCountSize);
   });
 
-  test('testThatInValidRoomIsNotUpdatedDatabase', async() =>{
+  test('testThatInValidRoomIsNotUpdatedDatabase', async () =>{
     classroomInstance.roomNumber = '12345678901';
     const res = await request(app)
-      .put('/classroom')
-      .send(classroomInstance)
+        .put('/classroom')
+        .send(classroomInstance);
     expect(res.statusCode).toEqual(422);
-    //expect(res.body).toHaveProperty('put')
+    // expect(res.body).toHaveProperty('put')
 
-    let changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}})
+    let changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}});
     expect(changedClassroom).toBeNull();
     changedClassroom = await Classroom.findByPk(classroomInstance.id);
     expect(changedClassroom).toBeDefined();
     expect(changedClassroom.roomNumber).not.toBe(classroomInstance.roomNumber);
-  })
-  test('testThatUnknownRoomErrorsWhenUpdated', async() =>{
+  });
+  test('testThatUnknownRoomErrorsWhenUpdated', async () =>{
     classroomInstance.id = 99;
     const res = await request(app)
-      .put('/classroom')
-      .send(classroomInstance)
+        .put('/classroom')
+        .send(classroomInstance);
     expect(res.statusCode).toEqual(404);
-    //expect(res.body).toHaveProperty('put')
+    // expect(res.body).toHaveProperty('put')
 
-    const changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}})
+    const changedClassroom = await Classroom.findOne({where: {roomNumber: classroomInstance.roomNumber}});
     expect(changedClassroom).toBeNull();
-
-  })
-})
+  });
+});
 
 describe('delete', ()=>{
   let classroomInstance1;
@@ -151,48 +152,48 @@ describe('delete', ()=>{
   // Valid classroom
   beforeEach(async () => {
     // clearing the database before each test
-    await Classroom.destroy ({
+    await Classroom.destroy({
       where: {},
-      truncate: true
+      truncate: true,
     });
     // creating an object literal with valid db properties, so that when I modify attributes it does not call validation
     let classTemp = await ClassroomController.createClassroom({roomNumber: '239A'});
     classroomInstance1 = {id: classTemp.pk, roomNumber: '239A'};
     classTemp = await ClassroomController.createClassroom({roomNumber: '239B'});
-    classroomInstance2 =  {id: classTemp.pk, roomNumber: '239B'}
+    classroomInstance2 = {id: classTemp.pk, roomNumber: '239B'};
   });
 
-  test('testThatRoomIsDeletedInDatabase', async() => {
+  test('testThatRoomIsDeletedInDatabase', async () => {
     const res = await request(app)
-      .delete('/classroom')
-      .send(classroomInstance1)
+        .delete('/classroom')
+        .send(classroomInstance1);
     expect(res.statusCode).toEqual(200);
     // expect(res.body).toHaveProperty('delete')
 
     const classroomList = await Classroom.findAll();
-    expect(classroomList.includes({id:classroomInstance1.id})).toBeFalsy();
+    expect(classroomList.includes({id: classroomInstance1.id})).toBeFalsy();
   });
 
-  test('testThatLastRoomIsDeletedInDatabase', async() => {
+  test('testThatLastRoomIsDeletedInDatabase', async () => {
     const res = await request(app)
-      .delete('/classroom')
-      .send(classroomInstance2)
+        .delete('/classroom')
+        .send(classroomInstance2);
     expect(res.statusCode).toEqual(200);
     // expect(res.body).toHaveProperty('delete')
 
     const classroomList = await Classroom.findAll();
-    expect(classroomList.includes({id:classroomInstance2.id})).toBeFalsy();
+    expect(classroomList.includes({id: classroomInstance2.id})).toBeFalsy();
   });
 
-  test('testThatUnknownRoomErrorsWhenDeleted', async() => {
+  test('testThatUnknownRoomErrorsWhenDeleted', async () => {
     classroomInstance1.id=99;
     const res = await request(app)
-      .delete('/classroom')
-      .send(classroomInstance1)
+        .delete('/classroom')
+        .send(classroomInstance1);
     expect(res.statusCode).toEqual(404);
     // expect(res.body).toHaveProperty('delete')
   });
-})
+});
 
 // Tests to check my wrapper emthods are returning properly formatted error messatgtes
 describe('wrapperMethodsErrorTests', ()=>{
@@ -213,17 +214,17 @@ describe('wrapperMethodsErrorTests', ()=>{
   // Valid classroom
   beforeEach(async () => {
     // clearing the database before each test
-    await Classroom.destroy ({
+    await Classroom.destroy({
       where: {},
-      truncate: true
+      truncate: true,
     });
     // creating an object literal with valid db properties, so that when I modify attributes it does not call validation
     let classTemp = await ClassroomController.createClassroom({roomNumber: '239A', location: 'Saskatoon Main'});
     classroomInstance1 = {id: classTemp.pk, roomNumber: '239A', location: 'Saskatoon Main'};
     classTemp = await ClassroomController.createClassroom({roomNumber: '239B', location: 'Saskatoon Main'});
-    classroomInstance2 =  {id: classTemp.pk, roomNumber: '239B', location: 'Saskatoon Main'};
+    classroomInstance2 = {id: classTemp.pk, roomNumber: '239B', location: 'Saskatoon Main'};
     classTemp = await ClassroomController.createClassroom({roomNumber: '239C', location: 'Saskatoon Main'});
-    classroomInstance3 =  {id: classTemp.pk, roomNumber: '239B', location: 'Saskatoon Main'};
+    classroomInstance3 = {id: classTemp.pk, roomNumber: '239B', location: 'Saskatoon Main'};
   });
 
   test('createClassroomErrorMessages', async ()=>{
@@ -243,7 +244,7 @@ describe('wrapperMethodsErrorTests', ()=>{
     response = await createClassroom(classroomInstance3);
     expect(response.error.roomNumber).toBeDefined();
     expect(response.error.location).toBeDefined();
-  })
+  });
 
   test('updateClassroomErrorMessages', async ()=>{
     // just roomNumber
@@ -262,5 +263,5 @@ describe('wrapperMethodsErrorTests', ()=>{
     response = await updateClassroom(classroomInstance3);
     expect(response.error.roomNumber).toBeDefined();
     expect(response.error.location).toBeDefined();
-  })
-})
+  });
+});

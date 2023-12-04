@@ -1,6 +1,7 @@
 <h1>{{title}}</h1>
 {{#if instructorList}}
-    <table class="table table-striped">
+
+        <table class="table table-striped" >
         <thead>
         <tr>
             <th>Instructor Number</th>
@@ -77,9 +78,10 @@
 
 
                         <label for="eLastName">Last Name:</label>
-                        <input type="text" class="form-control {{#if putErr.lastName}}is-invalid{{/if}}" id="eLastName"
-                               name="lastName" value="{{putSubmittedInstructor.lastName}}">
+                        <input type="text" class="form-control {{#if putErr.lastName}}is-invalid{{/if}}"
+                               value="{{putSubmittedInstructor.lastName}}" id="eLastName" name="lastName">
                         <div class="invalid-feedback">{{putErr.lastName}}</div>
+
 
                     </div>
                     <div class="modal-footer">
@@ -97,7 +99,7 @@
     <p>There are no instructors stored</p>
 {{/if}}
 
-<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">New</button>
+
 
 <!-- Add Modal - must be displayed even if no terms exist -->
 <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -136,6 +138,7 @@
     </div>
 </div>
 
+<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">New</button>
 <a href="http://localhost:3000/administration"><button class="btn btn-success">Go Back</button></a>
 
 <!-- My own handlers for the form submits -->
