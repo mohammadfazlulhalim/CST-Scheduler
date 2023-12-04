@@ -1,9 +1,22 @@
 const testConst = {
+  program1: {
+    programAbbreviation: 'CST',
+    programName: 'Computer Systems Technology',
+  },
+
+  programList: [
+
+    {programAbbreviation: 'CNT', programName: 'Computer Network Technology'},
+    {programAbbreviation: 'ECE', programName: 'Early Childhood Education'},
+
+
+  ],
   instructor1: {
     instructorID: '20',
     firstName: 'Ben',
     lastName: 'Benson',
   },
+
   courseOffering1: {
     startDate: '2023-09-01',
     termNumber: '2023-12-15',
@@ -34,6 +47,7 @@ const instructorConstraints = {
   lastNameLowerLimit: 0,
   lastNameUpperLimit: 50,
 };
+
 
 
 const termConstraints = {
