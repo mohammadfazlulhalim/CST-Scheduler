@@ -19,6 +19,7 @@ async function createClassrooms() {
     await Classroom.create({
       title: 'Room Number Table',
       roomNumber: roomNumber,
+      location: 'Saskatoon Main Campus',
     });
   }
 }

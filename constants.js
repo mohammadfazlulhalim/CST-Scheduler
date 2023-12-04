@@ -4,6 +4,7 @@ const testConst = {
     lastName: 'Sutherland',
     Specialty: 'Excel',
   },
+
   courseOffering1: {
     startDate: '2023-09-01',
     termNumber: '2023-12-15',
@@ -25,3 +26,4 @@ const termConstraints = {
 };
 
 module.exports = {testConst, termConstraints};
+
