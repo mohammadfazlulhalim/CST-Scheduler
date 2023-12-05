@@ -7,7 +7,6 @@ const testConst = require('../../constants').testConst;
 const app = require('../../app');
 const Associations = require("../../private/javascript/Associations");
 const SuperTest = require('supertest');
-const expect = require("expect");
 
 
 describe('Functional Course Offering', () => {

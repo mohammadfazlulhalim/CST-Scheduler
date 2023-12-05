@@ -1,7 +1,3 @@
-/**
- * The purpose of this file is to help with the CRUD of the program object. Christeen Shlimoon
- * @type {e | (() => Express)}
- */
 const express = require('express');
 const router = express.Router();
 const Program = require('../private/javascript/Program');

@@ -51,7 +51,9 @@ router.post('/', async function(req, res, next) {
     res.set('id', retCreate.id);
   }
 
-  res.redirect('/term');
+  res.render('courseOffering', {
+    title: 'Course Offering',
+  });
 });
 
 router.put('/', async function(req, res, next) {
