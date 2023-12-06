@@ -50,7 +50,7 @@ router.get('/', async function(req, res, next) {
     res.render('courseOffering', {
       title: '',
       listCO: listCO,
-      putErr: violations,
+      err: violations,
       submittedCO: violations ? req.body : undefined,
     });
   });
@@ -58,7 +58,18 @@ router.get('/', async function(req, res, next) {
   router.put('/', async function (req, res, next) {
     console.log('PUT: ' + JSON.stringify(req.body));
 
-    await updateCourseOffering(req.body);
+    const newCO = {
+      name: req.body.name,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      group: req.body.group,
+      courseID: req.body.courseID,
+      termID: req.body.termID,
+      instructorID: req.body.instructorID,
+      programID: req.body.programID,
+    }
+
+    await updateCourseOffering(newCO);
 
     const listCO = await getCOList();
 
@@ -80,7 +91,7 @@ router.get('/', async function(req, res, next) {
     res.render('courseOffering', {
       title: '',
       listCO: listCO,
-      putErr: violations,
+      err: violations,
       submittedCO: violations ? req.body : undefined,
     });
 
@@ -104,9 +115,9 @@ router.get('/', async function(req, res, next) {
    */
   async function updateCourseOffering(updateCO) {
     try {
-      const updatedCO = await CourseOffering.findByPk(updateCO.id);
+      const updated = await CourseOffering.findByPk(updateCO.id);
 
-      return await updatedCO.update(updateCO);
+      return await updated.update(updateCO);
     } catch (e) {
       return mapErrors(e);
     }
@@ -136,7 +147,7 @@ async function getCOList() {
 
   // retrieve all course offerings from the database
   try {
-    listCO = await CourseOfferingRouter.findAll({order: ['courseCode']});
+    listCO = await CourseOffering.findAll();
   } catch (err) {
     // if unable to retrieve from database; e.g., no records exist
     listCO = undefined;
