@@ -1,29 +1,30 @@
 <div class="container p-2">
     <h1>{{title}}</h1>
-    {{#if instructorList}}
+    {{#if listCO}}
 
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>Instructor Number</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Actions</th>
+                <th>Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Group</th>
             </tr>
             </thead>
             <!--Here is where I loop through my array object and add in a <tr> for each loop, and a <td> for each object-->
             <tbody>
-            {{#each instructorList}}
+            {{#each listCO}}
                 <tr>
-                    <td id="{{this.instructorID}}number">{{this.instructorID}}</td>
-                    <td id="{{this.instructorID}}firstName">{{this.firstName}}</td>
-                    <td id="{{this.instructorID}}lastName">{{this.lastName}}</td>
+                    <td id="{{this.id}}name">{{this.name}}</td>
+                    <td id="{{this.id}}startDate">{{this.startDate}}</td>
+                    <td id="{{this.id}}endDate">{{this.endDate}}</td>
+                    <td id="{{this.id}}group">{{this.group}}</td>
 
                     <td>
-                        <button id="{{this.instructorID}}edit" type="button" class="btn btn-primary editButton"
+                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
                                 data-toggle="modal" data-target="#editModal">Edit
                         </button>
-                        <button id="{{this.instructorID}}delete" type="button" class="btn btn-danger deleteButton"
+                        <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
                                 data-toggle="modal" data-target="#deleteModal">Delete
                         </button>
                     </td>
@@ -39,7 +40,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-danger" id="deleteModalLabel">Delete Instructor </h5>
+                        <h5 class="modal-title text-danger" id="deleteModalLabel">Delete Course Offering </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -66,17 +67,17 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-warning" id="editModalLabel">Edit Existing Instructor</h5>
+                        <h5 class="modal-title text-warning" id="editModalLabel">Edit Existing Course Offering</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="/instructor" method="POST">
+                    <form action="/courseOffering" method="POST">
                         <div class="modal-body">
-                            <label hidden for="eInstructorID">Instructor Number:</label>
+                            <label hidden for="eID">Course Offering Number:</label>
                             <input hidden type="number"
-                                   class="form-control {{#if putErr.instructorID}}is-invalid{{/if}}" id="eInstructorID"
-                                   name="instructorID" value="{{putSubmittedInstructor.instructorID}}">
+                                   class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eID"
+                                   name="ID" value="{{putSubmittedInstructor.instructorID}}">
                             <div class="invalid-feedback">{{putErr.instructorID}}</div>
 
                             <label for="eFirstName">First Name:</label>
@@ -158,9 +159,9 @@
      * This function links the buttons on the page to their appropriate handlers
      */
     function reLinkButtons() {
-        $('#createInstructor').click(handleCreateInstructor);
-        $('#deleteInstructor').click(handleDeleteInstructor);
-        $('#editInstructor').click(handleEditInstructor);
+        $('#createCO').click(handleCreateCO);
+        $('#deleteCO').click(handleDeleteCO);
+        $('#editCO').click(handleEditInstructor);
         $('.deleteButton').click(function() {
             handleDeleteModal(this.id.replace('delete', ''));
         });
@@ -177,18 +178,19 @@
      * in the Create New Instructor modal
      * @returns {Promise<void>}
      */
-    async function handleCreateInstructor() {
+    async function handleCreateCO() {
         // send a POST request to the router
-        const response = await fetch('http://localhost:3000/instructor', {
+        const response = await fetch('http://localhost:3000/courseOffering', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
-                instructorID: $('#cInstructorID').val(),
-                firstName: $('#cFirstName').val(),
-                lastName: $('#cLastName').val(),
+                name: $('#cName').val(),
+                startDate: $('#cStartDate').val(),
+                endDate: $('#cEndDate').val(),
+                group: $('#cGroup').val(),
             }),
         });
 
@@ -204,7 +206,7 @@
      * in the Delete Instructor modal
      * @returns {Promise<void>}
      */
-    async function handleDeleteInstructor() {
+    async function handleDeleteCO() {
         // send a DELETE request to the router
         const response = await fetch('http://localhost:3000/instructor', {
             method: 'DELETE',
@@ -213,7 +215,7 @@
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
-                instructorID: $('#deleteInstructor').val(),
+                instructorID: $('#deleteCO').val(),
             }),
         });
 
@@ -257,7 +259,7 @@
      * @param idToDelete    - The ID of the term to delete
      */
     function handleDeleteModal(idToDelete) {
-        $('#deleteInstructor').val(idToDelete);
+        $('#deleteCO').val(idToDelete);
     }
 
     /**

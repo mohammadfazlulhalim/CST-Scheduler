@@ -6,15 +6,8 @@ const CourseOfferingRouter = require('../private/javascript/CourseOffering');
 
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
-  let listCO;
 
-  // retrieve all course offerings from the database
-  try {
-    listCO = await CourseOfferingRouter.findAll({order: ['courseCode']});
-  } catch (err) {
-    // if unable to retrieve from database; e.g., no records exist
-    listCO = undefined;
-  }
+  const listCO = await getCOList();
 
   // render the courseOffering template file with appropriate title and the retrieved list of course offerings
   res.render('courseOffering', {
@@ -24,6 +17,7 @@ router.get('/', async function(req, res, next) {
 });
 
   router.post('/', async function (req, res, next) {
+
     console.log('POST: ' + JSON.stringify(req.body));
     await CourseOffering.sync();
 
@@ -51,11 +45,13 @@ router.get('/', async function(req, res, next) {
       res.set('id', retCreate.id);
     }
 
-    res.render('instructor', {
-      title: 'Instructor List',
-      instructorList: instructorLists,
-      err: violations,
-      submittedInstructor: violations ? req.body : undefined,
+    const listCO = await getCOList();
+
+    res.render('courseOffering', {
+      title: '',
+      listCO: listCO,
+      putErr: violations,
+      submittedCO: violations ? req.body : undefined,
     });
   });
 
@@ -64,11 +60,13 @@ router.get('/', async function(req, res, next) {
 
     await updateCourseOffering(req.body);
 
-    res.render('instructor', {
-      title: 'Instructor List',
-      instructorList: instructorLists,
-      err: violations,
-      submittedInstructor: violations ? req.body : undefined,
+    const listCO = await getCOList();
+
+    res.render('courseOffering', {
+      title: '',
+      listCO: listCO,
+      putErr: violations,
+      submittedCO: violations ? req.body : undefined,
     });
   });
 
@@ -77,11 +75,13 @@ router.get('/', async function(req, res, next) {
 
     await deleteCourseOffering(req.body);
 
-    res.render('instructor', {
-      title: 'Instructor List',
-      instructorList: instructorLists,
-      err: violations,
-      submittedInstructor: violations ? req.body : undefined,
+    const listCO = await getCOList();
+
+    res.render('courseOffering', {
+      title: '',
+      listCO: listCO,
+      putErr: violations,
+      submittedCO: violations ? req.body : undefined,
     });
 
   });
@@ -104,12 +104,11 @@ router.get('/', async function(req, res, next) {
    */
   async function updateCourseOffering(updateCO) {
     try {
-
       const updatedCO = await CourseOffering.findByPk(updateCO.id);
 
       return await updatedCO.update(updateCO);
     } catch (e) {
-      return e;
+      return mapErrors(e);
     }
   }
 
@@ -128,6 +127,44 @@ router.get('/', async function(req, res, next) {
       return e;
     }
   }
+
+/**
+ * gets a list of Course Offerings in the database
+ */
+async function getCOList() {
+  let listCO;
+
+  // retrieve all course offerings from the database
+  try {
+    listCO = await CourseOfferingRouter.findAll({order: ['courseCode']});
+  } catch (err) {
+    // if unable to retrieve from database; e.g., no records exist
+    listCO = undefined;
+  }
+
+  return listCO;
+}
+
+
+/**
+ * Given an error object, this function maps it to a more presentable format for the hbs template.
+ * @param {Object} err  - An object representing errors
+ * @return {{}}         - Formatted error object
+ */
+const mapErrors = (err) => {
+  const violations = {error: {}};
+
+  if (err.errors && err.errors.length > 0) {
+    for (const error of err.errors) {
+      violations.error[error.path] = error.message;
+    }
+  } else {
+    // If the expected errors structure is not found, handle it accordingly
+    violations.error.general = 'An unexpected error occurred.';
+  }
+
+  return violations;
+};
 
   module.exports = {router, createCourseOffering, updateCourseOffering, deleteCourseOffering};
 
