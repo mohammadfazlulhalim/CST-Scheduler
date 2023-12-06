@@ -35,13 +35,13 @@ describe('Functional Course Offering', () => {
     //refresh before each test
     beforeEach(async function() {
         await CourseOffering.sync({force: true});
-        testCourseOffering1 = testConst.courseOffering1;
-        testCourseOffering2 = testConst.courseOffering2;
+        testCourseOffering1 = {...testConst.courseOffering1}
+        testCourseOffering2 = {...testConst.courseOffering2};
     })
 
     //destroy course offering table after each test
     afterEach(async function() {
-        await CourseOffering.destroy({ truncate: true});
+        await CourseOffering.truncate();
     })
 
     //test that course Offering is successfully added to empty darabase
@@ -61,10 +61,12 @@ describe('Functional Course Offering', () => {
         let err;
         let foundCO;
 
+        testCourseOffering1.group = '';
+
         //posts offering to router, expects return code
         const res = await SuperTest(app)
             .post('/courseOffering')
-            .send({}).expect(422);
+            .send(testCourseOffering1).expect(422);
 
         //expects to Get error from the database
         try {
@@ -79,14 +81,31 @@ describe('Functional Course Offering', () => {
 
     //test that course Offering is successfully updated in the database
     test('testThatCourseOfferingIsUpdated ', async function(){
+        // //posts offering to router, expects return code
+        // const res = await CourseOffering.create(testCourseOffering1);
+        //
+        // //expects to find the same offering in database
+        // const foundCO = await CourseOffering.findOne({where: {id: parseInt(res.get('id'))}});
+        // expect(foundCO).toBeTruthy();
+
         //first add to database
-        await testPost(testCourseOffering1);
+        const testCO = await testPost(testCourseOffering1);
 
         //now change info in object
-        testCourseOffering1.group = 'A';
+        testCO.group = 'A';
 
-        //update
-        await testPut(testCourseOffering1);
+        //posts offering to router, expects return code
+        const res = await SuperTest(app)
+            .put('/courseOffering')
+            .send(testCO).expect(200);
+
+        //expects to find the updated offering in database, and for it to be changed
+        const foundCO = await CourseOffering.findByPk(testCO.id)
+        expect(foundCO).toBeTruthy();
+        expect(foundCO.group).toBe(testCO.group);
+
+        // //update
+        // await testPut(testCO);
     });
 
     //test that invalid course Offering is not updated in the database
@@ -145,10 +164,10 @@ describe('Functional Course Offering', () => {
     //test that course Offering is successfully deleted from the database
     test('testThatCourseOfferingIsDeleted', async function(){
         //first add to database
-        await testPost(testCourseOffering1);
+        const toDelete = await testPost(testCourseOffering1);
 
         //delete
-        await testDelete(testCourseOffering1);
+        await testDelete(toDelete);
     });
 
 
@@ -159,10 +178,8 @@ describe('Functional Course Offering', () => {
         let foundCO;
 
         //first add to database
-        await testPost(testCourseOffering1);
+        const oldNumCO = await testPost(testCourseOffering1);
 
-        // Get number of Course offerings
-        const oldNumCO = (await CourseOffering.findAll()).length;
 
         //fail to delete from database
         const res = await SuperTest(app)
@@ -198,8 +215,9 @@ const testPost = async function(testCO) {
         .expect(201);
 
     //expects to find the same offering in database
-    const foundCO = await CourseOffering.findOne({where: {id: parseInt(res.get('id'))}});
+    const foundCO = await CourseOffering.findByPk(res.get('id'))
     expect(foundCO).toBeTruthy();
+    return foundCO;
 };
 
 /**
@@ -208,7 +226,7 @@ const testPost = async function(testCO) {
  */
 const testPut = async function(testCO) {
     //get the old CO in the database
-    const oldCO = await CourseOffering.findOne({where: {id: testCO.id}});
+    const oldCO = await CourseOffering.findByPk(testCO.id)
 
     //posts offering to router, expects return code
     const res = await SuperTest(app)
@@ -216,9 +234,9 @@ const testPut = async function(testCO) {
         .send(testCO).expect(200);
 
     //expects to find the updated offering in database, and for it to be changed
-    const foundCO = await CourseOffering.findOne({where: {id: parseInt(res.get('id'))}});
+    const foundCO = await CourseOffering.findByPk(testCO.id)
     expect(foundCO).toBeTruthy();
-    expect(foundCO).not.ToBo(oldCO);
+    expect(foundCO).not.ToBe(oldCO);
 };
 
 
@@ -228,9 +246,7 @@ const testPut = async function(testCO) {
  */
 const testDelete = async function(testCO) {
 
-    //get testCO is already in the database
-    const toDelete = await CourseOffering.findOne({where: {id: testCO.id}});
-    expect(toDelete).toBeTruthy();
+    expect(testCO).toBeTruthy();
 
     // Get number of Course offerings
     const oldNumCO = (await CourseOffering.findAll()).length;

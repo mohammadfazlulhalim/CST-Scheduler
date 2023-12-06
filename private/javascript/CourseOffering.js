@@ -8,7 +8,11 @@ const Program = require('../javascript/Program')
  * This class stores objects that represent course offerings to be used in the CST Scheduler.
  */
 const CourseOffering = sequelize.define('CourseOffering', {
-
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
   name: {
     type: DataTypes.STRING,
   },
