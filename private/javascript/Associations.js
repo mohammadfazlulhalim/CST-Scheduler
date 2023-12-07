@@ -6,14 +6,14 @@ const CourseOffering = require('../../private/javascript/CourseOffering');
 
 addAssociations = () => {
     Term.hasMany(CourseOffering, {as:'courseOfferings', foreignKey: 'termID'});
-    Course.hasMany(CourseOffering);
-    Instructor.hasMany(CourseOffering);
-    Program.hasMany(CourseOffering);
+    Course.hasMany(CourseOffering, {as:'courseOfferings', foreignKey: 'courseID'});
+    Instructor.hasMany(CourseOffering, {as:'courseOfferings', foreignKey: 'instructorID'});
+    Program.hasMany(CourseOffering), {as:'courseOfferings', foreignKey: 'programID'};
 
     CourseOffering.belongsTo(Term, {foreignKey: 'termID'});
-    CourseOffering.belongsTo(Course);
-    CourseOffering.belongsTo(Instructor);
-    CourseOffering.belongsTo(Program);
+    CourseOffering.belongsTo(Course, {foreignKey: 'courseID'});
+    CourseOffering.belongsTo(Instructor, {foreignKey: 'instructorID'});
+    CourseOffering.belongsTo(Program, {foreignKey: 'programID'});
 };
 
 

@@ -8,10 +8,6 @@ const testConst = require('../../constants').testConst;
 
 // tests for the 'group' field
 describe('courseOfferingUnit', () => {
-  let testCourse;
-  let testTerm;
-  let testInstructor;
-  let testProgram;
   let testCourseOffering;
   beforeAll(async function() {
     await Course.sync({force: true});
@@ -21,16 +17,22 @@ describe('courseOfferingUnit', () => {
     await CourseOffering.sync({force: true});
 
     Associations.addAssociations();
+    await Term.create(testConst.term1);
+    await Course.create(testConst.course1);
+    await Instructor.create(testConst.instructor1);
+    await Program.create(testConst.program1);
   })
   // set up a valid user
   beforeEach(async function() {
     // drop the table and re-create it
-    testCourse = testConst.course1;
-    testTerm = testConst.term1;
-    testInstructor = testConst.instructor1;
-    testProgram = testConst.program1;
     testCourseOffering = testConst.courseOffering1;
   });
+
+
+  afterEach(async function() {
+    await CourseOffering.truncate();
+  });
+
 
   test('testThatGroupWithOneLetterIsValid', async function() {
     const groupLetter = 'A';
@@ -111,7 +113,12 @@ describe('courseOfferingUnit', () => {
 describe('findAll()', () => {
   beforeEach(async function() {
     // clear the table
-    await CourseOffering.sync({force: true});
+    await CourseOffering.sync();
+  });
+
+
+  afterEach(async function() {
+    await CourseOffering.truncate();
   });
 
   test('testFindAllReturnsCorrectNumberOfItems', async function() {

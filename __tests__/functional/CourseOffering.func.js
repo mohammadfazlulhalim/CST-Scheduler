@@ -10,10 +10,6 @@ const SuperTest = require('supertest');
 
 
 describe('Functional Course Offering', () => {
-    let testCourse;
-    let testTerm;
-    let testInstructor;
-    let testProgram;
     let testCourseOffering1;
     let testCourseOffering2;
     beforeAll(async function() {
@@ -26,15 +22,15 @@ describe('Functional Course Offering', () => {
         Associations.addAssociations();
 
         //set up a valid user with foreign keys
-        testCourse = testConst.course1;
-        testTerm = testConst.term1;
-        testInstructor = testConst.instructor1;
-        testProgram = testConst.program1;
+        await Term.create(testConst.term1);
+        await Course.create(testConst.course1);
+        await Instructor.create(testConst.instructor1);
+        await Program.create(testConst.program1);
     })
 
     //refresh before each test
     beforeEach(async function() {
-        await CourseOffering.sync({force: true});
+        await CourseOffering.sync();
         testCourseOffering1 = {...testConst.courseOffering1}
         testCourseOffering2 = {...testConst.courseOffering2};
     })

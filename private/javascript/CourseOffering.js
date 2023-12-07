@@ -49,6 +49,20 @@ const CourseOffering = sequelize.define('CourseOffering', {
     foreignKey: true,
   },
 
+  programID: {
+    type: DataTypes.INTEGER,
+    foreignKey: true,
+  },
+
+  instructorID: {
+    type: DataTypes.INTEGER,
+    foreignKey: true,
+  },
+
+  courseID: {
+    type: DataTypes.INTEGER,
+    foreignKey: true,
+  },
 
 }, {
   tableName: 'CourseOfferings',
