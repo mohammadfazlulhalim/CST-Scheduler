@@ -5,6 +5,7 @@
         <table class="table table-striped">
             <thead>
             <tr>
+                <th>ID</th>
                 <th>Name</th>
                 <th>Start Date</th>
                 <th>End Date</th>
@@ -15,10 +16,12 @@
             <tbody>
             {{#each listCO}}
                 <tr>
+                    <td id="{{this.id}}id" >{{this.id}}</td>
                     <td id="{{this.id}}name">{{this.name}}</td>
                     <td id="{{this.id}}startDate">{{this.startDate}}</td>
                     <td id="{{this.id}}endDate">{{this.endDate}}</td>
                     <td id="{{this.id}}group">{{this.group}}</td>
+
 
                     <td>
                         <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
@@ -45,12 +48,13 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="/instructor" method="POST">
+                    <form action="/courseOffering" method="POST">
                         <div class="modal-body">
-                            <p id="deleteModalText">Are you sure you want to delete this instructor?</p>
+                            <p id="deleteModalText">Are you sure you want to delete this Course Offering?</p>
                         </div>
 
-                        <input type="text" id="deleteID" name="id" hidden/>
+                        <input hidden type="number" id="dID"
+                               name="id" value="{{submittedCO.id}}">
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -77,8 +81,8 @@
                             <label hidden for="eID">Course Offering Number:</label>
                             <input hidden type="number"
                                    class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eID"
-                                   name="ID" value="{{submittedCO.instructorID}}">
-                            <div class="invalid-feedback">{{putErr.instructorID}}</div>
+                                   name="id" value="{{submittedCO.id}}">
+                            <div class="invalid-feedback">{{putErr.id}}</div>
 
                             <label for="eName">Name:</label>
                             <input type="text" class="form-control {{#if putErr.name}}is-invalid{{/if}}" id="eName"
@@ -111,7 +115,7 @@
             </div>
         </div>
     {{else}}
-        <p>There are no instructors stored</p>
+        <p>There are no course offerings stored</p>
     {{/if}}
     <!-- Add Modal - must be displayed even if no terms exist -->
     <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel"
@@ -119,13 +123,18 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-success" id="addModalLabel">Create New Instructor</h5>
+                    <h5 class="modal-title text-success" id="addModalLabel">Create New Course Offering</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <form action="/courseOffering" method="POST">
                     <div class="modal-body">
+                        <input hidden type="number"
+                               class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eID"
+                               name="ID" value="{{submittedCO.id}}">
+                        <div class="invalid-feedback">{{putErr.id}}</div>
+
                         <label for="cName">Name:</label>
                         <input type="text" class="form-control {{#if err.name}}is-invalid{{/if}}" id="cName"
                                name="name" value="{{submittedCO.name}}">
@@ -156,7 +165,7 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">Add New Instructor</button>
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">Add New Course Offering</button>
     <a href="http://localhost:3000/administration">
         <button class="btn btn-success">Return</button>
     </a>
@@ -187,7 +196,7 @@
 
     /**
      * This function handles what happens when a user clicks the "create" button
-     * in the Create New Instructor modal
+     * in the Create New Course Offering modal
      * @returns {Promise<void>}
      */
     async function handleCreateCO() {
@@ -215,7 +224,7 @@
 
     /**
      * This function handles what happens when a user clicks the "Delete" button
-     * in the Delete Instructor modal
+     * in the Delete Course Offering modal
      * @returns {Promise<void>}
      */
     async function handleDeleteCO() {
@@ -231,6 +240,8 @@
             }),
         });
 
+        console.log("We here")
+
         // get the HTML text response
         const data = await response.text();
         const modal = '#deleteModal';
@@ -240,7 +251,7 @@
 
     /**
      * This function handles what happens when a user clicks the "Save" button
-     * in the Edit Existing Instructor modal
+     * in the Edit Existing Course Offering modal
      * @returns {Promise<void>}
      */
     async function handleEditCO() {
@@ -253,6 +264,7 @@
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
+                id: $('#eID').val(),
                 name: $('#eName').val(),
                 startDate: $('#eStartDate').val(),
                 endDate: $('#eEndDate').val(),
@@ -276,11 +288,12 @@
     }
 
     /**
-     * This function loads the form in the Edit Existing Instructor modal with the information
+     * This function loads the form in the Edit Existing Course Offering modal with the information
      * of the term the user wants to edit
      * @param idToEdit    - The ID of the term being edited
      */
     function handleEditModal(idToEdit) {
+        $('#eID').val($(`#${idToEdit}id`).text());
         $('#eName').val($(`#${idToEdit}name`).text());
         $('#eStartDate').val($(`#${idToEdit}startDate`).text());
         $('#eEndDate').val($(`#${idToEdit}endDate`).text());
@@ -315,6 +328,7 @@
         $('.is-invalid').removeClass('is-invalid');
         $('.invalid-feedback').text('');
 
+        $('#cID').val('');
         $('#cName').val('');
         $('#cStartDate').val('');
         $('#cEndDate').val('');

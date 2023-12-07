@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const CourseOffering = require('../private/javascript/CourseOffering');
 
-const CourseOfferingRouter = require('../private/javascript/CourseOffering');
 
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
@@ -33,8 +32,8 @@ router.get('/', async function(req, res, next) {
     }
     const retCreate = await createCourseOffering(newCO);
     let violations;
-    if (retCreate.e) {
-      // if the term does not have a start/end date, that means it's invalid and errors were sent back
+    if (retCreate.error) {
+
       res.status(422);
       // send error messages to the hbs template
       violations = retCreate.error;
@@ -59,6 +58,7 @@ router.get('/', async function(req, res, next) {
     console.log('PUT: ' + JSON.stringify(req.body));
 
     const newCO = {
+      id: req.body.id,
       name: req.body.name,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
@@ -69,7 +69,19 @@ router.get('/', async function(req, res, next) {
       programID: req.body.programID,
     }
 
-    await updateCourseOffering(newCO);
+    const retUpdate = await updateCourseOffering(newCO);
+    let violations;
+    if (retUpdate.error) {
+
+      res.status(422);
+      // send error messages to the hbs template
+      violations = retUpdate.error;
+    } else {
+      // creation was successful
+      res.status(201);
+      // put the ID in the response so tests can access it
+      res.set('id', retUpdate.id);
+    }
 
     const listCO = await getCOList();
 
@@ -105,7 +117,7 @@ router.get('/', async function(req, res, next) {
     try {
       return await CourseOffering.create(createCO);
     } catch (e) {
-      return e;
+      return mapErrors(e);
     }
   }
 
@@ -177,5 +189,5 @@ const mapErrors = (err) => {
   return violations;
 };
 
-  module.exports = {router, createCourseOffering, updateCourseOffering, deleteCourseOffering};
+module.exports = {router, createCourseOffering, updateCourseOffering, deleteCourseOffering};
 

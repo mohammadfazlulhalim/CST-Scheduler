@@ -8,10 +8,8 @@ const fillProgramTable = require('./Program.fix');
 
 // call individual fixture methods here
 fillTermTable();
-fillCourseOfferingTable();
 fillInstructorTable();
 fillClassroomTable();
 fillCourseTable();
-fillCourseOfferingTable();
 fillProgramTable();
-
+fillCourseOfferingTable();
