@@ -87,22 +87,22 @@
                             <label for="eName">Name:</label>
                             <input type="text" class="form-control {{#if putErr.name}}is-invalid{{/if}}" id="eName"
                                    name="name" value="{{submittedCO.name}}">
-                            <div class="invalid-feedback">{{err.name}}</div>
+                            <div class="invalid-feedback">{{putErr.name}}</div>
 
                             <label for="eStartDate">Start Date:</label>
                             <input type="text" class="form-control {{#if putErr.startDate}}is-invalid{{/if}}" id="eStartDate"
                                    name="startDate" value="{{submittedCO.startDate}}">
-                            <div class="invalid-feedback">{{err.startDate}}</div>
+                            <div class="invalid-feedback">{{putErr.startDate}}</div>
 
                             <label for="eEndDate">End Date:</label>
                             <input type="text" class="form-control {{#if putErr.endDate}}is-invalid{{/if}}" id="eEndDate"
                                    name="endDate" value="{{submittedCO.endDate}}">
-                            <div class="invalid-feedback">{{err.endDate}}</div>
+                            <div class="invalid-feedback">{{putErr.endDate}}</div>
 
                             <label for="eGroup">Group:</label>
                             <input type="text" class="form-control {{#if putErr.group}}is-invalid{{/if}}" id="eGroup"
                                    name="group" value="{{submittedCO.group}}">
-                            <div class="invalid-feedback">{{err.group}}</div>
+                            <div class="invalid-feedback">{{putErr.group}}</div>
 
 
                         </div>
@@ -239,8 +239,6 @@
                 id: $('#deleteCO').val(),
             }),
         });
-
-        console.log("We here")
 
         // get the HTML text response
         const data = await response.text();

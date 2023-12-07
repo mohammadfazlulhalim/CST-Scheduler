@@ -50,6 +50,7 @@ router.post('/', async (req, res, next) => {
   const classrooms = await getClassrooms();
 
   res.render('classroom', {
+    title: 'Classrooms',
     classroomList: classrooms,
     err: violations,
     submittedClassroom: violations ? req.body : undefined,
@@ -83,6 +84,7 @@ router.put('/', async (req, res, next) => {
   const classrooms = await getClassrooms();
 
   res.render('classroom', {
+    title: 'Classrooms',
     classroomList: classrooms,
     err: violations,
     putClassroom: violations ? req.body : undefined,
@@ -114,6 +116,7 @@ router.delete('/', async (req, res, next) => {
   }
 
   res.render('classroom', {
+    title: 'Classrooms',
     classroomList: classrooms,
       err: violations,
       delClassroom: violations ? req.body : undefined,

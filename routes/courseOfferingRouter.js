@@ -47,7 +47,7 @@ router.get('/', async function(req, res, next) {
     const listCO = await getCOList();
 
     res.render('courseOffering', {
-      title: '',
+      title: 'Course Offerings',
       listCO: listCO,
       err: violations,
       submittedCO: violations ? req.body : undefined,
@@ -78,7 +78,7 @@ router.get('/', async function(req, res, next) {
       violations = retUpdate.error;
     } else {
       // creation was successful
-      res.status(201);
+      res.status(200);
       // put the ID in the response so tests can access it
       res.set('id', retUpdate.id);
     }
@@ -86,7 +86,7 @@ router.get('/', async function(req, res, next) {
     const listCO = await getCOList();
 
     res.render('courseOffering', {
-      title: '',
+      title: 'Course Offerings',
       listCO: listCO,
       putErr: violations,
       submittedCO: violations ? req.body : undefined,
@@ -95,13 +95,17 @@ router.get('/', async function(req, res, next) {
 
   router.delete('/', async function (req, res, next) {
     console.log('DELETE: ' + JSON.stringify(req.body));
-
-    await deleteCourseOffering(req.body);
+    const retDelete = await deleteCourseOffering(req.body);
+    let violations;
+    if (retDelete <= 0) {
+      res.status(404);
+      violations = {id: 'Course Offering not found; cannot delete'};
+    }
 
     const listCO = await getCOList();
 
     res.render('courseOffering', {
-      title: '',
+      title: 'Course Offerings',
       listCO: listCO,
       err: violations,
       submittedCO: violations ? req.body : undefined,
@@ -139,15 +143,15 @@ router.get('/', async function(req, res, next) {
    * deletes a course offering from the database, void return
    * @param deleteCO
    */
-  function deleteCourseOffering(deleteCO) {
+  async function deleteCourseOffering(deleteCO) {
     try {
-      return CourseOffering.destroy({
+      return await CourseOffering.destroy({
         where: {
           id: deleteCO.id
         },
       })
     } catch (e) {
-      return e;
+      return 0;
     }
   }
 

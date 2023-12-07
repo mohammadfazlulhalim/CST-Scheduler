@@ -97,7 +97,7 @@ describe('Functional Course Offering', () => {
         //posts offering to router, expects return code
         const res = await SuperTest(app)
             .put('/courseOffering')
-            .send(testCO).expect(200);
+            .send(testCO.dataValues).expect(200);
 
         //expects to find the updated offering in database, and for it to be changed
         const foundCO = await CourseOffering.findByPk(testCO.id)
@@ -115,12 +115,15 @@ describe('Functional Course Offering', () => {
         let foundCO;
 
         //first add to database
-        await testPost(testCourseOffering1);
+        const testCO = await testPost(testCourseOffering1);
+
+        //now change info in object
+        testCO.group = '';
 
         //post empty object to router, expects bad return code
         const res = await SuperTest(app)
             .put('/courseOffering')
-            .send({}).expect(422);
+            .send(testCO.dataValues).expect(422);
 
         //expects to Get error from the database
         try {
@@ -140,19 +143,20 @@ describe('Functional Course Offering', () => {
         let foundCO;
 
         //first add to database
-        await testPost(testCourseOffering1);
+        const testCO = await testPost(testCourseOffering1);
 
         //change to have no id
-        testCourseOffering1.id = '';
+        testCO.dataValues.id = '';
+        testCO.group = 'A';
 
         //post empty object to router, expects bad return code
         const res = await SuperTest(app)
             .delete('/courseOffering')
-            .send(testCourseOffering1.id).expect(422);
+            .send(testCO.dataValues).expect(404);
 
         //expects to Get error from the database
         try {
-            foundCO = await CourseOffering.findOne({where: {id: parseInt(res.get('id'))}});
+            foundCO = await CourseOffering.findByPk({id: parseInt(res.get('id'))});
         }
         catch(error) {
             err = error;
@@ -167,7 +171,7 @@ describe('Functional Course Offering', () => {
         const toDelete = await testPost(testCourseOffering1);
 
         //delete
-        await testDelete(toDelete);
+        await testDelete(toDelete.dataValues);
     });
 
 
@@ -178,17 +182,20 @@ describe('Functional Course Offering', () => {
         let foundCO;
 
         //first add to database
-        const oldNumCO = await testPost(testCourseOffering1);
+        const toDelete = await testPost(testCourseOffering1);
+        const oldNumCO = (await CourseOffering.findAll()).length;
 
+        //change to have no id
+        toDelete.dataValues.id = '';
 
         //fail to delete from database
         const res = await SuperTest(app)
             .delete('/courseOffering')
-            .send(testCourseOffering2).expect(404);
+            .send(toDelete.dataValues).expect(404);
 
         //expects to Get error from the database
         try {
-            foundCO = await CourseOffering.findOne({where: {id: parseInt(res.get('id'))}});
+            foundCO = await CourseOffering.findByPk({id: parseInt(res.get('id'))});
         }
         catch(error) {
             err = error;
@@ -252,7 +259,10 @@ const testDelete = async function(testCO) {
     const oldNumCO = (await CourseOffering.findAll()).length;
 
     // delete the course offering
-    await SuperTest(app).delete('/courseOffering').send(testCO).expect(200); // expect 200: OK
+    await SuperTest(app)
+        .delete('/courseOffering')
+        .send(testCO)
+        .expect(200); // expect 200: OK
 
     // If the Course offering was deleted, the number of entries in the db should decrement
     const newNumCO = (await CourseOffering.findAll()).length;

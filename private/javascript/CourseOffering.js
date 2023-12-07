@@ -44,6 +44,11 @@ const CourseOffering = sequelize.define('CourseOffering', {
     },
   },
 
+  termID: {
+    type: DataTypes.INTEGER,
+    foreignKey: true,
+  },
+
 
 }, {
   tableName: 'CourseOfferings',

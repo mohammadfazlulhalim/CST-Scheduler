@@ -54,7 +54,7 @@ router.delete('/', async function(req, res, next) {
   let violations;
   if (result <= 0) {
     res.status(404);
-    violations = {id: 'TermRouter not found; cannot delete'};
+    violations = {id: 'Term not found; cannot delete'};
   }
   const termLists = await readAllTerms();
   res.render('term', {
