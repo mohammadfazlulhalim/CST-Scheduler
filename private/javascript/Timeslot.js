@@ -8,7 +8,7 @@ const Room = require('../javascript/Classroom');
 /**
  * This class stores objects that represent course offerings to be used in the CST Scheduler.
  */
-const CourseOffering = sequelize.define('CourseOffering', {
+const Timeslot = sequelize.define('CourseOffering', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -83,8 +83,8 @@ const CourseOffering = sequelize.define('CourseOffering', {
     },
 
 }, {
-    tableName: 'CourseOfferings',
+    tableName: 'Timeslots',
 });
 
 
-module.exports = CourseOffering;
+module.exports = Timeslot;
