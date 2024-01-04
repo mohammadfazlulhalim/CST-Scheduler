@@ -35,6 +35,7 @@ const Instructor = sequelize.define('Instructor', {
     },
   },
 },
+    //my codes starts here >>>>>>>>>>>>>>
 {
   tableName: 'Instructor',
 });
