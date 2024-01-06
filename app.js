@@ -14,7 +14,7 @@ const viewCoursesRouter = require('./routes/course');
 const adminRouter = require('./routes/administrationRouter');
 const scheduleRouter = require('./routes/scheduleRouter'),
 
-const app = express();
+app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
