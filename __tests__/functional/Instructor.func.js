@@ -130,6 +130,8 @@ describe('Instructors in database', () => {
    */
 const testPost = async function(testInstructor) {
   const res = await supertest(app).post('/instructor').send(testInstructor).expect(201); // expect 201: created
+  console.log (">>>>>>>>>>Test response>>>>>>>>>>");
+  console.log(res);
   // find the newly added instructor in the database
   // for this to work correctly, the router must set a parameter named 'id' using res.set()
   const foundInstructor = await Instructor.findOne({where: {instructorID: parseInt(res.get('instructorID'))}});

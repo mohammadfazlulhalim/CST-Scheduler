@@ -36,13 +36,13 @@ const Instructor = sequelize.define('Instructor', {
     },
   },
 
-  // my codes starts here >>>>>>>>>>>>>>
+  // Added properties >>>>>>>>>>>>>>
   officeNum: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
       notEmpty: {
-        msg: 'Exception "Office number can not be empty"',
+        msg: 'Exception "Office number cannot be empty"',
 
       },
       len: {
