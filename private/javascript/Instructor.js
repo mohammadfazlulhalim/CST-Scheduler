@@ -1,11 +1,12 @@
 const {DataTypes, sequelize} = require('../../datasource');
-const CourseOffering = require('../javascript/CourseOffering')
+const CourseOffering = require('../javascript/CourseOffering');
 
 // Database constructor for Instructor
 const Instructor = sequelize.define('Instructor', {
   instructorID: {
     type: DataTypes.INTEGER,
     allowNull: false, // Can't be null
+    autoIncrement: true,
     primaryKey: true,
   },
   firstName: {
@@ -34,8 +35,58 @@ const Instructor = sequelize.define('Instructor', {
       },
     },
   },
+
+  // my codes starts here >>>>>>>>>>>>>>
+  officeNum: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    validate: {
+      notEmpty: {
+        msg: 'Exception "Office number can not be empty"',
+
+      },
+      len: {
+        args: [6, 6],
+        msg: 'Exception "Office number must be 6 digits"',
+      },
+
+    },
+  },
+  phoneNum: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    validate: {
+      notEmpty: {
+        msg: 'Exception "Phone number can not be empty"',
+
+      },
+      len: {
+        args: [6, 7],
+        msg: 'Exception "Phone number must be 6 digits"',
+      },
+
+    },
+  },
+  email: {
+    type: DataTypes.STRING,
+    isUnique: true,
+    allowNull: true,
+    validate: {
+      isEmail: {
+        msg: 'Exception"Invalid Email address"',
+      },
+      notEmpty: {
+        msg: 'Exception "E-Mail address can not be empty"',
+
+      },
+      len: {
+        args: [13, 50],
+        msg: 'Exception "Invalid Email address"',
+      },
+
+    },
+  },
 },
-    //my codes starts here >>>>>>>>>>>>>>
 {
   tableName: 'Instructor',
 });
