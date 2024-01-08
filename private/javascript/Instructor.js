@@ -39,7 +39,7 @@ const Instructor = sequelize.define('Instructor', {
   // my codes starts here >>>>>>>>>>>>>>
   officeNum: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
     validate: {
       notEmpty: {
         msg: 'Exception "Office number can not be empty"',
@@ -54,7 +54,7 @@ const Instructor = sequelize.define('Instructor', {
   },
   phoneNum: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
     validate: {
       notEmpty: {
         msg: 'Exception "Phone number can not be empty"',
@@ -70,7 +70,7 @@ const Instructor = sequelize.define('Instructor', {
   email: {
     type: DataTypes.STRING,
     isUnique: true,
-    allowNull: true,
+    allowNull: false,
     validate: {
       isEmail: {
         msg: 'Exception"Invalid Email address"',
