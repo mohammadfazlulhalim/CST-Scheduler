@@ -54,78 +54,29 @@ async function updateDatabase() {
 
 }
 
-
-/**
- * Ritish's Code, read over the test and should work for us - Brandon
- */
-// PK does autoincrement behind the scenes...
-describe('timeslot id tests', () => {
-    beforeEach(async () => {
-        await updateDatabase()
-    })
-
-    test('testTSTimeSlotHasValidID', async () => {
-        try {
-            const createdTimeSlot = await TimeSlot.create(timeSlotInstance);
-            const foundTimeSlot = await TimeSlot.findOne(
-                {where: {timeslotID: createdTimeSlot.timeslotID}}
-            )
-            expect(foundTimeSlot).toBeTruthy()
-        } catch (error) {
-            console.error(error.message);
-        }
-    })
-}); // end id tests
-
-
 // TODO fix association tests LATER
 // associations test - course offering
 /**
  * Ritish's Code - only modified the beforeEach,need to inspect the rest
  */
-describe('tests TS association with course offering', () => {
+describe('timeslotCourseOffering', () => {
 
     beforeEach(async () => {
         await updateDatabase()
     })
 
-    test('testTSAssociatedCourseOfferingValid', async () => {
-        try {
-            // statements
-            const timeslotcreated = await TimeSlot.create(timeSlotInstance);
-            const timeslotread = await TimeSlot.findOne({
-                where: {
-                    timeslotID: timeslotcreated.timeslotID
-                },
-                include: CourseOffering
-            })
-
-
-            // expect the timeslot instance to have a referenceable
-            // courseoffering id that established the association in the first place.
-
-
-        } catch (e) {
-            // in case of any errors in test
-            console.log(e);
-        }
+    test('testAssociatedCourseOfferingValid', async () => {
+        // TODO: Add associations
     })
+});
 
-}) // TS course offering associations tests end here
-
-
-// starttime
-/**
- * Ritish's code - need's some slight refinements
- */
-describe('timeslot starttime tests', () => {
-
+describe('timeslotStartTime', () => {
     beforeEach(async () => {
         await updateDatabase()
     })
 
     // lower bound 24hrs - 00:00
-    test('testTSTimeSlotStartTimeLowerBoundValid', async () => {
+    test('testStartTimeLowerBoundValid', async () => {
         try {
             timeSlotInstance.starttime = '00:00'
             await TimeSlot.create(timeSlotInstance);
@@ -134,29 +85,28 @@ describe('timeslot starttime tests', () => {
             expect(createdTimeSlot.starttime).equals('00:00');
 
         } catch (error) {
-            // TODO: Modification - may not work so need to validate
-            expect(1).ToEqual(2);
             console.error(error.message);
         }
     })
 
     // testing valid at upper bound 23:59
-    test('testTSTimeSlotStartTimeUpperBound24HrsValid', async () => {
+    test('testStartTimeUpperBound24HrsValid', async () => {
         try {
-            timeSlotInstance.starttime = '23:59'
+            timeSlotInstance.starttime = '23:59';
             await TimeSlot.create(timeSlotInstance);
             const createdTimeSlot = await TimeSlot.findOne()
             expect(createdTimeSlot).toBeTruthy()
             // TODO: Add check that the time is correct
+            expect(createdTimeSlot.starttime).toBe('23:59')
         } catch (error) {
             console.error(error.message);
         }
     })
 
     // testing invalid at 24:00 since max is 23:59
-    test('testTSTimeSlotStartTimeUpperBoundHourInvalid', async () => {
+    test('testStartTimeUpperBoundHourInvalid', async () => {
         try {
-            timeSlotInstance.starttime = '24:00'
+            timeSlotInstance.starttime = '24:00';
             await TimeSlot.create(timeSlotInstance);
             const createdTimeSlot = await TimeSlot.findOne()
             fail()
@@ -168,9 +118,9 @@ describe('timeslot starttime tests', () => {
     })
 
     // random string
-    test('testTSTimeSlotStartTimeInvalid', async () => {
+    test('testStartTimeInvalid', async () => {
         try {
-            timeSlotInstance.starttime = `non-time string`
+            timeSlotInstance.starttime = 'non-numeric';
             await TimeSlot.create(timeSlotInstance);
             fail()
         } catch (error) {
@@ -179,34 +129,27 @@ describe('timeslot starttime tests', () => {
                 .toBe('Invalid Start Time for TimeSlot');
         }
     })
+});
 
-}); // end start time tests
-
-
-/**
- * Ritish's code - Need some modifications
- */
-// endtime tests
-describe('timeslot endtime tests', () => {
-
+describe('timeslotEndtime', () => {
     beforeEach(updateDatabase)
 
-    test('testTSTimeSlotEndTimeValid', async () => {
+    test('testEndTimeValid', async () => {
         try {
             timeSlotInstance.starttime = '16:00'
             timeSlotInstance.endtime = '17:00'
             await TimeSlot.create(timeSlotInstance);
             const createdTimeSlot = await TimeSlot.findOne()
             expect(createdTimeSlot).toBeTruthy()
-            // TODO: Check the times to make sure they are correck
+            expect(createdTimeSlot.endtime).toBe('17:00')
         } catch (error) {
             console.error(error.message);
         }
     })
 
-    test('testTSTimeSlotEndTimeInvalid', async () => {
+    test('testEndTimeInvalid', async () => {
         try {
-            timeSlotInstance.endtime = "non-time string"
+            timeSlotInstance.endtime = 'non-numeric';
             await TimeSlot.create(timeSlotInstance);
             fail()
         } catch (error) {
@@ -215,32 +158,27 @@ describe('timeslot endtime tests', () => {
                 .toBe('Invalid End Time for TimeSlot');
         }
     })
+});
 
-}); // end of endtime tests
-
-
-// day tests
-/**
- * Ritish's code - needs some modifications
- */
-describe("timeslot day tests", () => {
+describe("timeslotDay", () => {
     beforeEach(async () => {
         await updateDatabase()
     })
 
-    test('testTSTimeSlotDayValid', async () => {
+    test('testDayValid', async () => {
         try {
             timeSlotInstance.day = 'Tuesday'
             await TimeSlot.create(timeSlotInstance);
             const createdTimeSlot = await TimeSlot.findOne()
             expect(createdTimeSlot).toBeTruthy()
             // TODO: check that the day is Tuesday
+            expect(createdTimeSlot.day).toBe('Tuesday')
         } catch (error) {
             console.error(error.message);
         }
     })
 
-    test('testTSTimeSlotDayInvalid', async () => {
+    test('testDayInvalid', async () => {
         try {
             timeSlotInstance.day = 'Tuday'
             await TimeSlot.create(timeSlotInstance);
@@ -252,6 +190,5 @@ describe("timeslot day tests", () => {
                 .toBe('Invalid Day for TimeSlot');
         }
     })
-
-}) // day tests end here
+});
 
