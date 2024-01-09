@@ -5,9 +5,11 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "Functional-Unit Test": "node set-env.js",
+    "electron-dev": "node electron-dev.js",
+    "functional-unit test": "node set-env.js",
     "loaddb": "node fixtures/loadAll.fix.js",
-    "Cypress": "node cypressTest.js"
+    "cypress-helper": "cypress open",
+    "cypress": "start npm run electron-dev && start npm run cypress-helper"
   },
   "dependencies": {
     "bootstrap": "^5.3.2",
