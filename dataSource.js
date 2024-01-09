@@ -1,4 +1,4 @@
-const {Sequelize, DataTypes} = require('sequelize');
+const {Sequelize, Op, DataTypes} = require('sequelize');
 
 let connectionString;
 connectionString = 'sqlite:./private/database/scheduler.db';
@@ -9,4 +9,4 @@ if (process.env.TESTING_MODE==='testing') {
 const sequelize = new Sequelize(connectionString, {logging: false});
 
 
-module.exports = {Sequelize, DataTypes, sequelize};
+module.exports = {Sequelize, DataTypes, sequelize, Op};

@@ -1,6 +1,6 @@
-const {DataTypes, sequelize} = require('../../datasource');
+const {DataTypes, Op, sequelize} = require('../../datasource');
 const CourseOffering = require('../javascript/CourseOffering');
-
+// const {Op}= require('sequelize');
 // Database constructor for Instructor
 const Instructor = sequelize.define('Instructor', {
   instructorID: {
@@ -46,48 +46,46 @@ const Instructor = sequelize.define('Instructor', {
 
       },
       len: {
-        args: [6, 6],
+        args: [0, 6],
         msg: 'Exception "Office number must be 6 digits"',
       },
+      // len: {
+      //   [Op.between]: [0, 6],
+      //   msg: 'Exception "Office number must be 6 digits"',
+      // },
 
     },
+
   },
   phoneNum: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
       notEmpty: {
-        msg: 'Exception "Phone number can not be empty"',
+        msg: 'Exception "Phone number cannot be empty"',
 
       },
       len: {
-        args: [6, 7],
-        msg: 'Exception "Phone number must be 6 digits"',
+        args: [0, 7],
+        msg: 'Exception "Phone number must be 6 numeric digits"',
       },
+      is: /^(\d{3}-\d{3}|\d{3} \d{3}|\d{6})$/,
 
     },
   },
   email: {
     type: DataTypes.STRING,
-    isUnique: true,
+    unique: true,
     allowNull: false,
     validate: {
-      isEmail: {
-        msg: 'Exception"Invalid Email address"',
-      },
       notEmpty: {
-        msg: 'Exception "E-Mail address can not be empty"',
-
+        msg: 'Exception "E-mail address cannot be empty"',
       },
-      len: {
-        args: [13, 50],
-        msg: 'Exception "Invalid Email address"',
-      },
-
+      is: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
     },
   },
-},
-{
+
+
   tableName: 'Instructor',
 });
 

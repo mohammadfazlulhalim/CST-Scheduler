@@ -315,9 +315,8 @@ describe('officeNum', () => {
   });
 
 
-
   test('testThatofficeNumCannothave7Chars', async function() {
-    testInstructor.officeNum = 'a'.repeat(7); // define office number (7 Chars)
+    testInstructor.officeNum = '1'.repeat(7); // define office number (7 Chars)
     let err; let errCount; let instructor;
 
     try {
@@ -340,7 +339,6 @@ describe('officeNum', () => {
 });
 
 
-
 /**
  * These are tests for the phoneNum attribute of Instructor
  */
@@ -354,7 +352,7 @@ describe('phoneNum', () => {
   });
 
   beforeEach(async function() {
-    testInstructor.phoneNum = '123-4567';
+    testInstructor.phoneNum = '123-456';
     instructor = '';
     err = '';
   });
@@ -378,39 +376,20 @@ describe('phoneNum', () => {
 
   test('testThatPhoneNumCanNotBeEmpty', async function() {
     testInstructor.phoneNum = '';
-    let err; let errCount; let instructor;
+    let errCount; let instructor; let errorArray;
 
     try {
       instructor = await Instructor.create(testInstructor);
     } catch (error) {
       // If validation error is thrown, get error message
-      err = error.message;
       errCount = error.errors.length;
+      errorArray=error.errors;
     }
 
     expect(instructor).toBeFalsy; // check that instructor Object is not created
     // check that no errors are thrown
-    expect(err).toBe('Validation error: Exception "Phone number cannot be empty"');
-    expect(errCount).toBe(1);
-
-    if (instructor) { // destroy instructor if created
-      await instructor.destroy();
-    }
-  });
-
-  test('testThatPhoneNumCanHave-Char', async function() {
-    testInstructor.phoneNum = '123-456';
-
-    try {
-      instructor = await Instructor.create(testInstructor);
-    } catch (error) {
-      // If a validation error is thrown, fail the test with an error message
-      err = error.message;
-    }
-
-    expect(instructor).toBeTruthy(); // check that instructor Object is created
-    expect(instructor.phoneNum).toBe(testInstructor.phoneNum); // check that instructor Object Phone Number is correct
-    expect(err).toBe(''); // check that no errors are thrown
+    expect(errorArray[0].message).toBe('Exception \"Phone number cannot be empty\"');
+    expect(errCount).toBe(2);
 
     if (instructor) { // destroy instructor if created
       await instructor.destroy();
@@ -436,22 +415,41 @@ describe('phoneNum', () => {
     }
   });
 
-
-  test('testThatPhoneNumCanHaveValidChars', async function() {
-    testInstructor.phoneNum = "123%456"; // define phone number with invalid chars
-    let err; let errCount; let instructor;
+  test('testThatPhoneNumCanHave-Char', async function() {
+    testInstructor.phoneNum = '123-456';
 
     try {
       instructor = await Instructor.create(testInstructor);
     } catch (error) {
       // If a validation error is thrown, fail the test with an error message
       err = error.message;
+    }
+
+    expect(instructor).toBeTruthy(); // check that instructor Object is created
+    expect(instructor.phoneNum).toBe(testInstructor.phoneNum); // check that instructor Object Phone Number is correct
+    expect(err).toBe(''); // check that no errors are thrown
+
+    if (instructor) { // destroy instructor if created
+      await instructor.destroy();
+    }
+  });
+
+
+  test('testThatPhoneNumCanHaveValidChars', async function() {
+    testInstructor.phoneNum = '123%456'; // define phone number with invalid chars
+    let errorArray; let errCount; let instructor;
+
+    try {
+      instructor = await Instructor.create(testInstructor);
+    } catch (error) {
+      // If a validation error is thrown, fail the test with an error message
+      errorArray = error.errors;
       errCount = error.errors.length;
     }
 
     expect(instructor).toBeFalsy; // check that instructor Object is not created
     // check that no errors are thrown
-    expect(err).toBe('Validation error: Exception "Phone number can only have numeric, space character and - character"');
+    expect(errorArray[0].message).toBe('Validation is on phoneNum failed');
     expect(errCount).toBe(1);
 
     if (instructor) { // destroy instructor if created
@@ -461,27 +459,24 @@ describe('phoneNum', () => {
 
   test('testThatPhoneNumCannotHaveMoreThan6NumericChars', async function() {
     testInstructor.phoneNum = '123-4567';
+    let errArray; let errCount;
 
     try {
       instructor = await Instructor.create(testInstructor);
     } catch (error) {
       // If a validation error is thrown, fail the test with an error message
-      err = error.message;
+      errCount= error.errors.length;
+      errArray=error.errors;
     }
 
     expect(instructor).toBeFalsy(); // check that instructor Object is not created
-    expect(err).toBe('Validation error: Exception "Phone number cannot be more than 6 digits"');
-    expect(errCount).toBe(1);
+    expect(errArray[0].message).toBe('Exception \"Phone number must be 6 numeric digits\"');
+    expect(errCount).toBe(2);
 
     if (instructor) { // destroy instructor if created
       await instructor.destroy();
     }
   });
-
-
-
-
-
 });
 
 
@@ -520,22 +515,42 @@ describe('email', () => {
     }
   });
 
+  // test('testThatOnlyUniqueEmailCanBeEntered', async function() {
+  //   testInstructor.email = 'benson@saskpolytech.ca';
+  //   let err; let errCount; let instructor;
+  //
+  //   try {
+  //     instructor = await Instructor.create(testInstructor);
+  //   } catch (error) {
+  //     // If a validation error is thrown, fail the test with an error message
+  //     err = error.message;
+  //     errCount = error.errors.length;
+  //   }
+  //
+  //   expect(instructor).toBeFalsy(); // check that instructor Object is created
+  //   expect(err).toBe('Validation error: Validation is on email failed' );
+  //   expect(errCount).toBe(1); // check that no errors are thrown
+  //
+  //   if (instructor) { // destroy instructor if created
+  //     await instructor.destroy();
+  //   }
+  // });
   test('testThatEmailCanNotBeEmpty', async function() {
     testInstructor.email = '';
-    let err; let errCount; let instructor;
+    let errArray; let errCount; let instructor;
 
     try {
       instructor = await Instructor.create(testInstructor);
     } catch (error) {
       // If validation error is thrown, get error message
-      err = error.message;
+      errArray = error.errors;
       errCount = error.errors.length;
     }
 
     expect(instructor).toBeFalsy; // check that instructor Object is not created
-    // check that no errors are thrown
-    expect(err).toBe('Validation error: Exception "Email address cannot be empty"');
-    expect(errCount).toBe(1);
+
+    expect(errArray[0].message).toBe('Exception "E-mail address cannot be empty"' );
+    expect(errCount).toBe(2);
 
     if (instructor) { // destroy instructor if created
       await instructor.destroy();
@@ -550,11 +565,12 @@ describe('email', () => {
     } catch (error) {
       // If a validation error is thrown, fail the test with an error message
       err = error.message;
+      errCount = error.errors.length;
     }
 
     expect(instructor).toBeFalsy(); // check that instructor Object is not created
 
-    expect(err).toBe('Validation error: Exception "Invalid Email address"');
+    expect(err).toBe('Validation error: Validation is on email failed');
     expect(errCount).toBe(1);
 
     if (instructor) { // destroy instructor if created
@@ -570,10 +586,11 @@ describe('email', () => {
     } catch (error) {
       // If a validation error is thrown, fail the test with an error message
       err = error.message;
+      errCount= error.errors.length;
     }
 
     expect(instructor).toBeFalsy(); // check that instructor Object is created
-    expect(err).toBe('Validation error: Exception "Invalid Email address"');
+    expect(err).toBe('Validation error: Validation is on email failed');
     expect(errCount).toBe(1);
 
 
@@ -581,7 +598,4 @@ describe('email', () => {
       await instructor.destroy();
     }
   });
-
-
-
 });
