@@ -21,6 +21,9 @@ router.post('/', async function(req, res, next) {
     instructorID: req.body.instructorID,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
+    officeNum: req.body.officeNum,
+    phoneNum: req.body.phoneNum,
+    email: req.body.email,
   });
   let violations;
   if (result.error) {
@@ -71,6 +74,9 @@ router.put('/', async function(req, res, next) {
     instructorID: req.body.instructorID,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
+    officeNum: req.body.officeNum,
+    phoneNum: req.body.phoneNum,
+    email: req.body.email,
   });
   let violations;
   if (result.error) {
@@ -106,6 +112,9 @@ const createInstructor = async (instructor) => {
       instructorID: instructor.instructorID,
       firstName: instructor.firstName,
       lastName: instructor.lastName,
+      officeNum: instructor.officeNum,
+      phoneNum: instructor.phoneNum,
+      email: instructor.email,
     });
   } catch (err) {
     // return formatted errors
@@ -143,6 +152,9 @@ const updateInstructor = async (instructor) => {
         instructorID: instructor.instructorID,
         firstName: instructor.firstName,
         lastName: instructor.lastName,
+        officeNum: instructor.officeNum,
+        phoneNum: instructor.phoneNum,
+        email: instructor.email,
       });
     } catch (err) {
       // return formatted validation errors when invalid
