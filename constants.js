@@ -39,6 +39,21 @@ const testConst = {
         programAbbreviation: 'CST',
         programName: 'Computer Systems Technology',
     },
+    timeSlot1: {
+        starttime: '10:00', // The value is 24h for now
+        endtime: '11:00', // replaced duration for now
+        day: 'Wednesday',
+        roomID: `239B`,
+        courseOfferingID: 1,
+    },
+
+    timeSlotLowerBound: {
+        starttime: '00:00', // The value is 24h for now
+        endtime: '23:59',
+        day: 'Wednesday',
+        roomID: `239B`,
+        courseOfferingID: 1,
+    },
     programList: [
         {programAbbreviation: 'CNT', programName: 'Computer Network Technology'},
         {programAbbreviation: 'ECE', programName: 'Early Childhood Education'},
