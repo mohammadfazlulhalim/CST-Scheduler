@@ -131,4 +131,54 @@ describe('Test Instructor Report Page', () => {
     // Assert that there is the same amount of tables as there is instructors in the list
     cy.get('table').should('have.length', this.instructors.length);
   });
+  it('testModalAppearsOnInstructorReportPage', () => {
+    // Opens report page
+    cy.visit('localhost:3000/reports/instructor');
+    // Wait for the modal to pop up and then it should be visible
+    cy.get('#instructorFormModal').should('exist').should('be.visible');
+  });
+  it('testGenerateButtonDisabledOnModal', () => {
+    // Opens report page
+    cy.visit('localhost:3000/reports/instructor');
+    // Ensure the modal is visible
+    cy.get('#instructorFormModal').should('exist').should('be.visible');
+
+    // Check that the "Generate Report" button is initially disabled
+    cy.get('#generateReportBtn').should('be.disabled');
+  });
+  it('testGenerateButtonEnabledUponInstructorAndTermSelect', () => {
+    // Opens report page
+    cy.visit('localhost:3000/reports/instructor');
+    // Ensure the modal is visible
+    cy.get('#instructorFormModal').should('exist').should('be.visible');
+
+    // Fill out the form
+    // Select the name
+    cy.get('#instructorList').select('BenBenson');
+
+    // Check that the "Generate Report" button is initially disabled
+    cy.get('#generateReportBtn').should('be.disabled');
+
+    // Select the term
+    cy.get('#termBox').select('2024T4');
+
+    // Check that the "Generate Report" button is initially disabled
+    cy.get('#generateReportBtn').should('be.enable');
+  });
+  it('testNavigationToTheReportInstructorPage', ()=> {
+    // Opens the landing page
+    cy.visit('localhost:3000');
+
+    // Check that the hidden list is initially hidden
+    cy.get('#reportsDropdownList').should('not.be.visible'); // Replace with the actual selector for the hidden list
+
+    // Trigger hover over the "Reports" menu item
+    cy.get('#reportsMenu').trigger('mouseover'); // Replace with the actual selector for the "Reports" menu
+
+    // Click on the "Instructor Report" option in the dropdown
+    cy.get('#instructorReportItem').click(); // Replace with the actual selector for the "Instructor Report" option
+
+    // Check that the page redirects to the expected link
+    cy.url().should('eq', 'http://localhost:3000/reports/instructor');
+  });
 });
