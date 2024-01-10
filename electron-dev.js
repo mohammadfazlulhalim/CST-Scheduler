@@ -3,7 +3,9 @@
  */
 const exec = require('await-exec');
 
-process.env.TESTING_MODE = 'testing';
+process.env.TESTING_MODE = 'cypress';
+
+// Potentially call a loaddb or loadDevDB
 
 exec('electron .', {stdio: 'inherit'});
 exec('cypress open', {stdio: 'inherit'});

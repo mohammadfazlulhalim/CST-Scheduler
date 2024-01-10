@@ -37,7 +37,6 @@ async function updateDatabase() {
 
     await Classroom.sync({force: true});
     await CourseOffering.sync({force: true});
-
     Associations.addAssociations();
 
     // have a classroom and courseoffering exist during the tests
@@ -46,29 +45,10 @@ async function updateDatabase() {
 
     await TimeSlot.sync({force: true});
 
-    // the obj literal constant contains a room number
-    // and a course offering ID
+    // the obj literal constant contains a room number and a course offering ID
     timeSlotInstance = Object.assign({}, testConst.timeSlot1);
 
-    Associations.addAssociations();
-
 }
-
-// TODO fix association tests LATER
-// associations test - course offering
-/**
- * Ritish's Code - only modified the beforeEach,need to inspect the rest
- */
-describe('timeslotCourseOffering', () => {
-
-    beforeEach(async () => {
-        await updateDatabase()
-    })
-
-    test('testAssociatedCourseOfferingValid', async () => {
-        // TODO: Add associations
-    })
-});
 
 describe('timeslotStartTime', () => {
     beforeEach(async () => {
