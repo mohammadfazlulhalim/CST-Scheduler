@@ -1,14 +1,25 @@
 describe('Testing Instructor CRUD options', () => {
+  const tableFirstHeader ="body > div > div > div > table > thead > tr > th:nth-child(2)"
+  const tableSecondHeader="body > div > div > div > table > thead > tr > th:nth-child(3)"
+  const tableThirdHeader='body > div > div > div > table > thead > tr > th:nth-child(4)'
+  const tableFourthHeader= 'body > div > div > div > table > thead > tr > th:nth-child(5)'
+  const tableFifthHeader='body > div > div > div > table > thead > tr > th:nth-child(6)'
+  const tableSixthHeader='body > div > div > div > table > thead > tr > th:nth-child(7)'
+  const navMenu ='body>open>nav';
+  const navMenuItem= 'body>nav>menu';
+
   it('Instructor listings page is shown', () => {
-    cy.visit('http://localhost:3000/instructor');
-    cy.get('body > div > div > div > button').click();
-    cy.get('body > div > div > div > h1').should('have.text', 'Instructor Listings');
-    cy.get('body > div > div > div > table > thead > tr > th:nth-child(2)').should('have.text', 'First Name');
-    cy.get('body > div > div > div > table > thead > tr > th:nth-child(3)').should('have.text', 'Last Name');
-    cy.get('body > div > div > div > table > thead > tr > th:nth-child(4)').should('have.text', 'Office Number');
-    cy.get('body > div > div > div > table > thead > tr > th:nth-child(5)').should('have.text', 'Phone Number');
-    cy.get('body > div > div > div > table > thead > tr > th:nth-child(6)').should('have.text', 'Email');
-    cy.get('body > div > div > div > table > thead > tr > th:nth-child(7)').should('have.text', 'Action');
+    cy.visit('http://localhost:3000');
+    //TODO check the tables do not exist
+
+    cy.get(navMenu).trigger('mouseover', { /*TODO find the option I must send mouse over*/});
+    cy.get(navMenuItem).should('have.text', 'Instructor List').click();
+    cy.get(tableFirstHeader).should('have.text', 'First Name');
+    cy.get(tableSecondHeader).should('have.text', 'Last Name');
+    cy.get(tableThirdHeader).should('have.text', 'Office Number');
+    cy.get(tableFourthHeader).should('have.text', 'Phone Number');
+    cy.get(tableFifthHeader).should('have.text', 'Email');
+    cy.get(tableSixthHeader).should('have.text', 'Action');
   });
   it('Create New Instructor modal is shown after clicking ADD NEW INSTRUCTOR Button', () => {
     cy.visit('http://localhost:3000/instructor');
@@ -21,17 +32,6 @@ describe('Testing Instructor CRUD options', () => {
     cy.get('#addModal > div > div > form > div.modal-body > label:nth-child(16)').should('have.text', 'Email:');
   });
 
-  it('Edit information inside Instructor List Page ', () => {
-    cy.visit('http://localhost:3000/instructor');
-    cy.get('#\\31 edit').click();
-    cy.get('#editModalLabel').should('have.text', 'Edit Existing Instructor');
-    cy.get('#eFirstName').clear();
-    cy.get('#eFirstName').type('John');
-    cy.get('#eLastName').clear();
-    cy.get('#eLastName').type('Doe');
-    cy.get('#editInstructor').click();
-    cy.get('#\\31 firstName').should('have.text', 'John');
-  });
 
   it('Add information inside New Instructor modal', () => {
     cy.visit('http://localhost:3000/instructor');
@@ -44,6 +44,22 @@ describe('Testing Instructor CRUD options', () => {
     cy.get('#createInstructor').click();
     cy.get('#\\31 firstName').should('have.text', 'Ben');
   });
+
+  it('Edit information inside Instructor List Page ', () => {
+
+    //Test Edit instructor information
+    cy.visit('http://localhost:3000/instructor');
+    cy.get('#\\31 edit').click();
+    cy.get('#editModalLabel').should('have.text', 'Edit Existing Instructor');
+    cy.get('#eFirstName').clear();
+    cy.get('#eFirstName').type('John');
+    cy.get('#eLastName').clear();
+    cy.get('#eLastName').type('Doe');
+    cy.get('#editInstructor').click();
+    cy.get('#\\31 firstName').should('have.text', 'John');
+  });
+
+
 
   it('Delete information inside Instructor List Page ', () => {
     cy.visit('http://localhost:3000/instructor');
