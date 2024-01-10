@@ -5,7 +5,7 @@ const fillCourseTable = require('./Course.fix'); // story34
 const fillTermTable = require('./Term.fix');
 const fillClassroomTable = require('./Classroom.fix');
 const fillProgramTable = require('./Program.fix');
-
+const fillTimeslotTable = require('./Timeslot.fix');
 // call individual fixture methods here
 fillTermTable();
 fillInstructorTable();
@@ -13,3 +13,4 @@ fillClassroomTable();
 fillCourseTable();
 fillProgramTable();
 fillCourseOfferingTable();
+fillTimeslotTable();
