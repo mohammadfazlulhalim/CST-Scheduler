@@ -58,7 +58,14 @@ const testConst = {
     {instructorID: 4, firstName: 'Rick', lastName: 'Caron'},
     {instructorID: 5, firstName: 'Ernesto', lastName: 'Basoalto'},
   ],
+  validTimeslots: [
 
+    {name: 'CSEC280', startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1000', endTime: '1200', day: 'Thursday', group: 'A', termID: 1, programID: 1, instructorID: 1, courseID: 1, roomID: 2 },
+    {name: 'CSEC280', startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1000', endTime: '1200', day: 'Thursday', group: 'A', termID: 1, programID: 1, instructorID: 1, courseID: 1, roomID: 2 },
+
+    {name: 'CSEC280', startDate: '2023-09-01', endDate: '2023-12-15', startTime: '800', endTime: '900', day: 'Tuesday', group: 'B', termID: 1, programID: 1, instructorID: 1, courseID: 1, roomID: 1 },
+    {name: 'CSEC280', startDate: '2023-09-01', endDate: '2023-12-15', startTime: '900', endTime: '1000', day: 'Tuesday', group: 'B', termID: 1, programID: 1, instructorID: 1, courseID: 1, roomID: 1 },
+  ]
 };
 
 const instructorConstraints = {
