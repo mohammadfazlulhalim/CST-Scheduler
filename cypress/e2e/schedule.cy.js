@@ -1,4 +1,3 @@
-describe('schedulePage', () => {
   it('testThatModalWorks', () => {
     // Opens main page - and go to Schedule Courses
     cy.visit('localhost:3000');

@@ -72,15 +72,15 @@ const Timeslot = sequelize.define('CourseOffering', {
         foreignKey: true,
     },
 
-    courseID: {
-        type: DataTypes.INTEGER,
-        foreignKey: true,
-    },
-
     roomID: {
         type: DataTypes.INTEGER,
         foreignKey: true,
     },
+
+    courseOfferingID: {
+        type: DataTypes.INTEGER,
+        foreignKey: true,
+    }
 
 }, {
     tableName: 'Timeslots',

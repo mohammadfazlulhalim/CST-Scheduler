@@ -39,11 +39,22 @@ const testConst = {
         programAbbreviation: 'CST',
         programName: 'Computer Systems Technology',
     },
+
+    classroom1: {
+        roomNumber: '239a',
+    },
+
     timeSlot1: {
         starttime: '10:00', // The value is 24h for now
         endtime: '11:00', // replaced duration for now
+        startDate: '2023-09-01',
+        endDate: '2023-12-15',
         day: 'Wednesday',
-        roomID: `239B`,
+        group: 'B',
+        roomID: 1,
+        termID: 1,
+        instructorID: 1,
+        programID: 1,
         courseOfferingID: 1,
     },
 
