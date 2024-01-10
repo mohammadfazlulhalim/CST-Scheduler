@@ -14,7 +14,7 @@ async function fillTimeslotTable() {
 // eslint-disable-next-line require-jsdoc
 async function createTimeslot() {
   for (const timeslot of constants.testConst.validTimeslots) {
-    await timeslot.create(timeslot);
+    await Timeslot.create(timeslot);
   }
 }
 

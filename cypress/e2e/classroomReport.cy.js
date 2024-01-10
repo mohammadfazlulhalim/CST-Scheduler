@@ -5,11 +5,11 @@ const Instructor = require('../../private/javascript/Instructor');
 
 
 describe('template spec', () => {
-  beforeEach(async () => {
-    // drop the table and re-create it
-    await Timeslot.sync({force: true});
-    testTimeslot = {...constants.testConst.instructor1};
-  });
+  // beforeEach(async () => {
+  //   // drop the table and re-create it
+  //   await Timeslot.sync({force: true});
+  //   testTimeslot = {...constants.testConst.instructor1};
+  // });
 
   it('passes', () => {
     cy.visit('http://localhost:3000');

@@ -1,4 +1,4 @@
-const Timeslot = require('./private/javascript/Timeslot',
+const Timeslot = require('./private/javascript/Timeslot');
 const testConst = {
     instructor1: {
         instructorID: '20',
