@@ -9,6 +9,20 @@ describe('Testing Instructor CRUD options', () => {
   const tableFourthHeader= 'body > div > div > div > table > thead > tr > th:nth-child(5)';
   const tableFifthHeader='body > div > div > div > table > thead > tr > th:nth-child(6)';
   const tableSixthHeader='body > div > div > div > table > thead > tr > th:nth-child(7)';
+  const addInsModalFirstTextBoxLabel='#addModal > div > div > form > div.modal-body > label:nth-child(4)';
+  const addInsModalSecondTextBoxLabel='#addModal > div > div > form > div.modal-body > label:nth-child(7)';
+  const addInsModalThirdTextBoxLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(10)';
+  const addInsModalFourthTextBoxLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(13)';
+  const addInsModalFifthTextLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(16)';
+  const createInsButton= 'body > div > div > div > button' ;
+  const newInsFirstNameInputTextBox='#cFirstName';
+  const newInsLastNameInputTextBox='#cLastName';
+  const newInsOfficeNumInputBox='#cOffice';
+  const newInsPhoneNumInputBox='#cPhone';
+  const newInsEmailInputBox='#cEmail';
+  const CreateInstructorButton='#createInstructor';
+  const insListFirstNameOnFirstColumn='#\\31 firstName';
+  const insListEditButtonOnFirstColumn = '#\\31 edit';
 
   const navMenuSelector ='body>open>nav';
   const navMenuItem= 'body>nav>menu';
@@ -29,30 +43,30 @@ describe('Testing Instructor CRUD options', () => {
   it('Create New Instructor modal is shown after clicking ADD NEW INSTRUCTOR Button', () => {
     cy.get('body > div > div > div > button').click();
     cy.get('#addModalLabel').should('have.text', 'Create New Instructor');
-    cy.get('#addModal > div > div > form > div.modal-body > label:nth-child(4)').should('have.text', 'First Name:');
-    cy.get('#addModal > div > div > form > div.modal-body > label:nth-child(7)').should('have.text', 'Last Name:');
-    cy.get('#addModal > div > div > form > div.modal-body > label:nth-child(10)').should('have.text', 'Office Number:');
-    cy.get('#addModal > div > div > form > div.modal-body > label:nth-child(13)').should('have.text', 'Phone Number:');
-    cy.get('#addModal > div > div > form > div.modal-body > label:nth-child(16)').should('have.text', 'Email:');
+    cy.get(addInsModalFirstTextBoxLabel).should('have.text', 'First Name:');
+    cy.get(addInsModalSecondTextBoxLabel).should('have.text', 'Last Name:');
+    cy.get(addInsModalThirdTextBoxLabel).should('have.text', 'Office Number:');
+    cy.get(addInsModalFourthTextBoxLabel).should('have.text', 'Phone Number:');
+    cy.get(addInsModalFifthTextLabel).should('have.text', 'Email:');
   });
 
 
   it('Add information inside New Instructor modal', () => {
     cy.visit('http://localhost:3000/instructor');
-    cy.get('body > div > div > div > button').click();
-    cy.get('#cFirstName').type('Ben');
-    cy.get('#cLastName').type('Benson');
-    cy.get('#cOffice').type('223A.1');
-    cy.get('#cPhone').type('224-456');
-    cy.get('#cEmail').type('benson@saskpolytech.ca');
-    cy.get('#createInstructor').click();
-    cy.get('#\\31 firstName').should('have.text', 'Ben');
+    cy.get(createInsButton).click();
+    cy.get(newInsFirstNameInputTextBox).type('Ben');
+    cy.get(newInsLastNameInputTextBox).type('Benson');
+    cy.get(newInsOfficeNumInputBox).type('223A.1');
+    cy.get(newInsPhoneNumInputBox).type('(123)-456-9655');
+    cy.get(newInsEmailInputBox).type('benson@saskpolytech.ca');
+    cy.get(CreateInstructorButton).click();
+    cy.get(insListFirstNameOnFirstColumn).should('have.text', 'Ben');
   });
 
   it('Edit information inside Instructor List Page ', () => {
     // Test Edit instructor information
     cy.visit('http://localhost:3000/instructor');
-    cy.get('#\\31 edit').click();
+    cy.get(insListEditButtonOnFirstColumn).click();
     cy.get('#editModalLabel').should('have.text', 'Edit Existing Instructor');
     cy.get('#eFirstName').clear();
     cy.get('#eFirstName').type('John');

@@ -46,8 +46,8 @@ const Instructor = sequelize.define('Instructor', {
 
       },
       len: {
-        args: [0, 6],
-        msg: 'Exception "Office number must be 6 digits"',
+        args: [0, 10],
+        msg: 'Exception "Office cannot be more than 10 digits"',
       },
       // len: {
       //   [Op.between]: [0, 6],
@@ -66,10 +66,10 @@ const Instructor = sequelize.define('Instructor', {
 
       },
       len: {
-        args: [0, 7],
-        msg: 'Exception "Phone number must be 6 numeric digits"',
+        args: [0,14],
+        msg: 'Exception "Phone number can not be more than 10 numeric digits"',
       },
-      is: /^(\d{3}-\d{3}|\d{3} \d{3}|\d{6})$/,
+      is: /^\(\d{3}\)-\d{3}-d{4}$/,
 
     },
   },
