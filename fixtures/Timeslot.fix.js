@@ -13,7 +13,7 @@ async function fillTimeslotTable() {
 
 // eslint-disable-next-line require-jsdoc
 async function createTimeslot() {
-  for (const timeslot of constants.testConst.validTimeslots) {
+  for (const timeslot of constants.testConst.story9v2Timeslot) {
     await Timeslot.create(timeslot);
   }
 }
