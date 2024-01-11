@@ -11,13 +11,16 @@ const createAllTables = require('./createTables.fix');
 
 // call individual fixture methods here
 
+async function TestingDisShiz() {
+    await createAllTables();
+    await addAssociations();
+    fillTermTable();
+    fillInstructorTable();
+    fillClassroomTable();
+    fillCourseTable();
+    fillProgramTable();
+    fillCourseOfferingTable();
+    fillTimeslotTable();
+}
 
-createAllTables();
-addAssociations();
-// fillTermTable();
-// fillInstructorTable();
-// fillClassroomTable();
-// fillCourseTable();
-// fillProgramTable();
-// fillCourseOfferingTable();
-// fillTimeslotTable();
+TestingDisShiz();

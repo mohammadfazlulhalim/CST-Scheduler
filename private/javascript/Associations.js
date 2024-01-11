@@ -6,7 +6,7 @@ const CourseOffering = require('../../private/javascript/CourseOffering');
 const Timeslot = require('../../private/javascript/Timeslot');
 const Classroom = require('../../private/javascript/Classroom');
 
-addAssociations = () => {
+function addAssociations() {
   Term.hasMany(CourseOffering);
   Term.hasMany(Timeslot);
 

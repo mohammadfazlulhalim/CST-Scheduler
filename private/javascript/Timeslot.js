@@ -15,6 +15,8 @@ const Timeslot = sequelize.define('CourseOffering', {
     primaryKey: true,
   },
 
+
+
   startDate: {
     type: DataTypes.STRING,
   },
