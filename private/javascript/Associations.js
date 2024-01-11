@@ -11,7 +11,6 @@ function addAssociations() {
   Term.hasMany(Timeslot);
 
   Course.hasMany(CourseOffering);
-  Course.hasMany(Timeslot);
 
   Instructor.hasMany(CourseOffering);
   Instructor.hasMany(Timeslot);
