@@ -63,63 +63,63 @@ const testConst = {
     // Ben Benson's timeslot
     // Showcases a normal looking schedule,teaches tuesday and thursday
     // For group B
-    {timeSlotID: 1, courseOfferingID: 1, instructorID: 1, classroomID: 1, term: testConst.validTerms[0],
-      startTime: 800, endTime: 1000, day: 'Tuesday', room: '244', group: 'B'},
-    {timeSlotID: 2, courseOfferingID: 1, instructorID: 1, classroomID: 1, term: testConst.validTerms[0],
-      startTime: 800, endTime: 1000, day: 'Thursday', room: '244', group: 'B'},
+    {timeSlotID: 1, courseOfferingID: 1, instructorID: 1, classroomID: 1, term: 1,
+      startTime: '8:00', endTime: '10:00', day: 'Tuesday', roomID: 1, group: 'B'},
+    {timeSlotID: 2, courseOfferingID: 1, instructorID: 1, classroomID: 1, term: 1,
+      startTime: '8:00', endTime: '10:00', day: 'Thursday', roomID: 1, group: 'B'},
     // For group A
-    {timeSlotID: 1, courseOfferingID: 1, instructorID: 1, classroomID: 2, term: testConst.validTerms[0],
-      startTime: 100, endTime: 300, day: 'Tuesday', room: '242c', group: 'A'},
-    {timeSlotID: 2, courseOfferingID: 1, instructorID: 1, classroomID: 2, term: testConst.validTerms[0],
-      startTime: 100, endTime: 300, day: 'Thursday', room: '242c', group: 'A'},
+    {timeSlotID: 1, courseOfferingID: 1, instructorID: 1, classroomID: 2, term: 1,
+      startTime: '1:00', endTime: '3:00', day: 'Tuesday', roomID: 2, group: 'A'},
+    {timeSlotID: 2, courseOfferingID: 1, instructorID: 1, classroomID: 2, term: 1,
+      startTime: '1:00', endTime: '3:00', day: 'Thursday', roomID: 2, group: 'A'},
 
     // Bryce Barrie's timeslot
     // Teaching whole day on monday
     // For group B
-    {timeSlotID: 3, courseOfferingID: 2, instructorID: 2, classroomID: 1, term: testConst.validTerms[1],
-      startTime: 800, endTime: 1000, day: 'Monday', room: '244', group: 'B'},
+    {timeSlotID: 3, courseOfferingID: 2, instructorID: 2, classroomID: 1, term: 2,
+      startTime: '8:00', endTime: '10:00', day: 'Monday', roomID: 1, group: 'B'},
     // For group A
-    {timeSlotID: 4, courseOfferingID: 2, instructorID: 2, classroomID: 2, term: testConst.validTerms[1],
-      startTime: 1000, endTime: 1200, day: 'Monday', room: '242c', group: 'A'},
-    {timeSlotID: 5, courseOfferingID: 3, instructorID: 2, classroomID: 2, term: testConst.validTerms[1],
-      startTime: 100, endTime: 300, day: 'Monday', room: '242c', group: 'A'},
+    {timeSlotID: 4, courseOfferingID: 2, instructorID: 2, classroomID: 2, term: 2,
+      startTime: '10:00', endTime: '12:00', day: 'Monday', roomID: 2, group: 'A'},
+    {timeSlotID: 5, courseOfferingID: 3, instructorID: 2, classroomID: 2, term: 2,
+      startTime: '1:00', endTime: '3:00', day: 'Monday', roomID: 2, group: 'A'},
 
     // Donovan Onishenko's timeslots
     // Showcasing a diagonal schedule
     // Monday
     // For group B
-    {timeSlotID: 6, courseOfferingID: 4, instructorID: 3, classroomID: 1, term: testConst.validTerms[2],
-      startTime: 800, endTime: 1000, day: 'Monday', room: '244', group: 'B'},
+    {timeSlotID: 6, courseOfferingID: 4, instructorID: 3, classroomID: 1, term: 3,
+      startTime: '8:00', endTime: '10:00', day: 'Monday', roomID: 1, group: 'B'},
     // For group A
-    {timeSlotID: 7, courseOfferingID: 5, instructorID: 3, classroomID: 2, term: testConst.validTerms[2],
-      startTime: 100, endTime: 300, day: 'Monday', room: '242c', group: 'A'},
+    {timeSlotID: 7, courseOfferingID: 5, instructorID: 3, classroomID: 2, term: 3,
+      startTime: '1:00', endTime: '3:00', day: 'Monday', roomID: 2, group: 'A'},
     // Tuesday
-    {timeSlotID: 8, courseOfferingID: 4, instructorID: 3, classroomID: 1, term: testConst.validTerms[2],
-      startTime: 1000, endTime: 1200, day: 'Tuesday', room: '244', group: 'B'},
+    {timeSlotID: 8, courseOfferingID: 4, instructorID: 3, classroomID: 1, term: 3,
+      startTime: '10:00', endTime: '12:00', day: 'Tuesday', roomID: 1, group: 'B'},
     // For group A
-    {timeSlotID: 9, courseOfferingID: 5, instructorID: 3, classroomID: 2, term: testConst.validTerms[2],
-      startTime: 100, endTime: 300, day: 'Tuesday', room: '242c', group: 'A'},
+    {timeSlotID: 9, courseOfferingID: 5, instructorID: 3, classroomID: 2, term: 3,
+      startTime: '1:00', endTime: '3:00', day: 'Tuesday', roomID: 2, group: 'A'},
     // Wednesday
     // For group B
-    {timeSlotID: 10, courseOfferingID: 4, instructorID: 3, classroomID: 1, term: testConst.validTerms[2],
-      startTime: 1000, endTime: 1200, day: 'Wednesday', room: '244', group: 'B'},
+    {timeSlotID: 10, courseOfferingID: 4, instructorID: 3, classroomID: 1, term: 3,
+      startTime: '10:00', endTime: '12:00', day: 'Wednesday', roomID: 1, group: 'B'},
     // For group A
-    {timeSlotID: 11, courseOfferingID: 5, instructorID: 3, classroomID: 2, term: testConst.validTerms[2],
-      startTime: 100, endTime: 200, day: 'Wednesday', room: '242c', group: 'A'},
+    {timeSlotID: 11, courseOfferingID: 5, instructorID: 3, classroomID: 2, term: 3,
+      startTime: '1:00', endTime: '2:00', day: 'Wednesday', roomID: 2, group: 'A'},
     // Thursday
     // For group B
-    {timeSlotID: 12, courseOfferingID: 4, instructorID: 3, classroomID: 1, term: testConst.validTerms[2],
-      startTime: 1000, endTime: 1200, day: 'Thursday', room: '244', group: 'B'},
+    {timeSlotID: 12, courseOfferingID: 4, instructorID: 3, classroomID: 1, term: 3,
+      startTime: '10:00', endTime: '12:00', day: 'Thursday', roomID: 1, group: 'B'},
     // For group A
-    {timeSlotID: 13, courseOfferingID: 5, instructorID: 3, classroomID: 2, term: testConst.validTerms[2],
-      startTime: 100, endTime: 200, day: 'Thursday', room: '242c', group: 'A'},
+    {timeSlotID: 13, courseOfferingID: 5, instructorID: 3, classroomID: 2, term: 3,
+      startTime: '1:00', endTime: '2:00', day: 'Thursday', roomID: 2, group: 'A'},
     // Friday
     // For group B
-    {timeSlotID: 14, courseOfferingID: 4, instructorID: 3, classroomID: 1, term: testConst.validTerms[2],
-      startTime: 800, endTime: 1000, day: 'Friday', room: '244', group: 'B'},
+    {timeSlotID: 14, courseOfferingID: 4, instructorID: 3, classroomID: 1, term: 3,
+      startTime: '8:00', endTime: '10:00', day: 'Friday', roomID: 1, group: 'B'},
     // For group A
-    {timeSlotID: 15, courseOfferingID: 5, instructorID: 3, classroomID: 2, term: testConst.validTerms[2],
-      startTime: 100, endTime: 300, day: 'Friday', room: '242c', group: 'A'},
+    {timeSlotID: 15, courseOfferingID: 5, instructorID: 3, classroomID: 2, term: 3,
+      startTime: '1:00', endTime: '3:00', day: 'Friday', roomID: 2, group: 'A'},
   ],
 };
 

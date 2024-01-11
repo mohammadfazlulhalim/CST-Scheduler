@@ -2,6 +2,8 @@ describe('Test Instructor Report Page', () => {
   it('testInstructorAppearsOnReportHeader', () => {
     // Opens report page
     cy.visit('localhost:3000/reports/instructor');
+    // Ensure the modal is visible
+    cy.get('#instructorFormModal').should('exist').should('be.visible');
 
     // Fill out the form
     // Select the name
@@ -19,6 +21,8 @@ describe('Test Instructor Report Page', () => {
   it('testDateGeneratedAppearsOnHeaderAfterPost', () => {
     // Opens report page
     cy.visit('localhost:3000/reports/instructor');
+    // Ensure the modal is visible
+    cy.get('#instructorFormModal').should('exist').should('be.visible');
 
     // Fill out the form
     // Select the name
@@ -39,6 +43,8 @@ describe('Test Instructor Report Page', () => {
   it('testReportIsInATableWithWeekdaysAndHours', () => {
     // Opens report page
     cy.visit('localhost:3000/reports/instructor');
+    // Ensure the modal is visible
+    cy.get('#instructorFormModal').should('exist').should('be.visible');
 
     // Iterate through each table on the page
     cy.get('table').each(($table) => {
@@ -67,6 +73,9 @@ describe('Test Instructor Report Page', () => {
   it('testNewReportAndPrintButtonAreVisible', () => {
     // Opens report page
     cy.visit('localhost:3000/reports/instructor');
+
+    // Ensure the modal is visible
+    cy.get('#instructorFormModal').should('exist').should('be.visible');
 
     // Assert that the "New Report" button is visible
     cy.get('#newReportBtn').should('be.visible');
