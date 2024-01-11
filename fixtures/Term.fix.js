@@ -8,7 +8,7 @@ const constants = require('../constants');
  */
 async function fillTermTable() {
   // Clear table
-  await Term.sync({force: true});
+
 
   // Fill with the six terms, with valid start and end dates
   for (const term of constants.testConst.validTerms) {

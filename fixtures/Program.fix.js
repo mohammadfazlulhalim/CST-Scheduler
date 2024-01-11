@@ -5,9 +5,6 @@ const ProgramFix = require('../private/javascript/Program');
  * This function clears the program table if it exists and fills it with new enteries
  */
 async function fillProgramTable() {
-  // clear the db table
-  await ProgramFix.sync({force: true});
-
   // create 15 offerings
   await createProgram();
 }

@@ -7,15 +7,14 @@ const constants = require('../constants');
  * @return {Promise<void>}
  */
 async function fillTimeslotTable() {
-  await Timeslot.sync({force: true});
   await createTimeslot();
 }
 
 // eslint-disable-next-line require-jsdoc
 async function createTimeslot() {
-  for (const timeslot of constants.testConst.validTimeslots) {
-    await Timeslot.create(timeslot);
-  }
+  // for (const timeslot of constants.testConst.validTimeslots) {
+  //   await Timeslot.create(timeslot);
+  // }
 }
 
 module.exports = fillTimeslotTable;

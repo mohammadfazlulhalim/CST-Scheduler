@@ -6,7 +6,6 @@ const Course = require('../private/javascript/Course');
  * clears the course table if it exists and fills it 5 courses
  */
 async function fillCourseTable() {
-  await Course.sync({force: true});
   await createCourses();
 }
 

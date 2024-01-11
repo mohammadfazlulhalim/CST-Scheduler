@@ -6,7 +6,6 @@ const Classroom = require('../private/javascript/Classroom');
  * @return {Promise<void>}
  */
 async function fillClassroomTable() {
-  await Classroom.sync({force: true});
   await createClassrooms();
 }
 

@@ -1,5 +1,5 @@
 const {DataTypes, sequelize} = require('../../datasource');
-const CourseOffering = require('../javascript/CourseOffering');
+
 
 // Database constructor for Instructor
 const Instructor = sequelize.define('Instructor', {
