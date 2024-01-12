@@ -2,6 +2,11 @@ const express = require('express');
 const router = express.Router();
 const CourseOffering = require('../private/javascript/CourseOffering');
 
+// const Course = require('../private/javascript/Course');
+// const Term = require('../private/javascript/Term');
+// const Instructor = require('../private/javascript/Instructor');
+// const Program = require('../private/javascript/Program');
+
 
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
@@ -17,7 +22,6 @@ router.get('/', async function(req, res, next) {
 
   router.post('/', async function (req, res, next) {
 
-    console.log('POST: ' + JSON.stringify(req.body));
     await CourseOffering.sync();
 
     const newCO = {
@@ -119,10 +123,54 @@ router.get('/', async function(req, res, next) {
    */
   async function createCourseOffering(createCO) {
     try {
-      return await CourseOffering.create(createCO);
+      // console.log('Syntax of the new create is: ' + JSON.stringify(createCO));
+      return await CourseOffering.create(reformatObjectLiteral(createCO));
     } catch (e) {
       return mapErrors(e);
     }
+  }
+
+/**
+ * Reformats the object literal into the needed syntax for the association
+ * redo implemented in R3
+ * This may not be necessary, just experimenting with it
+ * @param coObj
+ * @returns {{name, id, startDate}}
+ */
+function reformatObjectLiteral(coObj) {
+    const newLit = {
+      id: coObj.id,
+      name: coObj.name,
+      startDate: coObj.startDate,
+      endDate: coObj.endDate,
+      group: coObj.group,
+      courseID: {
+        id: coObj.courseID.id,
+        courseCode: coObj.courseID.courseCode,
+        courseName: coObj.courseID.courseName,
+        courseNumCredits: coObj.courseID.courseNumCredits,
+        courseNumHoursPerWeek: coObj.courseID.courseNumHoursPerWeek,
+      },
+      termID: {
+        id: coObj.termID.id,
+        termNumber: coObj.termID.termNumber,
+        startDate: coObj.termID.startDate,
+        endDate: coObj.termID.endDate,
+      },
+      instructorID: {
+        instructorID: coObj.instructorID.instructorID,
+        firstName: coObj.instructorID.firstName,
+        lastName: coObj.instructorID.lastName,
+      },
+      programID: {
+        id: coObj.programID.id,
+        programName: coObj.programID.programName,
+        programAbbreviation: coObj.programID.programAbbreviation,
+      },
+    };
+
+    // console.log('New object is: ' + JSON.stringify(newLit));
+    return newLit;
   }
 
   /**

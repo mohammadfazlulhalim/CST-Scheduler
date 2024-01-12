@@ -84,7 +84,6 @@ router.put('/', async function(req, res, next) {
     violations = result.error;
   }
   const putSubmittedInstructor= req.body;
-  console.log(putSubmittedInstructor);
   const instructorLists = await readAllInstructors();
   res.render('instructor', {
     title: 'Instructor List',

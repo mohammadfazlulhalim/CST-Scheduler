@@ -1,31 +1,26 @@
-const Course = require('../../private/javascript/Course');
-const Term = require('../../private/javascript/Term');
-const Instructor = require('../../private/javascript/Instructor');
-const Program = require('../../private/javascript/Program');
+// const Course = require('../../private/javascript/Course');
+// const Term = require('../../private/javascript/Term');
+// const Instructor = require('../../private/javascript/Instructor');
+// const Program = require('../../private/javascript/Program');
 const CourseOffering = require('../../private/javascript/CourseOffering');
-const Associations = require('../../private/javascript/Associations');
-const testConst = require('../../constants').testConst;
+// const Associations = require('../../private/javascript/Associations');
+// const testConst = require('../../constants').testConst;
+const CourseOfferingScript = require('../../fixtures/AssociatedCourseOffering.fix')
 
+
+let testCourseOffering;
 // tests for the 'group' field
 describe('courseOfferingUnit', () => {
-  let testCourseOffering;
-  beforeAll(async function() {
-    await Course.sync({force: true});
-    await Term.sync({force: true});
-    await Instructor.sync({force: true});
-    await Program.sync({force: true});
-    await CourseOffering.sync({force: true});
 
-    Associations.addAssociations();
-    await Term.create(testConst.term1);
-    await Course.create(testConst.course1);
-    await Instructor.create(testConst.instructor1);
-    await Program.create(testConst.program1);
+  beforeAll(async function() {
+    const nestedObj = await CourseOfferingScript();
+    testCourseOffering = nestedObj.offering1;
   })
   // set up a valid user
   beforeEach(async function() {
     // drop the table and re-create it
-    testCourseOffering = testConst.courseOffering1;
+    const nestedObj = await CourseOfferingScript();
+    testCourseOffering = nestedObj.offering1;
   });
 
 
@@ -145,7 +140,6 @@ describe('findAll()', () => {
 async function createCourseOfferings(amount) {
   // list of viable groups
   const viableGroups = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0'.split(' ');
-  let testCourseOffering = testConst.courseOffering1;
   // create valid entries
   for (let i = 0; i < amount; i++) {
     // randomize the group number
