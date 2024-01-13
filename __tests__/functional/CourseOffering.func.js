@@ -14,13 +14,11 @@ describe('Functional Course Offering', () => {
     let testCourseOffering1;
     let testCourseOffering2;
     let courseObj;
-    beforeAll(async function() {
-        courseObj = await CourseOfferingScript();
-    })
 
     //refresh before each test
     beforeEach(async function() {
-        await CourseOffering.sync();
+        courseObj = await CourseOfferingScript();
+        await CourseOffering.sync({force: true});
         testCourseOffering1 = courseObj.offering1;
         testCourseOffering2 = courseObj.offering2;
     })
@@ -89,9 +87,6 @@ describe('Functional Course Offering', () => {
         const foundCO = await CourseOffering.findByPk(testCO.id)
         expect(foundCO).toBeTruthy();
         expect(foundCO.group).toBe(testCO.group);
-
-        // //update
-        // await testPut(testCO);
     });
 
     //test that invalid course Offering is not updated in the database
@@ -160,7 +155,6 @@ describe('Functional Course Offering', () => {
         await testDelete(toDelete.dataValues);
     });
 
-
     //test that invalid course Offering id throws an error
     test('testThatInvalidIDIsNotDeleted', async function(){
         //variable to catch errors
@@ -193,7 +187,6 @@ describe('Functional Course Offering', () => {
         const newNumCO = (await CourseOffering.findAll()).length;
         expect(newNumCO).toBe(oldNumCO);
     });
-
 });
 
 /**
@@ -231,7 +224,6 @@ const testPut = async function(testCO) {
     expect(foundCO).toBeTruthy();
     expect(foundCO).not.ToBe(oldCO);
 };
-
 
 /**
  * Tests that testCO is successfully deleted

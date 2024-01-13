@@ -59,7 +59,7 @@ router.get('/', async function(req, res, next) {
   });
 
   router.put('/', async function (req, res, next) {
-    console.log('PUT: ' + JSON.stringify(req.body));
+    // console.log('PUT: ' + JSON.stringify(req.body));
 
     const newCO = {
       id: req.body.id,
@@ -98,7 +98,7 @@ router.get('/', async function(req, res, next) {
   });
 
   router.delete('/', async function (req, res, next) {
-    console.log('DELETE: ' + JSON.stringify(req.body));
+    // console.log('DELETE: ' + JSON.stringify(req.body));
     const retDelete = await deleteCourseOffering(req.body);
     let violations;
     if (retDelete <= 0) {
@@ -114,7 +114,6 @@ router.get('/', async function(req, res, next) {
       err: violations,
       submittedCO: violations ? req.body : undefined,
     });
-
   });
 
   /**
@@ -124,53 +123,11 @@ router.get('/', async function(req, res, next) {
   async function createCourseOffering(createCO) {
     try {
       // console.log('Syntax of the new create is: ' + JSON.stringify(createCO));
-      return await CourseOffering.create(reformatObjectLiteral(createCO));
+      return await CourseOffering.create(createCO);
     } catch (e) {
+      // console.log('Error is: ' + e);
       return mapErrors(e);
     }
-  }
-
-/**
- * Reformats the object literal into the needed syntax for the association
- * redo implemented in R3
- * This may not be necessary, just experimenting with it
- * @param coObj
- * @returns {{name, id, startDate}}
- */
-function reformatObjectLiteral(coObj) {
-    const newLit = {
-      id: coObj.id,
-      name: coObj.name,
-      startDate: coObj.startDate,
-      endDate: coObj.endDate,
-      group: coObj.group,
-      courseID: {
-        id: coObj.courseID.id,
-        courseCode: coObj.courseID.courseCode,
-        courseName: coObj.courseID.courseName,
-        courseNumCredits: coObj.courseID.courseNumCredits,
-        courseNumHoursPerWeek: coObj.courseID.courseNumHoursPerWeek,
-      },
-      termID: {
-        id: coObj.termID.id,
-        termNumber: coObj.termID.termNumber,
-        startDate: coObj.termID.startDate,
-        endDate: coObj.termID.endDate,
-      },
-      instructorID: {
-        instructorID: coObj.instructorID.instructorID,
-        firstName: coObj.instructorID.firstName,
-        lastName: coObj.instructorID.lastName,
-      },
-      programID: {
-        id: coObj.programID.id,
-        programName: coObj.programID.programName,
-        programAbbreviation: coObj.programID.programAbbreviation,
-      },
-    };
-
-    // console.log('New object is: ' + JSON.stringify(newLit));
-    return newLit;
   }
 
   /**
