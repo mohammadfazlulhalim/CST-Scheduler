@@ -135,7 +135,8 @@ const Term = sequelize.define('Term', {
       },
     },
   },
-});
+}
+);
 
 
 module.exports = Term;
