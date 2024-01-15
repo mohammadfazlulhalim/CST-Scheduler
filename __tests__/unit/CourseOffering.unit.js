@@ -21,7 +21,7 @@ describe('courseOfferingUnit', () => {
     await Course.create(testConst.course1);
     await Instructor.create(testConst.instructor1);
     await Program.create(testConst.program1);
-  })
+  });
   // set up a valid user
   beforeEach(async function() {
     // drop the table and re-create it
@@ -145,14 +145,14 @@ describe('findAll()', () => {
 async function createCourseOfferings(amount) {
   // list of viable groups
   const viableGroups = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0'.split(' ');
-  let testCourseOffering = testConst.courseOffering1;
+  const testCourseOffering = testConst.courseOffering1;
   // create valid entries
   for (let i = 0; i < amount; i++) {
     // randomize the group number
     const random = Math.floor(Math.random() * viableGroups.length);
     testCourseOffering.group = viableGroups[random];
     await CourseOffering.create(
-      testCourseOffering
+        testCourseOffering,
     );
   }
 }

@@ -9,6 +9,29 @@
           <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
       </head>
       <body>
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+          <div class="container-fluid">
+              <a class="navbar-brand" href="http://localhost:3000/#">CST Scheduler</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor04" aria-controls="navbarColor04" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarColor04">
+                  <ul class="navbar-nav me-auto">
+                      <li class="nav-item">
+                          <a class="nav-link active" href="http://localhost:3000/#">Home
+                              <span class="visually-hidden">(current)</span>
+                          </a>
+                      </li>
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Reports</a>
+                          <div class="dropdown-menu">
+                              <a class="dropdown-item" href="google.com">Instructor Report</a>
+                          </div>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </nav>
           <div class="container-fluid">
             {{{body}}}
           </div>

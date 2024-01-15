@@ -6,8 +6,14 @@ const router = express.Router();
  * Processing GET request for rendering the instructor report page.
  *
  */
-router.get('', function(req, res, next) {
-
+router.get('/', function(req, res, next) {
+  const instructor={
+    lastName: 'Benson',
+    firstName: 'Ben',
+  };
+  res.render('instructorReport', {
+    instructor,
+  });
 });
 
 
