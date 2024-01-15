@@ -33,7 +33,7 @@ const Timeslot = sequelize.define('CourseOffering', {
     },
 
     day: {
-        type: DataTypes.STRING,
+        type: DataTypes.NUMBER,
     },
 
     group: {

@@ -31,9 +31,9 @@ const testConst = {
         courseNumHoursPerWeek: 4,
     },
     term1: {
-        termNumber: 1,
-        startDate: '2023-08-01',
-        endDate: '2023-12-01'
+        termNumber: 5,
+        startDate: '2024-01-02',
+        endDate: '2023-04-25'
     },
     program1: {
         programAbbreviation: 'CST',
@@ -42,6 +42,7 @@ const testConst = {
 
     classroom1: {
         roomNumber: '239a',
+        location: 'Saskatoon',
     },
 
     timeSlot1: {

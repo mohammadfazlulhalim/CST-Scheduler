@@ -5,6 +5,7 @@ const CourseOffering = require('../private/javascript/CourseOffering');
 const Timeslot = require('../private/javascript/Timeslot');
 const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
+const {testConst} = require("../constants");
 
 let roomDefaults;
 let term;
@@ -17,28 +18,34 @@ router.get('/', (req, res, next)=>{
   // Potentially this is the view for picking options
 })
 
-router.post('/', (req, res, next)=>{
-  // POST handler - this can be the actual schedule page after picking options?
+router.post('/', async (req, res, next)=>{
+
+    //TODO - switch to req.body when the modal is complete
+    const hardTerm = await Term.findOne({where: {startDate: testConst.term1.startDate}}); //change to ID later
+    const hardProg = await Program.findOne({where: {programAbbreviation: testConst.program1.programAbbreviation}}); //change to id later
+    const hardGroups = 2;
+
+    const GROUP_LETTERS = [A, B, C, D]
+    const timeslotArray = new Array(hardGroups);
+    const COArray = new Array(hardGroups);
+    const groupLetters = new Array(hardGroups),
+
+
+    for(let i = 0; i < hardGroups; i++){
+        timeslotArray[i] = await Timeslot.findAll({where: {group: GROUP_LETTERS[i], program: hardProg.id, termID: hardTerm.id}});
+        COArray[i] = await CourseOffering.findAll({where: {group: GROUP_LETTERS[i], program: hardProg.id, termID: hardTerm.id}});
+        groupLetters[i] = GROUP_LETTERS[i];
+    }
+
+    res.render({
+        groups: groupLetters,
+        timeslotArray,
+        COArray,
+    })
+
+
 })
 
-/**
- * Uses program and term to retrieve timeslots from DB
- * or creates if none are found, and then sets the resulting
- * array of timeslots to variable 'timeslotArray'
- * @param options
- */
-function getTimeslots() {
-  // add in call to DB to retreive timesots
-}
 
-/**
- * Uses program and term to retrieve courseOfferings from DB
- * and sets the resulting array of courseOfferings to variable
- * 'courseOfferingArray'
- * @param options
- */
-function getCourseOfferings() {
-  // add in call to DB to retreive courseOfrferings
-}
 
 module.exports = router;
