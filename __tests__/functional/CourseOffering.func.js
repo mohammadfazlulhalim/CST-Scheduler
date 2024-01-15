@@ -1,38 +1,26 @@
-const Course = require('../../private/javascript/Course');
-const Term = require('../../private/javascript/Term');
-const Instructor = require('../../private/javascript/Instructor');
-const Program = require('../../private/javascript/Program');
+// const Course = require('../../private/javascript/Course');
+// const Term = require('../../private/javascript/Term');
+// const Instructor = require('../../private/javascript/Instructor');
+// const Program = require('../../private/javascript/Program');
 const CourseOffering = require('../../private/javascript/CourseOffering');
-const testConst = require('../../constants').testConst;
+// const testConst = require('../../constants').testConst;
 const app = require('../../app');
-const Associations = require('../../private/javascript/Associations');
+// const Associations = require("../../private/javascript/Associations");
 const SuperTest = require('supertest');
+const CourseOfferingScript = require('../../fixtures/AssociatedCourseOffering.fix');
 
 
 describe('Functional Course Offering', () => {
   let testCourseOffering1;
   let testCourseOffering2;
-  beforeAll(async function() {
-    await Course.sync({force: true});
-    await Term.sync({force: true});
-    await Instructor.sync({force: true});
-    await Program.sync({force: true});
-    await CourseOffering.sync({force: true});
-
-    Associations.addAssociations();
-
-    // set up a valid user with foreign keys
-    await Term.create(testConst.term1);
-    await Course.create(testConst.course1);
-    await Instructor.create(testConst.instructor1);
-    await Program.create(testConst.program1);
-  });
+  let courseObj;
 
   // refresh before each test
   beforeEach(async function() {
-    await CourseOffering.sync();
-    testCourseOffering1 = {...testConst.courseOffering1};
-    testCourseOffering2 = {...testConst.courseOffering2};
+    courseObj = await CourseOfferingScript();
+    await CourseOffering.sync({force: true});
+    testCourseOffering1 = courseObj.offering1;
+    testCourseOffering2 = courseObj.offering2;
   });
 
   // destroy course offering table after each test
@@ -98,9 +86,6 @@ describe('Functional Course Offering', () => {
     const foundCO = await CourseOffering.findByPk(testCO.id);
     expect(foundCO).toBeTruthy();
     expect(foundCO.group).toBe(testCO.group);
-
-    // //update
-    // await testPut(testCO);
   });
 
   // test that invalid course Offering is not updated in the database
@@ -166,7 +151,6 @@ describe('Functional Course Offering', () => {
     // delete
     await testDelete(toDelete.dataValues);
   });
-
 
   // test that invalid course Offering id throws an error
   test('testThatInvalidIDIsNotDeleted', async function() {
@@ -236,7 +220,6 @@ const testPut = async function(testCO) {
   expect(foundCO).toBeTruthy();
   expect(foundCO).not.ToBe(oldCO);
 };
-
 
 /**
  * Tests that testCO is successfully deleted
