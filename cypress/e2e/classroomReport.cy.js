@@ -262,6 +262,6 @@ describe('template spec', () => {
     cy.get('btnGenerateSchedule').click(); // Click generate schedule
     cy.wait('@generateReportPOST').its('request.method').should('eq', 'POST');
     cy.get('classReportModal').should('be.invisible'); // Check that the modal correctly popped up
-    //TODO decide what 2 do
+    // TODO decide what 2 do
   });
 });

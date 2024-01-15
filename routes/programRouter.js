@@ -56,7 +56,7 @@ router.post('/', async function(req, res, next) {
 
 // Update programs
 router.put('/', async function(req, res, next) {
-  console.log('We r in the put');
+  // console.log('We r in the put');
   await sequelize.sync();
   // From the hbs form gather the data
   const programID = req.body.progID;
@@ -65,14 +65,14 @@ router.put('/', async function(req, res, next) {
 
   // find if that program exists
   const programToUpdate = await Program.findByPk(programID);
-  console.log('program to update'+JSON.stringify(programToUpdate));
+  // console.log('program to update'+JSON.stringify(programToUpdate));
   let violations;
   // if it doesnt exist
   if (!programToUpdate) {
     res.status(404);
   } else {// else update
     const result = await updateProgram(programToUpdate, programName, programAbbreviation);
-    console.log('We r out of the program to update method'+JSON.stringify(result));
+    // console.log('We r out of the program to update method'+JSON.stringify(result));
 
     // initialize violations
     // let violations;

@@ -15,9 +15,9 @@ describe('Program Model Validation', () => {
   beforeAll(async () => {
     try {
       await sequelize.sync({force: true});
-      console.log('Program table created successfully');
+      // console.log('Program table created successfully');
     } catch (error) {
-      console.error('Error creating Program table:', error);
+      // console.error('Error creating Program table:', error);
     }
 
     // beforeAll(async () => {
