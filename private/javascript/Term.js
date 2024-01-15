@@ -135,7 +135,7 @@ const Term = sequelize.define('Term', {
       },
     },
   },
-}
+},
 );
 
 

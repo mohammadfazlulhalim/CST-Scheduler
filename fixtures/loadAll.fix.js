@@ -9,18 +9,16 @@ const fillTimeslotTable = require('./Timeslot.fix');
 const {addAssociations} = require('../private/javascript/Associations');
 const createAllTables = require('./createTables.fix');
 
-// call individual fixture methods here
-
-async function TestingDisShiz() {
-    await createAllTables();
-    await addAssociations();
-    fillTermTable();
-    fillInstructorTable();
-    fillClassroomTable();
-    fillCourseTable();
-    fillProgramTable();
-    fillCourseOfferingTable();
-    fillTimeslotTable();
+async function loadEverything() {
+  await createAllTables();
+  await addAssociations();
+  await fillTermTable();
+  await fillInstructorTable();
+  await fillClassroomTable();
+  await fillCourseTable();
+  await fillProgramTable();
+  await fillCourseOfferingTable();
+  await fillTimeslotTable();
 }
 
-TestingDisShiz();
+loadEverything();

@@ -19,7 +19,7 @@ async function createTimeslot() {
   //     startDate = constants.testConst.validTimeslots(0).startDate,
   //
   // )
-  await Timeslot.create(constants.testConst.validTimeslots[0]);
+  // await Timeslot.create(constants.testConst.validTimeslots[0]);
 }
 
 module.exports = fillTimeslotTable;
