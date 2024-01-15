@@ -25,6 +25,7 @@ router.post('/', async function(req, res, next) {
     phoneNum: req.body.phoneNum,
     email: req.body.email,
   });
+
   let violations;
   if (result.error) {
     // if the instructor does not have a start/end date, that means it's invalid and errors were sent back
@@ -78,6 +79,7 @@ router.put('/', async function(req, res, next) {
     phoneNum: req.body.phoneNum,
     email: req.body.email,
   });
+
   let violations;
   if (result.error) {
     if (result.error.invalidKey) {
@@ -92,6 +94,8 @@ router.put('/', async function(req, res, next) {
   const putSubmittedInstructor= req.body;
   console.log(putSubmittedInstructor);
   const instructorLists = await readAllInstructors();
+
+  
   res.render('instructor', {
     title: 'Instructor List',
     instructorList: instructorLists,
