@@ -24,33 +24,27 @@ async function loadRelationships() {
   const termObj = await Term.create(testConst.term1);
   const insObj = await Instructor.create(testConst.instructor1);
   const progObj = await Program.create(testConst.program1);
-  const tempObj1 = {
-    name: 'Hardware',
-    startDate: '2023-09-01',
-    endDate: '2023-12-15',
-    group: 'B',
+
+  courseOfferingObj.offering1 = {
+    name: testConst.courseOffering1.name,
+    startDate: testConst.courseOffering1.startDate,
+    endDate: testConst.courseOffering1.endDate,
+    group: testConst.courseOffering1.group,
     courseID: courseObj,
     termID: termObj,
     instructorID: insObj,
     programID: progObj,
   };
-  const tempObj2 = {
-    name: 'Seminar',
-    startDate: '2023-09-01',
-    endDate: '2023-12-15',
-    group: 'B',
+  courseOfferingObj.offering2 = {
+    name: testConst.courseOffering2.name,
+    startDate: testConst.courseOffering2.startDate,
+    endDate: testConst.courseOffering2.endDate,
+    group: testConst.courseOffering2.group,
     courseID: courseObj,
     termID: termObj,
     instructorID: insObj,
     programID: progObj,
   };
-
-  // courseOfferingObj.offering1 = await CourseOffering.create(tempObj1);
-  courseOfferingObj.offering1 = tempObj1;
-  courseOfferingObj.offering2 = tempObj2;
-  // courseOfferingObj.offering2 = await CourseOffering.create(tempObj2);
-
-
 
   return courseOfferingObj;
 }

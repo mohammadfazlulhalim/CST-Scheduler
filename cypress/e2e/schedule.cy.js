@@ -55,7 +55,7 @@
     cy.get('8:00')
     cy.get('3:00')
   });
-});
+
 
 function enterModalInfo() {
   // Opens main page - and go to Schedule Courses

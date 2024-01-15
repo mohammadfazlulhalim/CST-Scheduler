@@ -14,9 +14,6 @@ const Timeslot = sequelize.define('CourseOffering', {
         autoIncrement: true,
         primaryKey: true,
     },
-    name: {
-        type: DataTypes.STRING,
-    },
 
     //Dates - YYYY-MM-DD
     startDate: {
@@ -56,31 +53,6 @@ const Timeslot = sequelize.define('CourseOffering', {
             },
         },
     },
-
-    // termID: {
-    //     type: DataTypes.INTEGER,
-    //     foreignKey: true,
-    // },
-    //
-    // programID: {
-    //     type: DataTypes.INTEGER,
-    //     foreignKey: true,
-    // },
-    //
-    // instructorID: {
-    //     type: DataTypes.INTEGER,
-    //     foreignKey: true,
-    // },
-    //
-    // roomID: {
-    //     type: DataTypes.INTEGER,
-    //     foreignKey: true,
-    // },
-    //
-    // courseOfferingID: {
-    //     type: DataTypes.INTEGER,
-    //     foreignKey: true,
-    // }
 
 }, {
     tableName: 'Timeslots',
