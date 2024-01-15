@@ -1,5 +1,4 @@
 describe('Testing Instructor CRUD options', () => {
-
   const addNewInsModalHeader='#addModalLabel';
   const insListingsPageHeader='body > div > div > div > h1';
   const tableFirstHeader ='body > div > div > div > table > thead > tr > th:nth-child(2)';
@@ -13,7 +12,7 @@ describe('Testing Instructor CRUD options', () => {
   const addInsModalThirdTextBoxLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(10)';
   const addInsModalFourthTextBoxLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(13)';
   const addInsModalFifthTextLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(16)';
-  const createInsButton= 'body > div > div > div > button' ;
+  const createInsButton= 'body > div > div > div > button';
   const newInsFirstNameInputTextBox='#cFirstName';
   const newInsLastNameInputTextBox='#cLastName';
   const newInsOfficeNumInputBox='#cOffice';
@@ -26,10 +25,9 @@ describe('Testing Instructor CRUD options', () => {
   const firstTextBoxOnEditModal='#eFirstName';
   const secondTextBoxOnEditModal ='#eLastName';
   const saveButtonOnEditModal ='#editInstructor';
-  const insListDeleteButtonOnFirstColumn ='#\\31 delete' ;
+  const insListDeleteButtonOnFirstColumn ='#\\31 delete';
   const confirmDeleteButtonOnDeleteModal='#deleteInstructor';
-  const insListFirstNameOnFirstColumnAfterDeletion = '#\\32 firstName'
-
+  const insListFirstNameOnFirstColumnAfterDeletion = '#\\32 firstName';
 
 
   const navMenuSelector ='body>open>nav';
@@ -41,7 +39,7 @@ describe('Testing Instructor CRUD options', () => {
     cy.get(navMenuItem).click();
   });
 
-  it('Test Instructor Lists are Shown Inside Instructor Page  ', () => {
+  it('testInstructorListsAreShownInsideInstructorPage  ', () => {
     // TODO check the tables do not exist
     cy.get(insListingsPageHeader).should('have.text', 'Instructor List');
     cy.get(tableFirstHeader).should('have.text', 'First Name');
@@ -50,13 +48,12 @@ describe('Testing Instructor CRUD options', () => {
     cy.get(tableFourthHeader).should('have.text', 'Phone Number');
     cy.get(tableFifthHeader).should('have.text', 'Email');
     cy.get(tableSixthHeader).should('have.text', 'Action');
-    cy.get(insListEditButtonOnFirstColumn).should ('have.text', 'Edit');
-    cy.get(insListDeleteButtonOnFirstColumn).should ('have.text', 'Delete');
-    cy.get(createInsButton).should ('have.text', 'Add New Instructor')
-
+    cy.get(insListEditButtonOnFirstColumn).should('have.text', 'Edit');
+    cy.get(insListDeleteButtonOnFirstColumn).should('have.text', 'Delete');
+    cy.get(createInsButton).should('have.text', 'Add New Instructor');
   });
 
-  it('Test Create New Instructor Modal ', () => {
+  it('testCreateNewInstructorModal ', () => {
     cy.get(createInsButton).click();
     cy.get(addNewInsModalHeader).should('have.text', 'Create New Instructor');
     cy.get(addInsModalFirstTextBoxLabel).should('have.text', 'First Name:');
@@ -67,7 +64,7 @@ describe('Testing Instructor CRUD options', () => {
   });
 
 
-  it('Test Adding Information of New Instructor ', () => {
+  it('testAddingInformationOfNewInstructor ', () => {
     cy.get(createInsButton).click();
     cy.get(newInsFirstNameInputTextBox).type('Ben');
     cy.get(newInsLastNameInputTextBox).type('Benson');
@@ -78,7 +75,7 @@ describe('Testing Instructor CRUD options', () => {
     cy.get(insListFirstNameOnFirstColumn).should('have.text', 'Ben');
   });
 
-  it('Test Edit Instructor Information', () => {
+  it('testEditInstructorInformation', () => {
     // Test Edit instructor information
     cy.get(insListEditButtonOnFirstColumn).click();
     cy.get(editModalHeader).should('have.text', 'Edit Existing Instructor');
@@ -91,7 +88,7 @@ describe('Testing Instructor CRUD options', () => {
   });
 
 
-  it('Test Delete Instructor Button  ', () => {
+  it('testDeleteInstructorButton  ', () => {
     cy.get(insListDeleteButtonOnFirstColumn).click();
     // cy.get('#deleteModal > div > div').should('have.text', 'Delete Instructor');
 

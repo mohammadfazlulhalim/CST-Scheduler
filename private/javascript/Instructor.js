@@ -43,16 +43,11 @@ const Instructor = sequelize.define('Instructor', {
     validate: {
       notEmpty: {
         msg: 'Exception "Office number cannot be empty"',
-
       },
       len: {
         args: [0, 10],
-        msg: 'Exception "Office cannot be more than 10 digits"',
+        msg: 'Exception "Office number cannot exceed 10 digits"',
       },
-      // len: {
-      //   [Op.between]: [0, 6],
-      //   msg: 'Exception "Office number must be 6 digits"',
-      // },
 
     },
 
@@ -63,13 +58,12 @@ const Instructor = sequelize.define('Instructor', {
     validate: {
       notEmpty: {
         msg: 'Exception "Phone number cannot be empty"',
-
       },
       len: {
-        args: [0,14],
-        msg: 'Exception "Phone number can not be more than 10 numeric digits"',
+        args: [14, 14],
+        msg: 'Exception "Phone number must contain 10 numeric digits"',
       },
-      is: /^\(\d{3}\)-\d{3}-d{4}$/,
+      is: /^\([0-9]{3}\)-[0-9]{3}-[0-9]{4}$/,
 
     },
   },

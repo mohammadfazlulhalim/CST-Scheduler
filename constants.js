@@ -55,11 +55,11 @@ const testConst = {
     {termNumber: 6, startDate: '2023-05-01', endDate: '2023-05-31'},
   ],
   validInstructor: [
-    {instructorID: 1, firstName: 'Bryce', lastName: 'Barrie', officeNum: '123A.1', phoneNum: '(123)-456-5467', email: 'barrie@saskpolytech.ca'},
-    {instructorID: 2, firstName: 'Coralee', lastName: 'Kaban', officeNum: '123A.2', phoneNum: '(123)-567-5678', email: 'kaban@saskpolytech.ca'},
-    {instructorID: 3, firstName: 'Ron', lastName: 'New', officeNum: '123B.0', phoneNum: '(123)-678-6587', email: 'new@saskpolytech.ca'},
-    {instructorID: 4, firstName: 'Rick', lastName: 'Caron', officeNum: '123A.3', phoneNum: '(123)-789-6587', email: 'caron@saskpolytech.ca'},
-    {instructorID: 5, firstName: 'Ernesto', lastName: 'Basoalto', officeNum: '123B.1', phoneNum: '(224)-456-6598', email: 'basalto@saskpolytech.ca'},
+    {firstName: 'Bryce', lastName: 'Barrie', officeNum: '123A.1', phoneNum: '(306)-456-5467', email: 'barrie@saskpolytech.ca'},
+    {firstName: 'Coralee', lastName: 'Kaban', officeNum: '123A.2', phoneNum: '(306)-567-5676', email: 'kaban@saskpolytech.ca'},
+    {firstName: 'Ron', lastName: 'New', officeNum: '123B.0', phoneNum: '(306)-678-6585', email: 'new@saskpolytech.ca'},
+     {firstName: 'Rick', lastName: 'Caron', officeNum: '123A.3', phoneNum: '(306)-123-7895', email: 'caron@saskpolytech.ca'},
+     { firstName: 'Ernesto', lastName: 'Basoalto', officeNum: '123B.1', phoneNum: '(306)-456-6859', email: 'basalto@saskpolytech.ca'},
   ],
 
 };
@@ -70,7 +70,7 @@ const instructorConstraints = {
   lastNameLowerLimit: 0,
   lastNameUpperLimit: 50,
   officeNumUpperLimit: 10,
-  officeNumLowerLimit:0,
+  officeNumLowerLimit: 0,
 
 };
 
