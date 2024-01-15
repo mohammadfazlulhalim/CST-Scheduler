@@ -1,6 +1,110 @@
 {{#if instructor}}
-    <h1><i>Instructor Report For:</i> {{instructor.lastName}}, {{instructor.firstName}}</h1>
+    <div>
+        <div class="row">
+            <div class="col-9">
+                <h2><i>Instructor Report For:</i> {{instructor.lastName}}, {{instructor.firstName}}</h2>
+            </div>
+            <div class="col-3">
+                <small>Report Generated: {{dateGen}}</small>
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Time</th>
+            <th scope="col">Monday</th>
+            <th scope="col">Tuesday</th>
+            <th scope="col">Wednesday</th>
+            <th scope="col">Thursday</th>
+            <th scope="col">Friday</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">8:00</th>
+            <td>
+                {{programYear}} <br>
+                {{timeslot.c}} <br>
+                {{timeslot.roomNum}}
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <th scope="row">9:00</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <th scope="row">10:00</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <th scope="row">11:00</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <th scope="row">12:00</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <th scope="row">1:00</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <th scope="row">2:00</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <th scope="row">3:00</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <div class="btnPairsCustom"></div>
+    <button class="btn btn-primary">New Report</button>
+    <button class="btn btn-outline-primary" onclick="window.print()">Print this page</button>
+<!-- instructorReport -->
 {{else}}
+
 <h1>Nothing to display at the moment</h1>
 {{/if}}
 
