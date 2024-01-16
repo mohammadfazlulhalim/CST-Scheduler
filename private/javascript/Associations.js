@@ -28,7 +28,7 @@ function addAssociations() {
   Timeslot.belongsTo(Term);
 
   CourseOffering.hasMany(Timeslot);
-  CourseOffering.hasMany(Instructor);
+  CourseOffering.belongsTo(Instructor);
   CourseOffering.belongsTo(Term);
   CourseOffering.belongsTo(Course);
   CourseOffering.belongsTo(Program);

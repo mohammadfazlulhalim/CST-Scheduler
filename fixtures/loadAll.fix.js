@@ -9,6 +9,7 @@ const fillTimeslotTable = require('./Timeslot.fix');
 const {addAssociations} = require('../private/javascript/Associations');
 const createAllTables = require('./createTables.fix');
 
+// eslint-disable-next-line require-jsdoc
 async function loadEverything() {
   await createAllTables();
   await addAssociations();

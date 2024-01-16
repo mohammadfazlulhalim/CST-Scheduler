@@ -20,19 +20,8 @@
             <th scope="col">Friday</th>
         </tr>
         </thead>
-        <tbody>
-
-        <tr>
-            <th scope="row">8:00</th>
-            <td>
-
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
+        <tbody id="timetable-body">
+        <!-- The table content will be dynamically generated here -->
         </tbody>
     </table>
 
@@ -44,3 +33,37 @@
     <h1>Nothing to display at the moment</h1>
 {{/if}}
 
+<script>
+    // Get the table body element
+    const timetableBody = document.getElementById('timetable-body');
+
+    // Loop through each hour
+    for (let hour = startTime; hour <= endTime; hour++) {
+        // Create a new row
+        const row = document.createElement('tr');
+
+        // Create the time cell
+        const timeCell = document.createElement('th');
+        timeCell.setAttribute('scope', 'row');
+        timeCell.textContent = `${hour}:00`;
+        row.appendChild(timeCell);
+
+        // Loop through each day
+        for (let day = 0; day < 5; day++) {
+            // Create a new data cell
+            const dataCell = document.createElement('td');
+
+            // Set a unique ID based on time and day
+            const cellID = `cell-${hour}-${day}`;
+            dataCell.setAttribute('id', cellID);
+
+            // You can add more customization or data to each cell if needed
+
+            // Append the cell to the row
+            row.appendChild(dataCell);
+        }
+
+        // Append the row to the table body
+        timetableBody.appendChild(row);
+    }
+</script>

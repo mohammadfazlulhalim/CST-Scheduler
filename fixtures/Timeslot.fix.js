@@ -1,4 +1,9 @@
 const Timeslot = require('../private/javascript/Timeslot');
+const Instructor = require('../private/javascript/Instructor');
+const Program = require('../private/javascript/Program');
+const Classroom = require('../private/javascript/Classroom');
+const Term = require('../private/javascript/Term');
+const courseOffering = require('../private/javascript/CourseOffering');
 const constants = require('../constants');
 
 /**
@@ -12,6 +17,28 @@ async function fillTimeslotTable() {
 
 // eslint-disable-next-line require-jsdoc
 async function createTimeslot() {
+  const instructor = await Instructor.findByPk(4);
+  const program = await Program.findByPk(1);
+  const classroom = await Classroom.findByPk(2);
+  const term = await Term.findByPk(1);
+  const courseOffering = null;
+  const thisTimeSlot = await Timeslot.create({
+    startDate: constants.testConst.validTimeslots[0].startDate,
+    endDate: constants.testConst.validTimeslots[0].endDate,
+    startTime: constants.testConst.validTimeslots[0].startTime,
+    endTime: constants.testConst.validTimeslots[0].endTime,
+    day: constants.testConst.validTimeslots[0].day,
+    group: constants.testConst.validTimeslots[0].group,
+    term: term.id,
+    instructor,
+    program,
+    classroom,
+    courseOffering,
+  });
+  console.log('I cry');
+  console.log(thisTimeSlot);
+  console.log('I still cry');
+
   // for (const timeslot of constants.testConst.validTimeslots) {
   //   await Timeslot.create(timeslot);
   // }
@@ -21,5 +48,6 @@ async function createTimeslot() {
   // )
   // await Timeslot.create(constants.testConst.validTimeslots[0]);
 }
+
 
 module.exports = fillTimeslotTable;
