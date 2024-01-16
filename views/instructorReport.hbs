@@ -101,31 +101,79 @@
 
 <!-- instructorReport -->
 {{else}}
-    <!-- Vertically centered scrollable modal -->
-    <div class="modal fade" id="instructorReportModal" tabindex="-1" aria-labelledby="instructorReportModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="instructorReportModalLabel">Select Term and Instructor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <h1>Nothing to display at the moment</h1>
 {{/if}}
 
 
-<div class="btnPairsCustom">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#instructorReportModal">
-        New Report</button>
-    <button class="btn btn-outline-primary" onclick="window.print()">Print this page</button>
+<!-- modal -->
+<!-- Vertically centered scrollable modal -->
+<div class="modal fade" id="instructorReportModal" tabindex="-1" aria-labelledby="instructorReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="instructorReportModalLabel">Create an Instructor Report For: </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="exampleSelect2" class="form-label mt-4">Instructors</label>
+                    <select class="form-select" id="exampleSelect2">
+                        <option disabled selected>Select Instructor</option>
+                        {{#each instructorList}}
+                            <option value="{{this._id}}">{{this.lastName}}, {{this.firstName}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleSelect1" class="form-label mt-4">Terms</label>
+                    <select class="form-select" id="exampleSelect1">
+                        <option disabled selected>Select Term</option>
+                        {{#each termList}}
+                            <option value="{{this._id}}">{{this.termNumber}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-outline-success">Save changes</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="btnPairsCustom">
+    <button id="newInstructorReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#instructorReportModal">
+        New Report</button>
+    <button class="btn btn-outline-success" onclick="window.print()">Print this page</button>
+</div>
+<script defer>
+    'use strict';
+    $('#createAbbr').val("");
+    $('#createName').val("");
+
+    // On arrival the modal will open
+    window.onload = function(){
+        const modal = new bootstrap.Modal(document.getElementById("instructorReportModal"));
+        modal.show();
+    }
+
+    async function handleCreateInstructorReport() {
+        // send a POST request to the router
+        const response = await fetch('http://localhost:3000/InstructorReport', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                // use the val() method to get the value of a form input
+                programName: $('#createName').val(),
+                programAbbreviation: $('#createAbbr').val(),
+
+            }),
+        });
+
+
+</script>
 
