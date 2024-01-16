@@ -32,7 +32,7 @@ router.get('/', function(req, res, next) {
     program ="CST 1"
   }
   res.render('instructorReport', {
-    instructor,
+    // instructor,
     timeslot: t,
     programYear: program,
     dateGen: dateGenerated.getDate()+'-'+monthArray[dateGenerated.getMonth()]+'-'+dateGenerated.getFullYear(),
