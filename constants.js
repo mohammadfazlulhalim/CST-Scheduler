@@ -8,7 +8,7 @@ const testConst = {
         name: 'Hardware',
         startDate: '2023-09-01',
         endDate: '2023-12-15',
-        group: 'B',
+        group: 'A',
         courseID: 1,
         termID: 1,
         instructorID: 1,
@@ -33,7 +33,7 @@ const testConst = {
     term1: {
         termNumber: 5,
         startDate: '2024-01-02',
-        endDate: '2023-04-25'
+        endDate: '2024-04-25'
     },
     program1: {
         programAbbreviation: 'CST',

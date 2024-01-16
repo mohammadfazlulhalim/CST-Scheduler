@@ -35,7 +35,7 @@ app.use('/course', viewCoursesRouter); // story34 view courses
 app.use('/classroom', classroomRouter);
 app.use('/program', programRouter);
 app.use('/administration', adminRouter);
-app.use('schedule', scheduleRouter); // Story 41
+app.use('/schedule', scheduleRouter); // Story 41
 
 // bootswatch
 app.use('/bw', express.static(__dirname + '/node_modules/bootswatch/dist'));

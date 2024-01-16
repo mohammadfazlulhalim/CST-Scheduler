@@ -9,14 +9,22 @@ async function loadTimeslots() {
   // Create course offering fixtures
   const courseObj = await CourseOfferingScript();
 
-  const coObj1 = await CourseOffering.create(courseObj.offering1);
+  console.log('offering1 term' + JSON.stringify(courseObj.offering1.termID));
+
+  // const coObj1 = await CourseOffering.create(courseObj.offering1, {include: [{
+  //     association: CourseOffering.Term,
+  //     include: [courseObj.offering1.termID]
+  //   }]});
+  const coObj1 = courseObj.offering1;
   const coObj2 =await CourseOffering.create(courseObj.offering2);
+
+  console.log('offering1' + JSON.stringify(coObj1.termID));
 
   // Setting up timeslots
   await Timeslot.sync({force: true});
   await Classroom.sync({force:true});
 
-  Associations.addAssociations();
+
 
   const ClassroomObj = await Classroom.create(testConst.classroom1);
 
@@ -95,3 +103,5 @@ async function loadTimeslots() {
 
 
 }
+
+module.exports = loadTimeslots;

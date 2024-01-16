@@ -7,12 +7,25 @@
         <div id="tabBar">
 
         </div>
-        {{#each groups}}
-            <div id="group{{this}}">
-                <div id="calender{{this}}">
+        {{#each groups as | grpLetter | }}
+            <div id="group{{grpLetter}}">
+                <div id="calender{{grpLetter}}">
+                    <h2>Group {{grpLetter}} Calendar</h2>
+                    <table>
+
+                    </table>
 
                 </div>
-                <div id="courseList{{this}}">
+                <div id="courseList{{grpLetter}}">
+                    <h2>Group {{grpLetter}} Courses</h2>
+                    {{#each COArray as | coObj | }}
+                        {{#if eq coObj ../grpLetter }}
+
+                            <div class="card">
+                                <h3>Name: {{coObj.name}}</h3>
+                            </div>
+                        {{/if}}
+                    {{/each}}
 
                 </div>
             </div>
