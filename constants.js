@@ -1,6 +1,5 @@
 const testConst = {
     instructor1: {
-        instructorID: '20',
         firstName: 'Ben',
         lastName: 'Benson',
     },
@@ -79,11 +78,11 @@ const testConst = {
         {termNumber: 6, startDate: '2023-05-01', endDate: '2023-05-31'},
     ],
     validInstructor: [
-        {instructorID: 1, firstName: 'Bryce', lastName: 'Barrie'},
-        {instructorID: 2, firstName: 'Coralee', lastName: 'Kaban'},
-        {instructorID: 3, firstName: 'Ron', lastName: 'New'},
-        {instructorID: 4, firstName: 'Rick', lastName: 'Caron'},
-        {instructorID: 5, firstName: 'Ernesto', lastName: 'Basoalto'},
+        {firstName: 'Bryce', lastName: 'Barrie'},
+        {firstName: 'Coralee', lastName: 'Kaban'},
+        {firstName: 'Ron', lastName: 'New'},
+        {firstName: 'Rick', lastName: 'Caron'},
+        {firstName: 'Ernesto', lastName: 'Basoalto'},
     ],
 
 };

@@ -18,14 +18,6 @@ async function loadTimeslots() {
   const coObj1 = courseObj.offering1;
   const coObj2 =await CourseOffering.create(courseObj.offering2);
 
-  console.log('offering1' + JSON.stringify(coObj1.termID));
-
-  // Setting up timeslots
-  await Timeslot.sync({force: true});
-  await Classroom.sync({force:true});
-
-
-
   const ClassroomObj = await Classroom.create(testConst.classroom1);
 
   var TimeslotAObj = {

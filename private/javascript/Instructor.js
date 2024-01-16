@@ -3,11 +3,6 @@ const CourseOffering = require('../javascript/CourseOffering')
 
 // Database constructor for Instructor
 const Instructor = sequelize.define('Instructor', {
-  instructorID: {
-    type: DataTypes.INTEGER,
-    allowNull: false, // Can't be null
-    primaryKey: true,
-  },
   firstName: {
     type: DataTypes.STRING,
     allowNull: false,

@@ -11,29 +11,22 @@ const Program = require('../private/javascript/Program');
 async function loadRelationships() {
   const courseOfferingObj = {offering1: {}, offering2: {}};
 
-  await Program.sync({force: true});
-  await Instructor.sync({force: true});
-  await Term.sync({force: true});
-  await Course.sync({force: true});
-
-  await CourseOffering.sync({force: true});
-
   const courseObj = await Course.create(testConst.course1);
   const termObj = await Term.create(testConst.term1);
   const insObj = await Instructor.create(testConst.instructor1);
   const progObj = await Program.create(testConst.program1);
 
-  await CourseOffering.create(courseOfferingObj.offering1 = {
+  courseOfferingObj.offering1 = await CourseOffering.create({
     name: testConst.courseOffering1.name,
     startDate: testConst.courseOffering1.startDate,
     endDate: testConst.courseOffering1.endDate,
     group: testConst.courseOffering1.group,
-    courseID: courseObj,
-    termID: termObj,
-    instructorID: insObj,
-    programID: progObj,
+    courseID: courseObj.id,
+    termID: termObj.id,
+    instructorID: insObj.id,
+    programID: progObj.id,
   });
-  courseOfferingObj.offering2 = {
+  courseOfferingObj.offering2 = await CourseOffering.create({
     name: testConst.courseOffering2.name,
     startDate: testConst.courseOffering2.startDate,
     endDate: testConst.courseOffering2.endDate,
@@ -42,7 +35,7 @@ async function loadRelationships() {
     termID: termObj,
     instructorID: insObj,
     programID: progObj,
-  };
+  });
 
   return courseOfferingObj;
 }
