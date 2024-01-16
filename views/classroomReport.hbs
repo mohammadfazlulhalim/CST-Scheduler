@@ -1,0 +1,46 @@
+{{#if timeslots}}
+    <div>
+        <div class="row">
+            <div class="col-9">
+                <h2><i>Lab Schedule for:</i>{{classroom}}</h2>
+            </div>
+            <div class="col-3">
+                <small>Report Generated: {{dateGenerated}}</small>
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Time</th>
+            <th scope="col">Monday</th>
+            <th scope="col">Tuesday</th>
+            <th scope="col">Wednesday</th>
+            <th scope="col">Thursday</th>
+            <th scope="col">Friday</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <th scope="row">8:00</th>
+            <td>
+
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <div class="btnPairsCustom"></div>
+    <button class="btn btn-primary">New Report</button>
+    <button class="btn btn-outline-primary" onclick="window.print()">Print this page</button>
+
+{{else}}
+    <h1>Nothing to display at the moment</h1>
+{{/if}}
+
