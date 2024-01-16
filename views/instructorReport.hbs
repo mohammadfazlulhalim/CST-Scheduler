@@ -21,80 +21,6 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">8:00</th>
-            <td>
-                {{programYear}} <br>
-                {{timeslot.c}} <br>
-                {{timeslot.roomNum}}
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <th scope="row">9:00</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <th scope="row">10:00</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <th scope="row">11:00</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <th scope="row">12:00</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <th scope="row">1:00</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <th scope="row">2:00</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <th scope="row">3:00</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
 
         </tbody>
     </table>
@@ -114,30 +40,36 @@
                 <h5 class="modal-title" id="instructorReportModalLabel">Create an Instructor Report For: </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+<!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY-->
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="exampleSelect2" class="form-label mt-4">Instructors</label>
-                    <select class="form-select" id="exampleSelect2">
-                        <option disabled selected>Select Instructor</option>
-                        {{#each instructorList}}
-                            <option value="{{this._id}}">{{this.lastName}}, {{this.firstName}}</option>
-                        {{/each}}
-                    </select>
-                </div>
+<!--                form begins here-->
+                <form method="POST" action="/instructorReport/submit">
+                    <div class="form-group">
+                        <label for="selectInstructorInstructorReport" class="form-label mt-4">Instructors</label>
+                        <select class="form-select" id="selectInstructorInstructorReport" required>
+                            <option value="" disabled selected>Select Instructor</option>
+                            {{#each instructorList}}
+                                <option value="{{this._id}}">{{this.lastName}}, {{this.firstName}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="exampleSelect1" class="form-label mt-4">Terms</label>
-                    <select class="form-select" id="exampleSelect1">
-                        <option disabled selected>Select Term</option>
-                        {{#each termList}}
-                            <option value="{{this._id}}">{{this.termNumber}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-outline-success">Save changes</button>
+                    <div class="form-group">
+                        <label for="selectTermInstructorReport" class="form-label mt-4">Terms</label>
+                        <select class="form-select" id="selectTermInstructorReport" required>
+                            <option value="" disabled selected>Select Term</option>
+                            {{#each termList}}
+                                <option value="{{this._id}}">{{this.termNumber}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                        <button id="submitBtn" type="submit" class="btn btn-outline-success" >Save changes</button>
+                    </div>
+                </form>
+<!--                Form ends here-->
+
             </div>
         </div>
     </div>
@@ -150,8 +82,12 @@
 </div>
 <script defer>
     'use strict';
-    $('#createAbbr').val("");
-    $('#createName').val("");
+    // $('#createAbbr').val("");
+    // $('#createName').val("");
+
+    let submitBtn= document.getElementById("submitBtn");
+    let selectedInstructor = document.getElementById("selectInstructorInstructorReport");
+    let selectedTerm = document.getElementById("selectTermInstructorReport");
 
     // On arrival the modal will open
     window.onload = function(){
@@ -159,20 +95,39 @@
         modal.show();
     }
 
-    async function handleCreateInstructorReport() {
-        // send a POST request to the router
-        const response = await fetch('http://localhost:3000/InstructorReport', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                // use the val() method to get the value of a form input
-                programName: $('#createName').val(),
-                programAbbreviation: $('#createAbbr').val(),
+    function checkFormSelections(){
+        if(selectedInstructor.value !== undefined && selectedTerm.value !== undefined)
+        {
+            submitBtn.disabled = false;
+        }
+        else{
+            submitBtn.disabled = true;
+        }
+    }
 
-            }),
-        });
+    selectedInstructor.addEventListener("select", function(){
+            checkFormSelections()
+    });
+
+    selectedTerm.addEventListener("select", function(){
+        checkFormSelections()
+    });
+
+
+    // async function handleCreateInstructorReport() {
+    //     // send a POST request to the router
+    //     const response = await fetch('http://localhost:3000/InstructorReport', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             // use the val() method to get the value of a form input
+    //             programName: $('#createName').val(),
+    //             programAbbreviation: $('#createAbbr').val(),
+    //
+    //         }),
+    //     });
 
 
 </script>

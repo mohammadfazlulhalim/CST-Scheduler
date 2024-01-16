@@ -121,6 +121,18 @@ const testConst = {
     {timeSlotID: 15, courseOfferingID: 5, instructorID: 3, classroomID: 2, term: 3,
       startTime: '1:00', endTime: '3:00', day: 'Friday', roomID: 2, group: 'A'},
   ],
+
+  timeColumn8amTo3pmDisplayArray: [
+    '8:00',
+    '9:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '1:00',
+    '2:00',
+    '3:00',
+  ],
+
 };
 
 const instructorConstraints = {
