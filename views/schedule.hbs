@@ -7,7 +7,7 @@
         <div id="tabBar">
 
         </div>
-        {{#each groups as | grpLetter | }}
+        {{#each groupArray as | grpLetter | }}
             <div id="group{{grpLetter}}">
                 <div id="calender{{grpLetter}}">
                     <h2>Group {{grpLetter}} Calendar</h2>
@@ -35,14 +35,13 @@
                         <tr>
 
                         </tr>
-<!--                        Create a loop that creates each row from 8-14-->
-<!--                        For each loop we create six cells-->
-                        {{#loop}}
-                            <trow>
-                                <td>{{this}}(time)</td>
-                                <td class="mon"></td>
-                                <td class="tue"></td>
-                            </trow>
+                        {{#loop i = 0; i < 8; i++}}  <!--loops each timeslot, outer loop is hours, inner loop is days  -->
+                            <tr>
+                                <td>{{TIMES[i]}}</td>
+                                {{#loop j = 1; j < 6; j++}}
+                                    <td>groupArray[grpLetter].timeslotMatrix[j][i]</td>
+                                {{/loop}}
+                            </tr>
                         {{/loop}}
                     </table>
 

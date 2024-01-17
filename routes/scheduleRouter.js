@@ -26,39 +26,59 @@ router.post('/', async (req, res, next) => {
   const hardTerm = await Term.findOne({where: {startDate: testConst.term1.startDate}}); //change to ID later
   const hardProg = await Program.findOne({where: {programAbbreviation: testConst.program1.programAbbreviation}}); //change to id later
   const hardGroups = 2;
+  let groupArray = [];
 
   const GROUP_LETTERS = ['A', 'B', 'C', 'D'];
-  const timeslotArray = new Array(hardGroups);
-  const COArray = new Array(hardGroups);
-  const groupLetters = new Array(hardGroups);
+  const DAYS = [0, 1, 2, 3, 4, 5];
+  const TIMES = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+
+  // const timeslotMatrix = [[], [] , [], [], []];
+  let timeslotArray = new Array(hardGroups);
+  // const COArray = new Array(hardGroups);
+  // const groupLetters = new Array(hardGroups);
 
 
   for (let i = 0; i < hardGroups; i++) {
+    groupArray.add({
+      timeslotMatrix: [[], [] , [], [], []], //outer array is days, each inner array is times
+      COArray: new Array(hardGroups),
+      groupLetters: new Array(hardGroups),
+      groupLetter: GROUP_LETTERS[i],
+    })
+
     try {
-      timeslotArray[i] = await Timeslot.findAll({
+      timeslotArray = await Timeslot.findAll({
         where: {
           group: GROUP_LETTERS[i],
-          programId: hardProg.id,
-          termID: hardTerm.id,
+          ProgramId: hardProg.id,
+          TermId: hardTerm.id,
         },
       });
-      COArray[i] = await CourseOffering.findAll({
+      groupArray[i].COArray = await CourseOffering.findAll({
         where: {
           group: GROUP_LETTERS[i],
-          programId: hardProg.id,
-          termID: hardTerm.id,
+          ProgramId: hardProg.id,
+          TermId: hardTerm.id,
         },
       });
     } catch (error) {
       // console.log('Error is: ' + error);
     }
+    //mapping each timeslot in this group to the matrix
+    for(tSlot in timeslotArray){
+      const timeIndex = TIMES.indexOf(tSlot.startTime);
+      const dayIndex = DAYS.indexOf(tSlot.day);
+      groupArray[i].timeslotMatrix[dayIndex][timeIndex] = tSlot;//outer array is days, each inner array is times
+    }
+
     groupLetters[i] = GROUP_LETTERS[i];
   }
 
   res.render('schedule', {
     groups: groupLetters,
-    timeslotArray,
-    COArray,
+    groupArray,
+    DAYS,
+    TIMES,
   });
 
 
