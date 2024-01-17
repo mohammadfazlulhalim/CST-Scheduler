@@ -5,15 +5,20 @@ const term = require('../private/javascript/Term');
 const classroom = require('../private/javascript/Classroom');
 const timeslot = require('../private/javascript/Timeslot');
 
-router.get('/classroomReport', (req, res, next) => {
-  const terms = term.findAll({
-    order: [['startDate', 'DESC'], ['id', 'DESC']],
-    attributes: ['id', 'termNumber'],
-  });
-  const classrooms = classroom.findAll({
-    order: ['roomNumber', 'ASC'],
-    attributes: ['id', 'roomNumber'],
-  });
+router.get('/', (req, res, next) => {
+  let terms;
+  let classrooms;
+  try {
+    terms = term.findAll({
+      order: [['startDate', 'DESC'], ['id', 'DESC']],
+    });
+    classrooms = classroom.findAll({
+      order: ['roomNumber', 'ASC'],
+    });
+  } catch (err) {
+
+  }
+
 
   res.render('classroomReport', {
     title: 'Classroom Report',
@@ -21,7 +26,7 @@ router.get('/classroomReport', (req, res, next) => {
     classrooms,
   });
 });
-router.post('/classroomReport', (req, res, next) => {
+router.post('/', (req, res, next) => {
   const term = term.findOne({where: {id: [req.body.term]}});
 
   timeslots = generateClassroom(term.startDate, term.endDate, req.body.classroom);
@@ -47,4 +52,4 @@ function generateClassroom(startDate, endDate, classroom) {
 }
 
 
-module.exports = router;
+module.exports = {router};

@@ -38,7 +38,7 @@ async function createTimeslot() {
   }
 
 
-  const courseOffering = null;
+  /*   const courseOffering = null;
   const thisTimeSlot = await Timeslot.create({
     startDate: constants.testConst.validTimeslots[0].startDate,
     endDate: constants.testConst.validTimeslots[0].endDate,
@@ -52,7 +52,7 @@ async function createTimeslot() {
   await thisTimeSlot.setClassroom(classroom);
   await thisTimeSlot.setCourseOffering(courseOffering);
   await thisTimeSlot.setInstructor(instructor);
-  console.log(thisTimeSlot);
+  console.log(thisTimeSlot); */
 
   // constants.testConst.
 
