@@ -78,12 +78,12 @@
                         </button>
                     </div>
                     <form action="/instructor" method="POST">
-                        <div class="modal-body">
-                            <label hidden for="eInstructorID">Instructor Number:</label>
-                            <input hidden type="number"
-                                   class="form-control {{#if putErr.instructorID}}is-invalid{{/if}}" id="eInstructorID"
-                                   name="instructorID" value="{{putSubmittedInstructor.instructorID}}">
-                            <div class="invalid-feedback">{{putErr.instructorID}}</div>
+                       <div class="modal-body">
+<!--                            <label hidden for="eInstructorID">Instructor Number:</label>-->
+<!--                            <input hidden type="number"-->
+<!--                                   class="form-control {{#if putErr.instructorID}}is-invalid{{/if}}" id="eInstructorID"-->
+<!--                                   name="instructorID" value="{{putSubmittedInstructor.instructorID}}">-->
+<!--                            <div class="invalid-feedback">{{putErr.instructorID}}</div>-->
 
                             <label for="eFirstName">First Name:</label>
                             <input type="text" class="form-control {{#if putErr.firstName}}is-invalid{{/if}}"
@@ -96,6 +96,11 @@
                             <input type="text" class="form-control {{#if putErr.lastName}}is-invalid{{/if}}"
                                    value="{{putSubmittedInstructor.lastName}}" id="eLastName" name="lastName">
                             <div class="invalid-feedback">{{putErr.lastName}}</div>
+
+                           <label for="eOfficeNum">Office Number</label>
+                           <input type="text" class="form-control {{#if putErr.officeNum}}is-invalid{{/if}}"
+                                  value="{{putSubmittedInstructor.officeNum}}" id="eOfficeNum" name="officeNum">
+                           <div class="invalid-feedback">{{putErr.officeNum}}</div>
 
 
                         </div>
@@ -123,10 +128,7 @@
                 </div>
                 <form action="/instructor" method="POST">
                     <div class="modal-body">
-<!--                        <label for="cInstructorID">Instructor Number:</label>-->
-<!--                        <input type="number" class="form-control {{#if err.instructorID}}is-invalid{{/if}}"-->
-<!--                               id="cInstructorID"-->
-<!--                               name="instructorID" value="{{submittedInstructor.instructorID}}">-->
+
                         <div class="invalid-feedback">{{err.instructorID}}</div>
 
                         <label for="cFirstName">First Name:</label>
@@ -142,6 +144,15 @@
                         <Label for="cOfficeNum">Office Number:</Label>
                         <input type="text" class="form-control {{#if err.officeNum}}is-invalid{{/if}}" id="cOfficeNum" name="officeNum" value="{{submittedInstructor.officeNum}}">
                         <div Class="invalid-feedback">{{err.officeNum}}</div>
+
+                        <Label for="cPhoneNum">Phone Number:</Label>
+                        <input type="text" class="form-control {{#if err.phoneNum}}is-invalid{{/if}}" id="cPhoneNum" name="phoneNum" value="{{submittedInstructor.phoneNum}}">
+                        <div Class="invalid-feedback">{{err.phoneNum}}</div>
+
+                        <Label for="cEmail">Email:</Label>
+                        <input type="text" class="form-control {{#if err.email}}is-invalid{{/if}}" id="cEmail" name="Email" value="{{submittedInstructor.Email}}">
+                        <div Class="invalid-feedback">{{err.email}}</div>
+
 
                     </div>
                     <div class="modal-footer">
@@ -199,6 +210,9 @@
                 instructorID: $('#cInstructorID').val(),
                 firstName: $('#cFirstName').val(),
                 lastName: $('#cLastName').val(),
+                officeNum: $('#cOfficeNum').val(),
+                phoneNum: $('#cPhoneNum').val(),
+                email: $('#cEmail').val()
             }),
         });
 
@@ -252,6 +266,7 @@
                 instructorID: $('#eInstructorID').val(),
                 firstName: $('#eFirstName').val(),
                 lastName: $('#eLastName').val(),
+
             }),
         });
 
@@ -279,6 +294,7 @@
         $('#eInstructorID').val($(`#${idToEdit}number`).text());
         $('#eFirstName').val($(`#${idToEdit}firstName`).text());
         $('#eLastName').val($(`#${idToEdit}lastName`).text());
+        $('#eOfficeNum').val($(`#${idToEdit}officeNum`).text());
     }
 
     /**
