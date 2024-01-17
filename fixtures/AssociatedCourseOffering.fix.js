@@ -22,12 +22,12 @@ async function loadRelationships() {
     startDate: testConst.courseOffering1.startDate,
     endDate: testConst.courseOffering1.endDate,
     group: testConst.courseOffering1.group,
-    courseID: courseObj.id,
+    courseID: courseObj,
     termID: termObj.id,
-    instructorID: insObj.id,
-    programID: progObj.id,
+    instructorID: insObj,
+    programID: progObj,
   };
-  courseOfferingObj.offering2 = await CourseOffering.create({
+  courseOfferingObj.offering2 = {
     name: testConst.courseOffering2.name,
     startDate: testConst.courseOffering2.startDate,
     endDate: testConst.courseOffering2.endDate,
@@ -36,7 +36,7 @@ async function loadRelationships() {
     termID: termObj,
     instructorID: insObj,
     programID: progObj,
-  });
+  };
 
   return courseOfferingObj;
 }
