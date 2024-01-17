@@ -18,7 +18,7 @@ const Timeslot = sequelize.define('CourseOffering', {
     type: DataTypes.STRING,
   },
 
-  //Dates - YYYY-MM-DD
+  // Dates - YYYY-MM-DD
   startDate: {
     type: DataTypes.STRING,
   },

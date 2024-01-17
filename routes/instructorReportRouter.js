@@ -3,8 +3,8 @@ const router = express.Router();
 const Instructor = require('../private/javascript/Instructor');
 const Term = require('../private/javascript/Term');
 const {sequelize} = require('../dataSource');
-const {testConst} = require("../constants");
-const constants = require("constants");
+const {testConst} = require('../constants');
+const constants = require('constants');
 
 
 /**
@@ -15,9 +15,7 @@ router.get('/', async function(req, res, next) {
   let program='';
   const dateGenerated= new Date();
   const monthArray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-  let timeDisplay8to3 = testConst.timeColumn8amTo3pmDisplayArray
-
-
+  const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
 
   let instructorList;
   let termList;
@@ -57,6 +55,7 @@ router.get('/', async function(req, res, next) {
     dateGen: dateGenerated.getDate()+'-'+monthArray[dateGenerated.getMonth()]+'-'+dateGenerated.getFullYear(),
     instructorList,
     termList,
+    timeDisplayHours,
   });
 });
 
@@ -67,10 +66,9 @@ router.get('/', async function(req, res, next) {
  * for the requested instructor(s)
  */
 router.post('/submit', async function(req, res, next) {
-
   let instructorList;
   let termList;
-  let instructorSelected
+  let instructorSelected;
   let termSelected;
 
 
@@ -101,16 +99,13 @@ router.post('/submit', async function(req, res, next) {
     }
     res.render('instructorReport', {
 
-    })
-
+    });
   } else {
     // if no instructor or no term...
     res.render('instructorReport', {
-      title: "No result for instructor report from post handler",
-    })
+      title: 'No result for instructor report from post handler',
+    });
   }
-
-
 });
 
 /**

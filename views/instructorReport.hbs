@@ -12,16 +12,27 @@
     <table class="table table-bordered table-hover">
         <thead>
         <tr>
-            <th scope="col">Time</th>
-            <th scope="col">Monday</th>
-            <th scope="col">Tuesday</th>
-            <th scope="col">Wednesday</th>
-            <th scope="col">Thursday</th>
-            <th scope="col">Friday</th>
+            <th class="text-center" scope="col">Time</th>
+            <th class="text-center" scope="col">Monday</th>
+            <th class="text-center" scope="col">Tuesday</th>
+            <th class="text-center" scope="col">Wednesday</th>
+            <th class="text-center" scope="col">Thursday</th>
+            <th class="text-center" scope="col">Friday</th>
         </tr>
         </thead>
         <tbody>
-
+            {{#each timeDisplayHours}}
+                <tr>
+                    <td class="text-center">
+                        {{this}}
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {{/each}}
         </tbody>
     </table>
 
@@ -44,12 +55,13 @@
             <div class="modal-body">
 <!--                form begins here-->
                 <form method="POST" action="/instructorReport/submit">
+                    <small class="text-info"> <b>Please select both an instructor and a term.</b></small>
                     <div class="form-group">
                         <label for="selectInstructorInstructorReport" class="form-label mt-4">Instructors</label>
                         <select class="form-select" id="selectInstructorInstructorReport" required>
                             <option value="" disabled selected>Select Instructor</option>
                             {{#each instructorList}}
-                                <option value="{{this._id}}">{{this.lastName}}, {{this.firstName}}</option>
+                                <option value="{{this.instructorID}}">{{this.lastName}}, {{this.firstName}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -59,13 +71,14 @@
                         <select class="form-select" id="selectTermInstructorReport" required>
                             <option value="" disabled selected>Select Term</option>
                             {{#each termList}}
-                                <option value="{{this._id}}">{{this.termNumber}}</option>
+                                <option value="{{this.id}}">{{this.termNumber}}</option>
                             {{/each}}
                         </select>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                        <button id="submitBtn" type="submit" class="btn btn-outline-success" >Save changes</button>
+                        <button id="submitBtn"  onclick="handleCreateInstructorReport()"
+                                type="submit" class="btn btn-outline-success" >Save changes</button>
                     </div>
                 </form>
 <!--                Form ends here-->
@@ -85,18 +98,25 @@
     // $('#createAbbr').val("");
     // $('#createName').val("");
 
-    let submitBtn= document.getElementById("submitBtn");
-    let selectedInstructor = document.getElementById("selectInstructorInstructorReport");
-    let selectedTerm = document.getElementById("selectTermInstructorReport");
 
+    let submitBtn;
+    let selectedInstructor;
+    let selectedTerm;
     // On arrival the modal will open
     window.onload = function(){
+         submitBtn= document.getElementById("submitBtn");
+         selectedInstructor = document.getElementById("selectInstructorInstructorReport");
+        selectedTerm = document.getElementById("selectTermInstructorReport");
         const modal = new bootstrap.Modal(document.getElementById("instructorReportModal"));
+        submitBtn.disabled = true;
         modal.show();
+        selectedInstructor.onchange = checkFormSelections;
+        selectedTerm.onchange = checkFormSelections;
     }
 
     function checkFormSelections(){
-        if(selectedInstructor.value !== undefined && selectedTerm.value !== undefined)
+      console.log(selectedInstructor.value);
+        if(selectedInstructor.value !== ""  && selectedTerm.value !== "")
         {
             submitBtn.disabled = false;
         }
@@ -105,13 +125,49 @@
         }
     }
 
-    selectedInstructor.addEventListener("select", function(){
-            checkFormSelections()
-    });
 
-    selectedTerm.addEventListener("select", function(){
-        checkFormSelections()
-    });
+
+    async function handleCreateProgram() {
+        // send a POST request to the router
+        const response = await fetch('http://localhost:3000/instructorReport', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                // use the val() method to get the value of a form input
+                instructor: selectedInstructor.value,
+                term: selectedTerm.value,
+
+            }),
+        });
+
+        // get the HTML text response
+        const data = await response.text();
+        // set the whole document's HTML to be the response
+        document.documentElement.innerHTML = data;
+        // re-add the click handler
+        $('#createProgram').click(handleCreateProgram);
+        // refresh the modal
+        const modal = $('#addModal');
+        modal.modal('hide');
+
+        // if the response was not ok, pop up the modal
+        if (!response.ok) {
+            modal.modal('show');
+        }
+    }
+
+    // selectedInstructor.addEventListener("change", function(){
+    //         checkFormSelections();
+    // });
+    // selectedInstructor.onchange = checkFormSelections;
+    // selectedTerm.onchange = checkFormSelections;
+
+    // selectedTerm.addEventListener("change", function(){
+    //     checkFormSelections();
+    // });
+
 
 
     // async function handleCreateInstructorReport() {
