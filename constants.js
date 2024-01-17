@@ -132,6 +132,7 @@ const testConst = {
     '2:00',
     '3:00',
   ],
+  weekdaysFullySpelled: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
 };
 

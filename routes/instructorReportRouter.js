@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Instructor = require('../private/javascript/Instructor');
 const Term = require('../private/javascript/Term');
+const Timeslot = require('../private/javascript/Timeslot');
 const {sequelize} = require('../dataSource');
 const {testConst} = require('../constants');
 const constants = require('constants');
+
 
 
 /**
@@ -65,48 +67,44 @@ router.get('/', async function(req, res, next) {
  * this processes the POST request to render the instructor report
  * for the requested instructor(s)
  */
-router.post('/submit', async function(req, res, next) {
-  let instructorList;
-  let termList;
-  let instructorSelected;
-  let termSelected;
+router.post('/', async function(req, res, next) {
+  await sequelize.sync();
 
+  const instructorID = req.body.instructor;
+  const termID = req.body.term;
+  let instRepTimeslots;
 
-  // Gather the selections from the selectbox and list on the modal
   try {
-    instructorList= await Instructor.findAll({order: ['lastName']});
-  } catch (err) {
-    instructorList = undefined;
-  }
-  try {
-    termList= await Term.findAll({order: ['termNumber']});
-  } catch (err) {
-    termList = undefined;
+    instRepTimeslots = await Timeslot.findAll( {
+      where: {InstructorId: instructorID, TermId: termID},
+    //   TODO set up sort here
+    });
+  } catch (e) {
+    console.log(e)
   }
 
-  // check if instructor and term exist - that they are not undefined
-  if (instructorSelected && termSelected) {
-    // for the selectbox and list on the modal
-    try {
-      instructorList= await Instructor.findAll({order: ['lastName']});
-    } catch (err) {
-      instructorList = undefined;
-    }
-    try {
-      termList= await Term.findAll({order: ['termNumber']});
-    } catch (err) {
-      termList = undefined;
-    }
-    res.render('instructorReport', {
 
-    });
-  } else {
-    // if no instructor or no term...
-    res.render('instructorReport', {
-      title: 'No result for instructor report from post handler',
-    });
-  }
+
+
 });
+
+const updateReportPage = async (termID, instructorID) => {
+  let errors; // Define the errors variable
+
+  try {
+    // Update the program attributes
+    const programUpdated = await programToUpdate.update({
+      programName: newName,
+      programAbbreviation: newAbbr,
+    });
+    return programUpdated;
+  } catch (err) {
+    errors = mapErrors(err);
+
+    // console.error(errors);
+    return errors;
+  }
+};
 
 /**
  * Helper function for the POST.
