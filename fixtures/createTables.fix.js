@@ -5,6 +5,7 @@ const Instructor = require('../private/javascript/Instructor');
 const ProgramFix = require('../private/javascript/Program');
 const Term = require('../private/javascript/Term');
 const Timeslot = require('../private/javascript/Timeslot');
+const {addAssociations} = require('../private/javascript/Associations');
 
 // eslint-disable-next-line require-jsdoc
 async function createAllTables() {

@@ -75,37 +75,6 @@ const testConst = {
     {name: 'Career Path Search', startDate: '2023-09-01', endDate: '2023-12-15', group: 'A'},
   ],
   validTimeslots: [
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '800', endTime: '900', day: 'Monday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '900', endTime: '1000', day: 'Monday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1000', endTime: '1100', day: 'Monday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1100', endTime: '1200', day: 'Monday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1300', endTime: '1400', day: 'Monday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1400', endTime: '1500', day: 'Monday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '800', endTime: '900', day: 'Tuesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '900', endTime: '1000', day: 'Tuesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1000', endTime: '1100', day: 'Tuesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1100', endTime: '1200', day: 'Tuesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1300', endTime: '1400', day: 'Tuesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1400', endTime: '1500', day: 'Tuesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '800', endTime: '900', day: 'Wednesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '900', endTime: '1000', day: 'Wednesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1000', endTime: '1100', day: 'Wednesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1100', endTime: '1200', day: 'Wednesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1300', endTime: '1400', day: 'Wednesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1400', endTime: '1500', day: 'Wednesday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '800', endTime: '900', day: 'Thursday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '900', endTime: '1000', day: 'Thursday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1000', endTime: '1100', day: 'Thursday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1100', endTime: '1200', day: 'Thursday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1300', endTime: '1400', day: 'Thursday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1400', endTime: '1500', day: 'Thursday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '800', endTime: '900', day: 'Friday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '900', endTime: '1000', day: 'Friday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1000', endTime: '1100', day: 'Friday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1100', endTime: '1200', day: 'Friday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1300', endTime: '1400', day: 'Friday', group: 'B'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1400', endTime: '1500', day: 'Friday', group: 'B'},
-
     {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '800', endTime: '900', day: 'Monday', group: 'A'},
     {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1400', endTime: '1500', day: 'Monday', group: 'A'},
     {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '900', endTime: '1000', day: 'Tuesday', group: 'A'},
@@ -121,6 +90,25 @@ const testConst = {
 
 };
 
+function GenerateTimeSlotData() {
+  const TimeArray = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+  const TimeSlotDataArray = [];
+
+  for (let i = 1; i < 6; i++) {
+    for (let j = 0; j < 7; j++) {
+      if (j === 4) {
+        continue;
+      }
+      TimeSlotDataArray.push({
+        startDate: '2023-09-01', endDate: '2023-12-15',
+        startTime: TimeArray[j], endTime: TimeArray[j+1], day: i, group: 'B',
+      });
+    }
+  }
+
+  return TimeSlotDataArray;
+}
+
 const instructorConstraints = {
   firstNameUpperLimit: 50,
   firstNameLowerLimit: 0,
@@ -134,5 +122,5 @@ const termConstraints = {
   termNumberLowerLimit: 1,
 };
 
-module.exports = {instructorConstraints, testConst, termConstraints};
+module.exports = {instructorConstraints, testConst, termConstraints, GenerateTimeSlotData};
 
