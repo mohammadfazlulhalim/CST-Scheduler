@@ -9,6 +9,7 @@ const Program = require('../private/javascript/Program');
 
 // eslint-disable-next-line require-jsdoc
 async function loadRelationships() {
+  Associations.addAssociations();
   const courseOfferingObj = {offering1: {}, offering2: {}};
 
   const courseObj = await Course.create(testConst.course1);
@@ -16,7 +17,7 @@ async function loadRelationships() {
   const insObj = await Instructor.create(testConst.instructor1);
   const progObj = await Program.create(testConst.program1);
 
-  courseOfferingObj.offering1 = await CourseOffering.create({
+  courseOfferingObj.offering1 = {
     name: testConst.courseOffering1.name,
     startDate: testConst.courseOffering1.startDate,
     endDate: testConst.courseOffering1.endDate,
@@ -25,7 +26,7 @@ async function loadRelationships() {
     termID: termObj.id,
     instructorID: insObj.id,
     programID: progObj.id,
-  });
+  };
   courseOfferingObj.offering2 = await CourseOffering.create({
     name: testConst.courseOffering2.name,
     startDate: testConst.courseOffering2.startDate,

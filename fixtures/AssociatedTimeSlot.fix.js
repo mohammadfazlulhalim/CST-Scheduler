@@ -15,7 +15,9 @@ async function loadTimeslots() {
   //     association: CourseOffering.Term,
   //     include: [courseObj.offering1.termID]
   //   }]});
-  const coObj1 = courseObj.offering1;
+  const coObj1 = await CourseOffering.create(courseObj.offering1);
+  await coObj1.setTerm(courseObj.offering1.termID);
+  // setModelname()
   const coObj2 =await CourseOffering.create(courseObj.offering2);
 
   const ClassroomObj = await Classroom.create(testConst.classroom1);
