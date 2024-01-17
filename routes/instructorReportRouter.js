@@ -16,7 +16,8 @@ const constants = require('constants');
 router.get('/', async function(req, res, next) {
   let program='';
   const dateGenerated= new Date();
-  const monthArray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+  const monthArray=['Jan', 'Feb', 'Mar', 'Apr', 'May',
+    'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
   const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
 
   let instructorList;
