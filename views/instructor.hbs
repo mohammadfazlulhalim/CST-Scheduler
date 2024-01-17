@@ -5,9 +5,12 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>Instructor Number</th>
+<!--                <th>Instructor Number</th>-->
                 <th>First Name</th>
                 <th>Last Name</th>
+                <th>Office Number</th>
+                <th>Phone Number</th>
+                <th>Email</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -15,9 +18,12 @@
             <tbody>
             {{#each instructorList}}
                 <tr>
-                    <td id="{{this.instructorID}}number">{{this.instructorID}}</td>
+<!--                    <td id="{{this.instructorID}}number">{{this.instructorID}}</td>-->
                     <td id="{{this.instructorID}}firstName">{{this.firstName}}</td>
                     <td id="{{this.instructorID}}lastName">{{this.lastName}}</td>
+                    <td id="{{this.InstructorID}}officeNum">{{this.officeNum}}</td>
+                    <td id="{{this.InstructorID}}phoneNum">{{this.phoneNum}}</td>
+                    <td id="{{this.InstructorID}}email">{{this.email}}</td>
 
                     <td>
                         <button id="{{this.instructorID}}edit" type="button" class="btn btn-primary editButton"
@@ -117,10 +123,10 @@
                 </div>
                 <form action="/instructor" method="POST">
                     <div class="modal-body">
-                        <label for="cInstructorID">Instructor Number:</label>
-                        <input type="number" class="form-control {{#if err.instructorID}}is-invalid{{/if}}"
-                               id="cInstructorID"
-                               name="instructorID" value="{{submittedInstructor.instructorID}}">
+<!--                        <label for="cInstructorID">Instructor Number:</label>-->
+<!--                        <input type="number" class="form-control {{#if err.instructorID}}is-invalid{{/if}}"-->
+<!--                               id="cInstructorID"-->
+<!--                               name="instructorID" value="{{submittedInstructor.instructorID}}">-->
                         <div class="invalid-feedback">{{err.instructorID}}</div>
 
                         <label for="cFirstName">First Name:</label>
@@ -132,6 +138,10 @@
                         <input type="text" class="form-control {{#if err.lastName}}is-invalid{{/if}}" id="cLastName"
                                name="lastName" value="{{submittedInstructor.lastName}}">
                         <div class="invalid-feedback">{{err.lastName}}</div>
+
+                        <Label for="cOfficeNum">Office Number:</Label>
+                        <input type="text" class="form-control {{#if err.officeNum}}is-invalid{{/if}}" id="cOfficeNum" name="officeNum" value="{{submittedInstructor.officeNum}}">
+                        <div Class="invalid-feedback">{{err.officeNum}}</div>
 
                     </div>
                     <div class="modal-footer">

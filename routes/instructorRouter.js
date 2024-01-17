@@ -5,6 +5,9 @@ const {sequelize} = require('../dataSource');
 router.get('/', async function(req, res, next) {
   // Declaring the array
   const instructorLists = await readAllInstructors();
+
+  console.log(">>>>>>>>>look here>>>>>>>>>>");
+  console.log(instructorLists);
   res.render('instructor', {
     title: 'Instructor Listings',
     instructorList: instructorLists,
@@ -177,7 +180,7 @@ const updateInstructor = async (instructor) => {
 const readAllInstructors = async () => {
   try {
     // Calling the database, for all instructor entries, ordered by instructor number
-    return await Instructor.findAll({order: ['instructorID']});
+    return await Instructor.findAll({order: ['lastName']});
   } catch (err) {
     // If it is not found, declaring instructorList as undefined so that table will not be viewed on instructor.hbs
     // and instead a sentence declaring no instructor entries found is displayed

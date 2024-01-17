@@ -419,7 +419,7 @@ describe('phoneNum', () => {
   });
 
   test('testCreatingInstructorWithPhoneNumberHaveMoreThan10Digits  ', async function() {
-    testInstructor.phoneNum = '(123)-456-23232';
+    testInstructor.phoneNum = '12345623222';
     let errArray; let errCount;
 
     try {
