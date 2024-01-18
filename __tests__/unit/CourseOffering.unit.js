@@ -5,7 +5,8 @@
 const CourseOffering = require('../../private/javascript/CourseOffering');
 // const Associations = require('../../private/javascript/Associations');
 // const testConst = require('../../constants').testConst;
-const CourseOfferingScript = require('../../fixtures/AssociatedCourseOffering.fix')
+const CourseOfferingScript = require('../../fixtures/AssociatedCourseOffering.fix');
+const CreateTables = require('../../fixtures/ClearAndDefineTables');
 
 
 let testCourseOffering;
@@ -13,11 +14,13 @@ let testCourseOffering;
 describe('courseOfferingUnit', () => {
 
   beforeAll(async function() {
+    await CreateTables();
     const nestedObj = await CourseOfferingScript();
     testCourseOffering = nestedObj.offering1;
   })
   // set up a valid user
   beforeEach(async function() {
+    await CreateTables();
     // drop the table and re-create it
     const nestedObj = await CourseOfferingScript();
     testCourseOffering = nestedObj.offering1;
