@@ -8,12 +8,13 @@ const timeslot = require('../private/javascript/Timeslot');
 router.get('/', (req, res, next) => {
   let terms;
   let classrooms;
+  // terms = term.findAll();
   try {
     terms = term.findAll({
       order: [['startDate', 'DESC'], ['id', 'DESC']],
     });
     classrooms = classroom.findAll({
-      order: ['roomNumber', 'ASC'],
+      order: [['roomNumber', 'ASC']],
     });
   } catch (err) {
 

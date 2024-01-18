@@ -9,81 +9,45 @@
             </div>
         </div>
     </div>
-    <table class="table table-bordered table-hover">
-        <thead>
+    <table>
         <tr>
-            <th scope="col">Time</th>
-            <th scope="col">Monday</th>
-            <th scope="col">Tuesday</th>
-            <th scope="col">Wednesday</th>
-            <th scope="col">Thursday</th>
-            <th scope="col">Friday</th>
+            <th>Time</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
         </tr>
-        </thead>
-        <tbody id="timetable-body">
-        <!-- The table content will be dynamically generated here -->
-        </tbody>
-    </table>
+             {{#each timeslot}}
+                 <tr>
+                     <td id="time">...</td>
+                     <td>...</td>
+                     <td>...</td>
+                     <td>...</td>
+                     <td>...</td>
+                     <td>...</td>
+                 </tr>
+             {{/each}}
 
-    <div class="btnPairsCustom"></div>
-    <button class="btn btn-primary">New Report</button>
-    <button class="btn btn-outline-primary" onclick="window.print()">Print this page</button>
+        <!-- Repeat the pattern for each time slot -->
+    </table>
 
 {{else}}
     <h1>Nothing to display at the moment</h1>
 {{/if}}
 
-<!-- modal -->
-<!-- Vertically centered scrollable modal -->
-<div class="modal fade" id="classroomReportModal" tabindex="-1" aria-labelledby="classroomReportModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="classroomReportModalLabel">Create an Classroom Report For: </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY-->
-            <div class="modal-body">
-                <!--                form begins here-->
-                <form method="POST" action="/classroomReport">
-                    <small class="text-info"> <b>Please select classroom and a term.</b></small>
-                    <div class="form-group">
-                        <label for="selectClassroomClassroomReport" class="form-label mt-4">Classroom</label>
-                        <select class="form-select" id="selectClassroomClassroomReport" required>
-                            <option value="" disabled selected>Select Classroom</option>
-                            {{#each classrooms}}
-                                <option value="{{this.id}}">{{this.roomNumber}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="selectTermClassroomReport" class="form-label mt-4">Terms</label>
-                        <select class="form-select" id="selectTermClassroomReport" required>
-                            <option value="" disabled selected>Select Term</option>
-                            {{#each terms}}
-                                <option value="{{this.id}}">{{this.termNumber}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                        <button id="submitBtn"  onclick="handleCreateClassroomReport()"
-                                type="submit" class="btn btn-outline-success" >Save changes</button>
-                    </div>
-                </form>
-                <!--                Form ends here-->
-
-            </div>
-        </div>
-    </div>
+<div class="modal show" id="classroomReportInfoModal">
+    <div class="modal-header">MEOW</div>
+    <div class="modal-body">Woof</div>
+    <div class="modal-footer">Rawr</div>
 </div>
 
 
 <script>
+    $(document).ready(function() {
+        $('#classroomReportInfoModal').show();
+    });
     'use strict';
-
-    $('#classroomReportModal').show()
 
     // Get the table body element
     const timetableBody = document.getElementById('timetable-body');
@@ -108,7 +72,6 @@
             const cellID = `cell-${hour}-${day}`;
             dataCell.setAttribute('id', cellID);
 
-            // You can add more customization or data to each cell if needed
 
             // Append the cell to the row
             row.appendChild(dataCell);
