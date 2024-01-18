@@ -7,14 +7,14 @@
         <div id="tabBar">
 
         </div>
-        {{#each groupArray as | grpLetter | }}
-            <div id="group{{grpLetter}}">
-                <div id="calender{{grpLetter}}">
-                    <h2>Group {{grpLetter}} Calendar</h2>
+        {{#each groupArray}}
+            <div id="group{{groupLetter}}">
+                <div id="calender{{groupLetter}}">
+                    <h2>Group {{groupLetter}} Calendar</h2>
                     <table class="table">
                         <thead>
                         <th scope="col">
-
+                            Time
                         </th>
                         <th scope="col">
                             Monday
@@ -33,36 +33,24 @@
                         </th>
                         </thead>
                         <tr>
-
                         </tr>
-                        {{#each tArray in groupArray.timeslotMatrix }}
+                        {{#each timeslotMatrix }}
                             <!--loops each timeslot, outer loop is hours, inner loop is days  -->
                             <tr>
-                                <td>{{tArray.id}}</td>
-                                {{#each timeObj in tArray}}
-                                    {{#if timeObj.id}}
-                                        <td>groupArray[grpLetter].timeslotMatrix[j][i]</td>
-                                    {{/if}}
+                                {{#each this}}
+<!--                                    Do an if/else if it has data - bool created in router-->
+<!--                                    Then the 'each' will have different attributes and be loaded differently-->
+<!--                                    via html and the router sends attributes-->
+                                        <td>{{this.timeslot}}</td>
                                 {{/each}}
                             </tr>
                         {{/each}}
                     </table>
-
                 </div>
-                <div id="courseList{{grpLetter}}">
-                    <h2>Group {{grpLetter}} Courses</h2>
-                    {{#each COArray as | coObj | }}
-                        {{#if eq coObj ../grpLetter }}
-
-                            <div class="card">
-                                <h3>Name: {{coObj.name}}</h3>
-                            </div>
-                        {{/if}}
-                    {{/each}}
-
+                <div id="courseList{{groupLetter}}">
+                    <h2>Group {{groupLetter}} Courses</h2>
                 </div>
             </div>
         {{/each}}
-
     </div>
 </div>

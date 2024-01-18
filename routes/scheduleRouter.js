@@ -42,17 +42,23 @@ router.post('/', async (req, res, next) => {
     groupArray.push({
       timeslotMatrix: [[], [] , [], [], [], [], [], []], //outer array is times, each inner array is days
       COArray: new Array(hardGroups),
-      groupLetters: new Array(hardGroups),
       groupLetter: GROUP_LETTERS[i],
     })
 
-
+    // Creating the 2D array with empty values
     for(t in TIMES){
       for(d in DAYS){
+        let timeOb = null;
+        if (d==0) {
+          // just storing the time
+          // TODO converting the time
+            timeOb = TIMES[t];
+        }
         groupArray[i].timeslotMatrix[t][d] = {
-          tTime: t,
-          tDays: d,
-          timeslot: null
+          hasObj: false,
+            tTime: t,
+            tDays: d,
+            timeslot: timeOb,
         }
       }
     }
@@ -78,9 +84,8 @@ router.post('/', async (req, res, next) => {
 
     //mapping each timeslot in this group to the matrix
     for(const tSlot of timeslotArray){
-      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;//outer array is days, each inner array is times
+      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = formatCellInfo(tSlot);//outer array is days, each inner array is times
     }
-
     groupLetters[i] = GROUP_LETTERS[i];
   }
 
@@ -93,6 +98,12 @@ router.post('/', async (req, res, next) => {
 
 
 });
+
+function formatCellInfo(tSlot){
+  tSlot = 'id is: ' + tSlot.id;
+
+  return tSlot
+}
 
 
 module.exports = router;
