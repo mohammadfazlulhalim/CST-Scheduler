@@ -1,6 +1,5 @@
 const testConst = {
   instructor1: {
-    instructorID: '20',
     firstName: 'Ben',
     lastName: 'Benson',
     officeNum: '223A.1',

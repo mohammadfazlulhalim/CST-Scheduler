@@ -6,9 +6,7 @@ router.get('/', async function(req, res, next) {
   // Declaring the array
   const instructorLists = await readAllInstructors();
 
-  console.log(">>>>>>>>>look here>>>>>>>>>>");
-  console.log(instructorLists);
-  res.render('instructor', {
+   res.render('instructor', {
     title: 'Instructor Listings',
     instructorList: instructorLists,
   });
@@ -21,7 +19,7 @@ router.post('/', async function(req, res, next) {
   await sequelize.sync();
   // attempt to create the given instructor
   const result = await createInstructor({
-    instructorID: req.body.instructorID,
+    //instructorID: req.body.instructorID,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     officeNum: req.body.officeNum,
@@ -39,7 +37,8 @@ router.post('/', async function(req, res, next) {
     // creation was successful
     res.status(201);
     // put the ID in the response so tests can access it
-    res.set('instructorID', result.instructorID);
+
+    res.set('instructorID', result.id);
   }
   const instructorLists = await readAllInstructors();
 
@@ -95,7 +94,6 @@ router.put('/', async function(req, res, next) {
     violations = result.error;
   }
   const putSubmittedInstructor= req.body;
-  console.log(putSubmittedInstructor);
   const instructorLists = await readAllInstructors();
 
   
@@ -116,7 +114,7 @@ router.put('/', async function(req, res, next) {
 const createInstructor = async (instructor) => {
   try {
     return await Instructor.create({
-      instructorID: instructor.instructorID,
+      //instructorID: instructor.instructorID,
       firstName: instructor.firstName,
       lastName: instructor.lastName,
       officeNum: instructor.officeNum,
@@ -137,7 +135,7 @@ const createInstructor = async (instructor) => {
 const deleteInstructor = async (instructor) => {
   try {
     // try to delete the instructor
-    return await Instructor.destroy({where: {instructorID: parseInt(instructor.instructorID)}});
+    return await Instructor.destroy({where: {instructorID: parseInt(instructor.id)}});
   } catch (err) {
     // if an error occurred, state that 0 rows were deleted
     return 0;

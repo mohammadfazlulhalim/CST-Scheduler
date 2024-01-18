@@ -3,12 +3,12 @@ const CourseOffering = require('../javascript/CourseOffering');
 // const {Op}= require('sequelize');
 // Database constructor for Instructor
 const Instructor = sequelize.define('Instructor', {
-  instructorID: {
-    type: DataTypes.INTEGER,
-    allowNull: false, // Can't be null
-    autoIncrement: true,
-    primaryKey: true,
-  },
+  // instructorID: {
+  //   type: DataTypes.INTEGER,
+  //   allowNull: false, // Can't be null
+  //   autoIncrement: true,
+  //   primaryKey: true,
+  // },
   firstName: {
     type: DataTypes.STRING,
     allowNull: false,

@@ -18,18 +18,17 @@
             <tbody>
             {{#each instructorList}}
                 <tr>
-<!--                    <td id="{{this.instructorID}}number">{{this.instructorID}}</td>-->
-                    <td id="{{this.instructorID}}firstName">{{this.firstName}}</td>
-                    <td id="{{this.instructorID}}lastName">{{this.lastName}}</td>
-                    <td id="{{this.InstructorID}}officeNum">{{this.officeNum}}</td>
-                    <td id="{{this.InstructorID}}phoneNum">{{this.phoneNum}}</td>
-                    <td id="{{this.InstructorID}}email">{{this.email}}</td>
+                    <td id="{{this.id}}firstName">{{this.firstName}}</td>
+                    <td id="{{this.id}}lastName">{{this.lastName}}</td>
+                    <td id="{{this.id}}officeNum">{{this.officeNum}}</td>
+                    <td id="{{this.id}}phoneNum">{{this.phoneNum}}</td>
+                    <td id="{{this.id}}email">{{this.email}}</td>
 
                     <td>
-                        <button id="{{this.instructorID}}edit" type="button" class="btn btn-primary editButton"
+                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
                                 data-toggle="modal" data-target="#editModal">Edit
                         </button>
-                        <button id="{{this.instructorID}}delete" type="button" class="btn btn-danger deleteButton"
+                        <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
                                 data-toggle="modal" data-target="#deleteModal">Delete
                         </button>
                     </td>
@@ -97,11 +96,20 @@
                                    value="{{putSubmittedInstructor.lastName}}" id="eLastName" name="lastName">
                             <div class="invalid-feedback">{{putErr.lastName}}</div>
 
-                           <label for="eOfficeNum">Office Number</label>
+                           <label for="eOfficeNum">Office Number:</label>
                            <input type="text" class="form-control {{#if putErr.officeNum}}is-invalid{{/if}}"
                                   value="{{putSubmittedInstructor.officeNum}}" id="eOfficeNum" name="officeNum">
                            <div class="invalid-feedback">{{putErr.officeNum}}</div>
 
+                           <label for="ePhoneNum">Phone Number:</label>
+                           <input type="text" class="form-control {{#if putErr.phoneNum}}is-invalid{{/if}}"
+                                  value="{{putSubmittedInstructor.phoneNum}}" id="ePhoneNum" name="phoneNum">
+                           <div class="invalid-feedback">{{putErr.phoneNum}}</div>
+
+                           <label for="eEmail">Email:</label>
+                           <input type="text" class="form-control {{#if putErr.email}}is-invalid{{/if}}"
+                                  value="{{putSubmittedInstructor.email}}" id="eEmail" name="email">
+                           <div class="invalid-feedback">{{putErr.email}}</div>
 
                         </div>
                         <div class="modal-footer">
@@ -129,7 +137,7 @@
                 <form action="/instructor" method="POST">
                     <div class="modal-body">
 
-                        <div class="invalid-feedback">{{err.instructorID}}</div>
+                        <div class="invalid-feedback">{{err.id}}</div>
 
                         <label for="cFirstName">First Name:</label>
                         <input type="text" class="form-control {{#if err.firstName}}is-invalid{{/if}}" id="cFirstName"
@@ -207,7 +215,7 @@
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
-                instructorID: $('#cInstructorID').val(),
+                //instructorID: $('#cInstructorID').val(),
                 firstName: $('#cFirstName').val(),
                 lastName: $('#cLastName').val(),
                 officeNum: $('#cOfficeNum').val(),
@@ -266,9 +274,15 @@
                 instructorID: $('#eInstructorID').val(),
                 firstName: $('#eFirstName').val(),
                 lastName: $('#eLastName').val(),
+                officeNum: $('#eOfficeNum').val(),
+                phoneNum: $('#ePhoneNum').val(),
+                email:$('#eEmail').val(),
 
             }),
         });
+
+        console.log("Here is the response>>>>>>>>");
+        console.log(response);
 
         // get the HTML text response
         const data = await response.text();
@@ -295,6 +309,8 @@
         $('#eFirstName').val($(`#${idToEdit}firstName`).text());
         $('#eLastName').val($(`#${idToEdit}lastName`).text());
         $('#eOfficeNum').val($(`#${idToEdit}officeNum`).text());
+        $('#ePhoneNum').val($(`#${idToEdit}phoneNum`).text());
+        $('#eEmail').val($(`#${idToEdit}email`).text());
     }
 
     /**
@@ -325,9 +341,13 @@
         $('.is-invalid').removeClass('is-invalid');
         $('.invalid-feedback').text('');
 
-        $('#cInstructorID').val('');
+        // $('#cInstructorID').val('');
         $('#cFirstName').val('');
         $('#cLastName').val('');
+        $('#cOfficeNum').val('');
+        $('#cPhoneNum').val('');
+        $('#cEmail').val('');
+
     }
 
 </script>
