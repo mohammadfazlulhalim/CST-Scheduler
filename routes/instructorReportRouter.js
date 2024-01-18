@@ -7,8 +7,7 @@ const {sequelize} = require('../dataSource');
 const {testConst} = require('../constants');
 const constants = require('constants');
 
-
-
+// TODO: regenerate list on post for modal
 /**
  * Processing GET request for rendering the instructor report page.
  *
@@ -51,6 +50,7 @@ router.get('/', async function(req, res, next) {
   } else {
     program ='CST 1';
   }
+
   res.render('instructorReport', {
     instructor,
     timeslot: t,
@@ -74,38 +74,32 @@ router.post('/', async function(req, res, next) {
   const instructorID = req.body.instructor;
   const termID = req.body.term;
   let instRepTimeslots;
+  let instructorName;
+
+
+  try {
+    instructorName = await Instructor.findOne({where: {InstructorId: instructorID}});
+  } catch (err) {
+    instructorName = undefined;
+  }
 
   try {
     instRepTimeslots = await Timeslot.findAll( {
       where: {InstructorId: instructorID, TermId: termID},
-    //   TODO set up sort here
+      order: [['startTime', 'ASC'], ['day', 'ASC']],
+
     });
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
 
 
-
-
+  res.render('instructorReport', {
+    instRepTimeslots,
+    instructorName,
+  });
 });
 
-const updateReportPage = async (termID, instructorID) => {
-  let errors; // Define the errors variable
-
-  try {
-    // Update the program attributes
-    const programUpdated = await programToUpdate.update({
-      programName: newName,
-      programAbbreviation: newAbbr,
-    });
-    return programUpdated;
-  } catch (err) {
-    errors = mapErrors(err);
-
-    // console.error(errors);
-    return errors;
-  }
-};
 
 /**
  * Helper function for the POST.

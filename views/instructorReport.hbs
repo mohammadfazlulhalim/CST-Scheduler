@@ -2,7 +2,9 @@
     <div>
         <div class="row">
             <div class="col-9">
-                <h2><i>Instructor Report For:</i> {{instructor.lastName}}, {{instructor.firstName}}</h2>
+                <h2><i>Instructor Report For:</i> {{#if instructorName}}
+        {{instructorName.lastName}}, {{instructorName.firstName}}
+                {{/if}}</h2>
             </div>
             <div class="col-3">
                 <small>Report Generated: {{dateGen}}</small>
@@ -14,9 +16,9 @@
 
         <tr>
             <th class="text-center" scope="col">Time</th>
-            {{#each weekdayList}}
+<!--            {{#each weekdayList}}-->
 
-            {{/each}}
+<!--            {{/each}}-->
             <th class="text-center" scope="col">Monday</th>
             <th class="text-center" scope="col">Tuesday</th>
             <th class="text-center" scope="col">Wednesday</th>
@@ -30,11 +32,17 @@
                     <td class="text-center">
                         {{this}}
                     </td>
+                    {{#if instRepTimeslots}}
+                        <td>
+
+                        </td>
+                    {{else}}
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
+                    {{/if}}
                 </tr>
             {{/each}}
         </tbody>
