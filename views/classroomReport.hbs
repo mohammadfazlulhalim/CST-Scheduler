@@ -18,66 +18,60 @@
             <th>Thursday</th>
             <th>Friday</th>
         </tr>
-             {{#each timeslot}}
-                 <tr>
-                     <td id="time">...</td>
-                     <td>...</td>
-                     <td>...</td>
-                     <td>...</td>
-                     <td>...</td>
-                     <td>...</td>
-                 </tr>
-             {{/each}}
+        {{#each timeslot}}
+            <tr>
+                <td id="time">...</td>
+                <td>...</td>
+                <td>...</td>
+                <td>...</td>
+                <td>...</td>
+                <td>...</td>
+            </tr>
+        {{/each}}
 
-        <!-- Repeat the pattern for each time slot -->
     </table>
 
 {{else}}
     <h1>Nothing to display at the moment</h1>
 {{/if}}
-
-<div class="modal show" id="classroomReportInfoModal">
-    <div class="modal-header">MEOW</div>
-    <div class="modal-body">Woof</div>
-    <div class="modal-footer">Rawr</div>
+<div id="classroomReportInfoModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create a Classroom Report For:</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="#" class="mb-3">
+                    <div class="mb-3">
+                        <label for="termSelect" class="form-label">Term:</label>
+                        <select id="termSelect" name="term" class="form-select">
+                            {{#each terms}}
+                                <option value="{{id}}">{{termNumber}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="classroomSelect" class="form-label">Classroom:</label>
+                        <select id="classroomSelect" name="classroom" class="form-select">
+                            {{#each classrooms}}
+                                <option value="{{id}}">{{roomNumber}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
-
 <script>
-    $(document).ready(function() {
-        $('#classroomReportInfoModal').show();
-    });
     'use strict';
+    window.onload = function() {
+        const modal = new bootstrap.Modal(document.getElementById('classroomReportInfoModal'));
+        modal.show();
+    };
 
-    // Get the table body element
-    const timetableBody = document.getElementById('timetable-body');
-
-    // Loop through each hour
-    for (let hour = startTime; hour <= endTime; hour++) {
-        // Create a new row
-        const row = document.createElement('tr');
-
-        // Create the time cell
-        const timeCell = document.createElement('th');
-        timeCell.setAttribute('scope', 'row');
-        timeCell.textContent = `${hour}:00`;
-        row.appendChild(timeCell);
-
-        // Loop through each day
-        for (let day = 0; day < 5; day++) {
-            // Create a new data cell
-            const dataCell = document.createElement('td');
-
-            // Set a unique ID based on time and day
-            const cellID = `cell-${hour}-${day}`;
-            dataCell.setAttribute('id', cellID);
-
-
-            // Append the cell to the row
-            row.appendChild(dataCell);
-        }
-
-        // Append the row to the table body
-        timetableBody.appendChild(row);
-    }
 </script>

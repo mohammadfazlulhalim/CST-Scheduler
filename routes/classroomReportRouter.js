@@ -5,21 +5,9 @@ const term = require('../private/javascript/Term');
 const classroom = require('../private/javascript/Classroom');
 const timeslot = require('../private/javascript/Timeslot');
 
-router.get('/', (req, res, next) => {
-  let terms;
-  let classrooms;
-  // terms = term.findAll();
-  try {
-    terms = term.findAll({
-      order: [['startDate', 'DESC'], ['id', 'DESC']],
-    });
-    classrooms = classroom.findAll({
-      order: [['roomNumber', 'ASC']],
-    });
-  } catch (err) {
-
-  }
-
+router.get('/', async (req, res, next) => {
+  const terms = await term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'DESC']]});
+  const classrooms = await classroom.findAll({order: [['roomNumber', 'ASC']]});
 
   res.render('classroomReport', {
     title: 'Classroom Report',
