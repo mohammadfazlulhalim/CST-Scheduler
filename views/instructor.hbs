@@ -78,11 +78,11 @@
                     </div>
                     <form action="/instructor" method="POST">
                        <div class="modal-body">
-<!--                            <label hidden for="eInstructorID">Instructor Number:</label>-->
-<!--                            <input hidden type="number"-->
-<!--                                   class="form-control {{#if putErr.instructorID}}is-invalid{{/if}}" id="eInstructorID"-->
-<!--                                   name="instructorID" value="{{putSubmittedInstructor.instructorID}}">-->
-<!--                            <div class="invalid-feedback">{{putErr.instructorID}}</div>-->
+                            <label hidden for="eInstructorID">Instructor Number:</label>
+                            <input hidden type="number"
+                                   class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eInstructorID"
+                                   name="instructorID" value="{{putSubmittedInstructor.id}}">
+                            <div class="invalid-feedback">{{putErr.id}}</div>
 
                             <label for="eFirstName">First Name:</label>
                             <input type="text" class="form-control {{#if putErr.firstName}}is-invalid{{/if}}"
@@ -271,7 +271,7 @@
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
-                instructorID: $('#eInstructorID').val(),
+                id: $('#eInstructorID').val(),
                 firstName: $('#eFirstName').val(),
                 lastName: $('#eLastName').val(),
                 officeNum: $('#eOfficeNum').val(),

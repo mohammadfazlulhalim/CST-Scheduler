@@ -36,9 +36,9 @@ router.post('/', async function(req, res, next) {
   } else {
     // creation was successful
     res.status(201);
-    // put the ID in the response so tests can access it
+    // put the ID in the response so tests can access iti
 
-    res.set('instructorID', result.id);
+    res.set('id', result.id);
   }
   const instructorLists = await readAllInstructors();
 
@@ -74,7 +74,7 @@ router.delete('/', async function(req, res, next) {
  */
 router.put('/', async function(req, res, next) {
   const result = await updateInstructor({
-    instructorID: req.body.instructorID,
+    id: req.body.id,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     officeNum: req.body.officeNum,
@@ -104,6 +104,10 @@ router.put('/', async function(req, res, next) {
     putSubmittedInstructor,
 
   });
+
+  console.log(">>>>>putSubmittedInstructor");
+  console.log (putSubmittedInstructor);
+
 });
 
 /**
@@ -135,7 +139,7 @@ const createInstructor = async (instructor) => {
 const deleteInstructor = async (instructor) => {
   try {
     // try to delete the instructor
-    return await Instructor.destroy({where: {instructorID: parseInt(instructor.id)}});
+    return await Instructor.destroy({where: {id: parseInt(instructor.id)}});
   } catch (err) {
     // if an error occurred, state that 0 rows were deleted
     return 0;
@@ -149,12 +153,15 @@ const deleteInstructor = async (instructor) => {
  */
 const updateInstructor = async (instructor) => {
   // find the instructor to update
-  const instructorToUpdate = await Instructor.findByPk(instructor.instructorID);
+  const instructorToUpdate = await Instructor.findByPk(instructor.id);
+  console.log (">>>>>instructorToUpdate");
+  console.log(instructor);
   if (instructorToUpdate) {
     // only try to update the instructor if it already exists
     try {
       return await instructorToUpdate.update({
-        instructorID: instructor.instructorID,
+         //id: parseInt(instructor.id),
+        id:50,
         firstName: instructor.firstName,
         lastName: instructor.lastName,
         officeNum: instructor.officeNum,
