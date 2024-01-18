@@ -34,17 +34,28 @@ router.post('/', async (req, res, next) => {
 
   // const timeslotMatrix = [[], [] , [], [], []];
   let timeslotArray = new Array(hardGroups);
-  // const COArray = new Array(hardGroups);
-  // const groupLetters = new Array(hardGroups);
+  const COArray = new Array(hardGroups);
+  const groupLetters = new Array(hardGroups);
 
 
   for (let i = 0; i < hardGroups; i++) {
-    groupArray.add({
-      timeslotMatrix: [[], [] , [], [], []], //outer array is days, each inner array is times
+    groupArray.push({
+      timeslotMatrix: [[], [] , [], [], [], [], [], []], //outer array is times, each inner array is days
       COArray: new Array(hardGroups),
       groupLetters: new Array(hardGroups),
       groupLetter: GROUP_LETTERS[i],
     })
+
+
+    for(t in TIMES){
+      for(d in DAYS){
+        groupArray[i].timeslotMatrix[t][d] = {
+          tTime: t,
+          tDays: d,
+          timeslot: null
+        }
+      }
+    }
 
     try {
       timeslotArray = await Timeslot.findAll({
@@ -64,11 +75,10 @@ router.post('/', async (req, res, next) => {
     } catch (error) {
       // console.log('Error is: ' + error);
     }
+
     //mapping each timeslot in this group to the matrix
-    for(tSlot in timeslotArray){
-      const timeIndex = TIMES.indexOf(tSlot.startTime);
-      const dayIndex = DAYS.indexOf(tSlot.day);
-      groupArray[i].timeslotMatrix[dayIndex][timeIndex] = tSlot;//outer array is days, each inner array is times
+    for(const tSlot of timeslotArray){
+      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;//outer array is days, each inner array is times
     }
 
     groupLetters[i] = GROUP_LETTERS[i];

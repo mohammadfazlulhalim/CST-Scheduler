@@ -35,14 +35,17 @@
                         <tr>
 
                         </tr>
-                        {{#loop i = 0; i < 8; i++}}  <!--loops each timeslot, outer loop is hours, inner loop is days  -->
+                        {{#each tArray in groupArray.timeslotMatrix }}
+                            <!--loops each timeslot, outer loop is hours, inner loop is days  -->
                             <tr>
-                                <td>{{TIMES[i]}}</td>
-                                {{#loop j = 1; j < 6; j++}}
-                                    <td>groupArray[grpLetter].timeslotMatrix[j][i]</td>
-                                {{/loop}}
+                                <td>{{tArray.id}}</td>
+                                {{#each timeObj in tArray}}
+                                    {{#if timeObj.id}}
+                                        <td>groupArray[grpLetter].timeslotMatrix[j][i]</td>
+                                    {{/if}}
+                                {{/each}}
                             </tr>
-                        {{/loop}}
+                        {{/each}}
                     </table>
 
                 </div>
