@@ -19,6 +19,8 @@ router.get('/', async function(req, res, next) {
     'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
   const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
 
+  // TODO REMOVE THIS TEMPORARY CALL TO
+
   let instructorList;
   let termList;
 
@@ -104,8 +106,20 @@ router.post('/', async function(req, res, next) {
 /**
  * Helper function for the POST.
  * Help to gather timeslots for instructor
+ * // TODO establish empty cells within the final array
+ * //
  */
 function generateSchedule() {
+  let matrixTable = [
+
+  ];
+
+  let row = 0;
+  let col = 0;
+
+
+
+  console.log(matrixTable)
 
 }
 
