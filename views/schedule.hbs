@@ -49,6 +49,12 @@
                 </div>
                 <div id="courseList{{groupLetter}}">
                     <h2>Group {{groupLetter}} Courses</h2>
+                    {{#each COArray}}
+                        <div>
+                            <h5>{{this.name}}</h5>
+                            <p>{{this.id}}</p>
+                        </div>
+                    {{/each}}
                 </div>
             </div>
         {{/each}}

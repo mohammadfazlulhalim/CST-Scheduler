@@ -6,7 +6,7 @@ const Timeslot = require('../private/javascript/Timeslot');
 const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
 const {testConst} = require('../constants');
-
+const defineDB = require('../fixtures/DefineTables');
 let roomDefaults;
 let term;
 let program;
@@ -21,6 +21,9 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
+  // reloading the models with associations
+  await defineDB();
+
 
   //TODO - switch to req.body when the modal is complete
   const hardTerm = await Term.findOne({where: {startDate: testConst.term1.startDate}}); //change to ID later
@@ -40,26 +43,26 @@ router.post('/', async (req, res, next) => {
 
   for (let i = 0; i < hardGroups; i++) {
     groupArray.push({
-      timeslotMatrix: [[], [] , [], [], [], [], [], []], //outer array is times, each inner array is days
+      timeslotMatrix: [[], [], [], [], [], [], [], []], //outer array is times, each inner array is days
       COArray: new Array(hardGroups),
       groupLetter: GROUP_LETTERS[i],
-    })
+    });
 
     // Creating the 2D array with empty values
-    for(t in TIMES){
-      for(d in DAYS){
+    for (t in TIMES) {
+      for (d in DAYS) {
         let timeOb = null;
-        if (d==0) {
+        if (d == 0) {
           // just storing the time
           // TODO converting the time
-            timeOb = TIMES[t];
+          timeOb = TIMES[t];
         }
         groupArray[i].timeslotMatrix[t][d] = {
           hasObj: false,
-            tTime: t,
-            tDays: d,
-            timeslot: timeOb,
-        }
+          tTime: t,
+          tDays: d,
+          timeslot: timeOb,
+        };
       }
     }
 
@@ -82,9 +85,11 @@ router.post('/', async (req, res, next) => {
       // console.log('Error is: ' + error);
     }
 
+
     //mapping each timeslot in this group to the matrix
-    for(const tSlot of timeslotArray){
-      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = formatCellInfo(tSlot);//outer array is days, each inner array is times
+    for (const tSlot of timeslotArray) {
+      const formattedTSlot = await formatCellInfo(tSlot);
+      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = formattedTSlot;//outer array is days, each inner array is times
     }
     groupLetters[i] = GROUP_LETTERS[i];
   }
@@ -99,10 +104,15 @@ router.post('/', async (req, res, next) => {
 
 });
 
-function formatCellInfo(tSlot){
-  tSlot = 'id is: ' + tSlot.id;
+async function formatCellInfo(tSlot) {
+  coObj = await tSlot.getCourseOffering();
+  cObj = await coObj.getCourse();
 
-  return tSlot
+
+  insObj = await tSlot.getInstructor();
+
+  return cObj.courseCode + '    ' + insObj.lastName;
+
 }
 
 
