@@ -1,5 +1,4 @@
 <div>
-    <p>testeseset</p>
     <div id="scheduleModal" class="modal fade"  role="dialog" tabindex="-1" aria-labelledby="scheduleModalLabel"
          aria-hidden="false">
         <div class="modal-dialog" role="document">
@@ -14,7 +13,7 @@
                             <label for="termSelect" class="form-label">Term: </label>
                             <select id="termSelect" name="term" class="form-select">
                                 {{#each terms}}
-                                    <option value="{{id}}">{{termNumber}}</option> <!-- fix date in get -->
+                                    <option value="{{id}}">{{title}}</option> <!-- fix date in get -->
                                 {{/each}}
                             </select>
                         </div>
@@ -101,3 +100,14 @@
     </div>
 
 </div>
+
+<script>
+    'use strict';
+    window.onload = function() {
+      if ({{getrequest}}) {
+          const modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
+          modal.show();
+      }
+    };
+
+</script>

@@ -20,7 +20,13 @@ router.get('/', async (req, res, next) => {
   terms = await Term.findAll();
   programs = await Program.findAll();
 
-  // console.log("Terms: " + JSON.stringify(programs));
+
+  // formatting the time
+  for (let i=0; i<terms.length;i++) {
+    // console.log('Term is: ' + JSON.stringify(terms[i]));
+    const splitDate = terms[i].startDate.split('-');
+    terms[i].title = splitDate[0] + '-' + terms[i].termNumber;
+  }
 
   res.render('schedule', {
     getrequest: true,
@@ -34,11 +40,6 @@ router.post('/', async (req, res, next) => {
   // reloading the models with associations
   await defineDB();
 
-
-  //TODO - switch to req.body when the modal is complete
-  const hardTerm = await Term.findOne({where: {startDate: testConst.term1.startDate}}); //change to ID later
-  const hardProg = await Program.findOne({where: {programAbbreviation: testConst.program1.programAbbreviation}}); //change to id later
-  const hardGroups = 2;
   let groupArray = [];
 
   const GROUP_LETTERS = ['A', 'B', 'C', 'D'];
@@ -46,15 +47,15 @@ router.post('/', async (req, res, next) => {
   const TIMES = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
 
   // const timeslotMatrix = [[], [] , [], [], []];
-  let timeslotArray = new Array(hardGroups);
-  const COArray = new Array(hardGroups);
-  const groupLetters = new Array(hardGroups);
+  let timeslotArray = new Array(req.body.group);
+  const COArray = new Array(req.body.group);
+  const groupLetters = new Array(req.body.group);
 
 
-  for (let i = 0; i < hardGroups; i++) {
+  for (let i = 0; i < req.body.group; i++) {
     groupArray.push({
       timeslotMatrix: [[], [], [], [], [], [], [], []], //outer array is times, each inner array is days
-      COArray: new Array(hardGroups),
+      COArray: new Array(req.body.group),
       groupLetter: GROUP_LETTERS[i],
     });
 
@@ -80,15 +81,15 @@ router.post('/', async (req, res, next) => {
       timeslotArray = await Timeslot.findAll({
         where: {
           group: GROUP_LETTERS[i],
-          ProgramId: hardProg.id,
-          TermId: hardTerm.id,
+          ProgramId: req.body.program,
+          TermId: req.body.term,
         },
       });
       groupArray[i].COArray = await CourseOffering.findAll({
         where: {
           group: GROUP_LETTERS[i],
-          ProgramId: hardProg.id,
-          TermId: hardTerm.id,
+          ProgramId: req.body.program,
+          TermId: req.body.term,
         },
       });
     } catch (error) {
