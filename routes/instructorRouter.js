@@ -54,11 +54,11 @@ router.post('/', async function(req, res, next) {
  * DELETE handler for http://localhost:3000/instructor
  */
 router.delete('/', async function(req, res, next) {
-  const result = await deleteInstructor({instructorID: req.body.instructorID});
+  const result = await deleteInstructor({id: req.body.id});
   let violations;
   if (result <= 0) {
     res.status(404);
-    violations = {instructorID: 'Instructor not found; cannot delete'};
+    violations = {id: 'Instructor not found; cannot delete'};
   }
   const instructorLists = await readAllInstructors();
   res.render('instructor', {
@@ -105,8 +105,6 @@ router.put('/', async function(req, res, next) {
 
   });
 
-  console.log(">>>>>putSubmittedInstructor");
-  console.log (putSubmittedInstructor);
 
 });
 
@@ -139,7 +137,9 @@ const createInstructor = async (instructor) => {
 const deleteInstructor = async (instructor) => {
   try {
     // try to delete the instructor
-    return await Instructor.destroy({where: {id: parseInt(instructor.id)}});
+   // return await Instructor.destroy({where: {id: parseInt(instructor.id)}});
+
+    return await Instructor.destroy({where: {id: instructor.id}});
   } catch (err) {
     // if an error occurred, state that 0 rows were deleted
     return 0;
@@ -154,8 +154,7 @@ const deleteInstructor = async (instructor) => {
 const updateInstructor = async (instructor) => {
   // find the instructor to update
   const instructorToUpdate = await Instructor.findByPk(instructor.id);
-  console.log (">>>>>instructorToUpdate");
-  console.log(instructor);
+
   if (instructorToUpdate) {
     // only try to update the instructor if it already exists
     try {

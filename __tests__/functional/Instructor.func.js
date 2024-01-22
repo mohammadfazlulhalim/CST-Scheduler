@@ -11,6 +11,7 @@ describe('Instructors in database', () => {
     // drop the table and re-create it
     await Instructor.sync({force: true});
     testInstructor = {...constants.testConst.instructor1};
+
   });
 
   test('testThatValidInstructorPostAddsToEmptyList', async () => {
@@ -34,7 +35,7 @@ describe('Instructors in database', () => {
     const oldNumInstructors = (await Instructor.findAll()).length;
 
     const invalidInstructor = {
-      instructorID: 'InvalidID',
+      id: 'InvalidID',
       firstName: 'fcdsa',
       lastName: 'TooLonracterLimit',
     };
@@ -72,19 +73,21 @@ describe('Instructors in database', () => {
   test('testThatValidInstructorPutUpdatesList', async () => {
     // create a new instructor to update
     const instructorToUpdate = (await Instructor.create(testInstructor)).dataValues;
+
     // store initial number of instructors to compare against later
     const oldNumInstructors = (await Instructor.findAll()).length;
     // update the newly added instructor
     await supertest(app).put('/instructor').send({
-      instructorID: instructorToUpdate.instructorID,
+      id: instructorToUpdate.id,
       firstName: instructorToUpdate.firstName,
       lastName: 'NewLastName',
     }).expect(200); // expect 200: OK
     // ensure it didn't add a new instructor
     const newNumInstructors = (await Instructor.findAll()).length;
+
     expect(newNumInstructors).toBe(oldNumInstructors);
     // expect that the end date was actually changed
-    const newInstructor = await Instructor.findByPk(instructorToUpdate.instructorID);
+    const newInstructor = await Instructor.findByPk(instructorToUpdate.id);
     expect(newInstructor.lastName).toBe('NewLastName');
   });
 
@@ -95,7 +98,7 @@ describe('Instructors in database', () => {
     const oldNumInstructors = (await Instructor.findAll()).length;
     // try to update the newly added instructor
     await supertest(app).put('/instructor').send({
-      instructorID: instructorToUpdate.instructorID,
+      id: instructorToUpdate.id,
       firstName: instructorToUpdate.firstName,
       lastName: '',
     }).expect(422); // expect 422: unprocessable entity
@@ -103,7 +106,7 @@ describe('Instructors in database', () => {
     const newNumInstructors = (await Instructor.findAll()).length;
     expect(newNumInstructors).toBe(oldNumInstructors);
     // expect the end date to not have changed
-    const firstName = (await Instructor.findByPk(instructorToUpdate.instructorID)).dataValues.firstName;
+    const firstName = (await Instructor.findByPk(instructorToUpdate.id)).dataValues.firstName;
     expect(firstName).toBe(testInstructor.firstName);
   });
 
@@ -130,11 +133,10 @@ describe('Instructors in database', () => {
    */
 const testPost = async function(testInstructor) {
   const res = await supertest(app).post('/instructor').send(testInstructor).expect(201); // expect 201: created
-  console.log (">>>>>>>>>>Test response>>>>>>>>>>");
-  console.log(res);
+
   // find the newly added instructor in the database
   // for this to work correctly, the router must set a parameter named 'id' using res.set()
-  const foundInstructor = await Instructor.findOne({where: {instructorID: parseInt(res.get('instructorID'))}});
+  const foundInstructor = await Instructor.findOne({where: {id: parseInt(res.get('id'))}});
   // if the instructor does not exist, it will not be truthy; it will be null
   expect(foundInstructor).toBeTruthy();
 };
@@ -147,13 +149,17 @@ const testDelete = async function(testInstructor) {
   // create a new instructor to delete
   // testInstructor does not have an ID, so use newInstructor instead
   const newInstructor = (await Instructor.create(testInstructor)).dataValues; // data values is what actually contains the fields
+
   // store initial number of instructors to compare against later
   const oldNumInstructors = (await Instructor.findAll()).length;
+
   // delete the instructor
   await supertest(app).delete('/instructor').send(newInstructor).expect(200); // expect 200: OK
 
   // If the instructor was deleted successfully, the number of instructors in the database should
   // be one less than the count after the 'create' statement
   const newNumInstructor = (await Instructor.findAll()).length;
+
+
   expect(newNumInstructor).toBe(oldNumInstructors - 1);
 };

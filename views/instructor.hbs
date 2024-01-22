@@ -245,7 +245,7 @@
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
-                instructorID: $('#deleteInstructor').val(),
+                id: $('#deleteInstructor').val(),
             }),
         });
 
@@ -280,9 +280,6 @@
 
             }),
         });
-
-        console.log("Here is the response>>>>>>>>");
-        console.log(response);
 
         // get the HTML text response
         const data = await response.text();
