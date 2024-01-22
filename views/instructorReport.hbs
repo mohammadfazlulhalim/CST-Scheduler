@@ -34,9 +34,9 @@
                     <td class="text-center">
                         {{this}}
                     </td>
-                    {{#if instRepTimeslots}}
+                    {{#if matrixTable}}
                         <td>
-
+                            hi
                         </td>
                     {{else}}
                     <td></td>
@@ -68,11 +68,11 @@
 <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY-->
             <div class="modal-body">
 <!--                form begins here-->
-                <form method="POST" action="/instructorReport/submit">
+                <form method="POST" action="/instructorReport">
                     <small class="text-info"> <b>Please select both an instructor and a term.</b></small>
                     <div class="form-group">
                         <label for="selectInstructorInstructorReport" class="form-label mt-4">Instructors</label>
-                        <select name="selectInstructor" class="form-select" id="selectInstructorInstructorReport" required>
+                        <select name="selectInstructorReport" class="form-select" id="selectInstructorInstructorReport" required>
                             <option value="" disabled selected>Select Instructor</option>
                             {{#each instructorList}}
                                 <option value="{{this.instructorID}}">{{this.lastName}}, {{this.firstName}}</option>
@@ -85,13 +85,13 @@
                         <select class="form-select" id="selectTermInstructorReport" required>
                             <option value="" disabled selected>Select Term</option>
                             {{#each termList}}
-                                <option value="{{this.id}}">{{this.termNumber}}</option>
+                                <option value="{{this.id}}">{{this.year}} - {{this.termNumber}}</option>
                             {{/each}}
                         </select>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                        <button id="submitBtn"  onclick="handleCreateInstructorReport()"
+                        <button id="submitBtn"
                                 type="submit" class="btn btn-outline-success" >Save changes</button>
                     </div>
                 </form>
@@ -112,8 +112,6 @@
     // $('#createAbbr').val("");
     // $('#createName').val("");
 
-
-    import hbs from "hbs";
 
     let submitBtn;
     let selectedInstructor;
@@ -203,7 +201,6 @@
     //         }),
     //     });
 
-    hbs.registerHelper()
 
 </script>
 
