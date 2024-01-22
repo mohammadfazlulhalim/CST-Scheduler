@@ -1,7 +1,47 @@
 <div>
-    <div id="modal">
-
+    <p>testeseset</p>
+    <div id="scheduleModal" class="modal fade"  role="dialog" tabindex="-1" aria-labelledby="scheduleModalLabel"
+         aria-hidden="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Select Filters For Schedule</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/schedule" method="POST">
+                        <div class="mb-3">
+                            <label for="termSelect" class="form-label">Term: </label>
+                            <select id="termSelect" name="term" class="form-select">
+                                {{#each terms}}
+                                    <option value="{{id}}">{{termNumber}}</option> <!-- fix date in get -->
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="programSelect" class="form-label">Program: </label>
+                            <select id="programSelect" name="program" class="form-select">
+                                {{#each programs}}
+                                    <option value="{{id}}">{{programAbbreviation}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="groupSelect" class="form-label">Number of Groups: </label>
+                            <select id="groupSelect" name="group" class="form-select">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+
     <div id="main">
         <!--change this to a loop later-->
         <div id="tabBar">
@@ -38,10 +78,10 @@
                             <!--loops each timeslot, outer loop is hours, inner loop is days  -->
                             <tr>
                                 {{#each this}}
-<!--                                    Do an if/else if it has data - bool created in router-->
-<!--                                    Then the 'each' will have different attributes and be loaded differently-->
-<!--                                    via html and the router sends attributes-->
-                                        <td>{{this.timeslot}}</td>
+                                    <!--                                    Do an if/else if it has data - bool created in router-->
+                                    <!--                                    Then the 'each' will have different attributes and be loaded differently-->
+                                    <!--                                    via html and the router sends attributes-->
+                                    <td>{{this.timeslot}}</td>
                                 {{/each}}
                             </tr>
                         {{/each}}
@@ -59,4 +99,5 @@
             </div>
         {{/each}}
     </div>
+
 </div>

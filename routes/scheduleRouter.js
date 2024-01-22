@@ -13,11 +13,21 @@ let program;
 let timeslotArray;
 let courseOfferingArray;
 
-router.get('/', (req, res, next) => {
-  // Add in here for get request
-  // Potentially this is the view for picking options
-  //   res.render('schedule', {})
-  res.render('redirect-post', {});
+router.get('/', async (req, res, next) => {
+  await defineDB();
+  // console.log("start of get");
+
+  terms = await Term.findAll();
+  programs = await Program.findAll();
+
+  // console.log("Terms: " + JSON.stringify(programs));
+
+  res.render('schedule', {
+    getrequest: true,
+    terms,
+    programs,
+  })
+  // res.render('redirect-post', {});
 });
 
 router.post('/', async (req, res, next) => {
