@@ -27,6 +27,8 @@
         </tr>
         </thead>
         <tbody>
+<!--        TODO PLACE TWO LOOPS FOR TIMESLOT LIST AND DAY LIST - CODE TIMESLOT TO RUN IN CONJUNCTION WITH THE DAY LOOP-->
+<!--        TODO establish a 2d array before sending it via render to this hbs view-->
             {{#each timeDisplayHours}}
                 <tr>
                     <td class="text-center">
@@ -128,6 +130,7 @@
         selectedTerm.onchange = checkFormSelections;
     }
 
+
     function checkFormSelections(){
       console.log(selectedInstructor.value);
         if(selectedInstructor.value !== ""  && selectedTerm.value !== "")
@@ -140,7 +143,7 @@
     }
 
 
-
+    // TODO determine ways to avoid a hardcoded form submit
     async function handleCreateProgram() {
         // send a POST request to the router
         const response = await fetch('http://localhost:3000/instructorReport', {
@@ -158,6 +161,7 @@
 
         // get the HTML text response
         const data = await response.text();
+
         // set the whole document's HTML to be the response
         document.documentElement.innerHTML = data;
         // re-add the click handler
