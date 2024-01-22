@@ -36,9 +36,14 @@ router.get('/', async function(req, res, next) {
     newTermList= termList.map((item)=>{
       return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
     });
+
+    newTermList.sort((a, b)=>{
+      return b.displayTerm - a.displayTerm;
+    });
   } catch (err) {
     termList = undefined;
   }
+
 
   // const instructor={
   //   lastName: 'BensonBenson',

@@ -1,9 +1,9 @@
-{{#if instructor }}
+{{#if instructorName}}
     <div>
         <div class="row">
             <div class="col-9">
                 <h2><i>Instructor Report For:</i> {{#if instructorName}}
-        {{instructorName.lastName}}, {{instructorName.firstName}}
+        <span id="instructorsName">{{instructorName.lastName}}, {{instructorName.firstName}}</span>
                 {{/if}}</h2>
             </div>
             <div class="col-3">
@@ -52,7 +52,7 @@
 
 <!-- instructorReport -->
 {{else}}
-    <h1>Nothing to display at the moment</h1>
+    <h1 id="nothingToShow">Nothing to display at the moment</h1>
 {{/if}}
 
 
@@ -85,7 +85,7 @@
                         <select class="form-select" id="selectTermInstructorReport" required>
                             <option value="" disabled selected>Select Term</option>
                             {{#each termList}}
-                                <option value="{{this.id}}">{{this.year}} - {{this.termNumber}}</option>
+                                <option value="{{this.id}}">{{this.displayTerm}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -118,12 +118,21 @@
     let selectedTerm;
     // On arrival the modal will open
     window.onload = function(){
+      let instructsName= document.getElementById('instructorsName');
+      let nothingToShow = document.getElementById('nothingToShow');
          submitBtn= document.getElementById("submitBtn");
          selectedInstructor = document.getElementById("selectInstructorInstructorReport");
         selectedTerm = document.getElementById("selectTermInstructorReport");
         const modal = new bootstrap.Modal(document.getElementById("instructorReportModal"));
         submitBtn.disabled = true;
-        modal.show();
+        if(instructsName.innerText === '' || nothingToShow.innerText'Nothing to display at the moment')
+        {
+            modal.show();
+        }
+        else {
+            modal.hide();
+        }
+        //modal.show();
         selectedInstructor.onchange = checkFormSelections;
         selectedTerm.onchange = checkFormSelections;
     }
