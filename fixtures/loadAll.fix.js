@@ -12,7 +12,7 @@ const createAllTables = require('./createTables.fix');
 // eslint-disable-next-line require-jsdoc
 async function loadEverything() {
   await addAssociations();
-  await createAllTables();
+  await createAllTables(true);
   await fillTermTable();
   await fillInstructorTable();
   await fillClassroomTable();

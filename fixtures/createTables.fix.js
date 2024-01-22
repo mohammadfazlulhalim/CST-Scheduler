@@ -8,14 +8,14 @@ const Timeslot = require('../private/javascript/Timeslot');
 const {addAssociations} = require('../private/javascript/Associations');
 
 // eslint-disable-next-line require-jsdoc
-async function createAllTables() {
-  await Classroom.sync({force: true});
-  await Course.sync({force: true});
-  await Instructor.sync({force: true});
-  await ProgramFix.sync({force: true});
-  await Term.sync({force: true});
-  await CourseOffering.sync({force: true});
-  await Timeslot.sync({force: true});
+async function createAllTables(bForce) {
+  await Classroom.sync({force: bForce});
+  await Course.sync({force: bForce});
+  await Instructor.sync({force: bForce});
+  await ProgramFix.sync({force: bForce});
+  await Term.sync({force: bForce});
+  await CourseOffering.sync({force: bForce});
+  await Timeslot.sync({force: bForce});
 }
 
 module.exports = createAllTables;
