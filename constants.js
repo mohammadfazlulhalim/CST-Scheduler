@@ -75,16 +75,16 @@ const testConst = {
     {name: 'Career Path Search', startDate: '2023-09-01', endDate: '2023-12-15', group: 'A'},
   ],
   validTimeslots: [
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '800', endTime: '900', day: 'Monday', group: 'A'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1400', endTime: '1500', day: 'Monday', group: 'A'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '900', endTime: '1000', day: 'Tuesday', group: 'A'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1300', endTime: '1400', day: 'Tuesday', group: 'A'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1000', endTime: '1100', day: 'Wednesday', group: 'A'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1100', endTime: '1200', day: 'Wednesday', group: 'A'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1000', endTime: '1100', day: 'Thursday', group: 'A'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1100', endTime: '1200', day: 'Thursday', group: 'A'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '900', endTime: '1000', day: 'Friday', group: 'A'},
-    {startDate: '2023-09-01', endDate: '2023-12-15', startTime: '1300', endTime: '1400', day: 'Friday', group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '800', endTime: '900', day: 'Monday', group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '1400', endTime: '1500', day: 'Monday', group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '900', endTime: '1000', day: 'Tuesday', group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '1300', endTime: '1400', day: 'Tuesday', group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '1000', endTime: '1100', day: 'Wednesday', group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '1100', endTime: '1200', day: 'Wednesday', group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '1000', endTime: '1100', day: 'Thursday', group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '1100', endTime: '1200', day: 'Thursday', group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '900', endTime: '1000', day: 'Friday', group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '1300', endTime: '1400', day: 'Friday', group: 'A'},
   ],
 
 
@@ -100,7 +100,7 @@ function GenerateTimeSlotData() {
         continue;
       }
       TimeSlotDataArray.push({
-        startDate: '2023-09-01', endDate: '2023-12-15',
+        startDate: '2023-01-01', endDate: '2023-04-01',
         startTime: TimeArray[j], endTime: TimeArray[j+1], day: i, group: 'B',
       });
     }
