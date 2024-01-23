@@ -449,7 +449,7 @@ describe('phoneNum', () => {
     }
 
     expect(instructor).toBeFalsy(); // check that instructor Object is not created
-    expect(errArray[0].message).toBe('Exception \"Phone number can have 10 numeric digits, and/or \"()\", \"-\" sign only\"');
+    expect(errArray[0].message).toBe('Exception \"Phone number can have 10 numeric digits, and/or (), - sign only\"');
     expect(errCount).toBe(2);
 
     if (instructor) { // destroy instructor if created

@@ -61,7 +61,7 @@ const Instructor = sequelize.define('Instructor', {
       },
       len: {
         args: [10, 14],
-        msg: 'Exception "Phone number can have 10 numeric digits, and/or “()”, “-” sign only"',
+        msg: 'Exception "Phone number can have 10 numeric digits, and/or (), - sign only"',
       },
       is: /^\(?[0-9]{3}\)?-?[0-9]{3}-?[0-9]{4}$/,
 
