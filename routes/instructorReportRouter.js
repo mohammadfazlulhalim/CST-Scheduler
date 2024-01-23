@@ -3,6 +3,8 @@ const router = express.Router();
 const Instructor = require('../private/javascript/Instructor');
 const Term = require('../private/javascript/Term');
 const Timeslot = require('../private/javascript/Timeslot');
+const CourseOffering = require('../private/javascript/CourseOffering');
+const Classroom = require('../private/javascript/Classroom');
 const {sequelize} = require('../dataSource');
 const {testConst} = require('../constants');
 const constants = require('constants');
@@ -90,6 +92,8 @@ router.post('/', async function(req, res, next) {
   let instRepTimeslots;
   let instructorName;
   let matrixTable;
+  let program = "";
+  let termName
 
 
   try {
@@ -99,11 +103,27 @@ router.post('/', async function(req, res, next) {
   }
 
   try {
+    termName = await Term.findOne({where: {id: termID}});
+    if (termName.termNumber <= 3) {
+      program= 'CST 1';
+    } else {
+      program = 'CST 2';
+    }
+  } catch (e) {
+    console.log('Couldnt find term');
+
+  }
+
+
+  try {
     instRepTimeslots = await Timeslot.findAll( {
       where: {InstructorId: instructorID, TermId: termID},
       order: [['startTime', 'ASC'], ['day', 'ASC']],
-
     });
+
+
+
+
   } catch (e) {
     console.log('Couldnt find timeslot');
     console.log(e);
@@ -113,7 +133,7 @@ router.post('/', async function(req, res, next) {
   matrixTable=generateSchedule(instRepTimeslots);
 
   // get
-  const program='';
+ // const program='';
   const dateGenerated= new Date();
   const monthArray=['Jan', 'Feb', 'Mar', 'Apr', 'May',
     'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
@@ -122,17 +142,29 @@ router.post('/', async function(req, res, next) {
 
   let instructorList;
   let termList;
+  let newTermList;
 
   try {
     instructorList= await Instructor.findAll({order: ['lastName']});
   } catch (err) {
     instructorList = undefined;
   }
+
   try {
-    termList= await Term.findAll({order: ['termNumber']});
+    termList= await Term.findAll({order: ['startDate', 'termNumber'],
+    });
+    newTermList= termList.map((item)=>{
+      return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
+    });
+
+    newTermList.sort((a, b)=>{
+      return b.displayTerm - a.displayTerm;
+    });
   } catch (err) {
     termList = undefined;
   }
+
+
 
   res.render('instructorReport', {
     instRepTimeslots,
@@ -140,9 +172,10 @@ router.post('/', async function(req, res, next) {
     matrixTable,
     dateGen: dateGenerated.getDate()+'-'+monthArray[dateGenerated.getMonth()]+'-'+dateGenerated.getFullYear(),
     instructorList,
-    termList,
+    termList : newTermList,
     timeDisplayHours,
     showModal: false,
+    program,
   });
 });
 
@@ -153,23 +186,37 @@ router.post('/', async function(req, res, next) {
  * // TODO establish empty cells within the final array
  * //
  */
-function generateSchedule(instRepTimeslots) {
-  const matrixTable = [new Array(5), new Array(5), new Array(5),
-    new Array(5), new Array(5), new Array(5), new Array(5),
-    new Array(5)];
+async function generateSchedule(instRepTimeslots) {
+  const matrixTable = [];
+  let currentCourseOffering;
+  let currentClassroom;
+  for (let i = 0; i < 8; i++) {
+    matrixTable[i] = [
+        {}, {}, {}, {}, {}
+    ]
+  }
+
   const hours = testConst.timeColumn8amTo3pmDisplayArray24Hr;
 
   // eslint-disable-next-line guard-for-in
-  for (const currToDo of instRepTimeslots) {
-    const tDay= currToDo.day-1;
-    const tHour = hours.findIndex((st)=> st === currToDo.startTime);
-    if (currToDo !== undefined && currToDo !== null) {
-      matrixTable[tHour][tDay]= currToDo;
-    } else {
-      matrixTable[tHour][tDay]= 'Nothing to display';
+  for (const timeslot of instRepTimeslots) {
+    const tDay= timeslot.day-1;
+    const tHour = hours.findIndex((st)=> st === timeslot.startTime);
+
+    try {
+      currentCourseOffering = await CourseOffering.findOne({where: {id: timeslot.CourseOfferingId}});
+      currentClassroom = await Classroom.findOne({where: {id: timeslot.ClassroomId}});
+    } catch (err) {
+      console.log('Couldnt find instrcutor');
     }
+
+    // if (timeslot !== undefined && timeslot !== null) {
+      matrixTable[tHour][tDay]= {timeSlot:timeslot, courseOffering:currentCourseOffering, classRoom: currentClassroom};
+    // } else {
+    //   matrixTable[tHour][tDay]= 'Nothing to display';
+    // }
     console.log('Curr to do:');
-    console.log(currToDo);
+    console.log(timeslot);
   }
 
   console.log(matrixTable);
