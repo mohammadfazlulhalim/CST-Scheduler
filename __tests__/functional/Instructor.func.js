@@ -117,7 +117,7 @@ describe('Instructors in database', () => {
     const oldNumInstructors = (await Instructor.findAll()).length;
     // try to update the newly added instructor
     await supertest(app).put('/instructor').send({
-      instructorID: instructorToUpdate.instructorID + 1,
+      id: instructorToUpdate.id +1,
       firstName: instructorToUpdate.firstName,
       lastName: 'NewLastName',
     }).expect(404); // expect 404: not found

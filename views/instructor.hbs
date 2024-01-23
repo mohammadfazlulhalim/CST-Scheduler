@@ -79,9 +79,9 @@
                     <form action="/instructor" method="POST">
                        <div class="modal-body">
                             <label hidden for="eInstructorID">Instructor Number:</label>
-                            <input hidden type="number"
+                            <input hidden type="text"
                                    class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eInstructorID"
-                                   name="instructorID" value="{{putSubmittedInstructor.id}}">
+                                   name="id" value="{{putSubmittedInstructor.id}}">
                             <div class="invalid-feedback">{{putErr.id}}</div>
 
                             <label for="eFirstName">First Name:</label>
@@ -302,7 +302,8 @@
      * @param idToEdit    - The ID of the term being edited
      */
     function handleEditModal(idToEdit) {
-        $('#eInstructorID').val($(`#${idToEdit}number`).text());
+
+        $('#eInstructorID').val(idToEdit);
         $('#eFirstName').val($(`#${idToEdit}firstName`).text());
         $('#eLastName').val($(`#${idToEdit}lastName`).text());
         $('#eOfficeNum').val($(`#${idToEdit}officeNum`).text());

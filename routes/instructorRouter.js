@@ -159,8 +159,7 @@ const updateInstructor = async (instructor) => {
     // only try to update the instructor if it already exists
     try {
       return await instructorToUpdate.update({
-         //id: parseInt(instructor.id),
-        id:50,
+        id: instructor.id,
         firstName: instructor.firstName,
         lastName: instructor.lastName,
         officeNum: instructor.officeNum,
