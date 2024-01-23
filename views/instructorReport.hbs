@@ -34,18 +34,13 @@
 
 <!-- innerloop starts here-->
                     {{#each this}}
-                        {{#if this.timeSlot.startTime}}
-                            <td>{{../../program}}<br>{{this.timeSlot.startTime}}</td>
+                        {{#if timeSlot}}
+                            <td>{{../../program}}<br>{{course.courseCode}}{{courseOffering.group}}<br>{{classRoom.roomNumber}}</td>
                     {{else}}
                         <td></td>
                     {{/if}}
 
                 {{/each}}
-<!--                    <td></td>-->
-<!--                    <td></td>-->
-<!--                    <td></td>-->
-<!--                    <td></td>-->
-<!--                    <td></td>-->
                 </tr>
     {{/each}}
         </tbody>
@@ -55,9 +50,6 @@
 {{else}}
     <h1 id="nothingToShow">Nothing to display at the moment</h1>
 {{/if}}
-
-<p>{{program}}</p>
-
 <!-- modal -->
 <!-- Vertically centered scrollable modal -->
 <div class="modal fade" id="instructorReportModal" tabindex="-1" aria-labelledby="instructorReportModalLabel" aria-hidden="true">

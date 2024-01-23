@@ -129,7 +129,7 @@ router.post('/', async function(req, res, next) {
   }
 
   // eslint-disable-next-line prefer-const
-  matrixTable=generateSchedule(instRepTimeslots);
+  matrixTable=await generateSchedule(instRepTimeslots);
 
   // get
   // const program='';
