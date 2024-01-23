@@ -373,6 +373,24 @@ describe('phoneNum', () => {
     }
   });
 
+  test('testCreatingInstructorWithValidPhoneNumberWithoutBracesAndDash', async function() {
+    testInstructor.phoneNum = '1231111122';
+    let instructor;
+    try {
+      instructor = await Instructor.create(testInstructor);
+    } catch (error) {
+      // If a validation error is thrown, fail the test with an error message
+      err = error.message;
+    }
+
+    expect(instructor).toBeTruthy(); // check that instructor Object is created
+    expect(instructor.phoneNum).toBe(testInstructor.phoneNum); // check that instructor Object phone number is correct
+    expect(err).toBe(''); // check that no errors are thrown
+    if (instructor) { // destroy instructor if created
+      await instructor.destroy();
+    }
+  });
+
   test('testCreatingInstructorWithEmptyPhoneNumber ', async function() {
     testInstructor.phoneNum = '';
     let errCount; let instructor; let errorArray;
@@ -396,7 +414,7 @@ describe('phoneNum', () => {
   });
 
 
-  test('Test Creating Instructor With Phone Number Have Invalid Character ', async function() {
+  test('testCreatingInstructorWithPhoneNumberHaveInvalidCharacter ', async function() {
     testInstructor.phoneNum = '(123)%111-1122'; // define phone number with invalid chars
     let errorArray; let errCount; let instructor;
 
@@ -419,7 +437,7 @@ describe('phoneNum', () => {
   });
 
   test('testCreatingInstructorWithPhoneNumberHaveMoreThan10Digits  ', async function() {
-    testInstructor.phoneNum = '12345623222';
+    testInstructor.phoneNum = '(123)-456-23222';
     let errArray; let errCount;
 
     try {
@@ -431,7 +449,7 @@ describe('phoneNum', () => {
     }
 
     expect(instructor).toBeFalsy(); // check that instructor Object is not created
-    expect(errArray[0].message).toBe('Exception \"Phone number must contain 10 numeric digits\"');
+    expect(errArray[0].message).toBe('Exception \"Phone number can have 10 numeric digits, and/or \"()\", \"-\" sign only\"');
     expect(errCount).toBe(2);
 
     if (instructor) { // destroy instructor if created
