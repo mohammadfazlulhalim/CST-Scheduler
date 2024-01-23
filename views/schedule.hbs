@@ -1,5 +1,5 @@
 <div>
-    <div id="scheduleModal" class="modal fade"  role="dialog" tabindex="-1" aria-labelledby="scheduleModalLabel"
+    <div id="scheduleModal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="scheduleModalLabel"
          aria-hidden="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -12,7 +12,7 @@
                         <div class="mb-3">
                             <label for="termSelect" class="form-label">Term: </label>
                             <select id="termSelect" name="term" onchange="checkEnable()" class="form-select">
-                                <option></option>
+                                <option id="blankTerm"></option>
                                 {{#each terms}}
                                     <option value="{{id}}">{{title}}</option> <!-- fix date in get -->
                                 {{/each}}
@@ -21,7 +21,7 @@
                         <div class="mb-3">
                             <label for="programSelect" class="form-label">Program: </label>
                             <select id="programSelect" name="program" onchange="checkEnable()" class="form-select">
-                                <option></option>
+                                <option id="blankProgram"></option>
                                 {{#each programs}}
                                     <option value="{{id}}">{{programAbbreviation}}</option>
                                 {{/each}}
@@ -30,14 +30,14 @@
                         <div class="mb-3">
                             <label for="groupSelect" class="form-label">Number of Groups: </label>
                             <select id="groupSelect" name="group" onchange="checkEnable()" class="form-select">
-                                <option></option>
+                                <option id="blankGroup"></option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                                 <option value="4">4</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary" disabled>Enter</button>
+                        <button type="submit" class="btn btn-primary" disabled id="modalSubmit">Enter</button>
                     </form>
                 </div>
             </div>
@@ -47,10 +47,13 @@
     <div id="main">
         <!--change this to a loop later-->
         <div id="tabBar">
+            {{#each groupArray}}
+                <button id="btn{{groupLetter}}" onclick="changeGroup('{{groupLetter}}')">Group {{groupLetter}}</button>
 
+            {{/each}}
         </div>
         {{#each groupArray}}
-            <div id="group{{groupLetter}}">
+            <div id="group{{groupLetter}}" hidden>
                 <div id="calender{{groupLetter}}">
                     <h2>Group {{groupLetter}} Calendar</h2>
                     <table class="table">
@@ -107,15 +110,41 @@
 <script>
     'use strict';
     window.onload = function() {
-      if ({{getrequest}}) {
-          const modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
-          modal.show();
-      }
+        const modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
+        {{#if getrequest}}
+            modal.show();
+        {{else}}
+            changeGroup('A');
+        {{/if}}
+
     };
 
-    function checkEnable()
-    {
-        // if()
+    function checkEnable() {
+        let bTermSelected = document.getElementById('termSelect').value !== '';
+        let bProgramSelected = document.getElementById('programSelect').value !== '';
+        let bGroupSelected = document.getElementById('groupSelect').value !== '';
+
+        if (bTermSelected && bProgramSelected && bGroupSelected) {
+            document.getElementById('modalSubmit').removeAttribute('disabled');
+        } else {
+            document.getElementById('modalSubmit').disabled = 'disabled';
+        }
+    }
+
+    function changeGroup(group) {
+        // Disable all groups
+        hideAllGroups();
+        // enable the current one
+        document.getElementById('group' + group).removeAttribute('hidden');
+        //TODO change style for button to selected
+
+    }
+
+    function hideAllGroups() {
+        {{#each groupArray}}
+            document.getElementById("group{{groupLetter}}").setAttribute('hidden', '');
+        {{/each}}
+        //TODO change style for buttons to unselected
     }
 
 </script>
