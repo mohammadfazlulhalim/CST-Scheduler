@@ -53,8 +53,8 @@ async function loadTimeslots() {
     ClassroomId: ClassroomObj.id,
     TermId: coObj2.TermId,
     ProgramId: coObj2.ProgramId,
-    startTime: '14:00',
-    endTime: '15:00',
+    startTime: '15:00',
+    endTime: '16:00',
     day: 1,
     group: coObj2.group,
   };
@@ -84,36 +84,28 @@ async function loadTimeslots() {
   TimeslotAObj.endTime = '12:00';
   await Timeslot.create(TimeslotAObj); // 11-12 Thur
   TimeslotAObj.day = 5;
-  TimeslotAObj.startTime = '13:00';
-  TimeslotAObj.endTime = '14:00';
-  await Timeslot.create(TimeslotAObj); // 1-2 Fri
-  TimeslotAObj.day = 5;
-  TimeslotAObj.startTime = '14:00';
-  TimeslotAObj.endTime = '15:00';
-  await Timeslot.create(TimeslotAObj); // 2-3 Fri
+  TimeslotAObj.startTime = '12:00';
+  TimeslotAObj.endTime = '13:00';
+  await Timeslot.create(TimeslotAObj); // 12-1 Fri
 
   // Group B bottom-left to top-right diagonal
-  await Timeslot.create(TimeslotBObj); // 2-3 Monday
+  await Timeslot.create(TimeslotBObj); // 3-4 Monday
   TimeslotBObj.day = 2;
+  TimeslotBObj.startTime = '14:00';
+  TimeslotBObj.endTime = '15:00';
+  await Timeslot.create(TimeslotBObj); // 2-3 Tue
+  TimeslotBObj.day = 3;
   TimeslotBObj.startTime = '13:00';
   TimeslotBObj.endTime = '14:00';
-  await Timeslot.create(TimeslotBObj); // 1-2 Tue
-  TimeslotBObj.day = 3;
+  await Timeslot.create(TimeslotBObj); // 1-2 Wed
+  TimeslotBObj.day = 4;
+  TimeslotBObj.startTime = '12:00';
+  TimeslotBObj.endTime = '13:00';
+  await Timeslot.create(TimeslotBObj); // 12-1 Thur
+  TimeslotBObj.day = 5;
   TimeslotBObj.startTime = '11:00';
   TimeslotBObj.endTime = '12:00';
-  await Timeslot.create(TimeslotBObj); // 11-12 Wed
-  TimeslotBObj.day = 4;
-  TimeslotBObj.startTime = '10:00';
-  TimeslotBObj.endTime = '11:00';
-  await Timeslot.create(TimeslotBObj); // 10-11 Thur
-  TimeslotBObj.day = 5;
-  TimeslotBObj.startTime = '09:00';
-  TimeslotBObj.endTime = '10:00';
-  await Timeslot.create(TimeslotBObj); // 9-10 Fri
-  TimeslotBObj.day = 5;
-  TimeslotBObj.startTime = '08:00';
-  TimeslotBObj.endTime = '09:00';
-  await Timeslot.create(TimeslotBObj); // 8-9 Fri
+  await Timeslot.create(TimeslotBObj); // 11-12 Fri
 }
 
 module.exports = loadTimeslots;

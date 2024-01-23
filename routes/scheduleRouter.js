@@ -70,8 +70,7 @@ router.post('/', async (req, res, next) => {
         }
         groupArray[i].timeslotMatrix[t][d] = {
           hasObj: false,
-          tTime: t,
-          tDays: d,
+          cellID: t + '-' + d,
           timeslot: timeOb,
         };
       }
@@ -100,9 +99,6 @@ router.post('/', async (req, res, next) => {
     //mapping each timeslot in this group to the matrix
     for (const tSlot of timeslotArray) {
       const formattedTSlot = await formatCellInfo(tSlot);
-      console.log("times "+TIMES.indexOf(tSlot.startTime));
-      console.log("day "+tSlot.day);
-      console.log("ts "+ groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day]);
 
       groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = formattedTSlot;//outer array is days, each inner array is times
     }

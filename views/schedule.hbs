@@ -58,22 +58,22 @@
                     <h2>Group {{groupLetter}} Calendar</h2>
                     <table class="table">
                         <thead>
-                        <th scope="col">
+                        <th scope="col" id="time">
                             Time
                         </th>
-                        <th scope="col">
+                        <th scope="col" id="mon">
                             Monday
                         </th>
-                        <th scope="col">
+                        <th scope="col" id="tues">
                             Tuesday
                         </th>
-                        <th scope="col">
+                        <th scope="col" id="wed">
                             Wednesday
                         </th>
-                        <th scope="col">
+                        <th scope="col" id="thurs">
                             Thursday
                         </th>
-                        <th scope="col">
+                        <th scope="col" id="fri">
                             Friday
                         </th>
                         </thead>
@@ -86,7 +86,7 @@
                                     <!--                                    Do an if/else if it has data - bool created in router-->
                                     <!--                                    Then the 'each' will have different attributes and be loaded differently-->
                                     <!--                                    via html and the router sends attributes-->
-                                    <td>{{this.timeslot}}</td>
+                                    <td id="{{this.cellID}}">{{this.timeslot}}</td>
                                 {{/each}}
                             </tr>
                         {{/each}}
