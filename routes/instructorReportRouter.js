@@ -4,10 +4,12 @@ const Instructor = require('../private/javascript/Instructor');
 const Term = require('../private/javascript/Term');
 const Timeslot = require('../private/javascript/Timeslot');
 const CourseOffering = require('../private/javascript/CourseOffering');
+const Course = require('../private/javascript/Course');
 const Classroom = require('../private/javascript/Classroom');
 const {sequelize} = require('../dataSource');
 const {testConst} = require('../constants');
 const constants = require('constants');
+const defineDB = require('../fixtures/DefineTables');
 
 // TODO: regenerate list on post for modal
 /**
@@ -15,6 +17,7 @@ const constants = require('constants');
  *
  */
 router.get('/', async function(req, res, next) {
+  await defineDB();
   const program='';
   const dateGenerated= new Date();
   const monthArray=['Jan', 'Feb', 'Mar', 'Apr', 'May',
@@ -85,6 +88,7 @@ router.get('/', async function(req, res, next) {
  */
 router.post('/', async function(req, res, next) {
   console.log('We r in post');
+  await defineDB();
   await sequelize.sync();
 
   const instructorID = req.body.selectInstructorReport;
@@ -92,8 +96,8 @@ router.post('/', async function(req, res, next) {
   let instRepTimeslots;
   let instructorName;
   let matrixTable;
-  let program = "";
-  let termName
+  let program = '';
+  let termName;
 
 
   try {
@@ -111,7 +115,6 @@ router.post('/', async function(req, res, next) {
     }
   } catch (e) {
     console.log('Couldnt find term');
-
   }
 
 
@@ -120,10 +123,6 @@ router.post('/', async function(req, res, next) {
       where: {InstructorId: instructorID, TermId: termID},
       order: [['startTime', 'ASC'], ['day', 'ASC']],
     });
-
-
-
-
   } catch (e) {
     console.log('Couldnt find timeslot');
     console.log(e);
@@ -133,7 +132,7 @@ router.post('/', async function(req, res, next) {
   matrixTable=generateSchedule(instRepTimeslots);
 
   // get
- // const program='';
+  // const program='';
   const dateGenerated= new Date();
   const monthArray=['Jan', 'Feb', 'Mar', 'Apr', 'May',
     'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
@@ -165,14 +164,13 @@ router.post('/', async function(req, res, next) {
   }
 
 
-
   res.render('instructorReport', {
     instRepTimeslots,
     instructorName,
     matrixTable,
     dateGen: dateGenerated.getDate()+'-'+monthArray[dateGenerated.getMonth()]+'-'+dateGenerated.getFullYear(),
     instructorList,
-    termList : newTermList,
+    termList: newTermList,
     timeDisplayHours,
     showModal: false,
     program,
@@ -190,10 +188,11 @@ async function generateSchedule(instRepTimeslots) {
   const matrixTable = [];
   let currentCourseOffering;
   let currentClassroom;
+  let currentCourse;
   for (let i = 0; i < 8; i++) {
     matrixTable[i] = [
-        {}, {}, {}, {}, {}
-    ]
+      {}, {}, {}, {}, {},
+    ];
   }
 
   const hours = testConst.timeColumn8amTo3pmDisplayArray24Hr;
@@ -202,19 +201,44 @@ async function generateSchedule(instRepTimeslots) {
   for (const timeslot of instRepTimeslots) {
     const tDay= timeslot.day-1;
     const tHour = hours.findIndex((st)=> st === timeslot.startTime);
-
-    try {
-      currentCourseOffering = await CourseOffering.findOne({where: {id: timeslot.CourseOfferingId}});
-      currentClassroom = await Classroom.findOne({where: {id: timeslot.ClassroomId}});
-    } catch (err) {
-      console.log('Couldnt find instrcutor');
-    }
+    //
+    // try {
+    //   currentCourseOffering = await CourseOffering.findOne({where: {id: timeslot.CourseOfferingId}});
+    //   // eslint-disable-next-line no-unused-vars
+    //   currentCourse = await Course.findOne({where: {id: currentCourseOffering.CourseId}});
+    // } catch (err) {
+    //   console.log('Couldnt find cousroffering ');
+    // }
+    //
+    // try {
+    //   // eslint-disable-next-line no-unused-vars
+    //   currentClassroom = await Classroom.findOne({where: {id: timeslot.ClassroomId}});
+    // } catch (err) {
+    //   console.log('Couldnt find classroom');
+    // }
 
     // if (timeslot !== undefined && timeslot !== null) {
-      matrixTable[tHour][tDay]= {timeSlot:timeslot, courseOffering:currentCourseOffering, classRoom: currentClassroom};
+    // matrixTable[tHour][tDay]= {timeSlot: timeslot,
+    //   courseOffering: currentCourseOffering,
+    //   classRoom: currentClassroom,
+    //   course: currentCourse};
     // } else {
     //   matrixTable[tHour][tDay]= 'Nothing to display';
     // }
+    // eslint-disable-next-line no-unused-vars
+    currentCourseOffering = await timeslot.getCourseOffering();
+
+    // eslint-disable-next-line no-unused-vars
+    currentClassroom = await timeslot.getClassroom();
+
+    currentCourse = await currentCourseOffering.getCourse();
+
+    matrixTable[tHour][tDay]= {timeSlot: timeslot,
+      courseOffering: currentCourseOffering,
+      classRoom: currentClassroom,
+      course: currentCourse};
+
+    // matrixTable[tHour][tDay]= timeslot;
     console.log('Curr to do:');
     console.log(timeslot);
   }
