@@ -11,7 +11,8 @@
                     <form action="/schedule" method="POST">
                         <div class="mb-3">
                             <label for="termSelect" class="form-label">Term: </label>
-                            <select id="termSelect" name="term" class="form-select">
+                            <select id="termSelect" name="term" onchange="checkEnable()" class="form-select">
+                                <option></option>
                                 {{#each terms}}
                                     <option value="{{id}}">{{title}}</option> <!-- fix date in get -->
                                 {{/each}}
@@ -19,7 +20,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="programSelect" class="form-label">Program: </label>
-                            <select id="programSelect" name="program" class="form-select">
+                            <select id="programSelect" name="program" onchange="checkEnable()" class="form-select">
+                                <option></option>
                                 {{#each programs}}
                                     <option value="{{id}}">{{programAbbreviation}}</option>
                                 {{/each}}
@@ -27,14 +29,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="groupSelect" class="form-label">Number of Groups: </label>
-                            <select id="groupSelect" name="group" class="form-select">
+                            <select id="groupSelect" name="group" onchange="checkEnable()" class="form-select">
+                                <option></option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                                 <option value="4">4</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary" disabled>Enter</button>
                     </form>
                 </div>
             </div>
@@ -109,5 +112,10 @@
           modal.show();
       }
     };
+
+    function checkEnable()
+    {
+        // if()
+    }
 
 </script>

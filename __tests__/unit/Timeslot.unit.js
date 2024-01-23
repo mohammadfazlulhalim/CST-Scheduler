@@ -9,56 +9,13 @@ const Term = require("../../private/javascript/Term");
 const Instructor = require("../../private/javascript/Instructor");
 const Program = require("../../private/javascript/Program");
 const Associations = (require('../../private/javascript/Associations'))
+const CreateTables = require('../../fixtures/ClearAndDefineTables');
 
 let timeSlotInstance;
-let classroomCreated;
-let courseofferingCreated;
-
-
-// course offering constant for having one entry
-// in the table after .sync force true is run on the tables
-// const CourseOfferingInstance = {
-//     courseCode: 'COSA280',
-//     termNumber: 4,
-//     group: 'A',
-// }
-
-//
-// /**
-//  * Helper to refresh the db after a describe
-//  *      - reset objects to default constants
-//  *
-//  * @returns {Promise<void>}     the promise can be handled by async
-//  */
-// async function updateDatabase() {
-//     try {
-//         await sequelize.sync();
-//     } catch (err) {
-//         console.error(`Error syncing sequelize:\n${err}`)
-//     }
-//
-//     await Classroom.sync({force: true});
-//     await CourseOffering.sync({force: true});
-//     Associations.addAssociations();
-//
-//     // have a classroom and courseoffering exist during the tests
-//     classroomCreated = await Classroom.create(testConst.roomEntryS38) // 239B
-//     courseofferingCreated = await CourseOffering.create(CourseOfferingInstance);
-//
-//     await Timeslot.sync({force: true});
-//
-//     // the obj literal constant contains a room number and a course offering ID
-//     timeSlotInstance = Object.assign({}, testConst.timeSlot1);
-//
-// }
 
 describe('timeslotStartTime', () => {
     beforeAll(async function() {
-        await Term.sync({force: true});
-        await Instructor.sync({force: true});
-        await Program.sync({force: true});
-        await CourseOffering.sync({force: true});
-        await Classroom.sync({force: true});
+        await CreateTables();
 
         Associations.addAssociations();
         await Term.create(testConst.term1);
@@ -79,11 +36,11 @@ describe('timeslotStartTime', () => {
     // lower bound 24hrs - 00:00
     test('testStartTimeLowerBoundValid', async () => {
         try {
-            timeSlotInstance.starttime = '00:00'
+            timeSlotInstance.startTime = '00:00'
 
-            const createdTimeSlot = await Timeslot.findOne()
+            const createdTimeSlot = await Timeslot.create(timeSlotInstance)
             expect(createdTimeSlot).toBeTruthy()
-            expect(createdTimeSlot.starttime).equals('00:00');
+            expect(createdTimeSlot.startTime).toBe('00:00');
 
         } catch (error) {
             console.error(error.message);
@@ -93,12 +50,11 @@ describe('timeslotStartTime', () => {
     // testing valid at upper bound 23:59
     test('testStartTimeUpperBound24HrsValid', async () => {
         try {
-            timeSlotInstance.starttime = '23:59';
+            timeSlotInstance.startTime = '23:59';
 
-            const createdTimeSlot = await Timeslot.findOne()
+            const createdTimeSlot = await Timeslot.create(timeSlotInstance)
             expect(createdTimeSlot).toBeTruthy()
-            // TODO: Add check that the time is correct
-            expect(createdTimeSlot.starttime).toBe('23:59')
+            expect(createdTimeSlot.startTime).toBe('23:59')
         } catch (error) {
             console.error(error.message);
         }
@@ -107,38 +63,39 @@ describe('timeslotStartTime', () => {
     // testing invalid at 24:00 since max is 23:59
     test('testStartTimeUpperBoundHourInvalid', async () => {
         try {
-            timeSlotInstance.starttime = '24:00';
+            timeSlotInstance.startTime = '24:00';
 
-            const createdTimeSlot = await Timeslot.findOne()
+            const createdTimeSlot = await Timeslot.create(timeSlotInstance)
             fail()
         } catch (error) {
             expect(error.errors.length).toBe(1);
             expect(error.errors[0].message)
-                .toBe('Invalid Start Time for Timeslot');
+                .toBe('Invalid Start Time for TimeSlot');
         }
     })
 
     // random string
     test('testStartTimeInvalid', async () => {
         try {
-            timeSlotInstance.starttime = 'non-numeric';
+            timeSlotInstance.startTime = 'non-numeric';
 
+            const createdTimeSlot = await Timeslot.create(timeSlotInstance)
             fail()
         } catch (error) {
             expect(error.errors.length).toBe(1);
             expect(error.errors[0].message)
-                .toBe('Invalid Start Time for Timeslot');
+                .toBe('Invalid Start Time for TimeSlot');
         }
     })
 
     test('testEndTimeValid', async () => {
         try {
-            timeSlotInstance.starttime = '16:00'
-            timeSlotInstance.endtime = '17:00'
+            timeSlotInstance.startTime = '16:00'
+            timeSlotInstance.endTime = '17:00'
 
-            const createdTimeSlot = await Timeslot.findOne()
+            const createdTimeSlot = await Timeslot.create(timeSlotInstance)
             expect(createdTimeSlot).toBeTruthy()
-            expect(createdTimeSlot.endtime).toBe('17:00')
+            expect(createdTimeSlot.endTime).toBe('17:00')
         } catch (error) {
             console.error(error.message);
         }
@@ -146,25 +103,27 @@ describe('timeslotStartTime', () => {
 
     test('testEndTimeInvalid', async () => {
         try {
-            timeSlotInstance.endtime = 'non-numeric';
+            timeSlotInstance.endTime = 'non-numeric';
 
+            const createdTimeSlot = await Timeslot.create(timeSlotInstance)
             fail()
         } catch (error) {
             expect(error.errors.length).toBe(1);
             expect(error.errors[0].message)
-                .toBe('Invalid End Time for Timeslot');
+                .toBe('Invalid end Time for TimeSlot');
         }
     })
 
 
     test('testDayValid', async () => {
         try {
-            timeSlotInstance.day = 'Tuesday'
+            timeSlotInstance.endTime = '17:00'
+            timeSlotInstance.day = 2
 
-            const createdTimeSlot = await Timeslot.findOne()
+            const createdTimeSlot = await Timeslot.create(timeSlotInstance)
             expect(createdTimeSlot).toBeTruthy()
             // TODO: check that the day is Tuesday
-            expect(createdTimeSlot.day).toBe('Tuesday')
+            expect(createdTimeSlot.day).toBe(2)
         } catch (error) {
             console.error(error.message);
         }
@@ -172,26 +131,27 @@ describe('timeslotStartTime', () => {
 
     test('testDayInvalid', async () => {
         try {
-            timeSlotInstance.day = 'Tuday'
+            timeSlotInstance.day = 7
 
-            const createdTimeSlot = await Timeslot.findOne()
+            const createdTimeSlot = await Timeslot.create(timeSlotInstance)
             fail();
         } catch (error) {
             expect(error.errors.length).toBe(1);
             expect(error.errors[0].message)
-                .toBe('Invalid Day for Timeslot');
+                .toBe('Invalid Day for TimeSlot');
         }
     })
 
     test('testNoAssociationsValid', async () => {
         try {
+            timeSlotInstance.day = 3
             timeSlotInstance.termID = ''
             timeSlotInstance.courseOfferingID = ''
             timeSlotInstance.programID = ''
             timeSlotInstance.roomID = ''
             timeSlotInstance.instructorID = ''
 
-            const createdTimeSlot = await Timeslot.findOne()
+            const createdTimeSlot = await Timeslot.create(timeSlotInstance)
             expect(createdTimeSlot).toBeTruthy()
         } catch (error) {
             console.error(error.message);

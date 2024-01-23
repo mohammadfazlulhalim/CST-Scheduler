@@ -39,8 +39,8 @@ async function loadTimeslots() {
     ClassroomId: ClassroomObj.id,
     TermId: coObj1.TermId,
     ProgramId: coObj1.ProgramId,
-    startTime: '8:00',
-    endTime: '9:00',
+    startTime: '08:00',
+    endTime: '09:00',
     day: 1,
     group: coObj1.group,
   };
@@ -63,7 +63,7 @@ async function loadTimeslots() {
   // Group A top-left to bottom-right diagonal
   const timeslotCreated = await Timeslot.create(TimeslotAObj); // 8-9 Monday
   TimeslotAObj.day = 2;
-  TimeslotAObj.startTime = '9:00';
+  TimeslotAObj.startTime = '09:00';
   TimeslotAObj.endTime = '10:00';
 
   const response = await Timeslot.findByPk(timeslotCreated.id, {include: CourseOffering});
@@ -107,12 +107,12 @@ async function loadTimeslots() {
   TimeslotBObj.endTime = '11:00';
   await Timeslot.create(TimeslotBObj); // 10-11 Thur
   TimeslotBObj.day = 5;
-  TimeslotBObj.startTime = '9:00';
+  TimeslotBObj.startTime = '09:00';
   TimeslotBObj.endTime = '10:00';
   await Timeslot.create(TimeslotBObj); // 9-10 Fri
   TimeslotBObj.day = 5;
-  TimeslotBObj.startTime = '8:00';
-  TimeslotBObj.endTime = '9:00';
+  TimeslotBObj.startTime = '08:00';
+  TimeslotBObj.endTime = '09:00';
   await Timeslot.create(TimeslotBObj); // 8-9 Fri
 }
 

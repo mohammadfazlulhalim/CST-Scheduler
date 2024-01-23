@@ -5,6 +5,13 @@ const Instructor = require('../javascript/Instructor');
 const Program = require('../javascript/Program');
 const Room = require('../javascript/Classroom');
 
+// constant stores the regex for validating 12 or 24hr time
+// valid upper: 00:00
+// valid lower: 23:59
+// invalid fail: 24:00
+// could be better to just store 24 hour time for better comparison...
+const regexTimeString = `^([01][0-9]|2[0-3]):([0-5][0-9])$`;
+
 /**
  * This class stores objects that represent course offerings to be used in the CST Scheduler.
  */
@@ -26,14 +33,36 @@ const Timeslot = sequelize.define('Timeslot', {
 
     startTime: {
         type: DataTypes.TIME,
+        validate: {
+            is: {
+                args: regexTimeString,
+                msg: `Invalid Start Time for TimeSlot`
+            }, //regex for time string
+        },
     },
 
     endTime: {
         type: DataTypes.TIME,
+        validate: {
+            is: {
+                args: regexTimeString,
+                msg: `Invalid end Time for TimeSlot`
+            }, //regex for time string
+        },
     },
 
     day: {
         type: DataTypes.NUMBER,
+        validate: {
+            min: {
+                args: -1,
+                msg: 'Invalid Day for TimeSlot',
+            },
+            max: {
+                args: 6,
+                msg: 'Invalid Day for TimeSlot',
+            },
+        },
     },
 
     group: {

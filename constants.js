@@ -45,11 +45,11 @@ const testConst = {
     },
 
     timeSlot1: {
-        starttime: '10:00', // The value is 24h for now
-        endtime: '11:00', // replaced duration for now
+        startTime: '10:00', // The value is 24h for now
+        endTime: '11:00', // replaced duration for now
         startDate: '2023-09-01',
         endDate: '2023-12-15',
-        day: 'Wednesday',
+        day: 3,
         group: 'B',
         roomID: 1,
         termID: 1,
@@ -61,7 +61,7 @@ const testConst = {
     timeSlotLowerBound: {
         starttime: '00:00', // The value is 24h for now
         endtime: '23:59',
-        day: 'Wednesday',
+        day: 0,
         roomID: `239B`,
         courseOfferingID: 1,
     },
