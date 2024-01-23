@@ -44,7 +44,7 @@ router.post('/', async (req, res, next) => {
 
   const GROUP_LETTERS = ['A', 'B', 'C', 'D'];
   const DAYS = [0, 1, 2, 3, 4, 5];
-  const TIMES = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+  const TIMES = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
 
   // const timeslotMatrix = [[], [] , [], [], []];
   let timeslotArray = new Array(req.body.group);
@@ -100,6 +100,10 @@ router.post('/', async (req, res, next) => {
     //mapping each timeslot in this group to the matrix
     for (const tSlot of timeslotArray) {
       const formattedTSlot = await formatCellInfo(tSlot);
+      console.log("times "+TIMES.indexOf(tSlot.startTime));
+      console.log("day "+tSlot.day);
+      console.log("ts "+ groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day]);
+
       groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = formattedTSlot;//outer array is days, each inner array is times
     }
     groupLetters[i] = GROUP_LETTERS[i];
@@ -117,12 +121,11 @@ router.post('/', async (req, res, next) => {
 
 async function formatCellInfo(tSlot) {
   coObj = await tSlot.getCourseOffering();
+  prObj = await tSlot.getProgram();
+  insObj = await tSlot.getInstructor();
   cObj = await coObj.getCourse();
 
-
-  insObj = await tSlot.getInstructor();
-
-  return cObj.courseCode + '    ' + insObj.lastName;
+  return prObj.programAbbreviation + '\n' + cObj.courseCode + '\n' + insObj.lastName;
 
 }
 
