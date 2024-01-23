@@ -1,9 +1,12 @@
+{{#if matrixTable.length}}
+    <p> helllllloooooooooo</p>
+{{/if}}
 {{#if instructorName}}
     <div>
         <div class="row">
             <div class="col-9">
                 <h2><i>Instructor Report For:</i> {{#if instructorName}}
-        <span id="instructorsName">{{instructorName.lastName}}, {{instructorName.firstName}}</span>
+       {{instructorName.lastName}}, {{instructorName.firstName}}
                 {{/if}}</h2>
             </div>
             <div class="col-3">
@@ -15,10 +18,7 @@
         <thead>
 
         <tr>
-            <th class="text-center" scope="col">Time</th>
-<!--            {{#each weekdayList}}-->
-
-<!--            {{/each}}-->
+<!--            <th class="text-center" scope="col">Time</th>-->
             <th class="text-center" scope="col">Monday</th>
             <th class="text-center" scope="col">Tuesday</th>
             <th class="text-center" scope="col">Wednesday</th>
@@ -29,24 +29,29 @@
         <tbody>
 <!--        TODO PLACE TWO LOOPS FOR TIMESLOT LIST AND DAY LIST - CODE TIMESLOT TO RUN IN CONJUNCTION WITH THE DAY LOOP-->
 <!--        TODO establish a 2d array before sending it via render to this hbs view-->
-            {{#each timeDisplayHours}}
+    {{#each matrixTable}}
                 <tr>
-                    <td class="text-center">
-                        {{this}}
-                    </td>
-                    {{#if matrixTable}}
-                        <td>
-                            hi
-                        </td>
+<!--                    <td class="text-center">-->
+<!--                       8:00-->
+<!--                    </td>-->
+
+
+                    {{#each this}}
+
+                        {{#if this.startTime}}
+                            <td>{{this.startTime}} <br>{{this.day}}</td>
                     {{else}}
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                        <td>YOYOYOYOY</td>
                     {{/if}}
+
+                {{/each}}
+<!--                    <td></td>-->
+<!--                    <td></td>-->
+<!--                    <td></td>-->
+<!--                    <td></td>-->
+<!--                    <td></td>-->
                 </tr>
-            {{/each}}
+    {{/each}}
         </tbody>
     </table>
 
@@ -65,7 +70,7 @@
                 <h5 class="modal-title" id="instructorReportModalLabel">Create an Instructor Report For: </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-<!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY-->
+<!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
             <div class="modal-body">
 <!--                form begins here-->
                 <form method="POST" action="/instructorReport">
@@ -75,14 +80,14 @@
                         <select name="selectInstructorReport" class="form-select" id="selectInstructorInstructorReport" required>
                             <option value="" disabled selected>Select Instructor</option>
                             {{#each instructorList}}
-                                <option value="{{this.instructorID}}">{{this.lastName}}, {{this.firstName}}</option>
+                                <option value="{{this.id}}">{{this.lastName}}, {{this.firstName}}</option>
                             {{/each}}
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="selectTermInstructorReport" class="form-label mt-4">Terms</label>
-                        <select class="form-select" id="selectTermInstructorReport" required>
+                        <select name="selectTermInstructorReport" class="form-select" id="selectTermInstructorReport" required>
                             <option value="" disabled selected>Select Term</option>
                             {{#each termList}}
                                 <option value="{{this.id}}">{{this.displayTerm}}</option>
@@ -101,12 +106,18 @@
         </div>
     </div>
 </div>
-
 <div class="btnPairsCustom">
     <button id="newInstructorReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#instructorReportModal">
         New Report</button>
     <button class="btn btn-outline-success" onclick="window.print()">Print this page</button>
 </div>
+{{#each matrixTable as |row rowIndex|}}
+    <h2>
+        {{#each row as |element columnIndex|}}
+            <p>{{element}}<br>Index: {{rowIndex}} - {{columnIndex}}</p>
+        {{/each}}
+    </h2>
+{{/each}}
 <script defer>
     'use strict';
     // $('#createAbbr').val("");
@@ -118,21 +129,18 @@
     let selectedTerm;
     // On arrival the modal will open
     window.onload = function(){
-      let instructsName= document.getElementById('instructorsName');
-      let nothingToShow = document.getElementById('nothingToShow');
          submitBtn= document.getElementById("submitBtn");
          selectedInstructor = document.getElementById("selectInstructorInstructorReport");
         selectedTerm = document.getElementById("selectTermInstructorReport");
         const modal = new bootstrap.Modal(document.getElementById("instructorReportModal"));
         submitBtn.disabled = true;
-        if(instructsName.innerText === '' || nothingToShow.innerText'Nothing to display at the moment')
-        {
+
+        {{#if showModal}}
             modal.show();
-        }
-        else {
-            modal.hide();
-        }
-        //modal.show();
+        {{/if}}
+
+
+
         selectedInstructor.onchange = checkFormSelections;
         selectedTerm.onchange = checkFormSelections;
     }

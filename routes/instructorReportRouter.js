@@ -71,6 +71,7 @@ router.get('/', async function(req, res, next) {
     instructorList,
     termList: newTermList,
     timeDisplayHours,
+    showModal: true,
   });
 });
 
@@ -92,10 +93,9 @@ router.post('/', async function(req, res, next) {
 
 
   try {
-    instructorName = await Instructor.findOne({where: {InstructorId: instructorID}});
+    instructorName = await Instructor.findOne({where: {id: instructorID}});
   } catch (err) {
     console.log('Couldnt find instrcutor');
-    instructorName = 'Bob';
   }
 
   try {
@@ -119,7 +119,6 @@ router.post('/', async function(req, res, next) {
     'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
   const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
 
-  // TODO REMOVE THIS TEMPORARY CALL TO
 
   let instructorList;
   let termList;
@@ -143,6 +142,7 @@ router.post('/', async function(req, res, next) {
     instructorList,
     termList,
     timeDisplayHours,
+    showModal: false,
   });
 });
 
@@ -160,11 +160,19 @@ function generateSchedule(instRepTimeslots) {
   const hours = testConst.timeColumn8amTo3pmDisplayArray24Hr;
 
   // eslint-disable-next-line guard-for-in
-  for (const currToDo in instRepTimeslots) {
+  for (const currToDo of instRepTimeslots) {
     const tDay= currToDo.day-1;
     const tHour = hours.findIndex((st)=> st === currToDo.startTime);
-    matrixTable[tHour][tDay]= currToDo;
+    if (currToDo !== undefined && currToDo !== null) {
+      matrixTable[tHour][tDay]= currToDo;
+    } else {
+      matrixTable[tHour][tDay]= 'Nothing to display';
+    }
+    console.log('Curr to do:');
+    console.log(currToDo);
   }
+
+  console.log(matrixTable);
 
   return matrixTable;
 }
