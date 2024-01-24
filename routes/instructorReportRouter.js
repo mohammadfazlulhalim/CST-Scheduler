@@ -11,44 +11,41 @@ const {testConst} = require('../constants');
 const constants = require('constants');
 const defineDB = require('../fixtures/DefineTables');
 
-
 // global constants here to work with time arrays
 const hours24 = testConst.timeColumn8amTo3pmDisplayArray24Hr;
-const hours12 = testConst.timeColumn8amTo3pmDisplayArray
+const hours12 = testConst.timeColumn8amTo3pmDisplayArray;
 
 
-
-// TODO: regenerate list on post for modal
 /**
  * Processing GET request for rendering the instructor report page.
  *
  */
 router.get('/', async function(req, res, next) {
+  // redefine database
   await defineDB();
   const program='';
   const dateGenerated= new Date();
   const monthArray=['Jan', 'Feb', 'Mar', 'Apr', 'May',
     'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
   const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
-
-  // TODO REMOVE THIS TEMPORARY CALL TO
-
   let instructorList;
   let termList;
   let newTermList;
-
+  // try to find all the instructors
   try {
     instructorList= await Instructor.findAll({order: ['lastName']});
   } catch (err) {
     instructorList = undefined;
   }
+  // try to find all the terms
   try {
     termList= await Term.findAll({order: ['startDate', 'termNumber'],
     });
+    // add the year
     newTermList= termList.map((item)=>{
       return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
     });
-
+    // sort based on the year
     newTermList.sort((a, b)=>{
       return b.displayTerm - a.displayTerm;
     });
@@ -56,30 +53,7 @@ router.get('/', async function(req, res, next) {
     termList = undefined;
   }
 
-
-  // const instructor={
-  //   lastName: 'BensonBenson',
-  //   firstName: 'Onisheknooo',
-  // };
-
-  // const t={
-  //   c: 'CSEC280B',
-  //   roomNum: 244,
-  //   term: 2,
-  // };
-
-
-  // if (t.term > 3) {
-  //   program = 'CST 2';
-  // } else {
-  //   program ='CST 1';
-  // }
-
   res.render('instructorReport', {
-    // instructor,
-    // timeslot: t,
-    // programYear: program,
-    // dateGen: dateGenerated.getDate()+'-'+monthArray[dateGenerated.getMonth()]+'-'+dateGenerated.getFullYear(),
     instructorList,
     termList: newTermList,
     timeDisplayHours,
@@ -94,68 +68,68 @@ router.get('/', async function(req, res, next) {
  * for the requested instructor(s)
  */
 router.post('/', async function(req, res, next) {
-  console.log('We r in post');
+  // redefine the database
   await defineDB();
   await sequelize.sync();
-
-  const instructorID = req.body.selectInstructorReport;
-  const termID = req.body.selectTermInstructorReport;
+  const instructorID = req.body.selectInstructorReport; // from the modal selection
+  const termID = req.body.selectTermInstructorReport; // from the modal selection
   let instRepTimeslots;
   let instructorName;
   let matrixTable;
   let program = '';
   let termName;
+  const dateGenerated= new Date();
+  const monthArray=['Jan', 'Feb', 'Mar', 'Apr', 'May',
+    'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+  const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
+  let instructorList;
+  let termList;
+  let newTermList;
 
-
+  // try to find the instructor selected
   try {
     instructorName = await Instructor.findOne({where: {id: instructorID}});
   } catch (err) {
-    console.log('Couldnt find instrcutor');
+    instructorName=undefined;
   }
-
+  // try to find the term selected
   try {
     termName = await Term.findOne({where: {id: termID}});
+    // based on the term define the program year
     if (termName.termNumber <= 3) {
       program= 'CST 1';
     } else {
       program = 'CST 2';
     }
   } catch (e) {
-    console.log('Couldnt find term');
+    termName=undefined;
   }
 
-
+  // try to find the time slots based on selections
   try {
     instRepTimeslots = await Timeslot.findAll( {
       where: {InstructorId: instructorID, TermId: termID},
       order: [['startTime', 'ASC'], ['day', 'ASC']],
     });
   } catch (e) {
-    console.log('Couldnt find timeslot');
-    console.log(e);
+    instRepTimeslots=undefined;
   }
 
+
+  // generates the schedule
   // eslint-disable-next-line prefer-const
   matrixTable = await generateSchedule(instRepTimeslots);
 
-  // get
-  // const program='';
-  const dateGenerated= new Date();
-  const monthArray=['Jan', 'Feb', 'Mar', 'Apr', 'May',
-    'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-  const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
 
-
-  let instructorList;
-  let termList;
-  let newTermList;
-
+  // The same code from get to put back in options in the drop down in modal
+  // find all instructors
   try {
     instructorList= await Instructor.findAll({order: ['lastName']});
   } catch (err) {
     instructorList = undefined;
   }
 
+  // find all the terms
   try {
     termList= await Term.findAll({order: ['startDate', 'termNumber'],
     });
@@ -186,7 +160,6 @@ router.post('/', async function(req, res, next) {
 });
 
 
-
 /**
  * Helper function for the POST.
  * Help to gather timeslots for instructor
@@ -202,45 +175,41 @@ async function generateSchedule(instRepTimeslots) {
   // import both the 24 hr and 12 hr array to use them for checks and display respectively
   for (let i = 0; i < hours24.length; i++) {
     matrixTable[i] = [
-      //columns:
+      // columns:
       // time  m   t  w   r  f
-      {timeRow: ""},     {}, {}, {}, {}, {},
+      {timeRow: ''}, {}, {}, {}, {}, {},
     ];
   }
 
   // eslint-disable-next-line guard-for-in
+  // for every entry in the timeslots
   for (const timeslot of instRepTimeslots) {
+    // make day one less (offset)
     const tDay= timeslot.day-1;
     const tHour = hours24.findIndex((st)=> st === timeslot.startTime);
 
+    // try to find the course, courseoffering and course for this timeslot object entry
     try {
       currentCourseOffering = await timeslot.getCourseOffering();
       currentClassroom = await timeslot.getClassroom();
       currentCourse = await currentCourseOffering.getCourse();
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
-
-    // TODO FIX INCREMENT TO AVOID MISPLACED TIMESLOTS IN ARRAY
+    // put the items in the array
     matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
       courseOffering: currentCourseOffering,
       classRoom: currentClassroom,
       course: currentCourse};
-
-    // matrixTable[tHour][tDay]= timeslot;
-    console.log('Curr to do:');
-    console.log(timeslot);
   }
 
-  // TODO fix the 24 hour time label to be 24 hours
+  // place the hours
   for (let i = 0; i < matrixTable.length; i++) {
     for (let j = 0; j < matrixTable[i].length; j++) {
-     matrixTable[i][0].timeRow = hours12[i];
+      matrixTable[i][0].timeRow = hours12[i];
     }
   }
 
-  // TODO remove this matrix table console log
-  console.log(matrixTable);
 
   return matrixTable;
 }
