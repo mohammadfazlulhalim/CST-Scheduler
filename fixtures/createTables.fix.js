@@ -9,6 +9,7 @@ const {addAssociations} = require('../private/javascript/Associations');
 
 // eslint-disable-next-line require-jsdoc
 async function createAllTables(bForce) {
+  await addAssociations();
   await Classroom.sync({force: bForce});
   await Course.sync({force: bForce});
   await Instructor.sync({force: bForce});

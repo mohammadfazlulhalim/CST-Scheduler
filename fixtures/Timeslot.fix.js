@@ -5,7 +5,7 @@ const Classroom = require('../private/javascript/Classroom');
 const Term = require('../private/javascript/Term');
 const courseOffering = require('../private/javascript/CourseOffering');
 const constants = require('../constants');
-const {GenerateTimeSlotData} = require('../constants');
+const {GenerateTimeSlotData, testConst} = require('../constants');
 
 /**
  * This clears the table for Classroom and then recreates the table
@@ -33,22 +33,19 @@ async function createTimeslot() {
     RealTimeSlots[i].setInstructor(instructor);
     RealTimeSlots[i].setClassroom(classroom);
     RealTimeSlots[i].setInstructor(await Instructor.findByPk((i%constants.testConst.validInstructor.length)+1));
+    RealTimeSlots[i].setCourseOffering(await courseOffering.findByPk((i%constants.testConst.validCourseOfferingsB.length)+2));
   }
-  const TimeSlotsArray2 = GenerateTimeSlotData();
 
-   classroom = await Classroom.findByPk(1);
+  classroom = await Classroom.findByPk(1);
 
   for (let i=0; i<RealTimeSlots2.length; i++) {
-    RealTimeSlots[i].setTerm(term);
-    RealTimeSlots[i].setProgram(program);
-    RealTimeSlots[i].setInstructor(instructor);
-    RealTimeSlots[i].setClassroom(classroom);
-    RealTimeSlots[i].setInstructor(await Instructor.findByPk((i%constants.testConst.validInstructor.length)+1));
+    RealTimeSlots2[i].setTerm(term);
+    RealTimeSlots2[i].setProgram(program);
+    RealTimeSlots2[i].setInstructor(instructor);
+    RealTimeSlots2[i].setClassroom(classroom);
+    RealTimeSlots2[i].setInstructor(await Instructor.findByPk((i%constants.testConst.validInstructor.length)+1));
+    RealTimeSlots2[i].setCourseOffering(await courseOffering.findByPk((i%constants.testConst.validCourseOfferingsA.length)+9));
   }
-
-
-
 }
-
 
 module.exports = fillTimeslotTable;

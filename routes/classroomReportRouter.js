@@ -15,6 +15,7 @@ router.get('/', async (req, res, next) => {
     title: 'Classroom Report',
     terms,
     classrooms,
+    showModal: true,
   });
 });
 router.post('/', async (req, res, next) => {
@@ -24,32 +25,54 @@ router.post('/', async (req, res, next) => {
 
   // const hardTerm = await Term.findOne({where: {startDate: testConst.term1.startDate}}); //change to ID later
   // const hardProg = await Program.findOne({where: {programAbbreviation: testConst.program1.programAbbreviation}}); //change to id later
-  const  realTerm = await term.findOne({where: {id: req.body.term}});
-  const  realClassroom = await classroom.findOne({where: {id: req.body.classroom}});
+  const realTerm = await term.findOne({where: {id: req.body.term}});
+  const realClassroom = await classroom.findOne({where: {id: req.body.classroom}});
 
   const TimeSlots = await generateSchedule(realTerm.startDate, realTerm.endDate, realClassroom);
-
-  //not gpt generated trust
-  const ScheduleArray = Array.from({ length: 8 }, () => Array(5));
-  // const ScheduleArray = [Array(5),Array(5),Array(5),Array(5),Array(5),Array(5),Array(5),];
-
+  const hasTimeSlots = TimeSlots.length >0;
+  let ScheduleArray;
+  const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   const TIMES = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
 
-  for (let ts of TimeSlots) {
-     ScheduleArray[TIMES.indexOf(ts.startTime)][ts.day] = ts;
+  if (hasTimeSlots) {
+    ScheduleArray = Array.from({length: 8}, () => Array(5));
+
+    for (let i = 0; i < ScheduleArray.length; i++) {
+      for (let j = 0; j < ScheduleArray[i].length; j++) {
+        ScheduleArray[i][j] = null;
+      }
+    }
+
+    for (const ts of TimeSlots) {
+      const currentCourseOffering = await ts.getCourseOffering();
+      const currentInstructorOffering = await ts.getInstructor();
+      const currentCourse= await currentCourseOffering.getCourse();
+
+      ScheduleArray[TIMES.indexOf(ts.startTime)][ts.day -1] =
+        {timeSlot: ts,
+          courseOffering: currentCourseOffering,
+          course: currentCourse,
+          Instructor: currentInstructorOffering,
+        };
+    }
   }
 
-  res.render('schedule', {
+
+  res.render('classroomReport', {
     ScheduleArray,
-    DAYS,
     TIMES,
+    realClassroom,
+    DAYS,
+    hasTimeSlots,
   });
 });
 
- function generateSchedule(startDate, endDate, classroom) {
-  return   timeslot.findAll({
+// eslint-disable-next-line require-jsdoc
+function generateSchedule(startDate, endDate, classroom) {
+  return timeslot.findAll({
     where: {startDate, endDate, ClassroomId: classroom.id},
   });
 }
+
 
 module.exports = {router};

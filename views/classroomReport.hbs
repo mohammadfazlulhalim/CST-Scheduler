@@ -1,39 +1,52 @@
-{{#if timeslots}}
+{{#if hasTimeSlots}}
     <div>
         <div class="row">
             <div class="col-9">
-                <h2><i>Lab Schedule for:</i>{{classroom}}</h2>
+                <h2><i>Lab Schedule for:</i> {{realClassroom.roomNumber}}</h2>
             </div>
             <div class="col-3">
-                <small>Report Generated: {{dateGenerated}}</small>
+                <small>Report Generated:{{dateGenerated}}</small>
             </div>
         </div>
     </div>
-    <table>
-        <tr>
-            <th>Time</th>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-        </tr>
-        {{#each timeslot}}
-            <tr>
-                <td id="time">...</td>
-                <td>...</td>
-                <td>...</td>
-                <td>...</td>
-                <td>...</td>
-                <td>...</td>
-            </tr>
-        {{/each}}
-
-    </table>
-
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered border-dark">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th class="text-center align-content-center m-auto" scope="col">Time</th>
+                            {{#each DAYS}}
+                                <th scope="col" class="text-center align-content-center m-auto">{{this}}</th>
+                            {{/each}}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each ScheduleArray}}
+                            <tr>
+                                <th class="text-center align-content-center m-auto">{{lookup ../TIMES @index}}</th>
+                                {{#each this}}
+                                    <td>
+                                        <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                                            <p class="text-break mb-0">{{this.course.courseCode}}</p>
+                                            <p class=" text-break mb-0">{{this.Instructor.lastName}}</p>
+                                        </div>
+                                    </td>
+                                {{/each}}
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 {{else}}
     <h1>Nothing to display at the moment</h1>
 {{/if}}
+
+
 <div id="classroomReportInfoModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -68,10 +81,20 @@
 </div>
 
 <script>
+
     'use strict';
-    window.onload = function() {
-        const modal = new bootstrap.Modal(document.getElementById('classroomReportInfoModal'));
-        modal.show();
-    };
+
+        window.onload = function() {
+            const modal = new bootstrap.Modal(document.getElementById('classroomReportInfoModal'));
+
+            if ({{showModal}})
+            {
+                modal.show();
+            }
+        };
+
+
+
+
 
 </script>

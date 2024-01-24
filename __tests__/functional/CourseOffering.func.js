@@ -8,6 +8,7 @@ const app = require('../../app');
 // const Associations = require("../../private/javascript/Associations");
 const SuperTest = require('supertest');
 const CourseOfferingScript = require('../../fixtures/AssociatedCourseOffering.fix');
+const CreateAllTables = require('../../Fixtures/createTables.fix');
 
 
 describe('Functional Course Offering', () => {
@@ -17,6 +18,7 @@ describe('Functional Course Offering', () => {
 
   // refresh before each test
   beforeEach(async function() {
+    await CreateAllTables(true);
     courseObj = await CourseOfferingScript();
     await CourseOffering.sync({force: true});
     testCourseOffering1 = courseObj.offering1;

@@ -5,8 +5,8 @@ const {DataTypes, sequelize} = require('../../datasource');
 const Instructor = sequelize.define('Instructor', {
   instructorID: {
     type: DataTypes.INTEGER,
-    allowNull: false, // Can't be null
     primaryKey: true,
+    autoIncrement: true,
   },
   firstName: {
     type: DataTypes.STRING,
