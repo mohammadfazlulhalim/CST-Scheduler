@@ -11,6 +11,13 @@ const {testConst} = require('../constants');
 const constants = require('constants');
 const defineDB = require('../fixtures/DefineTables');
 
+
+// global constants here to work with time arrays
+const hours24 = testConst.timeColumn8amTo3pmDisplayArray24Hr;
+const hours12 = testConst.timeColumn8amTo3pmDisplayArray
+
+
+
 // TODO: regenerate list on post for modal
 /**
  * Processing GET request for rendering the instructor report page.
@@ -129,7 +136,7 @@ router.post('/', async function(req, res, next) {
   }
 
   // eslint-disable-next-line prefer-const
-  matrixTable=await generateSchedule(instRepTimeslots);
+  matrixTable = await generateSchedule(instRepTimeslots);
 
   // get
   // const program='';
@@ -167,6 +174,7 @@ router.post('/', async function(req, res, next) {
   res.render('instructorReport', {
     instRepTimeslots,
     instructorName,
+    termName,
     matrixTable,
     dateGen: dateGenerated.getDate()+'-'+monthArray[dateGenerated.getMonth()]+'-'+dateGenerated.getFullYear(),
     instructorList,
@@ -176,6 +184,7 @@ router.post('/', async function(req, res, next) {
     program,
   });
 });
+
 
 
 /**
@@ -189,51 +198,31 @@ async function generateSchedule(instRepTimeslots) {
   let currentCourseOffering;
   let currentClassroom;
   let currentCourse;
-  for (let i = 0; i < 8; i++) {
+
+  // import both the 24 hr and 12 hr array to use them for checks and display respectively
+  for (let i = 0; i < hours24.length; i++) {
     matrixTable[i] = [
-      {}, {}, {}, {}, {},
+      //columns:
+      // time  m   t  w   r  f
+      {timeRow: ""},     {}, {}, {}, {}, {},
     ];
   }
-
-  const hours = testConst.timeColumn8amTo3pmDisplayArray24Hr;
 
   // eslint-disable-next-line guard-for-in
   for (const timeslot of instRepTimeslots) {
     const tDay= timeslot.day-1;
-    const tHour = hours.findIndex((st)=> st === timeslot.startTime);
-    //
-    // try {
-    //   currentCourseOffering = await CourseOffering.findOne({where: {id: timeslot.CourseOfferingId}});
-    //   // eslint-disable-next-line no-unused-vars
-    //   currentCourse = await Course.findOne({where: {id: currentCourseOffering.CourseId}});
-    // } catch (err) {
-    //   console.log('Couldnt find cousroffering ');
-    // }
-    //
-    // try {
-    //   // eslint-disable-next-line no-unused-vars
-    //   currentClassroom = await Classroom.findOne({where: {id: timeslot.ClassroomId}});
-    // } catch (err) {
-    //   console.log('Couldnt find classroom');
-    // }
+    const tHour = hours24.findIndex((st)=> st === timeslot.startTime);
 
-    // if (timeslot !== undefined && timeslot !== null) {
-    // matrixTable[tHour][tDay]= {timeSlot: timeslot,
-    //   courseOffering: currentCourseOffering,
-    //   classRoom: currentClassroom,
-    //   course: currentCourse};
-    // } else {
-    //   matrixTable[tHour][tDay]= 'Nothing to display';
-    // }
-    // eslint-disable-next-line no-unused-vars
-    currentCourseOffering = await timeslot.getCourseOffering();
+    try {
+      currentCourseOffering = await timeslot.getCourseOffering();
+      currentClassroom = await timeslot.getClassroom();
+      currentCourse = await currentCourseOffering.getCourse();
+    } catch (e) {
+      console.error(e)
+    }
 
-    // eslint-disable-next-line no-unused-vars
-    currentClassroom = await timeslot.getClassroom();
-
-    currentCourse = await currentCourseOffering.getCourse();
-
-    matrixTable[tHour][tDay]= {timeSlot: timeslot,
+    // TODO FIX INCREMENT TO AVOID MISPLACED TIMESLOTS IN ARRAY
+    matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
       courseOffering: currentCourseOffering,
       classRoom: currentClassroom,
       course: currentCourse};
@@ -243,6 +232,14 @@ async function generateSchedule(instRepTimeslots) {
     console.log(timeslot);
   }
 
+  // TODO fix the 24 hour time label to be 24 hours
+  for (let i = 0; i < matrixTable.length; i++) {
+    for (let j = 0; j < matrixTable[i].length; j++) {
+     matrixTable[i][0].timeRow = hours12[i];
+    }
+  }
+
+  // TODO remove this matrix table console log
   console.log(matrixTable);
 
   return matrixTable;

@@ -11,11 +11,15 @@
             </div>
         </div>
     </div>
+<!--    TODO place a term info here if possible-->
+
     <table class="table table-bordered table-hover">
         <thead>
 
+<!--        Header Row-->
         <tr>
-<!--            <th class="text-center" scope="col">Time</th>-->
+<!--            6 columns designated    -->
+            <th class="text-center" scope="col">Time</th>
             <th class="text-center" scope="col">Monday</th>
             <th class="text-center" scope="col">Tuesday</th>
             <th class="text-center" scope="col">Wednesday</th>
@@ -36,11 +40,14 @@
                     {{#each this}}
                         {{#if timeSlot}}
                             <td>{{../../program}}<br>{{course.courseCode}}{{courseOffering.group}}<br>{{classRoom.roomNumber}}</td>
-                    {{else}}
-                        <td></td>
-                    {{/if}}
-
-                {{/each}}
+                        {{else}}
+                            {{#if timeRow}}
+                                <td>{{timeRow}}</td>
+                            {{else}}
+                                <td></td>
+                            {{/if}}
+                        {{/if}}
+                    {{/each}}
                 </tr>
     {{/each}}
         </tbody>
