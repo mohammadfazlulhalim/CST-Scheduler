@@ -15,14 +15,16 @@ describe('template spec', () => {
       const expectedOptions = ['Select Classroom', '239A', '239B', '240B', '242C'];
       expect(selectOptions).to.include.members(expectedOptions); // Check if all expected options are present
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
-    });
+    }).parent().select('239B');
     cy.get('#termSelect').children('option').then((options) => {
       const selectOptions = [...options].map((option) => option.textContent);
       const expectedOptions = ['Select Term', '2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2023 - 5', '2023 - 6'];
       expect(selectOptions).to.include.members(expectedOptions); // Check if all expected options are present
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     });
-    // cy.get('#classroomSelect').select('1');
+    // cy.wait('#239B');
+    // cy.get('#classroomSelect').select(2, {force: true});
+
 
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check that the button is still disabled
     cy.get('#termSelect').select('2023 - 5').click(); // Select term 5

@@ -65,7 +65,7 @@
                         <select id="termSelect" name="term" class="form-select">
                             <option value="" selected disabled>Select Term</option>
                             {{#each newTermList}}
-                                <option id="{{this.id}}" value="{{this.id}}">{{this.displayTerm}}</option>
+                                <option value="{{this.id}}">{{this.displayTerm}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -74,7 +74,7 @@
                         <select id="classroomSelect" name="classroom" class="form-select">
                             <option value="" selected disabled>Select Classroom</option>
                             {{#each classrooms}}
-                                <option id="{{roomNumber}}" value="{{id}}">{{roomNumber}}</option>
+                                <option value="{{id}}">{{roomNumber}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -96,14 +96,13 @@
     window.onload = function() {
         const modal = new bootstrap.Modal(document.getElementById('classroomReportInfoModal'));
 
-        if ({{showModal}}) {
+        {{#if showModal}}
             modal.show();
-        }
-    };
-    document.addEventListener('DOMContentLoaded', function() {
+        {{/if}}
+
         var termSelect = document.getElementById('termSelect');
         var classroomSelect = document.getElementById('classroomSelect');
-        var submitBtn = document.getElementById('submitBtn');
+        var submitBtn = document.getElementById('btnGenerateSchedule');
 
         // Add event listeners to the selects
         termSelect.addEventListener('change', handleSelectChange);
@@ -113,5 +112,5 @@
             // Enable or disable the submit button based on whether both selects have values
             submitBtn.disabled = termSelect.value === '' || classroomSelect.value === '';
         }
-    });
+    };
 </script>
