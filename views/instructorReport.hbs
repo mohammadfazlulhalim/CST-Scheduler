@@ -3,17 +3,17 @@
         <div class="row">
             <div class="col-9">
                 <h2><i>Instructor Report For:</i> {{#if instructorName}}
-       {{instructorName.lastName}}, {{instructorName.firstName}}
+       <span id="nameDisplayer">{{instructorName.lastName}}, {{instructorName.firstName}}</span>
                 {{/if}}</h2>
             </div>
             <div class="col-3">
-                <small>Report Generated: {{dateGen}}</small>
+                <small>Report Generated: <span id="dateGenDisplayer">{{dateGen}}</span></small>
             </div>
         </div>
     </div>
 <!--    TODO place a term info here if possible-->
 
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover border-dark">
         <thead>
 
 <!--        Header Row-->
@@ -42,7 +42,7 @@
                             <td>{{../../program}}<br>{{course.courseCode}}{{courseOffering.group}}<br>{{classRoom.roomNumber}}</td>
                         {{else}}
                             {{#if timeRow}}
-                                <td>{{timeRow}}</td>
+                                <td class="text-center">{{timeRow}}</td>
                             {{else}}
                                 <td></td>
                             {{/if}}
@@ -91,7 +91,7 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
                         <button id="submitBtn"
                                 type="submit" class="btn btn-outline-success" >Save changes</button>
                     </div>
@@ -105,7 +105,7 @@
 <div class="btnPairsCustom">
     <button id="newInstructorReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#instructorReportModal">
         New Report</button>
-    <button class="btn btn-outline-success" onclick="window.print()">Print this page</button>
+    <button id="printRptBtn" class="btn btn-outline-success" onclick="window.print()">Print this page</button>
 </div>
 <script defer>
     'use strict';
