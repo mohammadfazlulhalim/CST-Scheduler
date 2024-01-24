@@ -25,9 +25,6 @@ async function loadTimeslots() {
   await coObj2.setCourse(courseObj.offering2.courseID);
   await coObj2.setProgram(courseObj.offering2.programID);
 
-  // const termTest = await coObj2.getTerm();
-  // console.log('getter test: ' + JSON.stringify(termTest));
-
   const ClassroomObj = await Classroom.create(testConst.classroom1);
 
   // creating the object literals for easy use
@@ -68,12 +65,7 @@ async function loadTimeslots() {
 
   const response = await Timeslot.findByPk(timeslotCreated.id, {include: CourseOffering});
 
-  // console.log("Eager test: " + JSON.stringify(response));
-
-  // console.log('Testing format response: ' + JSON.stringify(timeslotCreated));
-  // const termTest2 = await timeslotCreated.getCourseOffering();
-  // console.log('getter test 2: ' + JSON.stringify(termTest2));
-
+  //Group A top-left to bottom-right diagonal
   await Timeslot.create(TimeslotAObj); // 9-10 Tue
   TimeslotAObj.day = 3;
   TimeslotAObj.startTime = '10:00';

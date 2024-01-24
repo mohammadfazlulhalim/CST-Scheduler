@@ -2,6 +2,7 @@ it('testThatModalWorks', () => {
   // Opens main page - and go to Schedule Courses
   cy.visit('localhost:3000');
   cy.contains('Schedule Courses').click();
+  cy.get('#scheduleModal').should('be.visible')
 
   // Check that Enter button is disabled
   cy.get('#modalSubmit').should('be.disabled');
@@ -27,8 +28,7 @@ it('testThatModalWorks', () => {
   cy.get('#modalSubmit').should('not.be.disabled');
   cy.get('#modalSubmit').click();
 
-  // cy.get('Hardware-A')
-  // cy.get('Hardware-B').should('be.hidden') // Needs to be inverted
+  cy.get('#scheduleModal').should('be.hidden')
 
   cy.get('#time').then((tdElement) => {
     // Use .text() to get the text content of the <td> element
@@ -44,14 +44,14 @@ it('testThatModalWorks', () => {
   cy.get('#wed').contains('Wednesday');
   cy.get('#thurs').contains('Thursday');
   cy.get('#fri').contains('Friday');
-  cy.get('#0-0-A').contains('08:00');
-  cy.get('#1-0-A').contains('09:00');
+  cy.get('#0-0-A').contains('8:00');
+  cy.get('#1-0-A').contains('9:00');
   cy.get('#2-0-A').contains('10:00');
   cy.get('#3-0-A').contains('11:00');
   cy.get('#4-0-A').contains('12:00');
-  cy.get('#5-0-A').contains('13:00');
-  cy.get('#6-0-A').contains('14:00');
-  cy.get('#7-0-A').contains('15:00');
+  cy.get('#5-0-A').contains('1:00');
+  cy.get('#6-0-A').contains('2:00');
+  cy.get('#7-0-A').contains('3:00');
 
   // DONE check group a has specific tiles filled
   cy.get('#0-1-A').contains('CSEC280');
@@ -74,7 +74,7 @@ it('testThatModalWorks', () => {
 
   cy.get("#Hardware-A").contains("Ben Benson");
   cy.get("#Hardware-A").should('be.visible');
-  cy.get("#Seminar-B").should('be.hidden');
+  cy.get("#Hardware-B").should('be.hidden');
 
   cy.get('#btnB').click();
 
@@ -83,14 +83,14 @@ it('testThatModalWorks', () => {
   cy.get('#wed').contains('Wednesday');
   cy.get('#thurs').contains('Thursday');
   cy.get('#fri').contains('Friday');
-  cy.get('#0-0-B').contains('08:00');
-  cy.get('#1-0-B').contains('09:00');
+  cy.get('#0-0-B').contains('8:00');
+  cy.get('#1-0-B').contains('9:00');
   cy.get('#2-0-B').contains('10:00');
   cy.get('#3-0-B').contains('11:00');
   cy.get('#4-0-B').contains('12:00');
-  cy.get('#5-0-B').contains('13:00');
-  cy.get('#6-0-B').contains('14:00');
-  cy.get('#7-0-B').contains('15:00');
+  cy.get('#5-0-B').contains('1:00');
+  cy.get('#6-0-B').contains('2:00');
+  cy.get('#7-0-B').contains('3:00');
 
   // DONE check group a has specific tiles filled
   cy.get('#7-1-B').contains('CSEC280');
@@ -111,8 +111,8 @@ it('testThatModalWorks', () => {
     }
   }
 
-  cy.get("#Seminar-B").contains("Ben Benson");
+  cy.get("#Hardware-B").contains("Ben Benson");
   cy.get("#Hardware-A").should('be.hidden');
-  cy.get("#Seminar-B").should('be.visible');
+  cy.get("#Hardware-B").should('be.visible');
 
 });

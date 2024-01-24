@@ -14,7 +14,7 @@ const testConst = {
         programID: 1,
     },
     courseOffering2: {
-        name: 'Seminar',
+        name: 'Hardware',
         startDate: '2023-09-01',
         endDate: '2023-12-15',
         group: 'B',

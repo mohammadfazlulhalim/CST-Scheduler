@@ -7,15 +7,9 @@ const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
 const {testConst} = require('../constants');
 const defineDB = require('../fixtures/DefineTables');
-let roomDefaults;
-let term;
-let program;
-let timeslotArray;
-let courseOfferingArray;
 
 router.get('/', async (req, res, next) => {
   await defineDB();
-  // console.log("start of get");
 
   terms = await Term.findAll();
   programs = await Program.findAll();
@@ -23,7 +17,6 @@ router.get('/', async (req, res, next) => {
 
   // formatting the time
   for (let i=0; i<terms.length;i++) {
-    // console.log('Term is: ' + JSON.stringify(terms[i]));
     const splitDate = terms[i].startDate.split('-');
     terms[i].title = splitDate[0] + '-' + terms[i].termNumber;
   }
@@ -33,27 +26,26 @@ router.get('/', async (req, res, next) => {
     terms,
     programs,
   })
-  // res.render('redirect-post', {});
 });
 
 router.post('/', async (req, res, next) => {
   // reloading the models with associations
-  // console.log('Entered post');
 
+  //loads the db connection
   await defineDB();
 
   let groupArray = [];
 
+  //constants
   const GROUP_LETTERS = ['A', 'B', 'C', 'D'];
   const DAYS = [0, 1, 2, 3, 4, 5];
   const TIMES = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+  const DISPLAY_TIMES = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00']
 
-  // const timeslotMatrix = [[], [] , [], [], []];
   let timeslotArray = new Array(req.body.group);
-  const COArray = new Array(req.body.group);
   const groupLetters = new Array(req.body.group);
 
-
+  //looping through each group object requested
   for (let i = 0; i < req.body.group; i++) {
     groupArray.push({
       timeslotMatrix: [[], [], [], [], [], [], [], []], //outer array is times, each inner array is days
@@ -66,18 +58,18 @@ router.post('/', async (req, res, next) => {
       for (d in DAYS) {
         let timeOb = null;
         if (d == 0) {
-          // TODO converting the time to 12 hr - nice to have
-          timeOb = TIMES[t];
+          timeOb = DISPLAY_TIMES[t];
         }
         groupArray[i].timeslotMatrix[t][d] = {
           hasObj: false,
-          cellID: t + '-' + d + '-' + GROUP_LETTERS[i],
-          timeslot: timeOb,
+          cellID: t + '-' + d + '-' + GROUP_LETTERS[i], //dynamic id
+          timeslot: timeOb, //always empty except for time column
         };
       }
     }
 
     try {
+      //fetch all timeslots that match filters
       timeslotArray = await Timeslot.findAll({
         where: {
           group: GROUP_LETTERS[i],
@@ -85,6 +77,7 @@ router.post('/', async (req, res, next) => {
           TermId: req.body.term,
         },
       });
+      //fetch all course offerings that match filters
       groupArray[i].COArray = await CourseOffering.findAll({
         where: {
           group: GROUP_LETTERS[i],
@@ -92,13 +85,14 @@ router.post('/', async (req, res, next) => {
           TermId: req.body.term,
         },
       });
+
+      //getting each course offering for this group
       const tempCOArray = [groupArray[i].COArray.length]
       for (let k =0; k < tempCOArray.length;k++) {
         tempCOArray[k] = await formatCourseOffering(groupArray[i].COArray[k]);
       }
       groupArray[i].COArray=tempCOArray;
     } catch (error) {
-      // console.log('Error is: ' + error);
     }
 
 
@@ -121,6 +115,7 @@ router.post('/', async (req, res, next) => {
 
 });
 
+//formatting each timeslot for easier displaying
 async function formatCellInfo(tSlot) {
   coObj = await tSlot.getCourseOffering();
   prObj = await tSlot.getProgram();
@@ -131,10 +126,9 @@ async function formatCellInfo(tSlot) {
 
 }
 
+//formatting each course offering for easier display
 async function formatCourseOffering(coObj) {
-  // console.log('Entered formatting co');
   const insObj = await coObj.getInstructor();
-  // console.log('got ins');
   return {
     id: coObj.id,
     name: coObj.name,

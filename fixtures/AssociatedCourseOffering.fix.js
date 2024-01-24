@@ -1,4 +1,3 @@
-const CourseOffering = require('../private/javascript/CourseOffering');
 const Associations = require('../private/javascript/Associations');
 const Course = require('../private/javascript/Course');
 const {testConst} = require('../constants');
