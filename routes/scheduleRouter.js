@@ -38,6 +38,8 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   // reloading the models with associations
+  // console.log('Entered post');
+
   await defineDB();
 
   let groupArray = [];
@@ -64,13 +66,12 @@ router.post('/', async (req, res, next) => {
       for (d in DAYS) {
         let timeOb = null;
         if (d == 0) {
-          // just storing the time
-          // TODO converting the time
+          // TODO converting the time to 12 hr - nice to have
           timeOb = TIMES[t];
         }
         groupArray[i].timeslotMatrix[t][d] = {
           hasObj: false,
-          cellID: t + '-' + d,
+          cellID: t + '-' + d + '-' + GROUP_LETTERS[i],
           timeslot: timeOb,
         };
       }
@@ -91,6 +92,11 @@ router.post('/', async (req, res, next) => {
           TermId: req.body.term,
         },
       });
+      const tempCOArray = [groupArray[i].COArray.length]
+      for (let k =0; k < tempCOArray.length;k++) {
+        tempCOArray[k] = await formatCourseOffering(groupArray[i].COArray[k]);
+      }
+      groupArray[i].COArray=tempCOArray;
     } catch (error) {
       // console.log('Error is: ' + error);
     }
@@ -123,6 +129,19 @@ async function formatCellInfo(tSlot) {
 
   return prObj.programAbbreviation + '\n' + cObj.courseCode + '\n' + insObj.lastName;
 
+}
+
+async function formatCourseOffering(coObj) {
+  // console.log('Entered formatting co');
+  const insObj = await coObj.getInstructor();
+  // console.log('got ins');
+  return {
+    id: coObj.id,
+    name: coObj.name,
+    iName: insObj.firstName + ' ' + insObj.lastName,
+    group: coObj.group,
+    date: coObj.startDate + '-' + coObj.endDate,
+  }
 }
 
 

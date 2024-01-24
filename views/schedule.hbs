@@ -48,16 +48,17 @@
         <!--change this to a loop later-->
         <div id="tabBar">
             {{#each groupArray}}
-                <button id="btn{{groupLetter}}" onclick="changeGroup('{{groupLetter}}')">Group {{groupLetter}}</button>
+                <button id="btn{{groupLetter}}" onclick="changeGroup('{{groupLetter}}')" class=" btn btn-primary">
+                    Group {{groupLetter}}</button>
 
             {{/each}}
         </div>
         {{#each groupArray}}
-            <div id="group{{groupLetter}}" hidden>
-                <div id="calender{{groupLetter}}">
+            <div id="group{{groupLetter}}" class="row" hidden>
+                <div id="calender{{groupLetter}}" class="col-md-8">
                     <h2>Group {{groupLetter}} Calendar</h2>
-                    <table class="table">
-                        <thead>
+                    <table class="table table-bordered bordered-dark">
+                        <thead class="thead-dark">
                         <th scope="col" id="time">
                             Time
                         </th>
@@ -92,12 +93,13 @@
                         {{/each}}
                     </table>
                 </div>
-                <div id="courseList{{groupLetter}}">
+                <div id="courseList{{groupLetter}}" class=" col-md-4">
                     <h2>Group {{groupLetter}} Courses</h2>
                     {{#each COArray}}
-                        <div>
-                            <h5>{{this.name}}</h5>
-                            <p>{{this.id}}</p>
+                        <div class="card" style="width: 12rem;" id="{{this.name}}-{{this.group}}">
+                            <h3>{{this.name}}</h3>
+                            <ul>{{this.iName}}</ul>
+                            <ul>{{this.date}}</ul>
                         </div>
                     {{/each}}
                 </div>
@@ -136,15 +138,16 @@
         hideAllGroups();
         // enable the current one
         document.getElementById('group' + group).removeAttribute('hidden');
-        //TODO change style for button to selected
+        document.getElementById('btn' + group).setAttribute('class', 'btn btn-primary');
 
     }
 
     function hideAllGroups() {
         {{#each groupArray}}
             document.getElementById("group{{groupLetter}}").setAttribute('hidden', '');
+            document.getElementById("btn{{groupLetter}}").setAttribute('class', 'btn btn-secondary');
         {{/each}}
-        //TODO change style for buttons to unselected
+
     }
 
 </script>
