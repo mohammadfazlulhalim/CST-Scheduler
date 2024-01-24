@@ -6,9 +6,12 @@
   "scripts": {
     "start": "electron .",
     "test": "node set-env.js",
-    "loaddb": "node fixtures/loadAll.fix.js"
+    "loaddb": "node fixtures/loadAll.fix.js",
+    "cypress": "node electron-dev.js"
+
   },
   "dependencies": {
+    "await-exec": "^0.1.2",
     "bootstrap": "^5.3.2",
     "bootswatch": "^5.3.2",
     "cookie-parser": "~1.4.4",

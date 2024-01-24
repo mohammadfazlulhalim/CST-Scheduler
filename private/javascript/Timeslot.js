@@ -1,10 +1,9 @@
-const {sequelize, DataTypes} = require('../../../../../Downloads/cstprojects-prj5.cstscheduler-d6d17070552c/cstprojects-prj5.cstscheduler-d6d17070552c/dataSource');
-const Course = require('../../../../../Downloads/cstprojects-prj5.cstscheduler-d6d17070552c/cstprojects-prj5.cstscheduler-d6d17070552c/private/javascript/Course');
-const Term = require('../../../../../Downloads/cstprojects-prj5.cstscheduler-d6d17070552c/cstprojects-prj5.cstscheduler-d6d17070552c/private/javascript/Term');
-const Instructor = require('../../../../../Downloads/cstprojects-prj5.cstscheduler-d6d17070552c/cstprojects-prj5.cstscheduler-d6d17070552c/private/javascript/Instructor');
-const Program = require('../../../../../Downloads/cstprojects-prj5.cstscheduler-d6d17070552c/cstprojects-prj5.cstscheduler-d6d17070552c/private/javascript/Program');
-const Room = require('../../../../../Downloads/cstprojects-prj5.cstscheduler-d6d17070552c/cstprojects-prj5.cstscheduler-d6d17070552c/private/javascript/Classroom');
-
+const {sequelize, DataTypes} = require('../../dataSource');
+const Course = require('../javascript/Course');
+const Term = require('../javascript/Term');
+const Instructor = require('../javascript/Instructor');
+const Program = require('../javascript/Program');
+const Room = require('../javascript/Classroom');
 // constant stores the regex for validating 12 or 24hr time
 // valid upper: 00:00
 // valid lower: 23:59
