@@ -1,39 +1,4 @@
-describe("Testing fixtures", function() {
-  const addNewInsModalHeader='#addModalLabel';
-  const insListingsPageHeader='body > div > div > div > h1';
-  const tableFirstHeader ='body > div > div > div > table > thead > tr > th:nth-child(1)';
-  const tableSecondHeader='body > div > div > div > table > thead > tr > th:nth-child(2)';
-  const tableThirdHeader='body > div > div > div > table > thead > tr > th:nth-child(3)';
-  const tableFourthHeader= 'body > div > div > div > table > thead > tr > th:nth-child(4)';
-  const tableFifthHeader='body > div > div > div > table > thead > tr > th:nth-child(5)';
-  const tableSixthHeader='body > div > div > div > table > thead > tr > th:nth-child(6)';
 
-
-  it("On the Instructor Management page with AJAX / XHR", function() {
-    // this function will be temporary
-    // using cy.request, we will ping the
-    // Request URL that we copied earlier
-    cy.request("http://localhost:3000/instructor").then(
-        response => {
-          // then use the response.body to write a fixture.
-          cy.writeFile("./fixtures/instructor.json", response.body);
-        }
-    );
-  });
-  it('testInstructorListsAreShownInsideInstructorPage  ', () => {
-    // TODO check the tables do not exist
-    cy.get(insListingsPageHeader).should('have.text', 'Instructor Listings');
-    cy.get(tableFirstHeader).should('have.text', 'First Name');
-    cy.get(tableSecondHeader).should('have.text', 'Last Name');
-    cy.get(tableThirdHeader).should('have.text', 'Office Number');
-    cy.get(tableFourthHeader).should('have.text', 'Phone Number');
-    cy.get(tableFifthHeader).should('have.text', 'Email');
-    cy.get(tableSixthHeader).should('have.text', 'Actions');
-    // cy.get(insListEditButtonOnFirstColumn).should('have.text', 'Edit');
-    // cy.get(insListDeleteButtonOnFirstColumn).should('have.text', 'Delete');
-    // cy.get(createInsButton).should('have.text', 'Add New Instructor');
-  });
-});
 describe('Testing Instructor CRUD options', () => {
   const addNewInsModalHeader='#addModalLabel';
   const insListingsPageHeader='body > div > div > div > h1';
@@ -56,17 +21,17 @@ describe('Testing Instructor CRUD options', () => {
   const newInsEmailInputBox='#cEmail';
   const CreateInstructorButtonOnNewInsModal='#createInstructor';
   const insListFirstNameOnFirstColumn='#\\31 firstName';
-  const insListEditButtonOnFirstColumn = '#\\36 edit';
+  const insListEditButtonOnFirstColumn = '#\\37 edit';
   const editModalHeader='#editModalLabel';
   const firstTextBoxOnEditModal='#eFirstName';
   const secondTextBoxOnEditModal ='#eLastName';
   const saveButtonOnEditModal ='#editInstructor';
   const insListDeleteButtonOnFirstColumn ='#\\31 delete';
-  const insListDeleteButtonOnFirstColumnForDeleteTest ='#\\36 delete';
+  const insListDeleteButtonOnFirstColumnForDeleteTest ='#\\37 delete';
   const confirmDeleteButtonOnDeleteModal='#deleteInstructor';
   const insListFirstNameOnFirstColumnAfterDeletion = '#\\32 firstName';
-  const insListFirstNameOnFirstColumnAfterCreation='#\\36 firstName'
-  const insListFirstNameOnFirstColumnAfterEditing='#\\36 firstName'
+  const insListFirstNameOnFirstColumnAfterCreation='#\\37 firstName'
+  const insListFirstNameOnFirstColumnAfterEditing='#\\37 firstName'
   const navMenuSelector ='#navbarColor04 > ul > li:nth-child(2) > a';
   const navMenuItem= '#navbarColor04 > ul > li:nth-child(2) > div > a:nth-child(3)';
 
