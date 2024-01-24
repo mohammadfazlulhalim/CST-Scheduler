@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const {sequelize} = require('../dataSource');
 const term = require('../private/javascript/Term');
 const classroom = require('../private/javascript/Classroom');
 const timeslot = require('../private/javascript/Timeslot');
@@ -8,27 +7,32 @@ const {addAssociations} = require('../private/javascript/Associations');
 const createAllTables = require('../fixtures/createTables.fix');
 
 router.get('/', async (req, res, next) => {
-  const terms = await term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'DESC']]});
+  const termList = await term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'DESC']]});
   const classrooms = await classroom.findAll({order: [['roomNumber', 'ASC']]});
 
+  // Adding the year to the terms
+  const newTermList= termList.map((item)=>{
+    return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
+  });
+
   res.render('classroomReport', {
+    routerPost: false,
     title: 'Classroom Report',
-    terms,
+    newTermList,
     classrooms,
     showModal: true,
   });
 });
 router.post('/', async (req, res, next) => {
-  // reloading the models with associations
   await addAssociations();
   await createAllTables(false);
+  const dateGenerated= new Date();
 
-  // const hardTerm = await Term.findOne({where: {startDate: testConst.term1.startDate}}); //change to ID later
-  // const hardProg = await Program.findOne({where: {programAbbreviation: testConst.program1.programAbbreviation}}); //change to id later
   const realTerm = await term.findOne({where: {id: req.body.term}});
   const realClassroom = await classroom.findOne({where: {id: req.body.classroom}});
 
   const TimeSlots = await generateSchedule(realTerm.startDate, realTerm.endDate, realClassroom);
+
   const hasTimeSlots = TimeSlots.length >0;
   let ScheduleArray;
   const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -57,8 +61,10 @@ router.post('/', async (req, res, next) => {
     }
   }
 
-
   res.render('classroomReport', {
+    dateGen: dateGenerated.getFullYear()+'-'+dateGenerated.getMonth()+'-'+dateGenerated.getDate(),
+    routerPost: true,
+    realTerm,
     ScheduleArray,
     TIMES,
     realClassroom,
@@ -67,12 +73,13 @@ router.post('/', async (req, res, next) => {
   });
 });
 
-// eslint-disable-next-line require-jsdoc
+/*
+
+ */
 function generateSchedule(startDate, endDate, classroom) {
   return timeslot.findAll({
     where: {startDate, endDate, ClassroomId: classroom.id},
   });
 }
-
 
 module.exports = {router};

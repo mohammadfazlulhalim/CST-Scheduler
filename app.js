@@ -12,7 +12,6 @@ const termRouter = require('./routes/termRouter').router;
 const programRouter = require('./routes/programRouter').router;
 const classroomReportRouter = require('./routes/classroomReportRouter').router;
 const viewCoursesRouter = require('./routes/course');
-const adminRouter = require('./routes/administrationRouter');
 
 const app = express();
 
@@ -34,7 +33,6 @@ app.use('/courseOffering', courseOfferingRouter);
 app.use('/course', viewCoursesRouter); // story34 view courses
 app.use('/classroom', classroomRouter);
 app.use('/program', programRouter);
-app.use('/administration', adminRouter);
 app.use('/classroomReport', classroomReportRouter);
 
 // bootswatch

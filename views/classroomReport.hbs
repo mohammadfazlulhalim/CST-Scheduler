@@ -3,9 +3,10 @@
         <div class="row">
             <div class="col-9">
                 <h2><i>Lab Schedule for:</i> {{realClassroom.roomNumber}}</h2>
+                <p>Dates: {{realTerm.startDate}} to {{realTerm.endDate}} </p>
             </div>
             <div class="col-3">
-                <small>Report Generated:{{dateGenerated}}</small>
+                <small>Report Generated:{{dateGen}}</small>
             </div>
         </div>
     </div>
@@ -43,7 +44,9 @@
         </div>
     </div>
 {{else}}
-    <h1>Nothing to display at the moment</h1>
+    {{#if routerPost}}
+        <h1>Nothing to display at the moment</h1>
+    {{/if}}
 {{/if}}
 
 
@@ -52,7 +55,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create a Classroom Report For:</h5>
+                <h5 class="modal-title">Create a Classroom Report For: </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -60,41 +63,55 @@
                     <div class="mb-3">
                         <label for="termSelect" class="form-label">Term:</label>
                         <select id="termSelect" name="term" class="form-select">
-                            {{#each terms}}
-                                <option value="{{id}}">{{termNumber}}</option>
+                            <option value="" selected disabled>Select Term</option>
+                            {{#each newTermList}}
+                                <option id="{{this.id}}" value="{{this.id}}">{{this.displayTerm}}</option>
                             {{/each}}
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="classroomSelect" class="form-label">Classroom:</label>
                         <select id="classroomSelect" name="classroom" class="form-select">
+                            <option value="" selected disabled>Select Classroom</option>
                             {{#each classrooms}}
-                                <option value="{{id}}">{{roomNumber}}</option>
+                                <option id="{{roomNumber}}" value="{{id}}">{{roomNumber}}</option>
                             {{/each}}
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="btnGenerateSchedule" disabled>Submit</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
+{{#if routerPost}}
+    <a href="/classroomReport"><button class="btn btn-primary">Change Classrooms</button></a><br />
+{{/if}}
+
 <script>
 
     'use strict';
 
-        window.onload = function() {
-            const modal = new bootstrap.Modal(document.getElementById('classroomReportInfoModal'));
+    window.onload = function() {
+        const modal = new bootstrap.Modal(document.getElementById('classroomReportInfoModal'));
 
-            if ({{showModal}})
-            {
-                modal.show();
-            }
-        };
+        if ({{showModal}}) {
+            modal.show();
+        }
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        var termSelect = document.getElementById('termSelect');
+        var classroomSelect = document.getElementById('classroomSelect');
+        var submitBtn = document.getElementById('submitBtn');
 
+        // Add event listeners to the selects
+        termSelect.addEventListener('change', handleSelectChange);
+        classroomSelect.addEventListener('change', handleSelectChange);
 
-
-
-
+        function handleSelectChange() {
+            // Enable or disable the submit button based on whether both selects have values
+            submitBtn.disabled = termSelect.value === '' || classroomSelect.value === '';
+        }
+    });
 </script>
