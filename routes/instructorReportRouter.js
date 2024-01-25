@@ -15,6 +15,7 @@ const defineDB = require('../fixtures/DefineTables');
 const hours24 = testConst.timeColumn8amTo3pmDisplayArray24Hr;
 const hours12 = testConst.timeColumn8amTo3pmDisplayArray;
 
+// TODO Promise issues to resolve!
 
 /**
  * Processing GET request for rendering the instructor report page.
