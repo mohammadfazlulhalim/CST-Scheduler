@@ -263,7 +263,6 @@ describe('officeNum', () => {
       // If a validation error is thrown, fail the test with an error message
       err = error.message;
     }
-
     expect(instructor).toBeTruthy(); // check that instructor Object is created
     expect(instructor.officeNum).toBe(testInstructor.officeNum); // check that instructor Object office number is correct
     expect(err).toBe(''); // check that no errors are thrown

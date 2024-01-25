@@ -17,7 +17,7 @@ const testConst = {
     programID: 1,
   },
   courseOffering2: {
-    name: 'Seminar',
+    name: 'Hardware',
     startDate: '2023-09-01',
     endDate: '2023-12-15',
     group: 'B',
@@ -33,13 +33,39 @@ const testConst = {
     courseNumHoursPerWeek: 4,
   },
   term1: {
-    termNumber: 1,
-    startDate: '2023-08-01',
-    endDate: '2023-12-01',
+    termNumber: 5,
+    startDate: '2024-01-02',
+    endDate: '2024-04-25'
   },
   program1: {
     programAbbreviation: 'CST',
     programName: 'Computer Systems Technology',
+  },
+  classroom1: {
+    roomNumber: '239a',
+    location: 'Saskatoon',
+  },
+
+  timeSlot1: {
+    startTime: '10:00', // The value is 24h for now
+    endTime: '11:00', // replaced duration for now
+    startDate: '2023-09-01',
+    endDate: '2023-12-15',
+    day: 3,
+    group: 'B',
+    roomID: 1,
+    termID: 1,
+    instructorID: 1,
+    programID: 1,
+    courseOfferingID: 1,
+  },
+
+  timeSlotLowerBound: {
+    starttime: '00:00', // The value is 24h for now
+    endtime: '23:59',
+    day: 0,
+    roomID: `239B`,
+    courseOfferingID: 1,
   },
   programList: [
     {programAbbreviation: 'CNT', programName: 'Computer Network Technology'},
