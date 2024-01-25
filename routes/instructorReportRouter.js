@@ -23,11 +23,9 @@ const hours12 = testConst.timeColumn8amTo3pmDisplayArray;
  */
 router.get('/', async function(req, res, next) {
   // redefine database
-  await defineDB();
+ await defineDB();
   const program='';
   const dateGenerated= new Date();
-  const monthArray=['Jan', 'Feb', 'Mar', 'Apr', 'May',
-    'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
   const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
   let instructorList;
   let termList;
@@ -70,7 +68,7 @@ router.get('/', async function(req, res, next) {
  */
 router.post('/', async function(req, res, next) {
   // redefine the database
-  await defineDB();
+ await defineDB();
   await sequelize.sync();
   const instructorID = req.body.selectInstructorReport; // from the modal selection
   const termID = req.body.selectTermInstructorReport; // from the modal selection
@@ -94,6 +92,7 @@ router.post('/', async function(req, res, next) {
     instructorName=undefined;
   }
   // try to find the term selected
+  // TODO get the program form the program make association with course offering or course
   try {
     termName = await Term.findOne({where: {id: termID}});
     // based on the term define the program year
@@ -152,6 +151,7 @@ router.post('/', async function(req, res, next) {
     termName,
     matrixTable,
     dateGen: dateGenerated.getDate()+'-'+monthArray[dateGenerated.getMonth()]+'-'+dateGenerated.getFullYear(),
+    // dateGen: dateGenerated.toLocaleDateString('en-CA', {})
     instructorList,
     termList: newTermList,
     timeDisplayHours,

@@ -22,6 +22,7 @@ async function loadRelationships() {
   const insObj = await Instructor.create(testConst.instructor1);
   // TODO remove the extra instructor afterwards
   const insObj2 = await Instructor.create(testConst.instructorDonovan1);
+  const insObj3 = await Instructor.create(testConst.instructorBryce1);
 
   const progObj = await Program.create(testConst.program1);
 

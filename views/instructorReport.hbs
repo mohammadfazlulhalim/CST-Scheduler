@@ -97,7 +97,7 @@
 <div class="btnPairsCustom">
     <button id="newInstructorReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#instructorReportModal">
         New Report</button>
-    <button id="printRptBtn" class="btn btn-outline-success" onclick="window.print()">Print this page</button>
+    <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
 </div>
 <script defer>
     'use strict';
@@ -120,6 +120,29 @@
         selectedTerm.onchange = checkFormSelections;
     }
 
+    function printReport() {
+        const printWindow = window.open('', '_blank');
+
+        // Add styles or additional content if needed
+        printWindow.document.write('<html><head><title>Instructor Report</title></head><body>');
+
+        // Print date and instructor name
+        const dateGen = document.getElementById("dateGenDisplayer").innerText;
+        const instructorName = document.getElementById("nameDisplayer").innerText;
+
+        printWindow.document.write('<h2>Instructor Report For: ' + instructorName + '</h2>');
+        printWindow.document.write('<p>Report Generated: ' + dateGen + '</p>');
+
+        // Print the table
+        const tableHtml = document.querySelector('.table-bordered').outerHTML;
+        printWindow.document.write(tableHtml);
+
+        printWindow.document.write('</body></html>');
+
+        printWindow.document.close();
+        printWindow.print();
+    }
+
     /**
      * This function will enable and disable the modal submit button
      */
@@ -136,66 +159,6 @@
         }
     }
 
-
-    // // TODO determine ways to avoid a hardcoded form submit
-    // async function handleCreateProgram() {
-    //     // send a POST request to the router
-    //     const response = await fetch('http://localhost:3000/instructorReport', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({
-    //             // use the val() method to get the value of a form input
-    //             instructor: selectedInstructor.value,
-    //             term: selectedTerm.value,
-    //
-    //         }),
-    //     });
-    //
-    //     // get the HTML text response
-    //     const data = await response.text();
-    //
-    //     // set the whole document's HTML to be the response
-    //     document.documentElement.innerHTML = data;
-    //     // re-add the click handler
-    //     $('#createProgram').click(handleCreateProgram);
-    //     // refresh the modal
-    //     const modal = $('#addModal');
-    //     modal.modal('hide');
-    //
-    //     // if the response was not ok, pop up the modal
-    //     if (!response.ok) {
-    //         modal.modal('show');
-    //     }
-    // }
-
-    // selectedInstructor.addEventListener("change", function(){
-    //         checkFormSelections();
-    // });
-    // selectedInstructor.onchange = checkFormSelections;
-    // selectedTerm.onchange = checkFormSelections;
-
-    // selectedTerm.addEventListener("change", function(){
-    //     checkFormSelections();
-    // });
-
-
-
-    // async function handleCreateInstructorReport() {
-    //     // send a POST request to the router
-    //     const response = await fetch('http://localhost:3000/InstructorReport', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({
-    //             // use the val() method to get the value of a form input
-    //             programName: $('#createName').val(),
-    //             programAbbreviation: $('#createAbbr').val(),
-    //
-    //         }),
-    //     });
 
 
 </script>

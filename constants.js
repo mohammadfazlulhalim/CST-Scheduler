@@ -7,6 +7,10 @@ const testConst = {
         firstName: 'Donovan',
         lastName: 'Onishenko',
     },
+    instructorBryce1: {
+        firstName: 'Bryce',
+        lastName: 'Barrie',
+    },
     courseOffering1: {
         name: 'Hardware',
         startDate: '2023-09-01',

@@ -65,6 +65,15 @@ describe('Test Instructor Report Page', () => {
     cy.get('.table-bordered tbody tr:nth-child(7) td:first-child').should('have.text', expectedTimes12[6]);
     cy.get('.table-bordered tbody tr:nth-child(8) td:first-child').should('have.text', expectedTimes12[7]);
 
+    /**
+     * testFirstCellForBenBensonIsPopulated
+     */
+    // Check for oen of bens scheduled classes in the cell
+    cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', 'CST 2');
+
+    cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', 'CSEC280A');
+
+    cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', '239a');
 
     // Check the content of the thead
     cy.get('.table-bordered thead tr th').each((header, index) => {
