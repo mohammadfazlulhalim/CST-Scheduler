@@ -19,6 +19,10 @@ describe('firstName', () => {
     err = '';
   });
 
+  afterEach(async function() {
+    await Instructor.truncate();
+  });
+
   test('testThatValidFirstNameCanBeEntered', async function() {
     try {
       instructor = await Instructor.create(testInstructor);
@@ -252,6 +256,7 @@ describe('officeNum', () => {
 
   beforeEach(async function() {
     testInstructor.officeNum = '123A.1';
+    testInstructor.firstName = 'sALLY'
     instructor = '';
     err = '';
   });
@@ -274,6 +279,7 @@ describe('officeNum', () => {
 
   test('testCreatingInstructorWithEmptyOfficeNumber', async function() {
     testInstructor.officeNum = '';
+    testInstructor.firstName = 'sALLY'
     let err; let errCount; let instructor;
 
     try {
@@ -352,6 +358,7 @@ describe('phoneNum', () => {
 
   beforeEach(async function() {
     testInstructor.phoneNum = '(123)-111-1122';
+    testInstructor.officeNum= '123.4A';
     instructor = '';
     err = '';
   });
@@ -374,6 +381,7 @@ describe('phoneNum', () => {
 
   test('testCreatingInstructorWithValidPhoneNumberWithoutBracesAndDash', async function() {
     testInstructor.phoneNum = '1231111122';
+    testInstructor.officeNum ='123.4A';
     let instructor;
     try {
       instructor = await Instructor.create(testInstructor);
@@ -392,6 +400,7 @@ describe('phoneNum', () => {
 
   test('testCreatingInstructorWithEmptyPhoneNumber ', async function() {
     testInstructor.phoneNum = '';
+    testInstructor.officeNum= '123.4A';
     let errCount; let instructor; let errorArray;
 
     try {
@@ -437,6 +446,7 @@ describe('phoneNum', () => {
 
   test('testCreatingInstructorWithPhoneNumberHaveMoreThan10Digits  ', async function() {
     testInstructor.phoneNum = '(123)-456-23222';
+    testInstructor.officeNum= '1234.1A';
     let errArray; let errCount;
 
     try {
@@ -473,6 +483,8 @@ describe('email', () => {
 
   beforeEach(async function() {
     testInstructor.email = 'doe@saskpolytech.ca';
+    testInstructor.officeNum='1234.1A';
+    testInstructor.phoneNum='1234567890';
     instructor = '';
     err = '';
   });
@@ -498,6 +510,8 @@ describe('email', () => {
 
   test('testCreatingInstructorWithEmptyEmail ', async function() {
     testInstructor.email = '';
+    testInstructor.officeNum='1234.1A';
+    testInstructor.phoneNum='1234567890';
     let errArray; let errCount; let instructor;
 
     try {
@@ -541,6 +555,8 @@ describe('email', () => {
 
   test('testCreatingInstructorWithEmailMissingTopLevelDomain ', async function() {
     testInstructor.email = 'doe.saskpolytech';
+    testInstructor.officeNum='123.4A';
+    testInstructor.phoneNum='1234567890';
 
     try {
       instructor = await Instructor.create(testInstructor);
