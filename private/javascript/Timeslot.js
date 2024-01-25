@@ -4,6 +4,7 @@ const Term = require('../javascript/Term');
 const Instructor = require('../javascript/Instructor');
 const Program = require('../javascript/Program');
 const Room = require('../javascript/Classroom');
+
 // constant stores the regex for validating 12 or 24hr time
 // valid upper: 00:00
 // valid lower: 23:59

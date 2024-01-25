@@ -1,0 +1,157 @@
+<div>
+    <div id="scheduleModal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="scheduleModalLabel"
+         aria-hidden="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Select Filters For Schedule</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/schedule" method="POST">
+                        <div class="mb-3">
+                            <label for="termSelect" class="form-label">Term: </label>
+                            <select id="termSelect" name="term" onchange="checkEnable()" class="form-select">
+                                <option id="blankTerm"></option>
+                                {{#each terms}}
+                                    <option value="{{id}}">{{title}}</option> <!-- fix date in get -->
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="programSelect" class="form-label">Program: </label>
+                            <select id="programSelect" name="program" onchange="checkEnable()" class="form-select">
+                                <option id="blankProgram"></option>
+                                {{#each programs}}
+                                    <option value="{{id}}">{{programAbbreviation}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="groupSelect" class="form-label">Number of Groups: </label>
+                            <select id="groupSelect" name="group" onchange="checkEnable()" class="form-select">
+                                <option id="blankGroup"></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" disabled id="modalSubmit">Enter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main">
+        <!--change this to a loop later-->
+        <div id="tabBar">
+            {{#each groupArray}}
+                <button id="btn{{groupLetter}}" onclick="changeGroup('{{groupLetter}}')" class=" btn btn-primary">
+                    Group {{groupLetter}}</button>
+
+            {{/each}}
+        </div>
+        {{#each groupArray}}
+            <div id="group{{groupLetter}}" class="row" hidden>
+                <div id="calender{{groupLetter}}" class="col-md-8">
+                    <h2>Group {{groupLetter}} Calendar</h2>
+                    <table class="table table-bordered bordered-dark">
+                        <thead class="thead-dark">
+                        <th scope="col" id="time">
+                            Time
+                        </th>
+                        <th scope="col" id="mon">
+                            Monday
+                        </th>
+                        <th scope="col" id="tues">
+                            Tuesday
+                        </th>
+                        <th scope="col" id="wed">
+                            Wednesday
+                        </th>
+                        <th scope="col" id="thurs">
+                            Thursday
+                        </th>
+                        <th scope="col" id="fri">
+                            Friday
+                        </th>
+                        </thead>
+                        <tr>
+                        </tr>
+                        {{#each timeslotMatrix }}
+                            <!--loops each timeslot, outer loop is hours, inner loop is days  -->
+                            <tr>
+                                {{#each this}}
+                                    <!--                                    Do an if/else if it has data - bool created in router-->
+                                    <!--                                    Then the 'each' will have different attributes and be loaded differently-->
+                                    <!--                                    via html and the router sends attributes-->
+                                    <td id="{{this.cellID}}">{{this.timeslot}}</td>
+                                {{/each}}
+                            </tr>
+                        {{/each}}
+                    </table>
+                </div>
+                <div id="courseList{{groupLetter}}" class=" col-md-4">
+                    <h2>Group {{groupLetter}} Courses</h2>
+                    {{#each COArray}}
+                        <div class="card" style="width: 12rem;" id="{{this.name}}-{{this.group}}">
+                            <h3>{{this.name}}</h3>
+                            <ul>{{this.iName}}</ul>
+                            <ul>{{this.date}}</ul>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        {{/each}}
+    </div>
+    <a href="http://localhost:3000">
+        <button class="btn btn-success">Return</button>
+    </a>
+</div>
+
+<script>
+    'use strict';
+    window.onload = function() {
+        const modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
+        {{#if getrequest}}
+            modal.show();
+        {{else}}
+            changeGroup('A');
+        {{/if}}
+
+    };
+
+    function checkEnable() {
+        let bTermSelected = document.getElementById('termSelect').value !== '';
+        let bProgramSelected = document.getElementById('programSelect').value !== '';
+        let bGroupSelected = document.getElementById('groupSelect').value !== '';
+
+        if (bTermSelected && bProgramSelected && bGroupSelected) {
+            document.getElementById('modalSubmit').removeAttribute('disabled');
+        } else {
+            document.getElementById('modalSubmit').disabled = 'disabled';
+        }
+    }
+
+    function changeGroup(group) {
+        // Disable all groups
+        hideAllGroups();
+        // enable the current one
+        document.getElementById('group' + group).removeAttribute('hidden');
+        document.getElementById('btn' + group).setAttribute('class', 'btn btn-primary');
+
+    }
+
+    function hideAllGroups() {
+        {{#each groupArray}}
+            document.getElementById("group{{groupLetter}}").setAttribute('hidden', '');
+            document.getElementById("btn{{groupLetter}}").setAttribute('class', 'btn btn-secondary');
+        {{/each}}
+
+    }
+
+</script>

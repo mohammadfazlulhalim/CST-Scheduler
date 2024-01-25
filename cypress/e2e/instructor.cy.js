@@ -50,22 +50,23 @@ describe('Testing Instructor CRUD options', () => {
     cy.get(tableFourthHeader).should('have.text', 'Phone Number');
     cy.get(tableFifthHeader).should('have.text', 'Email');
     cy.get(tableSixthHeader).should('have.text', 'Actions');
-
-  });
+  })
 
   /* Test to confirm the availability of instructor's name according to the fixture data*/
-  it ('testAvailabilityOfAllInstructorInfo',()=>{
-    cy.contains('Bryce').should('exist');
-    cy.contains('Ernesto').should('exist');
-    cy.contains('Rick').should('exist');
-    cy.contains('Coralee').should('exist');
-    cy.contains('Ron').should('exist');
+  it('testAvailabilityOfAllInstructorInfo',()=>{
+    cy.get('body > div > div > div > table > tbody > tr:nth-child(1)').should('have.text', 'Bryce\\tBarrie\\t123A.1\\t(306)-456-5467\\tbarrie@saskpolytech.ca\\tEDIT DELETE');
+    cy.get('body > div > div > div > table > tbody > tr:nth-child(2)').should ('have.text','Ernesto\\tBasoalto\\t123B.1\\t(306)-456-6859\\tbasalto@saskpolytech.ca\\tEDIT DELETE' );
+    cy.get ('body > div > div > div > table > tbody > tr:nth-child(3)').should ('have.text', 'Ben\tBe\t223A.1\t(123)-456-9655\tbbenson@saskpolytech.ca\tEDIT DELETE');
+    cy.get ('body > div > div > div > table > tbody > tr:nth-child(4)').should ('have.text', 'Rick\tCaron\t123A.3\t(306)-123-7895\tcaron@saskpolytech.ca\tEDIT DELETE');
+    cy.get ('body > div > div > div > table > tbody > tr:nth-child(5)').should ('have.text', 'Coralee\\tKaban\\t123A.2\\t(306)-567-5676\\tkaban@saskpolytech.ca\\tEDIT DELETE');
+    cy.get ('body > div > div > div > table > tbody > tr:nth-child(6)').should ('have.text', 'Ron\\tNew\\t123B.0\\t(306)-678-6585\\tnew@saskpolytech.ca\\tEDIT DELETE')
+
   })
 
   /* Test to confirm the unavailability of new instructor's name (to be created/ added)  according to the fixture data*/
   it ('testUnavailabilityOfNewInstructorInfo',()=>{
-    cy.contains('Ben').should('not.exist');
-    cy.contains('Benson').should('not.exist');
+    cy.contains('Bin').should('not.exist');
+
   })
 
 /* Test  "Add New Instructor" button navigates us to "Create New Instructor" modal, and it has required input boxes */
@@ -82,33 +83,33 @@ describe('Testing Instructor CRUD options', () => {
 
   /* Test to  create a new instructor Ben Benson and confirm the availability inside Instructor Listings*/
   it('testAddingInformationOfNewInstructor ', () => {
-    cy.get(createInsButton, {timeout:10000}).click();
-    cy.get(newInsFirstNameInputTextBox, {timeout:50000}).type('Ben');
+    cy.get(createInsButton).click();
+    cy.get(newInsFirstNameInputTextBox).type('Bin');
     cy.get(newInsLastNameInputTextBox,).type('Benson');
-    cy.get(newInsOfficeNumInputBox, {timeout:10000}).type('223A.1');
-    cy.get(newInsPhoneNumInputBox, {timeout:10000}).type('(123)-456-9655');
-    cy.get(newInsEmailInputBox, {timeout:10000}).type('benson@saskpolytech.ca');
-    cy.get(CreateInstructorButtonOnNewInsModal, {timeout:10000} ).click();
-    cy.contains('Ben').should('exist');
+    cy.get(newInsOfficeNumInputBox).type('223A.1');
+    cy.get(newInsPhoneNumInputBox).type('(123)-456-9655');
+    cy.get(newInsEmailInputBox).type('bbenson@saskpolytech.ca');
+    cy.get(CreateInstructorButtonOnNewInsModal ).click();
+    cy.contains('Bin').should('exist');
   });
 
   /* Test to  edit instructor Ben Benson's name and confirm the availability of edited instructor inside Instructor Listings*/
   it('testEditInstructorInformation', () => {
-    cy.get(insListEditButtonOnFirstColumn, {timeout:10000}).click();
+    cy.get(insListEditButtonOnFirstColumn).click();
     cy.get(editModalHeader).should('have.text', 'Edit Existing Instructor');
-    cy.get(firstTextBoxOnEditModal, {timeout:10000}).clear();
-    cy.get(firstTextBoxOnEditModal, {timeout:10000}).type('John');
-    cy.get(secondTextBoxOnEditModal, {timeout:10000}).clear();
-    cy.get(secondTextBoxOnEditModal, {timeout:10000}).type('Doe');
-    cy.get(saveButtonOnEditModal, {timeout:10000}).click();
+    cy.get(firstTextBoxOnEditModal).clear();
+    cy.get(firstTextBoxOnEditModal).type('John');
+    cy.get(secondTextBoxOnEditModal).clear();
+    cy.get(secondTextBoxOnEditModal).type('Doe');
+    cy.get(saveButtonOnEditModal).click();
     cy.contains('John').should('exist');
   });
 
   /* Test to  delete instructor John's information and confirm the unavailability of deleted instructor inside Instructor Listings*/
   it('testDeleteInstructorButton  ', () => {
 
-    cy.get(insListDeleteButtonOnFirstColumnForDeleteTest, {timeout:10000}).click();
-    cy.get(confirmDeleteButtonOnDeleteModal, {timeout:10000}).click();
+    cy.get(insListDeleteButtonOnFirstColumnForDeleteTest).click();
+    cy.get(confirmDeleteButtonOnDeleteModal).click();
     cy.contains('John').should('not.exist');
 
   });

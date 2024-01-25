@@ -8,20 +8,21 @@ const Classroom = require('../private/javascript/Classroom');
 const CourseOffering = require('../private/javascript/CourseOffering');
 
 /**
- * This method deletes all tables and then recreates them, with associations
+ * This method redfines all tables, with associations
+ * It will not delete any data stored in the DB
  * @return {Promise<void>} Nothing
  */
 async function createTables() {
-  await Program.sync({force: true});
-  await Instructor.sync({force: true});
-  await Term.sync({force: true});
-  await Course.sync({force: true});
+  await Program.sync();
+  await Instructor.sync();
+  await Term.sync();
+  await Course.sync();
 
   await Associations.addAssociations();
 
-  await CourseOffering.sync({force: true});
-  await Classroom.sync({force:true});
-  await Timeslot.sync({force: true});
+  await CourseOffering.sync();
+  await Classroom.sync();
+  await Timeslot.sync();
 }
 
 module.exports = createTables;

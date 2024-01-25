@@ -381,7 +381,6 @@ describe('phoneNum', () => {
 
   test('testCreatingInstructorWithValidPhoneNumberWithoutBracesAndDash', async function() {
     testInstructor.phoneNum = '1231111122';
-    testInstructor.officeNum ='123.4A';
     let instructor;
     try {
       instructor = await Instructor.create(testInstructor);
@@ -510,8 +509,6 @@ describe('email', () => {
 
   test('testCreatingInstructorWithEmptyEmail ', async function() {
     testInstructor.email = '';
-    testInstructor.officeNum='1234.1A';
-    testInstructor.phoneNum='1234567890';
     let errArray; let errCount; let instructor;
 
     try {
@@ -555,9 +552,6 @@ describe('email', () => {
 
   test('testCreatingInstructorWithEmailMissingTopLevelDomain ', async function() {
     testInstructor.email = 'doe.saskpolytech';
-    testInstructor.officeNum='123.4A';
-    testInstructor.phoneNum='1234567890';
-
     try {
       instructor = await Instructor.create(testInstructor);
     } catch (error) {

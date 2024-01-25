@@ -17,7 +17,6 @@ router.get('/', async function(req, res, next) {
 
   router.post('/', async function (req, res, next) {
 
-    // console.log('POST: ' + JSON.stringify(req.body));
     await CourseOffering.sync();
 
     const newCO = {
@@ -55,7 +54,7 @@ router.get('/', async function(req, res, next) {
   });
 
   router.put('/', async function (req, res, next) {
-    console.log('PUT: ' + JSON.stringify(req.body));
+    // console.log('PUT: ' + JSON.stringify(req.body));
 
     const newCO = {
       id: req.body.id,
@@ -94,7 +93,7 @@ router.get('/', async function(req, res, next) {
   });
 
   router.delete('/', async function (req, res, next) {
-    console.log('DELETE: ' + JSON.stringify(req.body));
+    // console.log('DELETE: ' + JSON.stringify(req.body));
     const retDelete = await deleteCourseOffering(req.body);
     let violations;
     if (retDelete <= 0) {

@@ -93,7 +93,7 @@ describe('testThatLocation', ()=>{
   // Test if a location with 51 characters is invalid
   test('testThatRoomNumberIsInvalidWith11Characters', async () => {
     try {
-      classroomInstance.location = 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy'
+      classroomInstance.location = 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy';
     } catch (error) {
       expect(error.message).toBe('The location must be between 2 and 50 characters in length.');
     }
@@ -105,4 +105,4 @@ describe('testThatLocation', ()=>{
       await classroomInstance.destroy();
     }
   });
-})
+});
