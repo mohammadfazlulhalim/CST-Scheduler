@@ -25,9 +25,6 @@ async function loadTimeslots() {
   await coObj2.setCourse(courseObj.offering2.courseID);
   await coObj2.setProgram(courseObj.offering2.programID);
 
-  // const termTest = await coObj2.getTerm();
-  // console.log('getter test: ' + JSON.stringify(termTest));
-
   const ClassroomObj = await Classroom.create(testConst.classroom1);
 
   // creating the object literals for easy use
@@ -39,8 +36,8 @@ async function loadTimeslots() {
     ClassroomId: ClassroomObj.id,
     TermId: coObj1.TermId,
     ProgramId: coObj1.ProgramId,
-    startTime: '8:00',
-    endTime: '9:00',
+    startTime: '08:00',
+    endTime: '09:00',
     day: 1,
     group: coObj1.group,
   };
@@ -53,8 +50,8 @@ async function loadTimeslots() {
     ClassroomId: ClassroomObj.id,
     TermId: coObj2.TermId,
     ProgramId: coObj2.ProgramId,
-    startTime: '14:00',
-    endTime: '15:00',
+    startTime: '15:00',
+    endTime: '16:00',
     day: 1,
     group: coObj2.group,
   };
@@ -63,17 +60,12 @@ async function loadTimeslots() {
   // Group A top-left to bottom-right diagonal
   const timeslotCreated = await Timeslot.create(TimeslotAObj); // 8-9 Monday
   TimeslotAObj.day = 2;
-  TimeslotAObj.startTime = '9:00';
+  TimeslotAObj.startTime = '09:00';
   TimeslotAObj.endTime = '10:00';
 
   const response = await Timeslot.findByPk(timeslotCreated.id, {include: CourseOffering});
 
-  // console.log("Eager test: " + JSON.stringify(response));
-
-  // console.log('Testing format response: ' + JSON.stringify(timeslotCreated));
-  // const termTest2 = await timeslotCreated.getCourseOffering();
-  // console.log('getter test 2: ' + JSON.stringify(termTest2));
-
+  //Group A top-left to bottom-right diagonal
   await Timeslot.create(TimeslotAObj); // 9-10 Tue
   TimeslotAObj.day = 3;
   TimeslotAObj.startTime = '10:00';
@@ -84,36 +76,28 @@ async function loadTimeslots() {
   TimeslotAObj.endTime = '12:00';
   await Timeslot.create(TimeslotAObj); // 11-12 Thur
   TimeslotAObj.day = 5;
-  TimeslotAObj.startTime = '13:00';
-  TimeslotAObj.endTime = '14:00';
-  await Timeslot.create(TimeslotAObj); // 1-2 Fri
-  TimeslotAObj.day = 5;
-  TimeslotAObj.startTime = '14:00';
-  TimeslotAObj.endTime = '15:00';
-  await Timeslot.create(TimeslotAObj); // 2-3 Fri
+  TimeslotAObj.startTime = '12:00';
+  TimeslotAObj.endTime = '13:00';
+  await Timeslot.create(TimeslotAObj); // 12-1 Fri
 
   // Group B bottom-left to top-right diagonal
-  await Timeslot.create(TimeslotBObj); // 2-3 Monday
+  await Timeslot.create(TimeslotBObj); // 3-4 Monday
   TimeslotBObj.day = 2;
+  TimeslotBObj.startTime = '14:00';
+  TimeslotBObj.endTime = '15:00';
+  await Timeslot.create(TimeslotBObj); // 2-3 Tue
+  TimeslotBObj.day = 3;
   TimeslotBObj.startTime = '13:00';
   TimeslotBObj.endTime = '14:00';
-  await Timeslot.create(TimeslotBObj); // 1-2 Tue
-  TimeslotBObj.day = 3;
+  await Timeslot.create(TimeslotBObj); // 1-2 Wed
+  TimeslotBObj.day = 4;
+  TimeslotBObj.startTime = '12:00';
+  TimeslotBObj.endTime = '13:00';
+  await Timeslot.create(TimeslotBObj); // 12-1 Thur
+  TimeslotBObj.day = 5;
   TimeslotBObj.startTime = '11:00';
   TimeslotBObj.endTime = '12:00';
-  await Timeslot.create(TimeslotBObj); // 11-12 Wed
-  TimeslotBObj.day = 4;
-  TimeslotBObj.startTime = '10:00';
-  TimeslotBObj.endTime = '11:00';
-  await Timeslot.create(TimeslotBObj); // 10-11 Thur
-  TimeslotBObj.day = 5;
-  TimeslotBObj.startTime = '9:00';
-  TimeslotBObj.endTime = '10:00';
-  await Timeslot.create(TimeslotBObj); // 9-10 Fri
-  TimeslotBObj.day = 5;
-  TimeslotBObj.startTime = '8:00';
-  TimeslotBObj.endTime = '9:00';
-  await Timeslot.create(TimeslotBObj); // 8-9 Fri
+  await Timeslot.create(TimeslotBObj); // 11-12 Fri
 }
 
 module.exports = loadTimeslots;

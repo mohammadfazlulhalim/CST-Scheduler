@@ -7,29 +7,29 @@ const Classroom = require('../../private/javascript/Classroom');
 const Timeslot = require('../../private/javascript/Timeslot');
 
 addAssociations = () => {
-  // Course offering associations:
-  Term.hasMany(CourseOffering);
-  Course.hasMany(CourseOffering);
-  Instructor.hasMany(CourseOffering);
-  Program.hasMany(CourseOffering);
+    // Course offering associations:
+    Term.hasMany(CourseOffering);
+    Course.hasMany(CourseOffering);
+    Instructor.hasMany(CourseOffering);
+    Program.hasMany(CourseOffering);
 
-  CourseOffering.belongsTo(Term);
-  CourseOffering.belongsTo(Course);
-  CourseOffering.belongsTo(Instructor);
-  CourseOffering.belongsTo(Program);
+    CourseOffering.belongsTo(Term);
+    CourseOffering.belongsTo(Course);
+    CourseOffering.belongsTo(Instructor);
+    CourseOffering.belongsTo(Program);
 
-  // Timeslot associations:
-  Term.hasMany(Timeslot);
-  CourseOffering.hasMany(Timeslot);
-  Instructor.hasMany(Timeslot);
-  Program.hasMany(Timeslot);
-  Classroom.hasMany(Timeslot);
+    // Timeslot associations:
+    Term.hasMany(Timeslot);
+    CourseOffering.hasMany(Timeslot);
+    Instructor.hasMany(Timeslot);
+    Program.hasMany(Timeslot);
+    Classroom.hasMany(Timeslot);
 
-  Timeslot.belongsTo(Term);
-  Timeslot.belongsTo(CourseOffering);
-  Timeslot.belongsTo(Instructor);
-  Timeslot.belongsTo(Program);
-  Timeslot.belongsTo(Classroom);
+    Timeslot.belongsTo(Term);
+    Timeslot.belongsTo(CourseOffering);
+    Timeslot.belongsTo(Instructor);
+    Timeslot.belongsTo(Program);
+    Timeslot.belongsTo(Classroom);
 
 };
 

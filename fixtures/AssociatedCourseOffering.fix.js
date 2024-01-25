@@ -1,4 +1,3 @@
-const CourseOffering = require('../private/javascript/CourseOffering');
 const Associations = require('../private/javascript/Associations');
 const Course = require('../private/javascript/Course');
 const {testConst} = require('../constants');
@@ -12,9 +11,18 @@ async function loadRelationships() {
   Associations.addAssociations();
   const courseOfferingObj = {offering1: {}, offering2: {}};
 
-  const courseObj = await Course.create(testConst.course1);
+  // Checking the DB to see if the entry already exists
+  let courseOBJ = await Course.findOne({where: {courseCode: testConst.course1.courseCode}});
+  // If it does not exist, create it
+  if (!courseOBJ) {
+    courseObj = await Course.create(testConst.course1);
+  }
+
   const termObj = await Term.create(testConst.term1);
   const insObj = await Instructor.create(testConst.instructor1);
+  // TODO remove the extra instructor afterwards
+  const insObj2 = await Instructor.create(testConst.instructorDonovan1);
+
   const progObj = await Program.create(testConst.program1);
 
   courseOfferingObj.offering1 = {

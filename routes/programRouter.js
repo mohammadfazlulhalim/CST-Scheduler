@@ -56,7 +56,7 @@ router.post('/', async function(req, res, next) {
 
 // Update programs
 router.put('/', async function(req, res, next) {
-  console.log('We r in the put');
+
   await sequelize.sync();
   // From the hbs form gather the data
   const programID = req.body.progID;
@@ -65,14 +65,12 @@ router.put('/', async function(req, res, next) {
 
   // find if that program exists
   const programToUpdate = await Program.findByPk(programID);
-  console.log('program to update'+JSON.stringify(programToUpdate));
   let violations;
   // if it doesnt exist
   if (!programToUpdate) {
     res.status(404);
   } else {// else update
     const result = await updateProgram(programToUpdate, programName, programAbbreviation);
-    console.log('We r out of the program to update method'+JSON.stringify(result));
 
     // initialize violations
     // let violations;
@@ -81,7 +79,6 @@ router.put('/', async function(req, res, next) {
       res.status(422);
       // send error messages to the hbs template
       violations = result.error;
-      console.log('our error'+JSON.stringify(violations));
     } else {
       // creation was successful
       res.status(201);
@@ -198,7 +195,6 @@ const createProgram = async (program) => {
       programAbbreviation: program.programAbbreviation,
 
     });
-    console.log('Term to Create: ' + JSON.stringify(programToCreate));
     return programToCreate;
   } catch (err) {
     return mapErrors(err);
@@ -215,7 +211,7 @@ const mapErrors = (err) => {
       violations.error[error.path] = error.message;
     }
   } else {
-    console.error('Error object does not have iterable errors property:', err);
+    // console.error('Error object does not have iterable errors property:', err);
   }
 
   return violations;

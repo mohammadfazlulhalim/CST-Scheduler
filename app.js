@@ -13,8 +13,9 @@ const programRouter = require('./routes/programRouter').router;
 const instructorReportRouter = require('./routes/instructorReportRouter');
 const viewCoursesRouter = require('./routes/course');
 const adminRouter = require('./routes/administrationRouter');
-
-const app = express();
+const scheduleRouter = require('./routes/scheduleRouter'),
+//previously const app=express()
+app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,6 +36,7 @@ app.use('/course', viewCoursesRouter); // story34 view courses
 app.use('/classroom', classroomRouter);
 app.use('/program', programRouter);
 app.use('/administration', adminRouter);
+app.use('/schedule', scheduleRouter); // Story 41
 app.use('/instructorReport', instructorReportRouter);
 
 // bootswatch
