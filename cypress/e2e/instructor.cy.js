@@ -29,6 +29,12 @@ describe('Testing Instructor CRUD options', () => {
   const saveButtonOnEditModal ='#editInstructor';
   const insListDeleteButtonOnFirstColumnForDeleteTest ='#\\36 delete';
   const confirmDeleteButtonOnDeleteModal='#deleteInstructor';
+  const firstRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(1)';
+  const secondRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(2)';
+  const thirdRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(3)';
+  const fourthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(4)';
+  const fifthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(5)'
+  const sixthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(6)'
   const navMenuSelector ='#navbarColor04 > ul > li:nth-child(2) > a';
   const navMenuItem= '#navbarColor04 > ul > li:nth-child(2) > div > a:nth-child(3)';
 
@@ -54,12 +60,12 @@ describe('Testing Instructor CRUD options', () => {
 
   /* Test to confirm the availability of instructor's name according to the fixture data*/
   it('testAvailabilityOfAllInstructorInfo',()=>{
-    cy.get('body > div > div > div > table > tbody > tr:nth-child(1)').should('have.text', 'Bryce\\tBarrie\\t123A.1\\t(306)-456-5467\\tbarrie@saskpolytech.ca\\tEDIT DELETE');
-    cy.get('body > div > div > div > table > tbody > tr:nth-child(2)').should ('have.text','Ernesto\\tBasoalto\\t123B.1\\t(306)-456-6859\\tbasalto@saskpolytech.ca\\tEDIT DELETE' );
-    cy.get ('body > div > div > div > table > tbody > tr:nth-child(3)').should ('have.text', 'Ben\tBe\t223A.1\t(123)-456-9655\tbbenson@saskpolytech.ca\tEDIT DELETE');
-    cy.get ('body > div > div > div > table > tbody > tr:nth-child(4)').should ('have.text', 'Rick\tCaron\t123A.3\t(306)-123-7895\tcaron@saskpolytech.ca\tEDIT DELETE');
-    cy.get ('body > div > div > div > table > tbody > tr:nth-child(5)').should ('have.text', 'Coralee\\tKaban\\t123A.2\\t(306)-567-5676\\tkaban@saskpolytech.ca\\tEDIT DELETE');
-    cy.get ('body > div > div > div > table > tbody > tr:nth-child(6)').should ('have.text', 'Ron\\tNew\\t123B.0\\t(306)-678-6585\\tnew@saskpolytech.ca\\tEDIT DELETE')
+    cy.get(firstRowOfListings).should('have.text', '\n                    Bryce\n                    Barrie\n                    123A.1\n                    (306)-456-5467\n                    barrie@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(secondRowOfListings).should ('have.text','\n                    Ernesto\n                    Basoalto\n                    123B.1\n                    (306)-456-6859\n                    basalto@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ' );
+    cy.get (thirdRowOfListings).should ('have.text', '\n                    Ben\n                    Benson\n                    223A.1\n                    (224)-456-1234\n                    benson@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (fourthRowOfListings).should ('have.text', '\n                    Rick\n                    Caron\n                    123A.3\n                    (306)-123-7895\n                    caron@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (fifthRowOfListings).should ('have.text', '\n                    Coralee\n                    Kaban\n                    123A.2\n                    (306)-567-5676\n                    kaban@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (sixthRowOfListings).should ('have.text', '\n                    Ron\n                    New\n                    123B.0\n                    (306)-678-6585\n                    new@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ')
 
   })
 
