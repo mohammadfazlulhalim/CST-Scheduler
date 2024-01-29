@@ -22,12 +22,12 @@ describe('Testing Instructor CRUD options', () => {
   const newInsPhoneNumInputBox='#cPhoneNum';
   const newInsEmailInputBox='#cEmail';
   const CreateInstructorButtonOnNewInsModal='#createInstructor';
-  const insListEditButtonOnFirstColumn = '#\\36 edit';
+  const insListEditButtonOnFirstColumn = '#\\37 edit';
   const editModalHeader='#editModalLabel';
   const firstTextBoxOnEditModal='#eFirstName';
   const secondTextBoxOnEditModal ='#eLastName';
   const saveButtonOnEditModal ='#editInstructor';
-  const insListDeleteButtonOnFirstColumnForDeleteTest ='#\\36 delete';
+  const insListDeleteButtonOnFirstColumnForDeleteTest ='#\\37 delete';
   const confirmDeleteButtonOnDeleteModal='#deleteInstructor';
   const firstRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(1)';
   const secondRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(2)';
@@ -60,11 +60,11 @@ describe('Testing Instructor CRUD options', () => {
 
   /* Test to confirm the availability of instructor's name according to the fixture data*/
   it('testAvailabilityOfAllInstructorInfo',()=>{
-    cy.get(firstRowOfListings).should('have.text', '\n                    Bryce\n                    Barrie\n                    123A.1\n                    (306)-456-5467\n                    barrie@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get(secondRowOfListings).should ('have.text','\n                    Ernesto\n                    Basoalto\n                    123B.1\n                    (306)-456-6859\n                    basalto@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ' );
-    cy.get (thirdRowOfListings).should ('have.text', '\n                    Ben\n                    Benson\n                    223A.1\n                    (224)-456-1234\n                    benson@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (fourthRowOfListings).should ('have.text', '\n                    Rick\n                    Caron\n                    123A.3\n                    (306)-123-7895\n                    caron@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (fifthRowOfListings).should ('have.text', '\n                    Coralee\n                    Kaban\n                    123A.2\n                    (306)-567-5676\n                    kaban@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(firstRowOfListings).should('have.text', '\n                    Ben\n                    Benson\n                    223A.1\n                    (224)-456-1234\n                    benson@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(secondRowOfListings).should ('have.text', '\n                    Bryce\n                    Barrie\n                    123A.1\n                    (306)-456-5467\n                    barrie@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (thirdRowOfListings).should ('have.text', '\n                    Coralee\n                    Kaban\n                    123A.2\n                    (306)-567-5676\n                    kaban@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (fourthRowOfListings).should ('have.text', '\n                    Ernesto\n                    Basoalto\n                    123B.1\n                    (306)-456-6859\n                    basalto@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (fifthRowOfListings).should ('have.text', '\n                    Rick\n                    Caron\n                    123A.3\n                    (306)-123-7895\n                    caron@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
     cy.get (sixthRowOfListings).should ('have.text', '\n                    Ron\n                    New\n                    123B.0\n                    (306)-678-6585\n                    new@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ')
 
   })

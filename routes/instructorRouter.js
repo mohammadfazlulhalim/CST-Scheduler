@@ -183,7 +183,7 @@ const updateInstructor = async (instructor) => {
 const readAllInstructors = async () => {
   try {
     // Calling the database, for all instructor entries, ordered by instructor number
-    return await Instructor.findAll({order: ['lastName']});
+    return await Instructor.findAll({order: ['firstName']});
   } catch (err) {
     // If it is not found, declaring instructorList as undefined so that table will not be viewed on instructor.hbs
     // and instead a sentence declaring no instructor entries found is displayed

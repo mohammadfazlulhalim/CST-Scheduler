@@ -126,7 +126,7 @@ const testConst = {
     name: 'Hardware',
     startDate: '2023-09-01',
     endDate: '2023-12-15',
-    group: 'B',
+    group: 'A',
     courseID: 1,
     termID: 1,
     instructorID: 1,
