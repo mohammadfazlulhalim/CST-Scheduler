@@ -22,22 +22,26 @@ describe('Testing Instructor CRUD options', () => {
   const newInsPhoneNumInputBox='#cPhoneNum';
   const newInsEmailInputBox='#cEmail';
   const CreateInstructorButtonOnNewInsModal='#createInstructor';
-  const insListEditButtonOnFirstColumn = '#\\37 edit';
+  const insListEditButtonOnFirstColumn = '#\\31 2edit';
   const editModalHeader='#editModalLabel';
   const firstTextBoxOnEditModal='#eFirstName';
   const secondTextBoxOnEditModal ='#eLastName';
   const saveButtonOnEditModal ='#editInstructor';
-  const insListDeleteButtonOnFirstColumnForDeleteTest ='#\\37 delete';
+  const insListDeleteButtonOnFirstColumnForDeleteTest ='#\\31 2delete';
   const confirmDeleteButtonOnDeleteModal='#deleteInstructor';
   const firstRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(1)';
   const secondRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(2)';
   const thirdRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(3)';
   const fourthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(4)';
-  const fifthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(5)'
-  const sixthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(6)'
-  const navMenuSelector ='#navbarColor04 > ul > li:nth-child(2) > a';
-  const navMenuItem= '#navbarColor04 > ul > li:nth-child(2) > div > a:nth-child(3)';
-
+  const fifthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(5)';
+  const sixthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(6)';
+  const seventhRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(7)';
+  const eighthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(8)';
+  const ninthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(9)';
+  const tenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(10)';
+  const eleventhRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(11)'
+  const navMenuSelector ='#navbarColor04 > ul > li:nth-child(3) > a';
+  const navMenuItem= '#navbarColor04 > ul > li:nth-child(3) > div > a:nth-child(3)';
 
 /* Navigating to our expected page "http://localhost:3000/instructor"*/
 
@@ -60,13 +64,17 @@ describe('Testing Instructor CRUD options', () => {
 
   /* Test to confirm the availability of instructor's name according to the fixture data*/
   it('testAvailabilityOfAllInstructorInfo',()=>{
-    cy.get(firstRowOfListings).should('have.text', '\n                    Ben\n                    Benson\n                    223A.1\n                    (224)-456-1234\n                    benson@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(firstRowOfListings).should('have.text', '\n                    Ben\n                    Benson\n                    123B.1\n                    (306)-456-6859\n                    benson@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
     cy.get(secondRowOfListings).should ('have.text', '\n                    Bryce\n                    Barrie\n                    123A.1\n                    (306)-456-5467\n                    barrie@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
     cy.get (thirdRowOfListings).should ('have.text', '\n                    Coralee\n                    Kaban\n                    123A.2\n                    (306)-567-5676\n                    kaban@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (fourthRowOfListings).should ('have.text', '\n                    Ernesto\n                    Basoalto\n                    123B.1\n                    (306)-456-6859\n                    basalto@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (fifthRowOfListings).should ('have.text', '\n                    Rick\n                    Caron\n                    123A.3\n                    (306)-123-7895\n                    caron@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (sixthRowOfListings).should ('have.text', '\n                    Ron\n                    New\n                    123B.0\n                    (306)-678-6585\n                    new@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ')
-
+    cy.get (fourthRowOfListings).should ('have.text', '\n                    Donovan\n                    Onishenko\n                    123B.1\n                    (306)-456-6859\n                    onishenko@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (fifthRowOfListings).should ('have.text', '\n                    Ernesto\n                    Basoalto\n                    123B.1\n                    (306)-456-6859\n                    basalto@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (eighthRowOfListings).should ('have.text', '\n                    Rick\n                    Caron\n                    123A.3\n                    (306)-123-7895\n                    caron@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (ninthRowOfListings).should ('have.text', '\n                    Ron\n                    New\n                    123B.0\n                    (306)-678-6585\n                    new@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ')
+    cy.get (sixthRowOfListings).should ('have.text', '\n                    Jason\n                    Schmidt\n                    123B.1\n                    (306)-456-6859\n                    schmidt@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (seventhRowOfListings).should ('have.text', '\n                    Micheal\n                    Grzesina\n                    123B.1\n                    (306)-456-6859\n                    grzesina@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (tenthRowOfListings).should ('have.text', '\n                    Wade\n                    Lahoda\n                    123B.1\n                    (306)-456-6859\n                    wade@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get (eleventhRowOfListings).should ('have.text', '\n                    firstName\n                    Holtslan\n                    125B.1\n                    (306)-456-6859\n                    holtslan@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ')
   })
 
   /* Test to confirm the unavailability of new instructor's name (to be created/ added)  according to the fixture data*/
@@ -91,7 +99,7 @@ describe('Testing Instructor CRUD options', () => {
   it('testAddingInformationOfNewInstructor ', () => {
     cy.get(createInsButton).click();
     cy.get(newInsFirstNameInputTextBox).type('Bin');
-    cy.get(newInsLastNameInputTextBox,).type('Benson');
+    cy.get(newInsLastNameInputTextBox).type('Benson');
     cy.get(newInsOfficeNumInputBox).type('223A.1');
     cy.get(newInsPhoneNumInputBox).type('(123)-456-9655');
     cy.get(newInsEmailInputBox).type('bbenson@saskpolytech.ca');
