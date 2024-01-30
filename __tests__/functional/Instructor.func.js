@@ -34,9 +34,8 @@ describe('Instructors in database', () => {
     const oldNumInstructors = (await Instructor.findAll()).length;
 
     const invalidInstructor = {
-      instructorID: 'InvalidID',
       firstName: 'fcdsa',
-      lastName: 'TooLonracterLimit',
+      lastName: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
     };
 
     await supertest(app).post('/instructor').send(invalidInstructor).expect(422); // expect 422: unprocessable entity
@@ -62,7 +61,7 @@ describe('Instructors in database', () => {
 
   test('testThatNonExistentInstructorCannotBeDeleted', async () => {
     const oldNumInstructors = (await Instructor.findAll()).length;
-    testInstructor.instructorid = 2;
+    testInstructor.id = 2;
     // try to delete a non-existent instructor
     await supertest(app).delete('/instructor').send(testInstructor).expect(404); // expect 404: not found
     const newNumInstructors = (await Instructor.findAll()).length;
@@ -76,7 +75,7 @@ describe('Instructors in database', () => {
     const oldNumInstructors = (await Instructor.findAll()).length;
     // update the newly added instructor
     await supertest(app).put('/instructor').send({
-      instructorID: instructorToUpdate.instructorID,
+      id: instructorToUpdate.id,
       firstName: instructorToUpdate.firstName,
       lastName: 'NewLastName',
     }).expect(200); // expect 200: OK
@@ -84,7 +83,7 @@ describe('Instructors in database', () => {
     const newNumInstructors = (await Instructor.findAll()).length;
     expect(newNumInstructors).toBe(oldNumInstructors);
     // expect that the end date was actually changed
-    const newInstructor = await Instructor.findByPk(instructorToUpdate.instructorID);
+    const newInstructor = await Instructor.findByPk(instructorToUpdate.id);
     expect(newInstructor.lastName).toBe('NewLastName');
   });
 
@@ -95,7 +94,7 @@ describe('Instructors in database', () => {
     const oldNumInstructors = (await Instructor.findAll()).length;
     // try to update the newly added instructor
     await supertest(app).put('/instructor').send({
-      instructorID: instructorToUpdate.instructorID,
+      id: instructorToUpdate.id,
       firstName: instructorToUpdate.firstName,
       lastName: '',
     }).expect(422); // expect 422: unprocessable entity
@@ -103,7 +102,7 @@ describe('Instructors in database', () => {
     const newNumInstructors = (await Instructor.findAll()).length;
     expect(newNumInstructors).toBe(oldNumInstructors);
     // expect the end date to not have changed
-    const firstName = (await Instructor.findByPk(instructorToUpdate.instructorID)).dataValues.firstName;
+    const firstName = (await Instructor.findByPk(instructorToUpdate.id)).dataValues.firstName;
     expect(firstName).toBe(testInstructor.firstName);
   });
 
@@ -114,7 +113,7 @@ describe('Instructors in database', () => {
     const oldNumInstructors = (await Instructor.findAll()).length;
     // try to update the newly added instructor
     await supertest(app).put('/instructor').send({
-      instructorID: instructorToUpdate.instructorID + 1,
+      id: instructorToUpdate.id + 1,
       firstName: instructorToUpdate.firstName,
       lastName: 'NewLastName',
     }).expect(404); // expect 404: not found
@@ -125,14 +124,14 @@ describe('Instructors in database', () => {
 });
 
 /**
-   * This function tests POST requests on the Instructor router
-   * @param {Object} testInstructor - The instructor to POST
-   */
+ * This function tests POST requests on the Instructor router
+ * @param {Object} testInstructor - The instructor to POST
+ */
 const testPost = async function(testInstructor) {
   const res = await supertest(app).post('/instructor').send(testInstructor).expect(201); // expect 201: created
   // find the newly added instructor in the database
   // for this to work correctly, the router must set a parameter named 'id' using res.set()
-  const foundInstructor = await Instructor.findOne({where: {instructorID: parseInt(res.get('instructorID'))}});
+  const foundInstructor = await Instructor.findOne({where: {id: parseInt(res.get('id'))}});
   // if the instructor does not exist, it will not be truthy; it will be null
   expect(foundInstructor).toBeTruthy();
 };

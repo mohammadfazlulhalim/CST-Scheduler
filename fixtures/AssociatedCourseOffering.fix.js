@@ -1,4 +1,3 @@
-const CourseOffering = require('../private/javascript/CourseOffering');
 const Associations = require('../private/javascript/Associations');
 const Course = require('../private/javascript/Course');
 const {testConst} = require('../constants');
@@ -21,6 +20,10 @@ async function loadRelationships() {
 
   const termObj = await Term.create(testConst.term1);
   const insObj = await Instructor.create(testConst.instructor1);
+  // TODO remove the extra instructor afterwards
+  const insObj2 = await Instructor.create(testConst.instructorDonovan1);
+  const insObj3 = await Instructor.create(testConst.instructorBryce1);
+
   const progObj = await Program.create(testConst.program1);
 
   courseOfferingObj.offering1 = {

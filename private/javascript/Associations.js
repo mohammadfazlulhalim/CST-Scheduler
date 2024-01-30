@@ -3,38 +3,37 @@ const Term = require('../../private/javascript/Term');
 const Instructor = require('../../private/javascript/Instructor');
 const Program = require('../../private/javascript/Program');
 const CourseOffering = require('../../private/javascript/CourseOffering');
-const Timeslot = require('../../private/javascript/Timeslot');
 const Classroom = require('../../private/javascript/Classroom');
+const Timeslot = require('../../private/javascript/Timeslot');
 
-function addAssociations() {
+addAssociations = () => {
+  // Course offering associations:
   Term.hasMany(CourseOffering);
-  Term.hasMany(Timeslot);
-
   Course.hasMany(CourseOffering);
-
   Instructor.hasMany(CourseOffering);
-  Instructor.hasMany(Timeslot);
-
   Program.hasMany(CourseOffering);
-  Program.hasMany(Timeslot);
 
-  Classroom.hasMany(Timeslot);
-
-
-  Timeslot.belongsTo(Instructor);
-  Timeslot.belongsTo(Classroom);
-  Timeslot.belongsTo(CourseOffering);
-  Timeslot.belongsTo(Program);
-  Timeslot.belongsTo(Term);
-
-  CourseOffering.hasMany(Timeslot);
-  CourseOffering.belongsTo(Instructor);
   CourseOffering.belongsTo(Term);
   CourseOffering.belongsTo(Course);
+  CourseOffering.belongsTo(Instructor);
   CourseOffering.belongsTo(Program);
+
+  // Timeslot associations:
+  Term.hasMany(Timeslot);
+  CourseOffering.hasMany(Timeslot);
+  Instructor.hasMany(Timeslot);
+  Program.hasMany(Timeslot);
+  Classroom.hasMany(Timeslot);
+
+  Timeslot.belongsTo(Term);
+  Timeslot.belongsTo(CourseOffering);
+  Timeslot.belongsTo(Instructor);
+  Timeslot.belongsTo(Program);
+  Timeslot.belongsTo(Classroom);
+
 };
 
 
-// This exports all the updated models
-module.exports = {addAssociations};
 
+//This exports all the updated models
+module.exports = {addAssociations};

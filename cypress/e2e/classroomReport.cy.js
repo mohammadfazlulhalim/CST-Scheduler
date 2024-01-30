@@ -39,13 +39,13 @@ describe('template spec', () => {
     ];
 
     const namesInOrder = [
-      ['Barrie', 'Onishenko', 'New', 'Schmidt', 'Basoalto'],
-      ['Kaban', 'Lahoda', 'Caron', 'Grzesina', 'Holtslan'],
-      ['New', 'Schmidt', 'Basoalto', 'Barrie', 'Onishenko'],
-      ['Caron', 'Grzesina', 'Holtslan', 'Kaban', 'Lahoda'],
+      ['Barrie', 'Onishenko', 'Kaban', 'Lahoda', 'New'],
+      ['Kaban', 'Lahoda', 'New', 'Schmidt', 'Caron'],
+      ['New', 'Schmidt', 'Caron', 'Grzesina', 'Basoalto'],
+      ['Caron', 'Grzesina', 'Basoalto', 'Benson', 'Holtslan'],
       ['', '', '', '', ''], // 12:00 slot appears empty
-      ['Basoalto', 'Barrie', 'Onishenko', 'New', 'Schmidt'],
-      ['Holtslan', 'Kaban', 'Lahoda', 'Caron', 'Grzesina'],
+      ['Basoalto', 'Benson', 'Holtslan', 'Barrie', 'Onishenko'],
+      ['Holtslan', 'Barrie', 'Onishenko', 'Kaban', 'Lahoda'],
       ['', '', '', '', ''],
     ];
 

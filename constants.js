@@ -3,81 +3,90 @@ const testConst = {
     firstName: 'Ben',
     lastName: 'Benson',
   },
+  instructorDonovan1: {
+    firstName: 'Donovan',
+    lastName: 'Onishenko',
+  },
+  instructorBryce1: {
+    firstName: 'Bryce',
+    lastName: 'Barrie',
+  },
   courseOffering1: {
     name: 'Hardware',
     startDate: '2023-09-01',
     endDate: '2023-12-15',
-    group: 'B',
+    group: 'A',
+    courseID: 1,
+    termID: 1,
+    instructorID: 1,
+    programID: 1,
   },
   courseOffering2: {
     name: 'Seminar',
     startDate: '2023-09-01',
     endDate: '2023-12-15',
     group: 'B',
+    courseID: 1,
+    termID: 1,
+    instructorID: 1,
+    programID: 1,
   },
   course1: {
     courseCode: 'CSEC280',
     courseName: 'Security 1',
     courseNumCredits: 4,
     courseNumHoursPerWeek: 4,
+
   },
   term1: {
-    termNumber: 1,
-    startDate: '2023-08-01',
-    endDate: '2023-12-01',
+    termNumber: 5,
+    startDate: '2024-01-02',
+    endDate: '2024-04-25',
   },
   program1: {
     programAbbreviation: 'CST',
     programName: 'Computer Systems Technology',
   },
+  classroom1: {
+    roomNumber: '239a',
+    location: 'Saskatoon',
+  },
+  timeSlot1: {
+    startTime: '10:00', // The value is 24h for now
+    endTime: '11:00', // replaced duration for now
+    startDate: '2023-09-01',
+    endDate: '2023-12-15',
+    day: 3,
+    group: 'B',
+  },
+
+  timeSlotLowerBound: {
+    starttime: '00:00', // The value is 24h for now
+    endtime: '23:59',
+    day: 0,
+    roomID: `239B`,
+    courseOfferingID: 1,
+  },
+
+
   programList: [
     {programAbbreviation: 'CNT', programName: 'Computer Network Technology'},
     {programAbbreviation: 'ECE', programName: 'Early Childhood Education'},
   ],
-  validCourses: [{
-    courseCode: 'MATH282', courseName: 'Mathematics of Computation', courseNumCredits: 3, courseNumHoursPerWeek: 3,
-  },
-  {
-    courseCode: 'COSA280', courseName: 'IT Development Project 1', courseNumCredits: 3, courseNumHoursPerWeek: 3,
-  },
-  {
-    courseCode: 'CDBM280', courseName: 'Database Management Systems', courseNumCredits: 5, courseNumHoursPerWeek: 5,
-  },
-  {
-    courseCode: 'SEM283', courseName: 'Seminar', courseNumCredits: 1, courseNumHoursPerWeek: 1,
-  },
-  {
-    courseCode: 'COHS280', courseName: 'Enterprise Systems Support', courseNumCredits: 3, courseNumHoursPerWeek: 3,
-  },
-  {
-    courseCode: 'CWEB280', courseName: 'Internet Programming/Web Applications 2', courseNumCredits: 6, courseNumHoursPerWeek: 5,
-  },
-  {
-    courseCode: 'COOS291', courseName: 'Advanced Operating Systems', courseNumCredits: 5, courseNumHoursPerWeek: 5,
-  },
-  {
-    courseCode: 'COOS293', courseName: 'Systems Administration 2', courseNumCredits: 4, courseNumHoursPerWeek: 4,
-  },
-  {
-    courseCode: 'COOS294', courseName: 'Cloud Infrastructure Administration', courseNumCredits: 4, courseNumHoursPerWeek: 4,
-  },
-  {
-    courseCode: 'COSA290', courseName: 'IT Development Project 2', courseNumCredits: 6, courseNumHoursPerWeek: 6,
-  },
-  {
-    courseCode: 'COSC292', courseName: 'Advanced Programming 2', courseNumCredits: 4, courseNumHoursPerWeek: 4,
-  },
-  {
-    courseCode: 'COSC295', courseName: 'Advanced Mobile Application Programming', courseNumCredits: 4, courseNumHoursPerWeek: 4,
-  },
-  {
-    courseCode: 'CPMG290 ', courseName: 'IT Development Project Management 2', courseNumCredits: 2, courseNumHoursPerWeek: 2,
-  },
-  {
-    courseCode: 'TCOM291', courseName: 'Career Path Search', courseNumCredits: 1, courseNumHoursPerWeek: 1,
-  },
-
-
+  validCourses: [{courseCode: 'MATH282', courseName: 'Mathematics of Computation', courseNumCredits: 3, courseNumHoursPerWeek: 3},
+    {courseCode: 'COSA280', courseName: 'IT Development Project 1', courseNumCredits: 3, courseNumHoursPerWeek: 3},
+    {courseCode: 'CDBM280', courseName: 'Database Management Systems', courseNumCredits: 5, courseNumHoursPerWeek: 5},
+    {courseCode: 'SEM283', courseName: 'Seminar', courseNumCredits: 1, courseNumHoursPerWeek: 1},
+    {courseCode: 'COHS280', courseName: 'Enterprise Systems Support', courseNumCredits: 3, courseNumHoursPerWeek: 3},
+    {courseCode: 'CWEB280', courseName: 'Internet Programming/Web Applications 2', courseNumCredits: 6, courseNumHoursPerWeek: 5},
+    {courseCode: 'COOS291', courseName: 'Advanced Operating Systems', courseNumCredits: 5, courseNumHoursPerWeek: 5},
+    {courseCode: 'COOS293', courseName: 'Systems Administration 2', courseNumCredits: 4, courseNumHoursPerWeek: 4},
+    {courseCode: 'COOS294', courseName: 'Cloud Infrastructure Administration', courseNumCredits: 4, courseNumHoursPerWeek: 4},
+    {courseCode: 'COSA290', courseName: 'IT Development Project 2', courseNumCredits: 6, courseNumHoursPerWeek: 6},
+    {courseCode: 'COSC292', courseName: 'Advanced Programming 2', courseNumCredits: 4, courseNumHoursPerWeek: 4},
+    {courseCode: 'COSC295', courseName: 'Advanced Mobile Application Programming', courseNumCredits: 4, courseNumHoursPerWeek: 4},
+    {courseCode: 'CPMG290 ', courseName: 'IT Development Project Management 2', courseNumCredits: 2, courseNumHoursPerWeek: 2},
+    {courseCode: 'TCOM291', courseName: 'Career Path Search', courseNumCredits: 1, courseNumHoursPerWeek: 1},
   ],
   validTerms: [
     {termNumber: 1, startDate: '2023-08-01', endDate: '2023-12-01'},
@@ -98,6 +107,7 @@ const testConst = {
     {firstName: 'Wade', lastName: 'Lahoda'},
     {firstName: 'Jason', lastName: 'Schmidt'},
     {firstName: 'Micheal', lastName: 'Grzesina'},
+    {firstName: 'Ben', lastName: 'Benson'},
   ],
   validCourseOfferingsB: [
     {name: 'Advanced Operating Systems', startDate: '2023-01-01', endDate: '2023-04-01', group: 'B'},
@@ -131,6 +141,27 @@ const testConst = {
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '9:00', endTime: '10:00', day: 5, group: 'A'},
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
   ],
+
+  timeColumn8amTo3pmDisplayArray: [
+    '8:00',
+    '9:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '1:00',
+    '2:00',
+    '3:00',
+  ], timeColumn8amTo3pmDisplayArray24Hr: [
+    '8:00',
+    '9:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+  ],
+  weekdaysFullySpelled: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
 
 
 };

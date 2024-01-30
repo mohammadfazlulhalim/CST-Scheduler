@@ -18,7 +18,6 @@ router.post('/', async function(req, res, next) {
   await sequelize.sync();
   // attempt to create the given instructor
   const result = await createInstructor({
-    instructorID: req.body.instructorID,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
   });
@@ -32,7 +31,7 @@ router.post('/', async function(req, res, next) {
     // creation was successful
     res.status(201);
     // put the ID in the response so tests can access it
-    res.set('instructorID', result.instructorID);
+    res.set('id', result.id);
   }
   const instructorLists = await readAllInstructors();
 
@@ -48,11 +47,11 @@ router.post('/', async function(req, res, next) {
  * DELETE handler for http://localhost:3000/instructor
  */
 router.delete('/', async function(req, res, next) {
-  const result = await deleteInstructor({instructorID: req.body.instructorID});
+  const result = await deleteInstructor({id: req.body.id});
   let violations;
   if (result <= 0) {
     res.status(404);
-    violations = {instructorID: 'Instructor not found; cannot delete'};
+    violations = {id: 'Instructor not found; cannot delete'};
   }
   const instructorLists = await readAllInstructors();
   res.render('instructor', {
@@ -68,7 +67,7 @@ router.delete('/', async function(req, res, next) {
  */
 router.put('/', async function(req, res, next) {
   const result = await updateInstructor({
-    instructorID: req.body.instructorID,
+    id: req.body.id,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
   });
@@ -84,7 +83,6 @@ router.put('/', async function(req, res, next) {
     violations = result.error;
   }
   const putSubmittedInstructor= req.body;
-  // console.log(putSubmittedInstructor);
   const instructorLists = await readAllInstructors();
   res.render('instructor', {
     title: 'Instructor List',
@@ -103,7 +101,6 @@ router.put('/', async function(req, res, next) {
 const createInstructor = async (instructor) => {
   try {
     return await Instructor.create({
-      instructorID: instructor.instructorID,
       firstName: instructor.firstName,
       lastName: instructor.lastName,
     });
@@ -121,7 +118,7 @@ const createInstructor = async (instructor) => {
 const deleteInstructor = async (instructor) => {
   try {
     // try to delete the instructor
-    return await Instructor.destroy({where: {instructorID: parseInt(instructor.instructorID)}});
+    return await Instructor.destroy({where: {id: parseInt(instructor.id)}});
   } catch (err) {
     // if an error occurred, state that 0 rows were deleted
     return 0;
@@ -135,12 +132,12 @@ const deleteInstructor = async (instructor) => {
  */
 const updateInstructor = async (instructor) => {
   // find the instructor to update
-  const instructorToUpdate = await Instructor.findByPk(instructor.instructorID);
+  const instructorToUpdate = await Instructor.findByPk(instructor.id);
   if (instructorToUpdate) {
     // only try to update the instructor if it already exists
     try {
       return await instructorToUpdate.update({
-        instructorID: instructor.instructorID,
+        id: instructor.id,
         firstName: instructor.firstName,
         lastName: instructor.lastName,
       });
@@ -161,7 +158,7 @@ const updateInstructor = async (instructor) => {
 const readAllInstructors = async () => {
   try {
     // Calling the database, for all instructor entries, ordered by instructor number
-    return await Instructor.findAll({order: ['instructorID']});
+    return await Instructor.findAll({order: ['id']});
   } catch (err) {
     // If it is not found, declaring instructorList as undefined so that table will not be viewed on instructor.hbs
     // and instead a sentence declaring no instructor entries found is displayed

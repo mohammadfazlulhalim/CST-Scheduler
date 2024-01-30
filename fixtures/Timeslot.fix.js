@@ -22,6 +22,9 @@ async function createTimeslot() {
   const RealTimeSlots = await Timeslot.bulkCreate(TimeSlotsArray);
   const RealTimeSlots2 = await Timeslot.bulkCreate(constants.testConst.validTimeslots);
 
+  // for (const timeslot of constants.testConst.story9v2Timeslot) {
+  //   await Timeslot.create(timeslot);
+  // }
 
   const instructor = await Instructor.findByPk(4);
   const program = await Program.findByPk(1);
@@ -43,8 +46,8 @@ async function createTimeslot() {
     RealTimeSlots2[i].setProgram(program);
     RealTimeSlots2[i].setInstructor(instructor);
     RealTimeSlots2[i].setClassroom(classroom);
-    RealTimeSlots2[i].setInstructor(await Instructor.findByPk((i%constants.testConst.validInstructor.length)+1));
-    RealTimeSlots2[i].setCourseOffering(await courseOffering.findByPk((i%constants.testConst.validCourseOfferingsA.length)+9));
+    RealTimeSlots2[i].setInstructor(await Instructor.findByPk((i % constants.testConst.validInstructor.length) + 1));
+    RealTimeSlots2[i].setCourseOffering(await courseOffering.findByPk((i % constants.testConst.validCourseOfferingsA.length) + 9));
   }
 }
 

@@ -1,13 +1,7 @@
 const {DataTypes, sequelize} = require('../../datasource');
 
-
 // Database constructor for Instructor
 const Instructor = sequelize.define('Instructor', {
-  instructorID: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
   firstName: {
     type: DataTypes.STRING,
     allowNull: false,
