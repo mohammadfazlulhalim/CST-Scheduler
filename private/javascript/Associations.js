@@ -30,10 +30,7 @@ addAssociations = () => {
   Timeslot.belongsTo(Instructor);
   Timeslot.belongsTo(Program);
   Timeslot.belongsTo(Classroom);
-
 };
 
 
-
-//This exports all the updated models
 module.exports = {addAssociations};

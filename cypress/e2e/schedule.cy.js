@@ -74,7 +74,7 @@ it('testThatModalWorks', () => {
 
   cy.get('#Hardware-A').contains('Ben Benson');
   cy.get('#Hardware-A').should('be.visible');
-  cy.get('#Hardware-B').should('be.hidden');
+  cy.get('#Seminar-B').should('be.hidden');
 
   cy.get('#btnB').click();
 
@@ -111,7 +111,7 @@ it('testThatModalWorks', () => {
     }
   }
 
-  cy.get('#Hardware-B').contains('Ben Benson');
+  cy.get('#Seminar-B').contains('Ben Benson');
   cy.get('#Hardware-A').should('be.hidden');
-  cy.get('#Hardware-B').should('be.visible');
+  cy.get('#Seminar-B').should('be.visible');
 });

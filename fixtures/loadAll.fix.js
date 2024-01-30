@@ -8,6 +8,7 @@ const fillProgramTable = require('./Program.fix');
 const fillTimeslotTable = require('./Timeslot.fix');
 const {addAssociations} = require('../private/javascript/Associations');
 const createAllTables = require('./createTables.fix');
+const fillTimeslot = require('./AssociatedTimeSlot.fix');
 
 // eslint-disable-next-line require-jsdoc
 async function loadEverything() {
@@ -19,6 +20,7 @@ async function loadEverything() {
   await fillProgramTable();
   await fillCourseOfferingTable();
   await fillTimeslotTable();
+  await fillTimeslot();
 }
 
 loadEverything();

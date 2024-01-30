@@ -12,19 +12,32 @@ async function loadRelationships() {
   const courseOfferingObj = {offering1: {}, offering2: {}};
 
   // Checking the DB to see if the entry already exists
-  const courseOBJ = await Course.findOne({where: {courseCode: testConst.course1.courseCode}});
+  let courseObj = await Course.findOne({where: {courseCode: testConst.course1.courseCode}});
   // If it does not exist, create it
-  if (!courseOBJ) {
+  if (!courseObj) {
     courseObj = await Course.create(testConst.course1);
   }
-
   const termObj = await Term.create(testConst.term1);
-  const insObj = await Instructor.create(testConst.instructor1);
+  // const termObj = await Term.findByPk(testConst.term1.id);
+  let insObj = await Instructor.findOne({where: {lastName: testConst.instructor1.lastName}});
+  if (!insObj) {
+    insObj = await Instructor.create(testConst.instructor1);
+  }
   // TODO remove the extra instructor afterwards
-  const insObj2 = await Instructor.create(testConst.instructorDonovan1);
-  const insObj3 = await Instructor.create(testConst.instructorBryce1);
+  let insObj2 = await Instructor.findOne({where: {lastName: testConst.instructorDonovan1.lastName}});
+  if (!insObj2) {
+    insObj2 = await Instructor.create(testConst.instructorDonovan1);
+  }
+  let insObj3 = await Instructor.findOne({where: {lastName: testConst.instructorBryce1.lastName}});
+  if (!insObj3) {
+    insObj3 = await Instructor.create(testConst.instructorBryce1);
+  }
 
-  const progObj = await Program.create(testConst.program1);
+  let progObj = await Program.findOne({where: {programAbbreviation: testConst.program1.programAbbreviation}});
+  if (!progObj) {
+    progObj = await Program.create(testConst.program1);
+  }
+
 
   courseOfferingObj.offering1 = {
     name: testConst.courseOffering1.name,

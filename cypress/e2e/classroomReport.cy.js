@@ -12,13 +12,13 @@ describe('template spec', () => {
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check the button is initially disabled
     cy.get('#classroomSelect').children('option').then((options) => {
       const selectOptions = [...options].map((option) => option.textContent);
-      const expectedOptions = ['Select Classroom', '239A', '239B', '240B', '242C'];
+      const expectedOptions = ['Select Classroom', '239A', '239B', '239a', '240B', '242C'];
       expect(selectOptions).to.include.members(expectedOptions); // Check if all expected options are present
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     }).parent().select('239B');
     cy.get('#termSelect').children('option').then((options) => {
       const selectOptions = [...options].map((option) => option.textContent);
-      const expectedOptions = ['Select Term', '2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2023 - 5', '2023 - 6'];
+      const expectedOptions = ['Select Term', '2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2024 - 5', '2023 - 5', '2023 - 6'];
       expect(selectOptions).to.include.members(expectedOptions); // Check if all expected options are present
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     });
@@ -84,13 +84,13 @@ describe('template spec', () => {
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check the button is initially disabled
     cy.get('#classroomSelect').children('option').then((options) => {
       const selectOptions = [...options].map((option) => option.textContent);
-      const expectedOptions = ['Select Classroom', '239A', '239B', '240B', '242C'];
+      const expectedOptions = ['Select Classroom', '239A', '239B', '239a', '240B', '242C'];
       expect(selectOptions).to.include.members(expectedOptions); // Check if all expected options are present
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     }).parent().select('239A');
     cy.get('#termSelect').children('option').then((options) => {
       const selectOptions = [...options].map((option) => option.textContent);
-      const expectedOptions = ['Select Term', '2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2023 - 5', '2023 - 6'];
+      const expectedOptions = ['Select Term', '2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2024 - 5', '2023 - 5', '2023 - 6'];
       expect(selectOptions).to.include.members(expectedOptions); // Check if all expected options are present
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     });
@@ -156,13 +156,13 @@ describe('template spec', () => {
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check the button is initially disabled
     cy.get('#classroomSelect').children('option').then((options) => {
       const selectOptions = [...options].map((option) => option.textContent);
-      const expectedOptions = ['Select Classroom', '239A', '239B', '240B', '242C'];
+      const expectedOptions = ['Select Classroom', '239A', '239B', '239a', '240B', '242C'];
       expect(selectOptions).to.include.members(expectedOptions); // Check if all expected options are present
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     }).parent().select('240B');
     cy.get('#termSelect').children('option').then((options) => {
       const selectOptions = [...options].map((option) => option.textContent);
-      const expectedOptions = ['Select Term', '2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2023 - 5', '2023 - 6'];
+      const expectedOptions = ['Select Term', '2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2024 - 5', '2023 - 5', '2023 - 6'];
       expect(selectOptions).to.include.members(expectedOptions); // Check if all expected options are present
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     });
