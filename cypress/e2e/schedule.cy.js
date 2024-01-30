@@ -1,8 +1,8 @@
 it('testThatModalWorks', () => {
   // Opens main page - and go to Schedule Courses
   cy.visit('localhost:3000');
-  cy.contains('Schedule Courses').click();
-  cy.get('#scheduleModal').should('be.visible')
+  cy.contains('Schedule Builder').click();
+  cy.get('#scheduleModal').should('be.visible');
 
   // Check that Enter button is disabled
   cy.get('#modalSubmit').should('be.disabled');
@@ -28,7 +28,7 @@ it('testThatModalWorks', () => {
   cy.get('#modalSubmit').should('not.be.disabled');
   cy.get('#modalSubmit').click();
 
-  cy.get('#scheduleModal').should('be.hidden')
+  cy.get('#scheduleModal').should('be.hidden');
 
   cy.get('#time').then((tdElement) => {
     // Use .text() to get the text content of the <td> element
@@ -72,9 +72,9 @@ it('testThatModalWorks', () => {
     }
   }
 
-  cy.get("#Hardware-A").contains("Ben Benson");
-  cy.get("#Hardware-A").should('be.visible');
-  cy.get("#Hardware-B").should('be.hidden');
+  cy.get('#Hardware-A').contains('Ben Benson');
+  cy.get('#Hardware-A').should('be.visible');
+  cy.get('#Hardware-B').should('be.hidden');
 
   cy.get('#btnB').click();
 
@@ -111,8 +111,7 @@ it('testThatModalWorks', () => {
     }
   }
 
-  cy.get("#Hardware-B").contains("Ben Benson");
-  cy.get("#Hardware-A").should('be.hidden');
-  cy.get("#Hardware-B").should('be.visible');
-
+  cy.get('#Hardware-B').contains('Ben Benson');
+  cy.get('#Hardware-A').should('be.hidden');
+  cy.get('#Hardware-B').should('be.visible');
 });
