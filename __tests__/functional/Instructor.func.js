@@ -128,9 +128,9 @@ describe('Instructors in database', () => {
 });
 
 /**
-   * This function tests POST requests on the Instructor router
-   * @param {Object} testInstructor - The instructor to POST
-   */
+ * This function tests POST requests on the Instructor router
+ * @param {Object} testInstructor - The instructor to POST
+ */
 const testPost = async function(testInstructor) {
   const res = await supertest(app).post('/instructor').send(testInstructor).expect(201); // expect 201: created
 

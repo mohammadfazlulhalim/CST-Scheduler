@@ -12,7 +12,7 @@ const CourseOffering = require('../private/javascript/CourseOffering');
  * It will not delete any data stored in the DB
  * @return {Promise<void>} Nothing
  */
-async function createTables() {
+async function createTables(bfor) {
   await Program.sync();
   await Instructor.sync();
   await Term.sync();

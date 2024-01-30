@@ -1,0 +1,116 @@
+{{#if hasTimeSlots}}
+    <div>
+        <div class="row">
+            <div class="col-9">
+                <h2><i>Lab Schedule for:</i> {{realClassroom.roomNumber}}</h2>
+                <p>Dates: {{realTerm.startDate}} to {{realTerm.endDate}} </p>
+            </div>
+            <div class="col-3">
+                <small>Report Generated:{{dateGen}}</small>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered border-dark">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th class="text-center align-content-center m-auto" scope="col">Time</th>
+                            {{#each DAYS}}
+                                <th scope="col" class="text-center align-content-center m-auto">{{this}}</th>
+                            {{/each}}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each ScheduleArray}}
+                            <tr>
+                                <th class="text-center align-content-center m-auto">{{lookup ../TIMES @index}}</th>
+                                {{#each this}}
+                                    <td>
+                                        <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                                            <p class="text-break mb-0">{{this.course.courseCode}}</p>
+                                            <p class=" text-break mb-0">{{this.Instructor.lastName}}</p>
+                                        </div>
+                                    </td>
+                                {{/each}}
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{{else}}
+    {{#if routerPost}}
+        <h1 id="EmptyMessage">Nothing to display at the moment</h1>
+    {{/if}}
+{{/if}}
+
+
+<div id="classroomReportInfoModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create a Classroom Report For: </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="#" class="mb-3">
+                    <div class="mb-3">
+                        <label for="termSelect" class="form-label">Term:</label>
+                        <select id="termSelect" name="term" class="form-select">
+                            <option value="" selected disabled>Select Term</option>
+                            {{#each newTermList}}
+                                <option value="{{this.id}}">{{this.displayTerm}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="classroomSelect" class="form-label">Classroom:</label>
+                        <select id="classroomSelect" name="classroom" class="form-select">
+                            <option value="" selected disabled>Select Classroom</option>
+                            {{#each classrooms}}
+                                <option value="{{id}}">{{roomNumber}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btnGenerateSchedule" disabled>Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{#if routerPost}}
+    <a href="/classroomReport"><button class="btn btn-primary">Change Classrooms</button></a><br />
+{{/if}}
+
+<script>
+
+    'use strict';
+
+    window.onload = function() {
+        const modal = new bootstrap.Modal(document.getElementById('classroomReportInfoModal'));
+
+        {{#if showModal}}
+            modal.show();
+        {{/if}}
+
+        var termSelect = document.getElementById('termSelect');
+        var classroomSelect = document.getElementById('classroomSelect');
+        var submitBtn = document.getElementById('btnGenerateSchedule');
+
+        // Add event listeners to the selects
+        termSelect.addEventListener('change', handleSelectChange);
+        classroomSelect.addEventListener('change', handleSelectChange);
+
+        function handleSelectChange() {
+            // Enable or disable the submit button based on whether both selects have values
+            submitBtn.disabled = termSelect.value === '' || classroomSelect.value === '';
+        }
+    };
+</script>

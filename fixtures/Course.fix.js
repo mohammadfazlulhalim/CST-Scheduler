@@ -6,7 +6,6 @@ const Course = require('../private/javascript/Course');
  * clears the course table if it exists and fills it 5 courses
  */
 async function fillCourseTable() {
-  await Course.sync({force: true});
   await createCourses();
 }
 
@@ -53,6 +52,55 @@ async function createCourses() {
       courseNumCredits: 6,
       courseNumHoursPerWeek: 5,
     },
+    {
+      courseCode: 'COOS291',
+      courseName: 'Advanced Operating Systems',
+      courseNumCredits: 5,
+      courseNumHoursPerWeek: 5,
+    },
+    {
+      courseCode: 'COOS293',
+      courseName: 'Systems Administration 2',
+      courseNumCredits: 4,
+      courseNumHoursPerWeek: 4,
+    },
+    {
+      courseCode: 'COOS294',
+      courseName: 'Cloud Infrastructure Administration',
+      courseNumCredits: 4,
+      courseNumHoursPerWeek: 4,
+    },
+    {
+      courseCode: 'COSA290',
+      courseName: 'IT Development Project 2',
+      courseNumCredits: 6,
+      courseNumHoursPerWeek: 6,
+    },
+    {
+      courseCode: 'COSC292',
+      courseName: 'Advanced Programming 2',
+      courseNumCredits: 4,
+      courseNumHoursPerWeek: 4,
+    },
+    {
+      courseCode: 'COSC295',
+      courseName: 'Advanced Mobile Application Programming',
+      courseNumCredits: 4,
+      courseNumHoursPerWeek: 4,
+    },
+    {
+      courseCode: 'CPMG290 ',
+      courseName: 'IT Development Project Management 2',
+      courseNumCredits: 2,
+      courseNumHoursPerWeek: 2,
+    },
+    {
+      courseCode: 'TCOM291',
+      courseName: 'Career Path Search',
+      courseNumCredits: 1,
+      courseNumHoursPerWeek: 1,
+    },
+
   ];
 
   // loop through courses and create course object entries

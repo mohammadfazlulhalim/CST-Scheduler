@@ -1,17 +1,22 @@
 const CourseOffering = require('../private/javascript/CourseOffering');
+const Instructor = require('../private/javascript/Instructor');
+const course = require('../private/javascript/Course');
+const constants = require('../constants');
+const courseOffering = require('../private/javascript/CourseOffering');
 const testConst = require('../constants').testConst;
-const Associations = require('../private/javascript/Associations');
 
 /**
  * This function clears the courseOffering table if it exists and fills it with 15 course offerings.
  */
 async function fillCourseOfferingTable() {
-  // clear the db table
-  await CourseOffering.sync({force: true});
+  await CourseOffering.create(testConst.courseOffering1);
+  const COA = await CourseOffering.bulkCreate(testConst.validCourseOfferingsB);
+  const COB = await CourseOffering.bulkCreate(testConst.validCourseOfferingsA);
 
-  Associations.addAssociations();
-
-  CourseOffering.create(testConst.courseOffering1);
+  for (let i=0; i<COA.length; i++) {
+    COA[i].setCourse(await course.findByPk((i%constants.testConst.validCourses.length)+1));
+    COB[i].setCourse(await course.findByPk((i%constants.testConst.validCourses.length)+1));
+  }
 }
 
 

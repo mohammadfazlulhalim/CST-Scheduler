@@ -16,75 +16,75 @@ const regexTimeString = `^([01][0-9]|2[0-3]):([0-5][0-9])$`;
  * This class stores objects that represent course offerings to be used in the CST Scheduler.
  */
 const Timeslot = sequelize.define('Timeslot', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-    },
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
 
-    //Dates - YYYY-MM-DD
-    startDate: {
-        type: DataTypes.STRING,
-    },
+  // Dates - YYYY-MM-DD
+  startDate: {
+    type: DataTypes.STRING,
+  },
 
-    endDate: {
-        type: DataTypes.STRING,
-    },
+  endDate: {
+    type: DataTypes.STRING,
+  },
 
-    startTime: {
-        type: DataTypes.TIME,
-        validate: {
-            is: {
-                args: regexTimeString,
-                msg: `Invalid Start Time for TimeSlot`
-            }, //regex for time string
-        },
+  startTime: {
+    type: DataTypes.TIME,
+    validate: {
+      is: {
+        args: regexTimeString,
+        msg: `Invalid Start Time for TimeSlot`,
+      }, // regex for time string
     },
+  },
 
-    endTime: {
-        type: DataTypes.TIME,
-        validate: {
-            is: {
-                args: regexTimeString,
-                msg: `Invalid end Time for TimeSlot`
-            }, //regex for time string
-        },
+  endTime: {
+    type: DataTypes.TIME,
+    validate: {
+      is: {
+        args: regexTimeString,
+        msg: `Invalid end Time for TimeSlot`,
+      }, // regex for time string
     },
+  },
 
-    day: {
-        type: DataTypes.NUMBER,
-        validate: {
-            min: {
-                args: -1,
-                msg: 'Invalid Day for TimeSlot',
-            },
-            max: {
-                args: 6,
-                msg: 'Invalid Day for TimeSlot',
-            },
-        },
+  day: {
+    type: DataTypes.NUMBER,
+    validate: {
+      min: {
+        args: -1,
+        msg: 'Invalid Day for TimeSlot',
+      },
+      max: {
+        args: 6,
+        msg: 'Invalid Day for TimeSlot',
+      },
     },
+  },
 
-    group: {
-        type: DataTypes.STRING(1),
-        validate: {
-            isAlphanumeric: {
-                args: true,
-                msg: 'Course Offering group can only contain letters and numbers',
-            },
-            isUppercase: {
-                args: true,
-                msg: 'Course Offering group can only contain uppercase letters',
-            },
-            len: {
-                args: [0, 1],
-                msg: 'Course offering group can only be 0 or 1 character long',
-            },
-        },
+  group: {
+    type: DataTypes.STRING(1),
+    validate: {
+      isAlphanumeric: {
+        args: true,
+        msg: 'Course Offering group can only contain letters and numbers',
+      },
+      isUppercase: {
+        args: true,
+        msg: 'Course Offering group can only contain uppercase letters',
+      },
+      len: {
+        args: [0, 1],
+        msg: 'Course offering group can only be 0 or 1 character long',
+      },
     },
+  },
 
 }, {
-    tableName: 'Timeslots',
+  tableName: 'Timeslots',
 });
 
 

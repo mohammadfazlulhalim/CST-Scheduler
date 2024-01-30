@@ -118,18 +118,18 @@ router.delete('/', async (req, res, next) => {
   res.render('classroom', {
     title: 'Classrooms',
     classroomList: classrooms,
-      err: violations,
-      delClassroom: violations ? req.body : undefined,
+    err: violations,
+    delClassroom: violations ? req.body : undefined,
   });
 });
 
 /**
  * This helper method calls the database to handle create
  * @param classroomObj object literal containing classroom information to create
- * @returns {Promise<{}>} object literal containing primary key of classroom created, success message and error messages
+ * @return {Promise<{}>} object literal containing primary key of classroom created, success message and error messages
  */
 async function createClassroom(classroomObj) {
-  let createResponse = {};
+  const createResponse = {};
   try {
     const response = await Classroom.create({roomNumber: classroomObj.roomNumber, location: classroomObj.location});
     createResponse.success = 'Success';
@@ -149,7 +149,7 @@ async function createClassroom(classroomObj) {
 /**
  * This helper method calls the database to handle update
  * @param classroomObj object literal containing classroom information to update
- * @returns {Promise<{}>} object literal containing primary key of classroom updated, success message and error messages
+ * @return {Promise<{}>} object literal containing primary key of classroom updated, success message and error messages
  */
 async function updateClassroom(classroomObj) {
   const updateResponse = {};
@@ -178,7 +178,7 @@ async function updateClassroom(classroomObj) {
 /**
  * This helper method calls the database to handle delete
  * @param classroomObj object literal containing classroom information to delete
- * @returns {Promise<{}>} object literal containing primary key of classroom delete, success message and error messages
+ * @return {Promise<{}>} object literal containing primary key of classroom delete, success message and error messages
  */
 async function deleteClassroom(classroomObj) {
   const deleteResponse = {};

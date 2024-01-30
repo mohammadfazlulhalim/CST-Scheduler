@@ -65,7 +65,7 @@ async function loadTimeslots() {
 
   const response = await Timeslot.findByPk(timeslotCreated.id, {include: CourseOffering});
 
-  //Group A top-left to bottom-right diagonal
+  // Group A top-left to bottom-right diagonal
   await Timeslot.create(TimeslotAObj); // 9-10 Tue
   TimeslotAObj.day = 3;
   TimeslotAObj.startTime = '10:00';
