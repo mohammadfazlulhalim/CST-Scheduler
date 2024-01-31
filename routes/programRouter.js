@@ -112,12 +112,12 @@ router.delete('/', async function(req, res, next) {
 
   try {
     if (result.error) {
-    // error, that means it's invalid and errors were sent back
+      // error, that means it's invalid and errors were sent back
       res.status(422);
       // send error messages to the hbs template
       violations = result.error;
     } else {
-    // creation was successful
+      // creation was successful
       res.status(201);
       // put the ID in the response so tests can access it
       res.set('id', result.id);

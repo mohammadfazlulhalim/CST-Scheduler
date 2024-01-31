@@ -5,7 +5,8 @@ const {sequelize} = require('../dataSource');
 router.get('/', async function(req, res, next) {
   // Declaring the array
   const instructorLists = await readAllInstructors();
-  res.render('instructor', {
+
+   res.render('instructor', {
     title: 'Instructor Listings',
     instructorList: instructorLists,
   });
@@ -18,9 +19,14 @@ router.post('/', async function(req, res, next) {
   await sequelize.sync();
   // attempt to create the given instructor
   const result = await createInstructor({
+    //instructorID: req.body.instructorID,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
+    officeNum: req.body.officeNum,
+    phoneNum: req.body.phoneNum,
+    email: req.body.email,
   });
+
   let violations;
   if (result.error) {
     // if the instructor does not have a start/end date, that means it's invalid and errors were sent back
@@ -30,7 +36,8 @@ router.post('/', async function(req, res, next) {
   } else {
     // creation was successful
     res.status(201);
-    // put the ID in the response so tests can access it
+    // put the ID in the response so tests can access iti
+
     res.set('id', result.id);
   }
   const instructorLists = await readAllInstructors();
@@ -70,7 +77,11 @@ router.put('/', async function(req, res, next) {
     id: req.body.id,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
+    officeNum: req.body.officeNum,
+    phoneNum: req.body.phoneNum,
+    email: req.body.email,
   });
+
   let violations;
   if (result.error) {
     if (result.error.invalidKey) {
@@ -84,6 +95,8 @@ router.put('/', async function(req, res, next) {
   }
   const putSubmittedInstructor= req.body;
   const instructorLists = await readAllInstructors();
+
+  
   res.render('instructor', {
     title: 'Instructor List',
     instructorList: instructorLists,
@@ -91,6 +104,8 @@ router.put('/', async function(req, res, next) {
     putSubmittedInstructor,
 
   });
+
+
 });
 
 /**
@@ -101,8 +116,12 @@ router.put('/', async function(req, res, next) {
 const createInstructor = async (instructor) => {
   try {
     return await Instructor.create({
+      //instructorID: instructor.instructorID,
       firstName: instructor.firstName,
       lastName: instructor.lastName,
+      officeNum: instructor.officeNum,
+      phoneNum: instructor.phoneNum,
+      email: instructor.email,
     });
   } catch (err) {
     // return formatted errors
@@ -118,7 +137,9 @@ const createInstructor = async (instructor) => {
 const deleteInstructor = async (instructor) => {
   try {
     // try to delete the instructor
-    return await Instructor.destroy({where: {id: parseInt(instructor.id)}});
+   // return await Instructor.destroy({where: {id: parseInt(instructor.id)}});
+
+    return await Instructor.destroy({where: {id: instructor.id}});
   } catch (err) {
     // if an error occurred, state that 0 rows were deleted
     return 0;
@@ -133,6 +154,7 @@ const deleteInstructor = async (instructor) => {
 const updateInstructor = async (instructor) => {
   // find the instructor to update
   const instructorToUpdate = await Instructor.findByPk(instructor.id);
+
   if (instructorToUpdate) {
     // only try to update the instructor if it already exists
     try {
@@ -140,6 +162,9 @@ const updateInstructor = async (instructor) => {
         id: instructor.id,
         firstName: instructor.firstName,
         lastName: instructor.lastName,
+        officeNum: instructor.officeNum,
+        phoneNum: instructor.phoneNum,
+        email: instructor.email,
       });
     } catch (err) {
       // return formatted validation errors when invalid
@@ -158,7 +183,7 @@ const updateInstructor = async (instructor) => {
 const readAllInstructors = async () => {
   try {
     // Calling the database, for all instructor entries, ordered by instructor number
-    return await Instructor.findAll({order: ['id']});
+    return await Instructor.findAll({order: ['firstName']});
   } catch (err) {
     // If it is not found, declaring instructorList as undefined so that table will not be viewed on instructor.hbs
     // and instead a sentence declaring no instructor entries found is displayed
