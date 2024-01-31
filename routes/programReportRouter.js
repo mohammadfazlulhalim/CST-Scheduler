@@ -24,7 +24,46 @@ const hours12 = testConst.timeColumn8amTo3pmDisplayArray;
  *
  */
 router.get('/', async function(req, res, next) {
+  const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
+  let programList;
+  let termList;
+  let newTermList;
+  let groupList;
+
+  // Find the programs to list in the modal select box
+  try {
+    programList= await Program.findAll({order: ['programName']});
+  } catch (err) {
+    programList = undefined;
+  }
+
+  // Find the terms to list in the modal select box
+  try {
+    termList= await Term.findAll({order: ['startDate', 'termNumber'],
+    });
+    // add the year
+    newTermList= termList.map((item)=>{
+      return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
+    });
+    // sort based on the year
+    newTermList.sort((a, b)=>{
+      return b.displayTerm - a.displayTerm;
+    });
+  } catch (err) {
+    termList = undefined;
+  }
+
+  // Find the groups to list in the select box
+  try {
+    groupList= await CourseOffering.findAll({order: ['group']});
+  } catch (err) {
+    groupList = undefined;
+  }
   res.render('programReport', {
+    programList,
+    newTermList,
+    groupList,
+    showModal: true,
   });
 });
 
@@ -54,8 +93,8 @@ async function generateMatrix(instRepTimeslots) {
  * @param term
  * @param group
  */
-function generateSchedule(startDate, endDate, term, group)
-{
+function generateSchedule(startDate, endDate, term, group) {
 
 }
 
+module.exports = router;

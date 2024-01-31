@@ -1,1 +1,99 @@
 
+<!-- modal -->
+<!-- Vertically centered scrollable modal -->
+<div class="modal fade" id="programReportModal" tabindex="-1" aria-labelledby="programReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="programReportModalLabel">Create an Instructor Report For: </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
+            <div class="modal-body">
+                <!--                form begins here-->
+                <form method="POST" action="/programReport">
+                    <small class="text-info"> <b>Please select program, term, and a group.</b></small>
+                    <!-- Select box for program -->
+                    <div class="form-group">
+                        <label for="selectProgramReport" class="form-label mt-4">Program</label>
+                        <select name="selectProgramReport" class="form-select" id="selectProgramReport" required>
+                            <option value="" disabled selected>Select Program</option>
+                            {{#each programList}}
+                                <option value="{{this.id}}">{{this.programName}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <!-- Select box for term -->
+                    <div class="form-group">
+                        <label for="selectTermReport" class="form-label mt-4">Terms</label>
+                        <select name="selectTermReport" class="form-select" id="selectTermReport" required>
+                            <option value="" disabled selected>Select Term</option>
+                            {{#each newTermList}}
+                                <option value="{{this.id}}">{{this.displayTerm}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <!-- Select box for group -->
+                    <div class="form-group">
+                        <label for="selectGroupReport" class="form-label mt-4">Groups</label>
+                        <select name="selectGroupReport" class="form-select" id="selectGroupReport" required>
+                            <option value="" disabled selected>Select group</option>
+                            {{#each groupList}}
+                                <option value="{{this.id}}">{{this.group}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                        <button id="submitBtn"
+                                type="submit" class="btn btn-outline-success" >Save changes</button>
+                    </div>
+                </form>
+                <!--                Form ends here-->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script defer>
+    'use strict';
+    let submitBtn;
+    let selectedProgram;
+    let selectedTerm;
+    let selectedGroup;
+
+    // On arrival the modal will open
+    window.onload = function(){
+        submitBtn= document.getElementById("submitBtn");
+        selectedProgram = document.getElementById("selectProgramReport");
+        selectedTerm = document.getElementById("selectTermReport");
+        selectedGroup = document.getElementById("selectGroupReport");
+        const modal = new bootstrap.Modal(document.getElementById("programReportModal"));
+        submitBtn.disabled = true;
+        // only open upon first arrival
+        {{#if showModal}}
+            modal.show();
+        {{/if}}
+        selectedProgram.onchange = checkFormSelections;
+        selectedTerm.onchange = checkFormSelections;
+        selectedGroup.onchange = checkFormSelections;
+    }
+
+    /**
+     * This function will enable and disable the modal submit button
+     */
+    function checkFormSelections(){
+      console.log(selectedGroup.value)
+        // If not enough selections disable the button
+        if(selectedProgram.value !== ""  && selectedTerm.value !== "" && selectedGroup.value !== "")
+        {
+            submitBtn.disabled = false;
+        }
+        // Else enable it
+        else{
+            submitBtn.disabled = true;
+        }
+    }
+
+</script>
