@@ -11,7 +11,6 @@ describe('Instructors in database', () => {
     // drop the table and re-create it
     await Instructor.sync({force: true});
     testInstructor = {...constants.testConst.instructor1};
-
   });
 
   test('testThatValidInstructorPostAddsToEmptyList', async () => {

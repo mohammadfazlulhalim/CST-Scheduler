@@ -106,8 +106,8 @@ const testConst = {
     {termNumber: 6, startDate: '2023-05-01', endDate: '2023-05-31'},
   ],
   validInstructor: [
-    {firstName: 'Bryce', lastName: 'Barrie',officeNum: '123A.1', phoneNum: '(306)-456-5467', email: 'barrie@saskpolytech.ca' },
-    {firstName: 'Coralee', lastName: 'Kaban',officeNum: '123A.2', phoneNum: '(306)-567-5676', email: 'kaban@saskpolytech.ca' },
+    {firstName: 'Bryce', lastName: 'Barrie', officeNum: '123A.1', phoneNum: '(306)-456-5467', email: 'barrie@saskpolytech.ca'},
+    {firstName: 'Coralee', lastName: 'Kaban', officeNum: '123A.2', phoneNum: '(306)-567-5676', email: 'kaban@saskpolytech.ca'},
     {firstName: 'Ron', lastName: 'New', officeNum: '123B.0', phoneNum: '(306)-678-6585', email: 'new@saskpolytech.ca'},
     {firstName: 'Rick', lastName: 'Caron', officeNum: '123A.3', phoneNum: '(306)-123-7895', email: 'caron@saskpolytech.ca'},
     {firstName: 'Ernesto', lastName: 'Basoalto', officeNum: '123B.1', phoneNum: '(306)-456-6859', email: 'basalto@saskpolytech.ca'},
@@ -149,6 +149,11 @@ const testConst = {
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '9:00', endTime: '10:00', day: 5, group: 'A'},
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
+
+  //   TODO timeslots for room 241 - term 2
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
+
+
   ],
 
   timeColumn8amTo3pmDisplayArray: [

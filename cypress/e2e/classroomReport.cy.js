@@ -71,7 +71,6 @@ describe('template spec', () => {
       }
     }
   });
-
   it('testThatGeneratingAReportWithAFullyScheduledClassWorks', () => {
     cy.visit('http://localhost:3000'); // Visit the home page
     cy.intercept('GET', '/classroomReport/').as('classroomReportGET');
