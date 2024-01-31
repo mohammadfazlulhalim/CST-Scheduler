@@ -19,6 +19,13 @@ const Course = sequelize.define('Course', {
   courseCode: {
     // might have been tested elsewhere
     // unsure if story34 branch needs testing
+
+    //course code consisting of 3 or 4 characters followed by 3 or 4 digits
+    is: /^[A-Za-z]{3,4}\d{3,4}$/,
+    //this field is mandatory.
+    allowNull: false,
+    //course code has to be unique
+    unique: true,
     type: DataTypes.STRING,
 
   },
@@ -27,8 +34,8 @@ const Course = sequelize.define('Course', {
     allowNull: false,
     validate: {
       len: {
-        args: [1, 100],
-        msg: 'Error: Course Name must have 1 to 100 characters.',
+        args: [1, 50],
+        msg: 'Error: Course Name must have 1 to 50 characters.',
       },
     },
   },
