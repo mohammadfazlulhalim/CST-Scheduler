@@ -12,6 +12,32 @@ it('testThatCourseOfferingHasAssociations', () => {
 
   // TODO: Check sort orders on all associated fields before starting - See instructor.cy.js
 
+  // Terms
+  cy.get('#cTermSelect > option:nth-child(2)').contains('2024-5')
+  cy.get('#cTermSelect > option:nth-child(3)').contains('2023-1')
+  cy.get('#cTermSelect > option:nth-child(4)').contains('2023-4')
+  cy.get('#cTermSelect > option:nth-child(5)').contains('2023-3')
+  cy.get('#cTermSelect > option:nth-child(6)').contains('2023-6')
+  cy.get('#cTermSelect > option:nth-child(7)').contains('2023-2')
+  cy.get('#cTermSelect > option:nth-child(8)').contains('2023-4')
+  // Program
+  cy.get('#cProgramSelect > option:nth-child(2)').contains('ECE')
+  cy.get('#cProgramSelect > option:nth-child(3)').contains('CNT')
+  cy.get('#cProgramSelect > option:nth-child(4)').contains('CST')
+  // Instructor
+  cy.get('#cInstructorSelect > option:nth-child(2)').contains('Barrie')
+  cy.get('#cInstructorSelect > option:nth-child(3)').contains('Basoalto')
+  cy.get('#cInstructorSelect > option:nth-child(4)').contains('Benson')
+  cy.get('#cInstructorSelect > option:nth-child(5)').contains('Caron')
+  cy.get('#cInstructorSelect > option:nth-child(6)').contains('Grzesina')
+  cy.get('#cInstructorSelect > option:nth-child(7)').contains('Holtslan')
+  cy.get('#cInstructorSelect > option:nth-child(8)').contains('Kaban')
+  cy.get('#cInstructorSelect > option:nth-child(9)').contains('Lahoda')
+  cy.get('#cInstructorSelect > option:nth-child(10)').contains('New')
+  cy.get('#cInstructorSelect > option:nth-child(11)').contains('Onishenko')
+  cy.get('#cInstructorSelect > option:nth-child(12)').contains('Schmidt')
+
+
   cy.get('#createCO').should('be.disabled');
   cy.get('#cName').type('Mathematics of Computation');
   // Associated field
