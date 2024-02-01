@@ -9,7 +9,7 @@ describe('courseCode', () => {
   let course;
   let testCourse;
   let err = '';
-  beforeAll(async function(){
+  beforeEach(async function(){
     await Course.sync({force: true}); // wipes course table if it exists
     testCourse = testConst.course1; // test Course is created with the course properties defined in the constant.js file
   });
@@ -93,3 +93,62 @@ describe('courseCode', () => {
 
 
 });
+
+describe ('courseName', ()=>{
+  let course;
+  let err='';
+  let testCourse;
+  beforeEach(async()=>{
+    await Course.sync({force: true}); // wipes course table if it exists
+    testCourse= testConst.course1;
+  });
+
+  test('testCreatingCourseWithCourseNameHaving50Characters', async()=>{
+    testCourse.courseName ='A'.repeat(50)
+    try {
+      course = await Course.create(testCourse);
+    }catch(error){
+      err =error.message;
+    }
+    expect (err).toBe('');
+    expect (course).toBeTruthy(); //check the course object is created.
+  });
+  test('testCreatingCourseWithCourseNameHaving51Characters ', async()=>{
+    testCourse.courseName ='A'.repeat(51)
+    try {
+      course = await Course.create(testCourse);
+    }catch(error){
+      err =error.message;
+    }
+    expect (err).toBe('Validation error: Error: Course Name must have 1 to 50 characters.');
+    expect (course).toBeFalsy(); //No course will be created
+  });
+
+  test('testCreatingCourseWithEmptyCourseName', async()=>{
+    testCourse.courseName =''
+    try {
+      course = await Course.create(testCourse);
+    }catch(error){
+      err =error.message;
+    }
+    expect (err).toBe('Validation error: Error: Course Name must have 1 to 50 characters.');
+    expect (course).toBeFalsy(); //No course will be created
+  });
+
+});
+
+describe('courseNumCredits', ()=>{
+  let course;
+  let err ='';
+  let testCourse;
+  beforeEach(async()=>{
+    await Course.sync({force: true}); // wipes course table if it exists
+    testCourse= testConst.course1;
+  });
+
+  test('')
+
+  
+
+
+})

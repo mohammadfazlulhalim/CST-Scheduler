@@ -25,7 +25,7 @@ const Course = sequelize.define('Course', {
     validate:{
       //course code consisting of 3 or 4 characters followed by 3 or 4 digits
     is: {
-     args: /^[A-Za-z]{3,4}[0-9]{3,4}$/,
+     args: /^[A-Za-z]{3,4}\s*[0-9]{3,4}\s*$/,
       msg: 'Course Code can have 3-4 characters and 3-4 digits only'
 }
     }
