@@ -30,13 +30,19 @@ async function createTimeslot() {
   // const program = await Program.findByPk(1);
   let classroom = await Classroom.findByPk(2);
   const term = await Term.findByPk(1);
+
+  // s48 create term 2 for s48 related timeslots - split reports
+  const term2 = await Term.findByPk(2);
+
   for (let i=0; i<RealTimeSlots.length; i++) {
     RealTimeSlots[i].setTerm(term);
     RealTimeSlots[i].setProgram(program);
     // RealTimeSlots[i].setInstructor(instructor);
     RealTimeSlots[i].setClassroom(classroom);
-    RealTimeSlots[i].setInstructor(await Instructor.findByPk((i%constants.testConst.validInstructor.length)+1));
-    RealTimeSlots[i].setCourseOffering(await courseOffering.findByPk((i%constants.testConst.validCourseOfferingsB.length)+2));
+    RealTimeSlots[i].setInstructor(await Instructor
+        .findByPk((i%constants.testConst.validInstructor.length)+1));
+    RealTimeSlots[i].setCourseOffering(await courseOffering
+        .findByPk((i%constants.testConst.validCourseOfferingsB.length)+2));
   }
 
   classroom = await Classroom.findByPk(1);
@@ -46,9 +52,27 @@ async function createTimeslot() {
     RealTimeSlots2[i].setProgram(program);
     // RealTimeSlots2[i].setInstructor(instructor);
     RealTimeSlots2[i].setClassroom(classroom);
-    RealTimeSlots2[i].setInstructor(await Instructor.findByPk((i % constants.testConst.validInstructor.length) + 1));
-    RealTimeSlots2[i].setCourseOffering(await courseOffering.findByPk((i % constants.testConst.validCourseOfferingsA.length) + 9));
+    RealTimeSlots2[i].setInstructor(await Instructor
+        .findByPk((i % constants.testConst.validInstructor.length) + 1));
+    RealTimeSlots2[i].setCourseOffering(await courseOffering
+        .findByPk((i % constants.testConst.validCourseOfferingsA.length) + 9));
   }
+
+  // TODO try out two loops - one to create a new series of timeslots - reuse the validTimeslots for the time being and setTerm to term2!
+  const RealTimeSlots3 = await Timeslot.bulkCreate(constants.testConst.validTimeslots);
+
+  for (let i=0; i<RealTimeSlots.length; i++) {
+    RealTimeSlots[i].setTerm(term);
+    RealTimeSlots[i].setProgram(program);
+    // RealTimeSlots[i].setInstructor(instructor);
+    RealTimeSlots[i].setClassroom(classroom);
+    RealTimeSlots[i].setInstructor(await Instructor
+      .findByPk((i%constants.testConst.validInstructor.length)+1));
+    RealTimeSlots[i].setCourseOffering(await courseOffering
+      .findByPk((i%constants.testConst.validCourseOfferingsB.length)+2));
+  }
+
+
 }
 
 module.exports = fillTimeslotTable;

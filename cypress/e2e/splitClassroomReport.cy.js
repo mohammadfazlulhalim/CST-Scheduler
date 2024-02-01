@@ -1,7 +1,7 @@
 
 it('testSplitClassRoomReport', () => {
   const homepageurl = 'http://localhost:3000/';
-  const splitclassroomreportRoute = '/splitClassroomReport'
+  const splitclassroomreportRoute = '/splitClassroomReport';
   const splitclassroomreportURLFull = homepageurl + 'splitClassroomReport/';
 
   cy.visit(splitclassroomreportURLFull);
@@ -18,7 +18,7 @@ it('testSplitClassRoomReport', () => {
   }).parent().select('241');
   cy.get('#termSelect').children('option').then((options) => {
     const selectOptions = [...options].map((option) => option.textContent);
-    const expectedOptions = ['Select Term', '2023 - 1',  '2023 - 2', '2023 - 3', '2023 - 4', '2024 - 5', '2023 - 5', '2023 - 6'];
+    const expectedOptions = ['Select Term', '2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2024 - 5', '2023 - 5', '2023 - 6'];
     expect(selectOptions).to.include.members(expectedOptions); // Check if all expected options are present
     expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
   });
@@ -28,8 +28,5 @@ it('testSplitClassRoomReport', () => {
   cy.get('#btnGenerateSchedule').click(); // Click generate schedule
 
   // TODO check if a visit and intercept call to page is necessary...
-
-
-
 });
 
