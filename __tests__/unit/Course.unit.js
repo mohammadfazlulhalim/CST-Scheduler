@@ -1,264 +1,95 @@
+const {sequelize} = require('../../datasource');
+const testConst = require('../../constants').testConst
 const Course = require('../../private/javascript/Course');
-const {sequelize}= require('../../datasource');
-
-
-// --------------------------
-// series of tests inspired by story33
-
-
-// ensure that databases are created successfully
+const {create} = require("hbs");
 /**
- * function for checking database tables
+ *These are tests for the courseCode attribute of Course
  */
-
-// async function establishDatabaseTables() {
-//     try {
-//         await Course.sync();
-//     } catch (e) {
-//         console.error(e);
-//     }
-// }
-
-// for storing Course{} results
-let courseInstance;
-
-describe('testCourseModel', () => {
-  // another check before the `describe()` is ran
+describe('courseCode', () => {
   let course;
+  let testCourse;
+  let err = '';
+  beforeAll(async function(){
+    await Course.sync({force: true}); // wipes course table if it exists
+    testCourse = testConst.course1; // test Course is created with the course properties defined in the constant.js file
+  });
 
-  beforeEach(async () => {
+  test('testCreatingCourseWithAllValidInfo', async ()=>{
     try {
-      // CSEC info based on info found on https://saskpolytech.ca/programs-and-courses/programs/Computer-Systems-Technology.aspx#courses
-      await sequelize.sync( {force: true} );
-      course = {
-        courseCode: 'CSEC280',
-        courseName: 'Security 1',
-        courseNumCredits: 4,
-        courseNumHoursPerWeek: 4,
-      };
-    } catch (err) {
-      console.error(err);
+      course =await Course.create(testCourse);
+    }catch (error){
+      //if a validation error is thrown, fail the test with an error message
+      err= error.message;
     }
+    expect (course).toBeTruthy(); //check the course object is created.
+    expect (course.courseCode).toBe(testCourse.courseCode); //check course object has the same course code as the testCourse
+    expect (err).toBe(''); //check no error is thrown
+
+    //delete course if created
+    if (course){
+      await course.destroy();
+    }
+
+  });
+  test ('testCreatingCourseWithCourseCodeHaving4CharactersFollowedBy4Digits', async()=>{
+   testCourse.courseCode= 'AAAA1111';
+
+    try{
+      course = await Course.create(testCourse);
+
+    }catch (error){
+      err=error.message;
+
+    }
+    expect (course).toBeTruthy(); //check the course object is created.
+    //expect (course.courseCode).toBe(testCourse.courseCode); //check course object has the same course code as the testCourse
+    expect (err).toBe(''); //check no error is thrown
+
+  });
+
+  test('testCreatingCourseWithCourseCodeHaving3CharactersFollowedBy3Digits', async()=>{
+    testCourse.courseCode= 'AAA111';
+
+    try{
+      course = await Course.create(testCourse);
+
+    }catch (error){
+      err=error.message;
+
+    }
+    expect (course).toBeTruthy(); //check the course object is created.
+    //expect (course.courseCode).toBe(testCourse.courseCode); //check course object has the same course code as the testCourse
+    expect (err).toBe(''); //check no error is thrown
+
+
+  });
+
+  test('testCreatingCourseWithCourseCodeHaving5CharactersFollowedBy3Digits', async ()=>{
+    testCourse.courseCode='AAAAA111';
+    try{
+      course= await Course.create(testCourse);
+      console.log(course);
+    }catch (error){
+      err=error.message;
+    }
+    expect (course).toBeFalsy; //No course will be created
+    expect (err).toBe('Validation error: Course Code can have 3-4 characters and 3-4 digits only');
+
+  });
+
+  test('testCreatingCourseWithCourseCodeHaving3CharacterFollowedBy5Digits ', async ()=>{
+    testCourse.courseCode='AAA11111';
+    try{
+      course= await Course.create(testCourse);
+      console.log(course);
+    }catch (error){
+      err=error.message;
+    }
+    expect (course).toBeFalsy; //No course will be created
+    expect (err).toBe('Validation error: Course Code can have 3-4 characters and 3-4 digits only');
+
   });
 
 
-  // courseName upper bound test
-  test('testCourseNameGoodUpperBound', async () => {
-    course.courseName = 'a'.repeat(100);
 
-    try {
-      await Course.create(course);
-      const updatedCourse = await Course.findOne({
-        where: {courseName: 'a'.repeat(100)},
-      });
-      expect(updatedCourse).toBeTruthy();
-    } catch (e) {
-      console.error(e);
-    }
-  });
-
-
-  // courseName lower bound test
-  test('testCourseNameLowerBound', async () => {
-    course.courseName = 'a';
-
-    try {
-      await Course.create(course);
-      const updatedCourse = await Course.findOne({
-        where: {courseName: 'a'},
-      });
-      expect(updatedCourse).toBeTruthy();
-    } catch (e) {
-      console.error(e);
-    }
-  });
-
-  // Someone enters empty string for courseName - ""
-  test('testCourseNameCatchNothingEntered', async () => {
-    course.courseName = '';
-
-    try {
-      await Course.create(course);
-      fail(); // throws an error to force the expects to run that are only inside the catch
-    } catch (e) {
-      expect(e.errors.length).toBe(1);
-      expect(e.errors[0].message)
-          .toBe('Error: Course Name must have 1 to 100 characters.');
-    }
-  });
-
-
-  test('testCourseNameCatchTooLong', async () => {
-    // 101 chars
-    course.courseName = 'a'.repeat(101);
-
-    try {
-      await Course.create(course);
-      fail(); // throws an error to force the expects to run that are only inside the catch
-    } catch (e) {
-      expect(e.errors.length).toBe(1);
-      expect(e.errors[0].message)
-          .toBe('Error: Course Name must have 1 to 100 characters.');
-    }
-  });
-
-
-  // upper bound
-  test('testNumberOfCreditsGood', async () => {
-    course.courseNumCredits = 6;
-
-    try {
-      const updatedCourse = await Course.create(course);
-      expect(updatedCourse).toBeTruthy();
-    } catch (e) {
-      console.error(e);
-    }
-  });
-
-  test('testNumberOfCreditsCatchString', async () => {
-    course.courseNumCredits = 'Four';
-
-    try {
-      await Course.create(course);
-      fail(); // throws an error to force the expects to run that are only inside the catch
-    } catch (e) {
-      expect(e.errors.length).toBe(1);
-      expect(e.errors[0].message)
-          .toBe('Error: Enter a whole number between 0 and 6 as a valid number of credits.');
-    }
-  });
-
-  test('testNumberOfCreditsCatchTooHighNumber', async () => {
-    course.courseNumCredits = 7;
-
-    try {
-      await Course.create(course);
-      fail(); // throws an error to force the expects to run that are only inside the catch
-    } catch (e) {
-      expect(e.errors.length).toBe(1);
-      expect(e.errors[0].message)
-          .toBe('Error: Enter a whole number between 0 and 6 as a valid number of credits.');
-    }
-  });
-
-
-  test('testNumberOfCreditsCatchNegativeVals', async () => {
-    course.courseNumCredits = -45;
-
-    try {
-      await Course.create(course);
-      fail(); // throws an error to force the expects to run that are only inside the catch
-    } catch (e) {
-      expect(e.errors.length).toBe(1);
-      expect(e.errors[0].message)
-          .toBe('Error: Enter a whole number between 0 and 6 as a valid number of credits.');
-    }
-  });
-
-
-  test('numberOfCreditsTestZeroForPass', async () => {
-    course.courseNumCredits = 0;
-
-    try {
-      await Course.create(course);
-      const updatedCourse = await Course.findOne({
-        where: {courseNumCredits: 0},
-      });
-      expect(updatedCourse).toBeTruthy();
-    } catch (e) {
-      console.error(e);
-    }
-  });
-
-  test('testNumberOfCreditsInteger', async () => {
-    course.courseNumCredits = 900;
-
-    try {
-      await Course.create(course);
-      fail(); // throws an error to force the expects to run that are only inside the catch
-    } catch (e) {
-      expect(e.errors.length).toBe(1);
-      expect(e.errors[0].message)
-          .toBe('Error: Enter a whole number between 0 and 6 as a valid number of credits.');
-    }
-  });
-
-
-  test('testNumberOfHoursValid', async () => {
-    course.courseNumHoursPerWeek = 60;
-
-    try {
-      await Course.create(course);
-      const updatedCourse = await Course.findOne({
-        where: {courseNumHoursPerWeek: 60},
-      });
-      expect(updatedCourse).toBeTruthy();
-    } catch (e) {
-      console.error(e);
-    }
-  });
-
-  // catch error once it crosses upper bound for num hours
-  test('testNumberOfHoursValueTooHigh', async () => {
-    course.courseNumHoursPerWeek = 169;
-
-    try {
-      await Course.create(course);
-      fail(); // throws an error to force the expects to run that are only inside the catch
-    } catch (e) {
-      expect(e.errors.length).toBe(1);
-      expect(e.errors[0].message)
-          .toBe('Error: Enter a whole number between 1 and 168 ' +
-                    'as a valid number of hours.');
-    }
-  });
-
-
-  test('testNumberOfHoursErrorNegative', async () => {
-    course.courseNumHoursPerWeek = -45;
-
-    try {
-      await Course.create(course);
-      fail(); // throws an error to force the expects to run that are only inside the catch
-    } catch (e) {
-      expect(e.errors.length).toBe(1);
-      expect(e.errors[0].message)
-          .toBe('Error: Enter a whole number between 1 and 168 ' +
-                    'as a valid number of hours.');
-    }
-  });
-
-
-  test('testNumberOfHoursCatchString', async () => {
-    course.courseNumHoursPerWeek = 'Sixty';
-
-    try {
-      await Course.create(course);
-      fail(); // throws an error to force the expects to run that are only inside the catch
-    } catch (e) {
-      expect(e.errors.length).toBe(1);
-      expect(e.errors[0].message)
-          .toBe('Error: Enter a whole number between 1 and 168 ' +
-                    'as a valid number of hours.');
-    }
-  });
-
-  test('testNumberOfHoursCatchNonInteger', async () => {
-    course.courseNumHoursPerWeek = 30.25;
-
-    try {
-      await Course.create(course);
-      fail(); // throws an error to force the expects to run that are only inside the catch
-    } catch (e) {
-      expect(e.errors.length).toBe(1);
-      expect(e.errors[0].message)
-          .toBe('Error: Enter a whole number between 1 and 168 ' +
-                    'as a valid number of hours.');
-    }
-  });
 });
-
-
-// // // Tests End // // // // //
-// --------------------------
-

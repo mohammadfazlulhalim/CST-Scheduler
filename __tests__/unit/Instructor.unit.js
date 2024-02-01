@@ -37,7 +37,7 @@ describe('firstName', () => {
 
     if (instructor) { // destroy instructor if created
       await instructor.destroy();
-    }
+      }
   });
 
   test('testThatFirstNameCanNotBeEmpty', async function() {

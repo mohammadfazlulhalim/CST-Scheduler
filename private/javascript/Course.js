@@ -17,16 +17,18 @@ const {sequelize, DataTypes} = require('../../datasource');
 // MODEL STUB START
 const Course = sequelize.define('Course', {
   courseCode: {
-    // might have been tested elsewhere
-    // unsure if story34 branch needs testing
-
-    //course code consisting of 3 or 4 characters followed by 3 or 4 digits
-    is: /^[A-Za-z]{3,4}\d{3,4}$/,
+    type: DataTypes.STRING,
     //this field is mandatory.
     allowNull: false,
     //course code has to be unique
     unique: true,
-    type: DataTypes.STRING,
+    validate:{
+      //course code consisting of 3 or 4 characters followed by 3 or 4 digits
+    is: {
+     args: /^[A-Za-z]{3,4}[0-9]{3,4}$/,
+      msg: 'Course Code can have 3-4 characters and 3-4 digits only'
+}
+    }
 
   },
   courseName: {
