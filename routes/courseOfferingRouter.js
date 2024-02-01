@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const CourseOffering = require('../private/javascript/CourseOffering');
+const Term = require('../private/javascript/Term');
+const Program = require('../private/javascript/Program');
+const Instructor = require('../private/javascript/Instructor');
+const Course = require('../private/javascript/Course');
 
 // const Course = require('../private/javascript/Course');
 // const Term = require('../private/javascript/Term');
@@ -11,16 +15,28 @@ const CourseOffering = require('../private/javascript/CourseOffering');
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
   const listCO = await getCOList();
+  const listTerm = await Term.findAll();
+  const listProgram = await Program.findAll();
+  const listInstructor = await Instructor.findAll();
+  const listCourse = await Instructor.findAll();
 
   // render the courseOffering template file with appropriate title and the retrieved list of course offerings
   res.render('courseOffering', {
     title: 'Course Offerings',
     listCO: listCO,
+    listTerm,
+    listProgram,
+    listInstructor,
+    listCourse
   });
 });
 
 router.post('/', async function(req, res, next) {
   await CourseOffering.sync();
+  const listTerm = await Term.findAll();
+  const listProgram = await Program.findAll();
+  const listInstructor = await Instructor.findAll();
+  const listCourse = await Instructor.findAll();
 
   const newCO = {
     name: req.body.name,
@@ -52,11 +68,19 @@ router.post('/', async function(req, res, next) {
     listCO: listCO,
     err: violations,
     submittedCO: violations ? req.body : undefined,
+    listTerm,
+    listProgram,
+    listInstructor,
+    listCourse
   });
 });
 
 router.put('/', async function(req, res, next) {
   // console.log('PUT: ' + JSON.stringify(req.body));
+  const listTerm = await Term.findAll();
+  const listProgram = await Program.findAll();
+  const listInstructor = await Instructor.findAll();
+  const listCourse = await Instructor.findAll();
 
   const newCO = {
     id: req.body.id,
@@ -90,11 +114,19 @@ router.put('/', async function(req, res, next) {
     listCO: listCO,
     putErr: violations,
     submittedCO: violations ? req.body : undefined,
+    listTerm,
+    listProgram,
+    listInstructor,
+    listCourse
   });
 });
 
 router.delete('/', async function(req, res, next) {
   // console.log('DELETE: ' + JSON.stringify(req.body));
+  const listTerm = await Term.findAll();
+  const listProgram = await Program.findAll();
+  const listInstructor = await Instructor.findAll();
+  const listCourse = await Instructor.findAll();
   const retDelete = await deleteCourseOffering(req.body);
   let violations;
   if (retDelete <= 0) {
@@ -109,6 +141,10 @@ router.delete('/', async function(req, res, next) {
     listCO: listCO,
     err: violations,
     submittedCO: violations ? req.body : undefined,
+    listTerm,
+    listProgram,
+    listInstructor,
+    listCourse
   });
 });
 
