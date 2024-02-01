@@ -3,8 +3,6 @@ const router = express.Router();
 const term = require('../private/javascript/Term');
 const classroom = require('../private/javascript/Classroom');
 const timeslot = require('../private/javascript/Timeslot');
-const {addAssociations} = require('../private/javascript/Associations');
-const createAllTables = require('../fixtures/createTables.fix');
 
 router.get('/', async (req, res, next) => {
   const termList = await term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'DESC']]});
@@ -24,8 +22,6 @@ router.get('/', async (req, res, next) => {
   });
 });
 router.post('/', async (req, res, next) => {
-  await addAssociations();
-  await createAllTables(false);
   const dateGenerated= new Date();
 
   const realTerm = await term.findOne({where: {id: req.body.term}});

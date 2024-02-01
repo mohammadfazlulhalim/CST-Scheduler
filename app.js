@@ -14,6 +14,8 @@ const classroomReportRouter = require('./routes/classroomReportRouter').router;
 const instructorReportRouter = require('./routes/instructorReportRouter');
 const viewCoursesRouter = require('./routes/course');
 const scheduleRouter = require('./routes/scheduleRouter');
+const {addAssociations} = require('./private/javascript/Associations');
+const createAllTables = require('./fixtures/createTables.fix');
 
 const app = express();
 
@@ -38,6 +40,9 @@ app.use('/program', programRouter);
 app.use('/classroomReport', classroomReportRouter);
 app.use('/schedule', scheduleRouter); // Story 41
 app.use('/instructorReport', instructorReportRouter);
+
+addAssociations();
+createAllTables(false);
 
 // bootswatch
 app.use('/bw', express.static(__dirname + '/node_modules/bootswatch/dist'));

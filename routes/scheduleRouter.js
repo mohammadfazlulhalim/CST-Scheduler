@@ -9,7 +9,6 @@ const {testConst} = require('../constants');
 const defineDB = require('../fixtures/createTables.fix');
 
 router.get('/', async (req, res, next) => {
-  await defineDB(false);
 
   terms = await Term.findAll();
   programs = await Program.findAll();
@@ -29,10 +28,6 @@ router.get('/', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-  // reloading the models with associations
-
-  // loads the db connection
-  await defineDB(false);
 
   const groupArray = [];
 

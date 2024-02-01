@@ -16,7 +16,7 @@
             <tbody id="tableBody">
             {{#each listCO}}
                 <tr>
-                    <td id="{{this.id}}id" >{{this.id}}</td>
+                    <td id="{{this.id}}id">{{this.id}}</td>
                     <td id="{{this.id}}name">{{this.name}}</td>
                     <td id="{{this.id}}startDate">{{this.startDate}}</td>
                     <td id="{{this.id}}endDate">{{this.endDate}}</td>
@@ -90,12 +90,14 @@
                             <div class="invalid-feedback">{{putErr.name}}</div>
 
                             <label for="eStartDate">Start Date:</label>
-                            <input type="text" class="form-control {{#if putErr.startDate}}is-invalid{{/if}}" id="eStartDate"
+                            <input type="text" class="form-control {{#if putErr.startDate}}is-invalid{{/if}}"
+                                   id="eStartDate"
                                    name="startDate" value="{{submittedCO.startDate}}">
                             <div class="invalid-feedback">{{putErr.startDate}}</div>
 
                             <label for="eEndDate">End Date:</label>
-                            <input type="text" class="form-control {{#if putErr.endDate}}is-invalid{{/if}}" id="eEndDate"
+                            <input type="text" class="form-control {{#if putErr.endDate}}is-invalid{{/if}}"
+                                   id="eEndDate"
                                    name="endDate" value="{{submittedCO.endDate}}">
                             <div class="invalid-feedback">{{putErr.endDate}}</div>
 
@@ -134,11 +136,29 @@
                                class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eID"
                                name="ID" value="{{submittedCO.id}}">
                         <div class="invalid-feedback">{{putErr.id}}</div>
+                        <div>
+                            <label for="cCourse">Course</label>
+                            <select id="cCourse" class="form-label">Course
+                                <option id="blankCourse"></option>
+                                {{#each listCourse}}
+                                    <option value="{{id}}">{{courseCode}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
 
                         <label for="cName">Name:</label>
                         <input type="text" class="form-control {{#if err.name}}is-invalid{{/if}}" id="cName"
                                name="name" value="{{submittedCO.name}}">
                         <div class="invalid-feedback">{{err.name}}</div>
+                        <div>
+                            <label for="cTerm">Term</label>
+                            <select id="cTerm" class="form-label">Course
+                                <option id="blankTerm"></option>
+                                {{#each listTerm}}
+                                    <option value="{{id}}">{{title}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
 
                         <label for="cStartDate">Start Date:</label>
                         <input type="text" class="form-control {{#if err.startDate}}is-invalid{{/if}}" id="cStartDate"
@@ -155,6 +175,26 @@
                                name="group" value="{{submittedCO.group}}">
                         <div class="invalid-feedback">{{err.group}}</div>
 
+                        <div>
+                            <label for="cProgram">Program</label>
+                            <select id="cProgram" class="form-label">Program
+                                <option id="blankProgram"></option>
+                                {{#each listProgram}}
+                                    <option value="{{id}}">{{programAbbreviation}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="cInstructor">Instructor</label>
+                            <select id="cTerm" class="form-label">Instructor
+                                <option id="blankInstructor"></option>
+                                {{#each listInstructor}}
+                                    <option value="{{id}}">{{lastName}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -165,7 +205,9 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">Add New Course Offering</button>
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">Add New Course
+        Offering
+    </button>
     <a href="http://localhost:3000/administration">
         <button class="btn btn-success">Return</button>
     </a>
@@ -201,6 +243,7 @@
      */
     async function handleCreateCO() {
         // send a POST request to the router
+        console.log('Instructor val: ' + $('cInstructor').selected())
         const response = await fetch('http://localhost:3000/courseOffering', {
             method: 'POST',
             headers: {
@@ -212,6 +255,10 @@
                 startDate: $('#cStartDate').val(),
                 endDate: $('#cEndDate').val(),
                 group: $('#cGroup').val(),
+                course: $('#cCourse').val(),
+                program: $('#cProgram').val(),
+                instructor: $('cInstructor').val(),
+                term: $('cTerm').val()
             }),
         });
 
@@ -266,7 +313,7 @@
                 name: $('#eName').val(),
                 startDate: $('#eStartDate').val(),
                 endDate: $('#eEndDate').val(),
-                group: $('#eGroup').val()
+                group: $('#eGroup').val(),
             }),
         });
 

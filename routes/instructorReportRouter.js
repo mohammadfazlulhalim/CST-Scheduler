@@ -23,7 +23,6 @@ const hours12 = testConst.timeColumn8amTo3pmDisplayArray;
  */
 router.get('/', async function(req, res, next) {
   // redefine database
-  await defineDB(false);
   const program='';
   const dateGenerated= new Date();
   const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
@@ -68,8 +67,6 @@ router.get('/', async function(req, res, next) {
  */
 router.post('/', async function(req, res, next) {
   // redefine the database
-  await defineDB(false);
-  await sequelize.sync();
   const instructorID = req.body.selectInstructorReport; // from the modal selection
   const termID = req.body.selectTermInstructorReport; // from the modal selection
   let instRepTimeslots;

@@ -15,10 +15,11 @@ const Course = require('../private/javascript/Course');
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
   const listCO = await getCOList();
-  const listTerm = await Term.findAll();
-  const listProgram = await Program.findAll();
-  const listInstructor = await Instructor.findAll();
-  const listCourse = await Instructor.findAll();
+  const listTerm = await getTerms();
+  const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
+  const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
+  const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
+
 
   // render the courseOffering template file with appropriate title and the retrieved list of course offerings
   res.render('courseOffering', {
@@ -33,21 +34,29 @@ router.get('/', async function(req, res, next) {
 
 router.post('/', async function(req, res, next) {
   await CourseOffering.sync();
-  const listTerm = await Term.findAll();
-  const listProgram = await Program.findAll();
-  const listInstructor = await Instructor.findAll();
-  const listCourse = await Instructor.findAll();
+  const listTerm = await getTerms();
+  const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
+  const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
+  const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
 
   const newCO = {
     name: req.body.name,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
     group: req.body.group,
-    courseID: req.body.courseID,
-    termID: req.body.termID,
-    instructorID: req.body.instructorID,
-    programID: req.body.programID,
+    CourseId: req.body.course,
+    TermId: req.body.term,
+    InstructorId: req.body.instructor,
+    ProgramId: req.body.program,
+
   };
+
+  console.log('program' + newCO.ProgramId);
+  console.log('instructor' + newCO.InstructorId);
+  console.log('term' + newCO.TermId);
+  console.log('course' + newCO.CourseId);
+
+
   const retCreate = await createCourseOffering(newCO);
   let violations;
   if (retCreate.error) {
@@ -77,10 +86,10 @@ router.post('/', async function(req, res, next) {
 
 router.put('/', async function(req, res, next) {
   // console.log('PUT: ' + JSON.stringify(req.body));
-  const listTerm = await Term.findAll();
-  const listProgram = await Program.findAll();
-  const listInstructor = await Instructor.findAll();
-  const listCourse = await Instructor.findAll();
+  const listTerm = await getTerms();
+  const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
+  const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
+  const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
 
   const newCO = {
     id: req.body.id,
@@ -88,11 +97,15 @@ router.put('/', async function(req, res, next) {
     startDate: req.body.startDate,
     endDate: req.body.endDate,
     group: req.body.group,
-    courseID: req.body.courseID,
-    termID: req.body.termID,
-    instructorID: req.body.instructorID,
-    programID: req.body.programID,
+    CourseId: req.body.course,
+    TermId: req.body.term,
+    InstructorId: req.body.instructor,
+    ProgramId: req.body.program,
   };
+  // console.log('program' + newCO.ProgramId);
+  // console.log('instructor' + newCO.InstructorId);
+  // console.log('term' + newCO.TermId);
+  // console.log('course' + newCO.CourseId);
 
   const retUpdate = await updateCourseOffering(newCO);
   let violations;
@@ -123,10 +136,10 @@ router.put('/', async function(req, res, next) {
 
 router.delete('/', async function(req, res, next) {
   // console.log('DELETE: ' + JSON.stringify(req.body));
-  const listTerm = await Term.findAll();
-  const listProgram = await Program.findAll();
-  const listInstructor = await Instructor.findAll();
-  const listCourse = await Instructor.findAll();
+  const listTerm = await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'DESC']]});
+  const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
+  const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
+  const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
   const retDelete = await deleteCourseOffering(req.body);
   let violations;
   if (retDelete <= 0) {
@@ -229,6 +242,16 @@ const mapErrors = (err) => {
 
   return violations;
 };
+
+async function getTerms() {
+  const terms = await Term.findAll({order: [['startDate', 'DESC'],['termNumber', 'ASC']]});
+  for (let i=0; i<terms.length; i++) {
+    const splitDate = terms[i].startDate.split('-');
+    terms[i].title = splitDate[0] + '-' + terms[i].termNumber;
+  }
+
+  return terms;
+}
 
 module.exports = {router, createCourseOffering, updateCourseOffering, deleteCourseOffering};
 
