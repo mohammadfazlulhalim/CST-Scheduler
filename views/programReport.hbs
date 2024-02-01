@@ -1,3 +1,7 @@
+{{#if timeSlot}}
+{{else}}
+    <h2>Nothing to Display</h2>
+{{/if}}
 
 <!-- modal -->
 <!-- Vertically centered scrollable modal -->
@@ -5,8 +9,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="programReportModalLabel">Create an Instructor Report For: </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="programReportModalLabel">Create a Program Report For: </h5>
+                <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
             <div class="modal-body">
@@ -56,12 +60,22 @@
     </div>
 </div>
 
+<!-- New report and print buttons -->
+<div class="btnPairsCustom">
+    <button id="newProgramBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#instructorReportModal">
+        New Report</button>
+    <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
+</div>
+
 <script defer>
     'use strict';
     let submitBtn;
     let selectedProgram;
     let selectedTerm;
     let selectedGroup;
+    let closeBtn;
+    let xBtn;
+    let newProgramBtn;
 
     // On arrival the modal will open
     window.onload = function(){
@@ -69,15 +83,35 @@
         selectedProgram = document.getElementById("selectProgramReport");
         selectedTerm = document.getElementById("selectTermReport");
         selectedGroup = document.getElementById("selectGroupReport");
+        closeBtn = document.getElementById("modalCloseBtn");
+        xBtn = document.getElementById("xBtn");
+        newProgramBtn = document.getElementById("newProgramBtn");
         const modal = new bootstrap.Modal(document.getElementById("programReportModal"));
         submitBtn.disabled = true;
         // only open upon first arrival
         {{#if showModal}}
+            // check if the "close" button was clicked
+            closeBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+
+            // check if the 'x' button was clicked
+            xBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+
             modal.show();
+
         {{/if}}
         selectedProgram.onchange = checkFormSelections;
         selectedTerm.onchange = checkFormSelections;
         selectedGroup.onchange = checkFormSelections;
+
+        // check if the "new report" button was clicked
+        newProgramBtn.addEventListener("click", function () {
+            modal.show();
+        });
+
     }
 
     /**
