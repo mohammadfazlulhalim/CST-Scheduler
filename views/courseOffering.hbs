@@ -186,7 +186,7 @@
                         </div>
                         <div>
                             <label for="cInstructor">Instructor</label>
-                            <select id="cTerm" class="form-label">Instructor
+                            <select id="cInstructor" class="form-label">Instructor
                                 <option id="blankInstructor"></option>
                                 {{#each listInstructor}}
                                     <option value="{{id}}">{{lastName}}</option>
@@ -243,7 +243,6 @@
      */
     async function handleCreateCO() {
         // send a POST request to the router
-        console.log('Instructor val: ' + $('cInstructor').selected())
         const response = await fetch('http://localhost:3000/courseOffering', {
             method: 'POST',
             headers: {
@@ -257,8 +256,8 @@
                 group: $('#cGroup').val(),
                 course: $('#cCourse').val(),
                 program: $('#cProgram').val(),
-                instructor: $('cInstructor').val(),
-                term: $('cTerm').val()
+                instructor: $('#cInstructor').val(),
+                term: $('#cTerm').val()
             }),
         });
 

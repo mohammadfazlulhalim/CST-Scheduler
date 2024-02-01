@@ -51,12 +51,6 @@ router.post('/', async function(req, res, next) {
 
   };
 
-  console.log('program' + newCO.ProgramId);
-  console.log('instructor' + newCO.InstructorId);
-  console.log('term' + newCO.TermId);
-  console.log('course' + newCO.CourseId);
-
-
   const retCreate = await createCourseOffering(newCO);
   let violations;
   if (retCreate.error) {
@@ -102,10 +96,6 @@ router.put('/', async function(req, res, next) {
     InstructorId: req.body.instructor,
     ProgramId: req.body.program,
   };
-  // console.log('program' + newCO.ProgramId);
-  // console.log('instructor' + newCO.InstructorId);
-  // console.log('term' + newCO.TermId);
-  // console.log('course' + newCO.CourseId);
 
   const retUpdate = await updateCourseOffering(newCO);
   let violations;
