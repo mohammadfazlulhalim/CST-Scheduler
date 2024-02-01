@@ -14,6 +14,7 @@ const Classroom = require('../private/javascript/Classroom');
 const {sequelize} = require('../dataSource');
 const {testConst} = require('../constants');
 const constants = require('constants');
+const {Sequelize} = require('sequelize');
 
 // global constants here to work with time arrays
 const hours24 = testConst.timeColumn8amTo3pmDisplayArray24Hr;
@@ -24,7 +25,7 @@ const hours12 = testConst.timeColumn8amTo3pmDisplayArray;
  *
  */
 router.get('/', async function(req, res, next) {
-  const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
+  // const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
   let programList;
   let termList;
   let newTermList;
@@ -55,7 +56,10 @@ router.get('/', async function(req, res, next) {
 
   // Find the groups to list in the select box
   try {
-    groupList= await CourseOffering.findAll({order: ['group']});
+    // groupList= await CourseOffering.findAll({order: ['group']});
+    groupList= await CourseOffering.findAll({order: ['group'], attributes: [
+      [Sequelize.fn('DISTINCT', Sequelize.col('group')), 'group']],
+    });
   } catch (err) {
     groupList = undefined;
   }
@@ -73,18 +77,155 @@ router.get('/', async function(req, res, next) {
  * for the requested program
  */
 router.post('/', async function(req, res, next) {
+  let programList;
+  let termList;
+  let newTermList;
+  let groupList;
+  const programID = req.body.selectProgramReport; // from the modal selection
+  const termID = req.body.selectTermReport; // from the modal selection
+  const group = req.body.selectGroupReport; // from the modal selection
+  let termName;
+  let programName;
+  let groupName;
+
+  // Find the programs to list in the modal select box
+  try {
+    programList= await Program.findAll({order: ['programName']});
+  } catch (err) {
+    programList = undefined;
+  }
+
+  // Find the terms to list in the modal select box
+  try {
+    termList= await Term.findAll({order: ['startDate', 'termNumber'],
+    });
+    // add the year
+    newTermList= termList.map((item)=>{
+      return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
+    });
+    // sort based on the year
+    newTermList.sort((a, b)=>{
+      return b.displayTerm - a.displayTerm;
+    });
+  } catch (err) {
+    termList = undefined;
+  }
+
+  // Find the groups to list in the select box
+  try {
+    // groupList= await CourseOffering.findAll({order: ['group']});
+    groupList= await CourseOffering.findAll({attributes: [
+      [Sequelize.fn('DISTINCT', Sequelize.col('group')), 'group']], order: ['group'],
+    });
+  } catch (err) {
+    groupList = undefined;
+  }
+
+  // try to find the term selected
+  try {
+    termName = await Term.findOne({where: {id: termID}});
+    // based on the term define the program year
+    // if (termName.termNumber <= 3) {
+    //   program= 'CST 1';
+    // } else {
+    //   program = 'CST 2';
+    // }
+  } catch (e) {
+    termName = undefined;
+  }
+
+  // try to find the program selected
+  try {
+    programName = await Program.findOne({where: {id: programID}});
+  } catch (e) {
+    programName = undefined;
+  }
+
+  // try to find the group selected
+  try {
+    groupName = await Program.findOne({where: {id: group}});
+  } catch (e) {
+    groupName = undefined;
+  }
+
+  // try to find the time slots based on selections
+  try {
+    instRepTimeslots = await Timeslot.findAll( {
+      where: {ProgramId: programID, TermId: termID, group: group},
+      order: [['startTime', 'ASC'], ['day', 'ASC']],
+    });
+  } catch (e) {
+    instRepTimeslots=undefined;
+  }
+
+  // generates the schedule
+  // eslint-disable-next-line prefer-const
+  matrixTable = await generateSchedule(instRepTimeslots);
+
   res.render('programReport', {
+    programList,
+    newTermList,
+    groupList,
+    showModal: false,
   });
 });
 
+
 /**
  * Helper function for the POST.
- * Help to gather timeslots for program
- *
+ * Help to gather timeslots for instructor
+ * //
  */
-async function generateMatrix(instRepTimeslots) {
+async function generateSchedule(instRepTimeslots) {
+  const matrixTable = [];
+  let currentCourseOffering;
+  let currentClassroom;
+  let currentCourse;
 
+  // import both the 24 hr and 12 hr array to use them for checks and display respectively
+  for (let i = 0; i < hours24.length; i++) {
+    matrixTable[i] = [
+      // columns:
+      // time  m   t  w   r  f
+      {timeRow: ''}, {}, {}, {}, {}, {},
+    ];
+  }
+
+  // eslint-disable-next-line guard-for-in
+  // for every entry in the timeslots
+  for (const timeslot of instRepTimeslots) {
+    // make day one less (offset)
+    const tDay= timeslot.day-1;
+    const tHour = hours24.findIndex((st)=> st === timeslot.startTime);
+
+    // try to find the course, courseoffering and course for this timeslot object entry
+    try {
+      currentCourseOffering = await timeslot.getCourseOffering();
+      currentClassroom = await timeslot.getClassroom();
+      currentCourse = await currentCourseOffering.getCourse();
+    } catch (e) {
+      console.error(e);
+    }
+    // put the items in the array
+    matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
+      courseOffering: currentCourseOffering,
+      classRoom: currentClassroom,
+      course: currentCourse};
+  }
+
+  // place the hours
+  for (let i = 0; i < matrixTable.length; i++) {
+    for (let j = 0; j < matrixTable[i].length; j++) {
+      matrixTable[i][0].timeRow = hours12[i];
+    }
+  }
+
+
+  return matrixTable;
 }
+
+
+module.exports = router;
 
 /**
  * Helper method to generare the time slot object

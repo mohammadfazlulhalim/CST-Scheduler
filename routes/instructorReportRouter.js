@@ -105,15 +105,7 @@ router.post('/', async function(req, res, next) {
     termName=undefined;
   }
 
-  // try to find the time slots based on selections
-  try {
-    instRepTimeslots = await Timeslot.findAll( {
-      where: {InstructorId: instructorID, TermId: termID},
-      order: [['startTime', 'ASC'], ['day', 'ASC']],
-    });
-  } catch (e) {
-    instRepTimeslots=undefined;
-  }
+  u
 
 
   // generates the schedule
