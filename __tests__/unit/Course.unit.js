@@ -117,21 +117,22 @@ describe ('courseName', ()=>{
     testCourse.courseName ='A'.repeat(51)
     try {
       course = await Course.create(testCourse);
+      console.log(course);
     }catch(error){
       err =error.message;
     }
-    expect (err).toBe('Validation error: Error: Course Name must have 1 to 50 characters.');
+    expect (err).toBe('Validation error: Course Name must have 1 to 50 characters.');
     expect (course).toBeFalsy(); //No course will be created
   });
 
   test('testCreatingCourseWithEmptyCourseName', async()=>{
-    testCourse.courseName =''
+    testCourse.courseName ='';
     try {
       course = await Course.create(testCourse);
     }catch(error){
       err =error.message;
     }
-    expect (err).toBe('Validation error: Error: Course Name must have 1 to 50 characters.');
+    expect (err).toBe('Validation error: Course Name must have 1 to 50 characters.');
     expect (course).toBeFalsy(); //No course will be created
   });
 
@@ -146,9 +147,27 @@ describe('courseNumCredits', ()=>{
     testCourse= testConst.course1;
   });
 
-  test('')
+  test('testCreatingCourseWithCreditUnitsHavingEmptyFields ', async ()=>{
+    testCourse.courseNumCredits=null;
+    try {
+      course = await Course.create(testCourse);
+    }catch (error){
+      err= error.message;
+    }
+    console.log(err);
+    expect (err).toBe('notNull Violation: Course.courseNumCredits cannot be null');
+    expect (course).toBeFalsy(); //No course will be created
+  });
+  test('testCreatingCourseWithCreditUnitsHavingString', async ()=>{
+    testCourse.courseNumCredits='six';
+    try {
+      course = await Course.create(testCourse);
+    }catch (error){
+      err= error.message;
+    }
 
-  
+    expect (err).toBe('Validation error: Enter a whole number between 0 and 6 as a valid number of credits.');
+    expect (course).toBeFalsy(); //No course will be created
+  });
 
-
-})
+});
