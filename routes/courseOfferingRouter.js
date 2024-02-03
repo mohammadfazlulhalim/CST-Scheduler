@@ -203,7 +203,7 @@ async function getCOList() {
 
   // retrieve all course offerings from the database
   try {
-    listCO = await CourseOffering.findAll();
+    listCO = await CourseOffering.findAll({include: [Program, Course, Instructor, Term]});
   } catch (err) {
     // if unable to retrieve from database; e.g., no records exist
     listCO = undefined;
