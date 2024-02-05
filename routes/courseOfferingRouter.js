@@ -85,6 +85,7 @@ router.put('/', async function(req, res, next) {
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
   const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
 
+
   const newCO = {
     id: req.body.id,
     name: req.body.name,

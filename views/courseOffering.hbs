@@ -21,12 +21,14 @@
                 <tr>
                     <td id="{{this.id}}name">{{this.name}}</td>
                     <td id="{{this.id}}group">{{this.group}}</td>
-                    <td id="{{this.id}}course">{{this.Course.courseCode}}</td>
+                    <td id="{{this.id}}course" data-courseid="{{this.Course.id}}">{{this.Course.courseCode}}</td>
                     <td id="{{this.id}}term" data-termid="{{this.Term.id}}">{{this.Term.title}}</td>
                     <td id="{{this.id}}startDate">{{this.startDate}}</td>
                     <td id="{{this.id}}endDate">{{this.endDate}}</td>
-                    <td id="{{this.id}}instructor" data-instructorid="{{this.Instructor.id}}">{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
-                    <td id="{{this.id}}program" data-programid="{{this.Program.id}}">{{this.Program.programAbbreviation}}</td>
+                    <td id="{{this.id}}instructor"
+                        data-instructorid="{{this.Instructor.id}}">{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
+                    <td id="{{this.id}}program"
+                        data-programid="{{this.Program.id}}">{{this.Program.programAbbreviation}}</td>
                     <td>
                         <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
                                 data-toggle="modal" data-target="#editModal">Edit
@@ -87,7 +89,6 @@
                                    class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eID"
                                    name="id" value="{{submittedCO.id}}">
                             <div class="invalid-feedback">{{putErr.id}}</div>
-
                             <label for="eName">Name:</label>
                             <input type="text" class="form-control {{#if putErr.name}}is-invalid{{/if}}" id="eName"
                                    name="name" value="{{submittedCO.name}}">
@@ -168,6 +169,7 @@
                                class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eID"
                                name="ID" value="{{submittedCO.id}}">
                         <div class="invalid-feedback">{{putErr.id}}</div>
+<!--                        TODO: Switch course to combobox-->
                         <div>
                             <label for="cCourse">Course</label>
                             <select id="cCourse" class="form-label" onchange="selectedCourseCreate()">Course
@@ -239,7 +241,8 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">Add New Course
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal"
+            id="openCreateModal">Add New Course
         Offering
     </button>
     <a href="http://localhost:3000/administration">
@@ -251,9 +254,6 @@
     'use strict';
 
     reLinkButtons();
-
-    //TODO: Auto select dropdown for edit
-    // TODO: Call checkUpdateEnable() when edit modal opens
 
     /**
      * This function autofills the name field with the course name when the course is selected
@@ -275,7 +275,6 @@
         checkCreateEnable();
     }
 
-
     /**
      * This function checks that each dropdown has an associated property selected
      * and if it does enables the submit button
@@ -293,15 +292,12 @@
         }
     }
 
-
     function selectedTermUpdate() {
         let termID = document.getElementById('eTerm').value;
         document.getElementById('eStartDate').value = document.getElementById('optionEditTerm' + termID).dataset.termstart;
         document.getElementById('eEndDate').value = document.getElementById('optionEditTerm' + termID).dataset.termend;
 
-
         checkUpdateEnable();
-
     }
 
     /**
@@ -309,6 +305,7 @@
      * and if so enables the submit button
      */
     function checkUpdateEnable() {
+
         let bTermSelected = document.getElementById('eTerm').value !== '';
         let bInstructorSelected = document.getElementById('eInstructor').value !== '';
         let bProgramSelected = document.getElementById('eProgram').value !== '';
@@ -318,7 +315,6 @@
         } else {
             document.getElementById('editCO').disabled = 'disabled';
         }
-
     }
 
     /**
@@ -331,6 +327,8 @@
         $('.deleteButton').click(function() {
             handleDeleteModal(this.id.replace('delete', ''));
         });
+        $('#openCreateModal').click(handleCreateModal);
+
         $('.editButton').click(function() {
             handleEditModal(this.id.replace('edit', ''));
         });
@@ -345,7 +343,6 @@
      * @returns {Promise<void>}
      */
     async function handleCreateCO() {
-        // send a POST request to the router
         const response = await fetch('http://localhost:3000/courseOffering', {
             method: 'POST',
             headers: {
@@ -411,6 +408,7 @@
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
+                course: $('#eCourse').val(),
                 id: $('#eID').val(),
                 name: $('#eName').val(),
                 startDate: $('#eStartDate').val(),
@@ -443,20 +441,28 @@
      * @param idToEdit    - The ID of the term being edited
      */
     function handleEditModal(idToEdit) {
-        $('#eID').val($(`#${idToEdit}id`).text());
+        $('#eID').val(idToEdit);
         $('#eName').val($(`#${idToEdit}name`).text());
         $('#eStartDate').val($(`#${idToEdit}startDate`).text());
         $('#eEndDate').val($(`#${idToEdit}endDate`).text());
         $('#eGroup').val($(`#${idToEdit}group`).text());
-        // TODO: Add selecting the dropdowns
         $('#eTerm').val(document.getElementById(idToEdit + 'term').dataset.termid);
+        $('#eCourse').val(document.getElementById(idToEdit + 'course').dataset.courseid);
         $('#eInstructor').val(document.getElementById(idToEdit + 'instructor').dataset.instructorid);
         $('#eProgram').val(document.getElementById(idToEdit + 'program').dataset.programid);
 
-
-
-
         checkUpdateEnable();
+    }
+
+    /**
+     * This function clears the add modal dropdowns
+     */
+    function handleCreateModal() {
+        document.getElementById('cTerm').value = '';
+        document.getElementById('cCourse').value = '';
+        document.getElementById('cInstructor').value = '';
+        document.getElementById('cProgram').value = '';
+
     }
 
     /**
