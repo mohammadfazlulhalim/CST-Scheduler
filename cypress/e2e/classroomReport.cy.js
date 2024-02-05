@@ -49,6 +49,8 @@ describe('template spec', () => {
       ['', '', '', '', ''],
     ];
 
+
+
     for (let i = 1; i <= 7; i++) {
       for (let j = 1; j <= 5; j++) {
         const classText = classesInOrder[i-1][j-1];
@@ -70,6 +72,9 @@ describe('template spec', () => {
         }
       }
     }
+
+
+
   });
   it('testThatGeneratingAReportWithAFullyScheduledClassWorks', () => {
     cy.visit('http://localhost:3000'); // Visit the home page

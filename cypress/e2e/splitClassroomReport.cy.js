@@ -27,12 +27,143 @@ it('testSplitClassRoomReport', () => {
   cy.get('#btnGenerateSchedule').should('be.enabled'); // Check that the button is now enabled
   cy.get('#btnGenerateSchedule').click(); // Click generate schedule
 
-  // TODO check if wait is needed for letting post run
-  cy.wait(1000);
+  //todo Add check to make sure left arrow is disabled, and right arrow is enabled, if theres
+  //todo more than one page to be shown
+
+  let classesInOrder = [
+    ['MATH282', 'COOS291', 'COHS280', 'CDBM280', 'MATH282'],
+    ['COSA280', 'COOS293', 'CWEB280', 'SEM283', 'COSA280'],
+    ['CDBM280', 'MATH282', 'COOS291', 'COHS280', 'CDBM280'],
+    ['SEM283', 'COSA280', 'COOS293', 'CWEB280', 'SEM283'],
+    ['', '', '', '', ''], // 12:00 slot appears empty
+    ['COHS280', 'CDBM280', 'MATH282', 'COOS291', 'COHS280'],
+    ['CWEB280', 'SEM283', 'COSA280', 'COOS293', 'CWEB280'],
+    ['', '', '', '', ''],
+  ];
+
+  let namesInOrder = [
+    ['Barrie', 'Onishenko', 'Kaban', 'Lahoda', 'New'],
+    ['Kaban', 'Lahoda', 'New', 'Schmidt', 'Caron'],
+    ['New', 'Schmidt', 'Caron', 'Grzesina', 'Basoalto'],
+    ['Caron', 'Grzesina', 'Basoalto', 'Benson', 'Holtslan'],
+    ['', '', '', '', ''], // 12:00 slot appears empty
+    ['Basoalto', 'Benson', 'Holtslan', 'Barrie', 'Onishenko'],
+    ['Holtslan', 'Barrie', 'Onishenko', 'Kaban', 'Lahoda'],
+    ['', '', '', '', ''],
+  ];
+
+  checkCorrectSchedule(classesInOrder, namesInOrder)
+  //TODO Add arrow click check both buttons are enabled after clicking right (if theres more than 1)
+
+   classesInOrder = [
+    ['MATH282', 'COOS291', 'COHS280', 'CDBM280', 'MATH282'],
+    ['COSA280', 'COOS293', 'CWEB280', 'SEM283', 'COSA280'],
+    ['CDBM280', 'MATH282', 'COOS291', 'COHS280', 'CDBM280'],
+    ['SEM283', 'COSA280', 'COOS293', 'CWEB280', 'SEM283'],
+    ['', '', '', '', ''], // 12:00 slot appears empty
+    ['COHS280', 'CDBM280', 'MATH282', 'COOS291', 'COHS280'],
+    ['CWEB280', 'SEM283', 'COSA280', 'COOS293', 'CWEB280'],
+    ['', '', '', '', ''],
+  ];
+
+   namesInOrder = [
+    ['Barrie', 'Onishenko', 'Kaban', 'Lahoda', 'New'],
+    ['Kaban', 'Lahoda', 'New', 'Schmidt', 'Caron'],
+    ['New', 'Schmidt', 'Caron', 'Grzesina', 'Basoalto'],
+    ['Caron', 'Grzesina', 'Basoalto', 'Benson', 'Holtslan'],
+    ['', '', '', '', ''], // 12:00 slot appears empty
+    ['Basoalto', 'Benson', 'Holtslan', 'Barrie', 'Onishenko'],
+    ['Holtslan', 'Barrie', 'Onishenko', 'Kaban', 'Lahoda'],
+    ['', '', '', '', ''],
+  ];
+
+  checkCorrectSchedule(classesInOrder, namesInOrder)
+
+  //todo MORE CHECKS
+
+  classesInOrder = [
+    ['MATH282', 'COOS291', 'COHS280', 'CDBM280', 'MATH282'],
+    ['COSA280', 'COOS293', 'CWEB280', 'SEM283', 'COSA280'],
+    ['CDBM280', 'MATH282', 'COOS291', 'COHS280', 'CDBM280'],
+    ['SEM283', 'COSA280', 'COOS293', 'CWEB280', 'SEM283'],
+    ['', '', '', '', ''], // 12:00 slot appears empty
+    ['COHS280', 'CDBM280', 'MATH282', 'COOS291', 'COHS280'],
+    ['CWEB280', 'SEM283', 'COSA280', 'COOS293', 'CWEB280'],
+    ['', '', '', '', ''],
+  ];
+
+  namesInOrder = [
+    ['Barrie', 'Onishenko', 'Kaban', 'Lahoda', 'New'],
+    ['Kaban', 'Lahoda', 'New', 'Schmidt', 'Caron'],
+    ['New', 'Schmidt', 'Caron', 'Grzesina', 'Basoalto'],
+    ['Caron', 'Grzesina', 'Basoalto', 'Benson', 'Holtslan'],
+    ['', '', '', '', ''], // 12:00 slot appears empty
+    ['Basoalto', 'Benson', 'Holtslan', 'Barrie', 'Onishenko'],
+    ['Holtslan', 'Barrie', 'Onishenko', 'Kaban', 'Lahoda'],
+    ['', '', '', '', ''],
+  ];
+
+  checkCorrectSchedule(classesInOrder, namesInOrder)
+
+  //todo MORE CHECKS
+
+
+  classesInOrder = [
+    ['MATH282', 'COOS291', 'COHS280', 'CDBM280', 'MATH282'],
+    ['COSA280', 'COOS293', 'CWEB280', 'SEM283', 'COSA280'],
+    ['CDBM280', 'MATH282', 'COOS291', 'COHS280', 'CDBM280'],
+    ['SEM283', 'COSA280', 'COOS293', 'CWEB280', 'SEM283'],
+    ['', '', '', '', ''], // 12:00 slot appears empty
+    ['COHS280', 'CDBM280', 'MATH282', 'COOS291', 'COHS280'],
+    ['CWEB280', 'SEM283', 'COSA280', 'COOS293', 'CWEB280'],
+    ['', '', '', '', ''],
+  ];
+
+   namesInOrder = [
+    ['Barrie', 'Onishenko', 'Kaban', 'Lahoda', 'New'],
+    ['Kaban', 'Lahoda', 'New', 'Schmidt', 'Caron'],
+    ['New', 'Schmidt', 'Caron', 'Grzesina', 'Basoalto'],
+    ['Caron', 'Grzesina', 'Basoalto', 'Benson', 'Holtslan'],
+    ['', '', '', '', ''], // 12:00 slot appears empty
+    ['Basoalto', 'Benson', 'Holtslan', 'Barrie', 'Onishenko'],
+    ['Holtslan', 'Barrie', 'Onishenko', 'Kaban', 'Lahoda'],
+    ['', '', '', '', ''],
+  ];
+
+  checkCorrectSchedule(classesInOrder, namesInOrder)
+
+  //TODO last check to make sure left arrow is enabled but right arrow is disabled
+
+
+
 
   // TODO check if a visit and intercept call to page is necessary...
 
   cy.get("#table")
 
 });
+
+function checkCorrectSchedule(classesInOrder, namesInOrder) {
+  for (let i = 1; i <= 7; i++) {
+    for (let j = 1; j <= 5; j++) {
+      const classText = classesInOrder[i-1][j-1];
+      const nameText = namesInOrder[i-1][j-1];
+
+      const classSelector = `table tbody tr:nth-of-type(${i}) td:nth-of-type(${j}) div p:first-of-type`;
+      const nameSelector = `table tbody tr:nth-of-type(${i}) td:nth-of-type(${j}) div p:last-of-type`;
+
+      if (classText) {
+        cy.get(classSelector).contains(classText);
+      } else {
+        cy.get(classSelector).should('be.empty');
+      }
+
+      if (nameText) {
+        cy.get(nameSelector).contains(nameText);
+      } else {
+        cy.get(nameSelector).should('be.empty');
+      }
+    }
+  }
+}
 
