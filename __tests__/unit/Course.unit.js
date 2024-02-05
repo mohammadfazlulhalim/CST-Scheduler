@@ -1,7 +1,7 @@
 const {sequelize} = require('../../datasource');
 const testConst = require('../../constants').testConst
 const Course = require('../../private/javascript/Course');
-const {create} = require("hbs");
+
 /**
  *These are tests for the courseCode attribute of Course
  */
@@ -15,6 +15,9 @@ describe('courseCode', () => {
     err=''; //empty error message (if any)
   });
 
+/**
+ * test creating course with valid information. we are using the constant.js file for the valid information
+  */
   test('testCreatingCourseWithAllValidInfo', async ()=>{
     try {
       course =await Course.create(testCourse);
@@ -32,6 +35,11 @@ describe('courseCode', () => {
     }
 
   });
+
+  /**
+   * test creating course with valid courseCode having upper limit of alphabetical characters and upper limits of numeric characters.
+   * we are using the constant.js file for other valid information
+   */
   test ('testCreatingCourseWithCourseCodeHaving4CharactersFollowedBy4Digits', async()=>{
    testCourse.courseCode= 'AAAA1111';
 
@@ -46,6 +54,11 @@ describe('courseCode', () => {
     expect (err.length).toBe(0); //check no error is thrown
 
   });
+
+  /**
+   * test creating course with valid courseCode having lower limit of alphabetical characters and lower limits of numeric characters.
+   * we are using the constant.js file for other valid information
+   */
 
   test('testCreatingCourseWithCourseCodeHaving3CharactersFollowedBy3Digits', async()=>{
     testCourse.courseCode= 'AAA111';
@@ -63,6 +76,11 @@ describe('courseCode', () => {
 
   });
 
+  /**
+   * test creating course with invalid courseCode having excess alphabetical characters.
+   * we are using the constant.js file for other valid information
+   */
+
   test('testCreatingCourseWithCourseCodeHaving5CharactersFollowedBy3Digits', async ()=>{
 
     try{
@@ -76,6 +94,10 @@ describe('courseCode', () => {
 
   });
 
+  /**
+   * test creating course with invalid courseCode having excess numeric characters.
+   * we are using the constant.js file for other valid information
+   */
   test('testCreatingCourseWithCourseCodeHaving3CharacterFollowedBy5Digits ', async ()=>{
 
     try{
@@ -93,6 +115,10 @@ describe('courseCode', () => {
 
 });
 
+/**
+ *These are tests for the courseName attribute of Course
+ */
+
 describe ('courseName', ()=>{
   let course;
   let err='';
@@ -103,6 +129,10 @@ describe ('courseName', ()=>{
     err='';  //empty the error message (if any)
   });
 
+  /**
+   * test creating course with valid courseName having upper limit of characters.
+   * we are using the constant.js file for other valid information
+   */
   test('testCreatingCourseWithCourseNameUpperLimit', async()=>{
 
     try {
@@ -114,11 +144,17 @@ describe ('courseName', ()=>{
     expect (err.length).toBe(0);
     expect (course).toBeTruthy(); //check the course object is created.
   });
+
+  /**
+   * test creating course with invalid courseName having excess chacters than the upper limit.
+   * we are using the constant.js file for other valid information
+   */
   test('testCreatingCourseWithCourseNameOverUpperLimit', async()=>{
 
     try {
       testCourse.courseName ='A'.repeat(51);
       course = await Course.create(testCourse);
+      course.courseName= 'A'.repeat(51);
     }catch(error){
       err =error.message;
     }
@@ -126,11 +162,16 @@ describe ('courseName', ()=>{
     expect (course).toBeFalsy(); //No course will be created
   });
 
+  /**
+   * test creating course with invalid courseName having empty string.
+   * we are using the constant.js file for other valid information
+   */
   test('testCreatingCourseWithEmptyCourseName', async()=>{
 
     try {
       testCourse.courseName ='';
       course = await Course.create(testCourse);
+      course.courseName='';
     }catch(error){
       err =error.message;
     }
@@ -140,6 +181,9 @@ describe ('courseName', ()=>{
 
 });
 
+/**
+ *These are tests for the courseNumCredits attribute of Course
+ */
 describe('courseNumCredits', ()=>{
   let course;
   let err ='';
@@ -150,6 +194,10 @@ describe('courseNumCredits', ()=>{
     err='';  //empty the error message (if any)
   });
 
+  /**
+   * test creating course with invalid courseCredits which is null.
+   * we are using the constant.js file for other valid information
+   */
   test('testCreatingCourseWithCreditUnitsHavingEmptyFields ', async ()=>{
 
     try {
@@ -161,6 +209,11 @@ describe('courseNumCredits', ()=>{
     expect (err).toBe('notNull Violation: Course.courseNumCredits cannot be null');
     expect (course).toBeFalsy(); //No course will be created
   });
+
+  /**
+   * test creating course with invalid courseCredit having string instead of Integer.
+   * we are using the constant.js file for other valid information
+   */
   test('testCreatingCourseWithCreditUnitsHavingString', async ()=>{
 
     try {
@@ -174,6 +227,10 @@ describe('courseNumCredits', ()=>{
     expect (course).toBeFalsy(); //No course will be created
   });
 
+  /**
+   * test creating course with invalid courseCredit having Decimal value instead of Integer.
+   * we are using the constant.js file for other valid information
+   */
   test('testCreatingCourseWithCreditUnitsHavingDecimalNumber', async ()=>{
 
     try {
@@ -187,6 +244,10 @@ describe('courseNumCredits', ()=>{
     expect (course).toBeFalsy(); //No course will be created
   });
 
+  /**
+   * test creating course with invalid courseCredit over the upper limit.
+   * we are using the constant.js file for other valid information
+   */
   test('testCreatingCourseWithCreditUnitOverLimit', async ()=>{
     try{
      testCourse.courseNumCredits=7;
@@ -199,7 +260,11 @@ describe('courseNumCredits', ()=>{
 
   });
 
-  test('testCreatingCourseWithCreditUniUpperLimit', async ()=>{
+  /**
+   * test creating course with valid courseCredit upper limit.
+   * we are using the constant.js file for other valid information
+   */
+  test('testCreatingCourseWithCreditUnitUpperLimit', async ()=>{
     try{
       testCourse.courseNumCredits=6;
       course= await Course.create(testCourse);
@@ -211,7 +276,11 @@ describe('courseNumCredits', ()=>{
 
   });
 
-  test('testCreatingCourseWithCreditUnitwithLowerLimit', async ()=>{
+  /**
+   * test creating course with valid courseCredit lower limit.
+   * we are using the constant.js file for other valid information
+   */
+  test('testCreatingCourseWithCreditUnitWithLowerLimit', async ()=>{
     try{
       testCourse.courseNumCredits=0;
       course= await Course.create(testCourse);
@@ -224,6 +293,9 @@ describe('courseNumCredits', ()=>{
   });
 });
 
+/**
+ *These are tests for the courseNumHoursPerWeek attribute of Course
+ */
  describe('courseNumHoursPerWeek', ()=>{
    let course;
    let err ='';
@@ -234,8 +306,11 @@ describe('courseNumCredits', ()=>{
      testCourse= testConst.course1; //test Course is created with the course properties defined in the constant.js file
      err='';  //empty the error message (if any)
    });
-
-   test ('testCreatingCourseWithEmptyCourseNumberOfHoursPerWeek', async()=>{
+   /**
+    * test creating course with invalid courseNumHoursPerWeek which is null.
+    * we are using the constant.js file for other valid information
+    */
+   test ('testCreatingCourseWithEmptyCourseNumHoursPerWeek', async()=>{
      try{
        testCourse.courseNumHoursPerWeek=null;
        course= await Course.create(testCourse);
@@ -246,6 +321,11 @@ describe('courseNumCredits', ()=>{
      expect(course).toBeFalsy();
 
    });
+
+   /**
+    * test creating course with invalid courseNumHoursPerWeek having string instead of Integer.
+    * we are using the constant.js file for other valid information
+    */
    test ('testCreatingCourseWithCourseNumberOfHoursHavingString ', async()=>{
      try{
        testCourse.courseNumHoursPerWeek="Twenty";
@@ -258,6 +338,10 @@ describe('courseNumCredits', ()=>{
 
    });
 
+   /**
+    * test creating course with invalid courseNumHoursPerWeek having Decimal value instead of Integer.
+    * we are using the constant.js file for other valid information
+    */
    test ('testCreatingCourseWithCourseNumberOfHoursHavingDecimal ', async()=>{
      try{
        testCourse.courseNumHoursPerWeek=20.5;
@@ -270,6 +354,10 @@ describe('courseNumCredits', ()=>{
 
    });
 
+   /**
+    * test creating course with invalid courseNumHoursPerWeek over the upper limit.
+    * we are using the constant.js file for other valid information
+    */
    test ('testCreatingCourseWithCourseNumberOfHoursUpperLimit ', async()=>{
      try{
        testCourse.courseNumHoursPerWeek=168;
@@ -282,6 +370,10 @@ describe('courseNumCredits', ()=>{
 
    });
 
+   /**
+    * test creating course with valid courseNumHours lower limit.
+    * we are using the constant.js file for other valid information
+    */
    test ('testCreatingCourseWithCourseNumberOfHoursLowerLimit', async()=>{
      try{
        testCourse.courseNumHoursPerWeek=1;
@@ -293,6 +385,11 @@ describe('courseNumCredits', ()=>{
      expect(course).toBeTruthy();
 
    });
+
+   /**
+    * test creating course with invalid courseNumHoursPerWeek over the upper limit.
+    * we are using the constant.js file for other valid information
+    */
    test ('testCreatingCourseWithCourseNumberOfHoursOverLimit', async()=>{
      try{
        testCourse.courseNumHoursPerWeek=169;
@@ -305,6 +402,10 @@ describe('courseNumCredits', ()=>{
 
    });
 
+   /**
+    * test creating course with invalid courseNumHoursPerWeek below the Lower limit.
+    * we are using the constant.js file for other valid information
+    */
    test ('testCreatingCourseWithCourseNumberOfHoursBelowLimit ', async()=>{
      try{
        testCourse.courseNumHoursPerWeek=0;
