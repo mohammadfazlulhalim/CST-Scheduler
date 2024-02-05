@@ -22,11 +22,11 @@
                     <td id="{{this.id}}name">{{this.name}}</td>
                     <td id="{{this.id}}group">{{this.group}}</td>
                     <td id="{{this.id}}course">{{this.Course.courseCode}}</td>
-                    <td id="{{this.id}}term">{{this.Term.id}}</td>
+                    <td id="{{this.id}}term" data-termid="{{this.Term.id}}">{{this.Term.title}}</td>
                     <td id="{{this.id}}startDate">{{this.startDate}}</td>
                     <td id="{{this.id}}endDate">{{this.endDate}}</td>
-                    <td id="{{this.id}}instructor">{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
-                    <td id="{{this.id}}program">{{this.Program.programAbbreviation}}</td>
+                    <td id="{{this.id}}instructor" data-instructorid="{{this.Instructor.id}}">{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
+                    <td id="{{this.id}}program" data-programid="{{this.Program.id}}">{{this.Program.programAbbreviation}}</td>
                     <td>
                         <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
                                 data-toggle="modal" data-target="#editModal">Edit
@@ -94,10 +94,11 @@
                             <div class="invalid-feedback">{{putErr.name}}</div>
                             <div>
                                 <label for="eTerm">Term</label>
-                                <select id="eTerm" class="form-label">Course
+                                <select id="eTerm" class="form-label" onchange="selectedTermUpdate()">Course
                                     <option></option>
                                     {{#each listTerm}}
-                                        <option value="{{id}}">{{title}}</option>
+                                        <option value="{{id}}" id="optionEditTerm{{id}}" data-termstart="{{startDate}}"
+                                                data-termend="{{endDate}}">{{title}}</option>
                                     {{/each}}
                                 </select>
                             </div>
@@ -120,7 +121,7 @@
                             <div class="invalid-feedback">{{putErr.group}}</div>
                             <div>
                                 <label for="eProgram">Program</label>
-                                <select id="eProgram" class="form-label">Program
+                                <select id="eProgram" class="form-label" onchange="checkUpdateEnable()">Program
                                     <option></option>
                                     {{#each listProgram}}
                                         <option value="{{id}}">{{programAbbreviation}}</option>
@@ -129,7 +130,7 @@
                             </div>
                             <div>
                                 <label for="eInstructor">Instructor</label>
-                                <select id="eInstructor" class="form-label">Instructor
+                                <select id="eInstructor" class="form-label" onchange="checkUpdateEnable()">Instructor
                                     <option></option>
                                     {{#each listInstructor}}
                                         <option value="{{id}}">{{lastName}}</option>
@@ -141,7 +142,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button type="button" id="editCO" class="btn btn-outline-success">Save</button>
+                            <button type="button" id="editCO" class="btn btn-outline-success" disabled>Save</button>
                         </div>
                     </form>
                 </div>
@@ -172,7 +173,8 @@
                             <select id="cCourse" class="form-label" onchange="selectedCourseCreate()">Course
                                 <option></option>
                                 {{#each listCourse}}
-                                    <option value="{{id}}">{{courseCode}}</option>
+                                    <option value="{{id}}" id="optionCreateCourse{{id}}"
+                                            data-coursename="{{courseName}}">{{courseCode}}</option>
                                 {{/each}}
                             </select>
                         </div>
@@ -186,7 +188,8 @@
                             <select id="cTerm" class="form-label" onchange="selectedTermCreate()">Course
                                 <option></option>
                                 {{#each listTerm}}
-                                    <option value="{{id}}">{{title}}</option>
+                                    <option value="{{id}}" id="optionCreateTerm{{id}}" data-termstart="{{startDate}}"
+                                            data-termend="{{endDate}}">{{title}}</option>
                                 {{/each}}
                             </select>
                         </div>
@@ -249,48 +252,34 @@
 
     reLinkButtons();
 
-    //DONE: Disable/enable submit buttons for create
-    //TODO: Disable/enable submit buttons for edit
+    //TODO: Auto select dropdown for edit
+    // TODO: Call checkUpdateEnable() when edit modal opens
 
-    // TODO: Autofill fields based on dropdown selections
-
+    /**
+     * This function autofills the name field with the course name when the course is selected
+     */
     function selectedCourseCreate() {
-      console.log('Entered the course create function');
-        // TODO fill name
-        // First get the name of the course
-        // let courseID = document.getElementById('cCourse').value;
-        // let courseList = document.getElementById('courseList').value
-        //
-        //
-        //  console.log('Array is: ' + JSON.stringify(courseList));
-        // for (let course in courseList) {
-        //   console.log('Course is: ' + course);
-        // }
-
-        // let course = courseList.filter(obj => {
-        //   return obj.id === courseID
-        // })
-        //
-        // console.log('Course is: ' + JSON.stringify(course));
-        //
-        //
-        //
-        // // now have the course, just need to type that into the field
-        // document.getElementById('cName').value = course.name;
-
-        // Now get the Course ID associated with that from the Course Array: listCourse
-
+        let courseID = document.getElementById('cCourse').value;
+        document.getElementById('cName').value = document.getElementById('optionCreateCourse' + courseID).dataset.coursename;
         checkCreateEnable();
-
     }
 
+    /**
+     * This function autofills the start and end dates with the term start and end dates when the term is selected
+     */
     function selectedTermCreate() {
-        // TODO fill start and end date
+        let termID = document.getElementById('cTerm').value;
+        document.getElementById('cStartDate').value = document.getElementById('optionCreateTerm' + termID).dataset.termstart;
+        document.getElementById('cEndDate').value = document.getElementById('optionCreateTerm' + termID).dataset.termend;
 
         checkCreateEnable();
     }
 
 
+    /**
+     * This function checks that each dropdown has an associated property selected
+     * and if it does enables the submit button
+     */
     function checkCreateEnable() {
         let bTermSelected = document.getElementById('cTerm').value !== '';
         let bCourseSelected = document.getElementById('cCourse').value !== '';
@@ -302,6 +291,34 @@
         } else {
             document.getElementById('createCO').disabled = 'disabled';
         }
+    }
+
+
+    function selectedTermUpdate() {
+        let termID = document.getElementById('eTerm').value;
+        document.getElementById('eStartDate').value = document.getElementById('optionEditTerm' + termID).dataset.termstart;
+        document.getElementById('eEndDate').value = document.getElementById('optionEditTerm' + termID).dataset.termend;
+
+
+        checkUpdateEnable();
+
+    }
+
+    /**
+     * This method checks that a value has been selected for every dropdown field
+     * and if so enables the submit button
+     */
+    function checkUpdateEnable() {
+        let bTermSelected = document.getElementById('eTerm').value !== '';
+        let bInstructorSelected = document.getElementById('eInstructor').value !== '';
+        let bProgramSelected = document.getElementById('eProgram').value !== '';
+
+        if (bTermSelected && bProgramSelected && bInstructorSelected) {
+            document.getElementById('editCO').removeAttribute('disabled');
+        } else {
+            document.getElementById('editCO').disabled = 'disabled';
+        }
+
     }
 
     /**
@@ -432,6 +449,14 @@
         $('#eEndDate').val($(`#${idToEdit}endDate`).text());
         $('#eGroup').val($(`#${idToEdit}group`).text());
         // TODO: Add selecting the dropdowns
+        $('#eTerm').val(document.getElementById(idToEdit + 'term').dataset.termid);
+        $('#eInstructor').val(document.getElementById(idToEdit + 'instructor').dataset.instructorid);
+        $('#eProgram').val(document.getElementById(idToEdit + 'program').dataset.programid);
+
+
+
+
+        checkUpdateEnable();
     }
 
     /**
