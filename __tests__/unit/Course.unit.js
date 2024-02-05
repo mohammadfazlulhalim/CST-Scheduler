@@ -174,6 +174,19 @@ describe('courseNumCredits', ()=>{
     expect (course).toBeFalsy(); //No course will be created
   });
 
+  test('testCreatingCourseWithCreditUnitsHavingDecimalNumber', async ()=>{
+
+    try {
+      testCourse.courseNumCredits=2.5;
+      course = await Course.create(testCourse);
+    }catch (error){
+      err= error.message;
+    }
+
+    expect (err).toBe('Validation error: Enter a whole number between 0 and 6 as a valid number of credits.');
+    expect (course).toBeFalsy(); //No course will be created
+  });
+
   test('testCreatingCourseWithCreditUnitOverLimit', async ()=>{
     try{
      testCourse.courseNumCredits=7;
@@ -236,6 +249,18 @@ describe('courseNumCredits', ()=>{
    test ('testCreatingCourseWithCourseNumberOfHoursHavingString ', async()=>{
      try{
        testCourse.courseNumHoursPerWeek="Twenty";
+       course= await Course.create(testCourse);
+     }catch(error){
+       err= error.message;
+     }
+     expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
+     expect(course).toBeFalsy();
+
+   });
+
+   test ('testCreatingCourseWithCourseNumberOfHoursHavingDecimal ', async()=>{
+     try{
+       testCourse.courseNumHoursPerWeek=20.5;
        course= await Course.create(testCourse);
      }catch(error){
        err= error.message;
