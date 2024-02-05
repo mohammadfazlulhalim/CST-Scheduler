@@ -1,6 +1,52 @@
-{{#if timeSlot}}
+{{#if matrixTable}}
+    <div>
+        <div class="row">
+            <div class="col-9">
+                <h2><i>Program Report For:</i>
+                    <span id="nameDisplayer">{{programName.programAbbreviation}} {{termName.termNumber}} {{group}}</span>
+                </h2>
+            </div>
+            <div class="col-3">
+                <small>Report Generated: <span id="dateGenDisplayer">{{dateGen}}</span></small>
+            </div>
+        </div>
+    </div>
+<table class="table table-bordered table-hover border-dark">
+    <thead>
+
+    <!--        Header Row-->
+    <tr>
+        <!--            6 columns designated    -->
+        <th class="text-center" scope="col">Time</th>
+        <th class="text-center" scope="col">Monday</th>
+        <th class="text-center" scope="col">Tuesday</th>
+        <th class="text-center" scope="col">Wednesday</th>
+        <th class="text-center" scope="col">Thursday</th>
+        <th class="text-center" scope="col">Friday</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 2D array looping through to display instuctor report -->
+    {{#each matrixTable}}
+        <tr>
+            <!-- innerloop starts here-->
+            {{#each this}}
+                {{#if timeSlot}}
+                    <td>{{../../program}}<br>{{course.courseCode}}{{courseOffering.group}}<br>{{instructor.lastName}}</td>
+                {{else}}
+                    {{#if timeRow}}
+                        <td class="text-center">{{timeRow}}</td>
+                    {{else}}
+                        <td></td>
+                    {{/if}}
+                {{/if}}
+            {{/each}}
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
 {{else}}
-    <h2>Nothing to Display</h2>
+<h1 id="nothingToShow">Nothing to display at the moment</h1>
 {{/if}}
 
 <!-- modal -->

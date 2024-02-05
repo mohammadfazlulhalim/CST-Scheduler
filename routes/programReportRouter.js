@@ -142,30 +142,39 @@ router.post('/', async function(req, res, next) {
   }
 
   // try to find the group selected
-  try {
-    groupName = await Program.findOne({where: {id: group}});
-  } catch (e) {
-    groupName = undefined;
-  }
+  // try {
+  //   groupName = await CourseOffering.findOne({where: {id: group}});
+  // } catch (e) {
+  //   groupName = undefined;
+  // }
 
   // try to find the time slots based on selections
+  let instRepTimeslots;
   try {
-    instRepTimeslots = await Timeslot.findAll( {
+    instRepTimeslots = await Timeslot.findAll({
       where: {ProgramId: programID, TermId: termID, group: group},
       order: [['startTime', 'ASC'], ['day', 'ASC']],
     });
+
+    console.log('the time slot is');
+    console.log(instRepTimeslots);
   } catch (e) {
-    instRepTimeslots=undefined;
+    // instRepTimeslots=undefined;
   }
 
   // generates the schedule
   // eslint-disable-next-line prefer-const
-  matrixTable = await generateSchedule(instRepTimeslots);
+  let matrixTable = await generateSchedule(instRepTimeslots);
+  console.log(matrixTable);
 
   res.render('programReport', {
     programList,
     newTermList,
     groupList,
+    matrixTable,
+    programName,
+    group,
+    termName,
     showModal: false,
   });
 });
@@ -181,6 +190,7 @@ async function generateSchedule(instRepTimeslots) {
   let currentCourseOffering;
   let currentClassroom;
   let currentCourse;
+  let currentInstructor;
 
   // import both the 24 hr and 12 hr array to use them for checks and display respectively
   for (let i = 0; i < hours24.length; i++) {
@@ -203,6 +213,7 @@ async function generateSchedule(instRepTimeslots) {
       currentCourseOffering = await timeslot.getCourseOffering();
       currentClassroom = await timeslot.getClassroom();
       currentCourse = await currentCourseOffering.getCourse();
+      currentInstructor = await currentInstructor.getInstructor();
     } catch (e) {
       console.error(e);
     }
@@ -210,7 +221,9 @@ async function generateSchedule(instRepTimeslots) {
     matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
       courseOffering: currentCourseOffering,
       classRoom: currentClassroom,
-      course: currentCourse};
+      course: currentCourse,
+      instructor: currentInstructor,
+    };
   }
 
   // place the hours
@@ -234,8 +247,8 @@ module.exports = router;
  * @param term
  * @param group
  */
-function generateSchedule(startDate, endDate, term, group) {
-
-}
+// function generateSchedule(startDate, endDate, term, group) {
+//
+// }
 
 module.exports = router;
