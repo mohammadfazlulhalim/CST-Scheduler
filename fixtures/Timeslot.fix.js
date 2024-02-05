@@ -64,13 +64,15 @@ async function createTimeslot() {
   // TODO try out two loops - one to create a new series of timeslots - reuse the validTimeslots for the time being and setTerm to term2! - classroom id 2 for now
   const RealTimeSlots3 = await Timeslot.bulkCreate(constants.testConst.validTimeslots);
 
-  const classroom2 = await Classroom.findByPk(2);
+  const classroom3 = await Classroom.findOne({
+    where: {roomNumber: '241'},
+  });
 
   for (let i=0; i<RealTimeSlots3.length; i++) {
     RealTimeSlots3[i].setTerm(term2);
     RealTimeSlots3[i].setProgram(program);
     // RealTimeSlots[i].setInstructor(instructor);
-    RealTimeSlots3[i].setClassroom(classroom2);
+    RealTimeSlots3[i].setClassroom(classroom3);
     RealTimeSlots3[i].setInstructor(await Instructor
         .findByPk((i%constants.testConst.validInstructor.length)+1));
     RealTimeSlots3[i].setCourseOffering(await courseOffering

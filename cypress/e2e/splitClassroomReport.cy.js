@@ -27,6 +27,12 @@ it('testSplitClassRoomReport', () => {
   cy.get('#btnGenerateSchedule').should('be.enabled'); // Check that the button is now enabled
   cy.get('#btnGenerateSchedule').click(); // Click generate schedule
 
+  // TODO check if wait is needed for letting post run
+  cy.wait(1000);
+
   // TODO check if a visit and intercept call to page is necessary...
+
+  cy.get("#table")
+
 });
 

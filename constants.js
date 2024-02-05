@@ -149,10 +149,22 @@ const testConst = {
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '9:00', endTime: '10:00', day: 5, group: 'A'},
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
+  ],
+  // TODO refine the s48 timeslots
+  s48validTimeslots: [
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '8:00', endTime: '9:00', day: 1, group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '14:00', endTime: '15:00', day: 1, group: 'A'},
+    {startDate: '2023-01-01', endDate: '2023-03-29', startTime: '9:00', endTime: '10:00', day: 2, group: 'A'},
+    {startDate: '2023-01-05', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
+    {startDate: '2023-01-05', endDate: '2023-04-01', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
+    {startDate: '2023-01-05', endDate: '2023-03-29', startTime: '11:00', endTime: '12:00', day: 3, group: 'A'},
+    {startDate: '2023-01-07', endDate: '2023-04-01', startTime: '10:00', endTime: '11:00', day: 4, group: 'A'},
+    {startDate: '2023-01-07', endDate: '2023-04-01', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
+    {startDate: '2023-01-07', endDate: '2023-04-01', startTime: '9:00', endTime: '10:00', day: 5, group: 'A'},
+    {startDate: '2023-01-07', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
 
     //   TODO timeslots for room 241 - term 2 - either separately from the list or dynamically use existing list - but with changed start and end date values - could algorithmic
     // {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
-
   ],
 
 
