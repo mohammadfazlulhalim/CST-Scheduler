@@ -27,7 +27,9 @@ async function createTimeslot() {
   // }
   //
   // const instructor = await Instructor.findByPk(4);
-  // const program = await Program.findByPk(1);
+
+  // TODO comment program if necessary
+  const program = await Program.findByPk(1);
   let classroom = await Classroom.findByPk(2);
   const term = await Term.findByPk(1);
 
@@ -58,21 +60,22 @@ async function createTimeslot() {
         .findByPk((i % constants.testConst.validCourseOfferingsA.length) + 9));
   }
 
-  // TODO try out two loops - one to create a new series of timeslots - reuse the validTimeslots for the time being and setTerm to term2!
+  // -----s48-----
+  // TODO try out two loops - one to create a new series of timeslots - reuse the validTimeslots for the time being and setTerm to term2! - classroom id 2 for now
   const RealTimeSlots3 = await Timeslot.bulkCreate(constants.testConst.validTimeslots);
 
-  for (let i=0; i<RealTimeSlots.length; i++) {
-    RealTimeSlots[i].setTerm(term);
-    RealTimeSlots[i].setProgram(program);
+  const classroom2 = await Classroom.findByPk(2);
+
+  for (let i=0; i<RealTimeSlots3.length; i++) {
+    RealTimeSlots3[i].setTerm(term2);
+    RealTimeSlots3[i].setProgram(program);
     // RealTimeSlots[i].setInstructor(instructor);
-    RealTimeSlots[i].setClassroom(classroom);
-    RealTimeSlots[i].setInstructor(await Instructor
-      .findByPk((i%constants.testConst.validInstructor.length)+1));
-    RealTimeSlots[i].setCourseOffering(await courseOffering
-      .findByPk((i%constants.testConst.validCourseOfferingsB.length)+2));
+    RealTimeSlots3[i].setClassroom(classroom2);
+    RealTimeSlots3[i].setInstructor(await Instructor
+        .findByPk((i%constants.testConst.validInstructor.length)+1));
+    RealTimeSlots3[i].setCourseOffering(await courseOffering
+        .findByPk((i%constants.testConst.validCourseOfferingsB.length)+2));
   }
-
-
 }
 
 module.exports = fillTimeslotTable;
