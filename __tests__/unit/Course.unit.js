@@ -9,6 +9,7 @@ describe('courseCode', () => {
   let course;
   let testCourse;
   let err = '';
+  let errCount;
   beforeEach(async function(){
     await Course.sync({force: true}); // wipes course table if it exists
     testCourse = testConst.course1; // test Course is created with the course properties defined in the constant.js file
@@ -51,7 +52,7 @@ describe('courseCode', () => {
 
     }
     expect (course).toBeTruthy(); //check the course object is created.
-    expect (err.length).toBe(0); //check no error is thrown
+    expect (err).toBe(''); //check no error is thrown
 
   });
 
@@ -68,10 +69,11 @@ describe('courseCode', () => {
 
     }catch (error){
       err=error.message;
+      errCount=error.errors.length;
 
     }
     expect (course).toBeTruthy(); //check the course object is created.
-    expect (err.length).toBe(0); //check no error is thrown
+    expect (err).toBe(''); //check no error is thrown
 
 
   });
@@ -88,8 +90,10 @@ describe('courseCode', () => {
       course= await Course.create(testCourse);
     }catch (error){
       err=error.message;
+      errCount= error.errors.length;
     }
     expect (course).toBeFalsy; //No course will be created
+    expect (errCount).toBe (1);
     expect (err).toBe('Validation error: Course Code can have 3-4 characters and 3-4 digits only');
 
   });
@@ -105,8 +109,10 @@ describe('courseCode', () => {
       course= await Course.create(testCourse);
     }catch (error){
       err=error.message;
+      errCount= error.errors.length;
     }
     expect (course).toBeFalsy; //No course will be created
+    expect (errCount).toBe(1);
     expect (err).toBe('Validation error: Course Code can have 3-4 characters and 3-4 digits only');
 
   });
@@ -120,9 +126,10 @@ describe('courseCode', () => {
  */
 
 describe ('courseName', ()=>{
-  let course;
+ let course;
   let err='';
   let testCourse;
+  let errCount =0;
   beforeEach(async()=>{
     await Course.sync({force: true}); // wipes course table if it exists
     testCourse= testConst.course1; //test Course is created with the course properties defined in the constant.js file
@@ -134,14 +141,16 @@ describe ('courseName', ()=>{
    * we are using the constant.js file for other valid information
    */
   test('testCreatingCourseWithCourseNameUpperLimit', async()=>{
-
-    try {
+    let course=undefined;
+    testCourse.courseCode='CSEC280';
+       try {
       testCourse.courseName ='A'.repeat(50)
       course = await Course.create(testCourse);
+
     }catch(error){
       err =error.message;
     }
-    expect (err.length).toBe(0);
+    expect (err).toBe('');
     expect (course).toBeTruthy(); //check the course object is created.
   });
 
@@ -154,7 +163,7 @@ describe ('courseName', ()=>{
     try {
       testCourse.courseName ='A'.repeat(51);
       course = await Course.create(testCourse);
-      course.courseName= 'A'.repeat(51);
+
     }catch(error){
       err =error.message;
     }
@@ -188,6 +197,7 @@ describe('courseNumCredits', ()=>{
   let course;
   let err ='';
   let testCourse;
+  let errCount;
   beforeEach(async()=>{
     await Course.sync({force: true}); // wipes course table if it exists
     testCourse= testConst.course1; //test Course is created with the course properties defined in the constant.js file
@@ -200,13 +210,17 @@ describe('courseNumCredits', ()=>{
    */
   test('testCreatingCourseWithCreditUnitsHavingEmptyFields ', async ()=>{
 
+    testCourse.courseName='Security';
     try {
       testCourse.courseNumCredits=null;
       course = await Course.create(testCourse);
     }catch (error){
       err= error.message;
+      errCount= error.errors.length;
+
     }
     expect (err).toBe('notNull Violation: Course.courseNumCredits cannot be null');
+    expect (errCount).toBe(1);
     expect (course).toBeFalsy(); //No course will be created
   });
 
@@ -221,9 +235,11 @@ describe('courseNumCredits', ()=>{
       course = await Course.create(testCourse);
     }catch (error){
       err= error.message;
+      errCount = error.errors.length;
     }
 
     expect (err).toBe('Validation error: Enter a whole number between 0 and 6 as a valid number of credits.');
+    expect (errCount).toBe(1); //Number of error to be 1
     expect (course).toBeFalsy(); //No course will be created
   });
 
@@ -238,9 +254,11 @@ describe('courseNumCredits', ()=>{
       course = await Course.create(testCourse);
     }catch (error){
       err= error.message;
+      errCount = error.errors.length;
     }
 
     expect (err).toBe('Validation error: Enter a whole number between 0 and 6 as a valid number of credits.');
+    expect (errCount).toBe(1); //Number of error to be 1
     expect (course).toBeFalsy(); //No course will be created
   });
 
@@ -254,9 +272,11 @@ describe('courseNumCredits', ()=>{
       course= await Course.create(testCourse);
       }catch(error){
          err= error.message;
+          errCount = error.errors.length;
         }
         expect (err).toBe('Validation error: Enter a whole number between 0 and 6 as a valid number of credits.');
-         expect(course).toBeFalsy();
+        expect(errCount).toBe(1);
+        expect(course).toBeFalsy();
 
   });
 
@@ -271,7 +291,7 @@ describe('courseNumCredits', ()=>{
     }catch(error){
       err= error.message;
       }
-    expect (err.length).toBe(0);
+    expect (err).toBe('');
     expect(course).toBeTruthy();
 
   });
@@ -287,7 +307,7 @@ describe('courseNumCredits', ()=>{
     }catch(error){
       err= error.message;
     }
-    expect (err.length).toBe(0);
+    expect (err).toBe('');
     expect(course).toBeTruthy();
 
   });
@@ -300,6 +320,7 @@ describe('courseNumCredits', ()=>{
    let course;
    let err ='';
    let testCourse;
+   let errCount;
 
    beforeEach(async()=>{
      await Course.sync({force: true}); // wipes course table if it exists
@@ -316,7 +337,9 @@ describe('courseNumCredits', ()=>{
        course= await Course.create(testCourse);
      }catch(error){
        err= error.message;
+       errCount = error.errors.length;
      }
+     expect (errCount).toBe(1);
      expect (err).toBe('notNull Violation: Course.courseNumHoursPerWeek cannot be null');
      expect(course).toBeFalsy();
 
@@ -332,7 +355,9 @@ describe('courseNumCredits', ()=>{
        course= await Course.create(testCourse);
      }catch(error){
        err= error.message;
+       errCount= error.errors.length;
      }
+     expect (errCount).toBe(1);
      expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
      expect(course).toBeFalsy();
 
@@ -348,7 +373,9 @@ describe('courseNumCredits', ()=>{
        course= await Course.create(testCourse);
      }catch(error){
        err= error.message;
+       errCount= error.errors.length;
      }
+     expect (errCount).toBe(1);
      expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
      expect(course).toBeFalsy();
 
@@ -365,8 +392,8 @@ describe('courseNumCredits', ()=>{
      }catch(error){
        err= error.message;
      }
-     expect (err.length).toBe(0);
-     expect(course).toBeTruthy();
+     expect (err).toBe('');   //No errors should be thrown
+     expect(course).toBeTruthy();   //valid course created
 
    });
 
@@ -381,7 +408,7 @@ describe('courseNumCredits', ()=>{
      }catch(error){
        err= error.message;
      }
-     expect (err.length).toBe(0);
+     expect (err).toBe('');
      expect(course).toBeTruthy();
 
    });
@@ -396,9 +423,11 @@ describe('courseNumCredits', ()=>{
        course= await Course.create(testCourse);
      }catch(error){
        err= error.message;
+       errCount= error.errors.length;
      }
+     expect (errCount).toBe(1);
      expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
-     expect(course).toBeTruthy();
+     expect(course).toBeFalsy();
 
    });
 
@@ -407,14 +436,17 @@ describe('courseNumCredits', ()=>{
     * we are using the constant.js file for other valid information
     */
    test ('testCreatingCourseWithCourseNumberOfHoursBelowLimit ', async()=>{
+
      try{
        testCourse.courseNumHoursPerWeek=0;
        course= await Course.create(testCourse);
      }catch(error){
        err= error.message;
+       errCount =error.errors.length;
      }
+     expect(errCount).toBe(1);
      expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
-     expect(course).toBeTruthy();
+     expect(course).toBeFalsy();
 
    });
 
