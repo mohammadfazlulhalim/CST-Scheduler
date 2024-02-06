@@ -180,6 +180,35 @@
             submitBtn.disabled = true;
         }
     }
+    function printReport() {
+        const printWindow = window.open('', '_blank');
+
+        // Add styles or additional content if needed
+        printWindow.document.write('<html><head><title>Program Report</title>');
+        printWindow.document.write('<style>');
+        printWindow.document.write('@media print { @page { size: landscape; } }'); // Set page orientation to landscape
+        printWindow.document.write('.table-bordered { border-collapse: collapse; width: 100%; }');
+        printWindow.document.write('.table-bordered th, .table-bordered td { border: 1px solid black; padding: 8px; }');
+        printWindow.document.write('</style>');
+        printWindow.document.write('</head><body>');
+
+        // Print date and instructor name
+        const dateGen = document.getElementById("dateGenDisplayer").innerText;
+        const instructorName = document.getElementById("nameDisplayer").innerText;
+
+        printWindow.document.write('<h2>Instructor Report For: ' + instructorName + '</h2>');
+        printWindow.document.write('<p>Report Generated: ' + dateGen + '</p>');
+
+        // Print the table
+        const tableHtml = document.querySelector('.table-bordered').outerHTML;
+        printWindow.document.write(tableHtml);
+
+        printWindow.document.write('</body></html>');
+
+        printWindow.document.close();
+        printWindow.print();
+    }
+
 
     // check if the "close" button was clicked
     closeBtn.addEventListener("click", function () {

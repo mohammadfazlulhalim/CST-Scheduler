@@ -31,6 +31,7 @@ router.get('/', async function(req, res, next) {
   let newTermList;
   let groupList;
 
+
   // Find the programs to list in the modal select box
   try {
     programList= await Program.findAll({order: ['programName']});
@@ -88,6 +89,7 @@ router.post('/', async function(req, res, next) {
   let programName;
   let groupName;
   const today = new Date();
+  let program;
 
   // Get the UTC day, month, and year components
   const day = today.getUTCDate();
@@ -133,9 +135,18 @@ router.post('/', async function(req, res, next) {
     groupList = undefined;
   }
 
+  // try to find the program selected
+  try {
+    programName = await Program.findOne({where: {id: programID}});
+    program=''+programName.programAbbreviation;
+  } catch (e) {
+    programName = undefined;
+  }
+
   // try to find the term selected
   try {
     termName = await Term.findOne({where: {id: termID}});
+    program+=''+termName.year;
     // based on the term define the program year
     // if (termName.termNumber <= 3) {
     //   program= 'CST 1';
@@ -144,13 +155,6 @@ router.post('/', async function(req, res, next) {
     // }
   } catch (e) {
     termName = undefined;
-  }
-
-  // try to find the program selected
-  try {
-    programName = await Program.findOne({where: {id: programID}});
-  } catch (e) {
-    programName = undefined;
   }
 
   // try to find the group selected
@@ -189,6 +193,7 @@ router.post('/', async function(req, res, next) {
     termName,
     showModal: false,
     dateGen,
+    program,
   });
 });
 
@@ -204,7 +209,7 @@ async function generateSchedule(instRepTimeslots) {
   let currentClassroom;
   let currentCourse;
   let currentInstructor;
-  let currentRoom;
+
 
   // import both the 24 hr and 12 hr array to use them for checks and display respectively
   for (let i = 0; i < hours24.length; i++) {
