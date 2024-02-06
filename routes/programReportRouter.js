@@ -204,6 +204,7 @@ async function generateSchedule(instRepTimeslots) {
   let currentClassroom;
   let currentCourse;
   let currentInstructor;
+  let currentRoom;
 
   // import both the 24 hr and 12 hr array to use them for checks and display respectively
   for (let i = 0; i < hours24.length; i++) {
@@ -228,20 +229,18 @@ async function generateSchedule(instRepTimeslots) {
       currentCourseOffering = await timeslot.getCourseOffering();
       currentClassroom = await timeslot.getClassroom();
       currentCourse = await currentCourseOffering.getCourse();
-      currentInstructor = await currentInstructor.getInstructor();
+      currentInstructor = await timeslot.getInstructor();
+      currentClassroom = await timeslot.getClassroom();
     } catch (e) {
       console.error(e);
     }
     // put the items in the array
     matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
-      // courseOffering: currentCourseOffering,
-      // classRoom: currentClassroom,
-      // course: currentCourse,
-      // instructor: currentInstructor,
-      courseOffering: "course",
+      courseOffering: currentCourseOffering,
       classRoom: currentClassroom,
       course: currentCourse,
       instructor: currentInstructor,
+      classroom: currentClassroom,
     };
   }
 

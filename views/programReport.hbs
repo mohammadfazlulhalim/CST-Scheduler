@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-9">
                 <h2><i>Program Report For:</i>
-                    <span id="nameDisplayer">{{programName.programAbbreviation}} year {{termName.termNumber}}{{group}}</span>
+                    <span id="nameDisplayer">{{programName.programAbbreviation}} Term {{termName.termNumber}}{{group}}</span>
                 </h2>
             </div>
             <div class="col-3">
@@ -32,7 +32,9 @@
             <!-- innerloop starts here-->
             {{#each this}}
                 {{#if timeSlot}}
-                    <td>{{../../program}}<br>{{course.courseCode}}{{courseOffering}}<br>{{instructor.lastName}}</td>
+                    <td>{{../../program}}<br>{{course.courseCode}}{{courseOffering.group}}<br>{{instructor.lastName}}
+                        <br>{{classroom.roomNumber}}
+                    </td>
                 {{else}}
                     {{#if timeRow}}
                         <td class="text-center">{{timeRow}}</td>
@@ -122,6 +124,9 @@
     let closeBtn;
     let xBtn;
     let newProgramBtn;
+    const modal = new bootstrap.Modal(document.getElementById("programReportModal"));
+    closeBtn = document.getElementById("modalCloseBtn");
+    xBtn = document.getElementById("xBtn");
 
     // On arrival the modal will open
     window.onload = function(){
@@ -129,10 +134,10 @@
         selectedProgram = document.getElementById("selectProgramReport");
         selectedTerm = document.getElementById("selectTermReport");
         selectedGroup = document.getElementById("selectGroupReport");
-        closeBtn = document.getElementById("modalCloseBtn");
-        xBtn = document.getElementById("xBtn");
+        //closeBtn = document.getElementById("modalCloseBtn");
+        //xBtn = document.getElementById("xBtn");
         newProgramBtn = document.getElementById("newProgramBtn");
-        const modal = new bootstrap.Modal(document.getElementById("programReportModal"));
+        //const modal = new bootstrap.Modal(document.getElementById("programReportModal"));
         submitBtn.disabled = true;
         // only open upon first arrival
         {{#if showModal}}
@@ -175,5 +180,15 @@
             submitBtn.disabled = true;
         }
     }
+
+    // check if the "close" button was clicked
+    closeBtn.addEventListener("click", function () {
+        modal.hide();
+    });
+
+    // check if the 'x' button was clicked
+    xBtn.addEventListener("click", function () {
+        modal.hide();
+    });
 
 </script>
