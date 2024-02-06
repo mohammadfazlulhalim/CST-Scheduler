@@ -204,7 +204,7 @@ async function getCOList() {
 
   // retrieve all course offerings from the database
   try {
-    listCO = await CourseOffering.findAll({include: [Program, Course, Instructor, Term]});
+    listCO = await CourseOffering.findAll({include: [Program, Course, Instructor, Term], order: [['name'],['group']]});
     // loop through the list, and format every term to add in title
     for (let i=0; i<listCO.length; i++) {
       if (listCO[i].Term) {

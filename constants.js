@@ -94,7 +94,7 @@ const testConst = {
     {courseCode: 'COSA290', courseName: 'IT Development Project 2', courseNumCredits: 6, courseNumHoursPerWeek: 6},
     {courseCode: 'COSC292', courseName: 'Advanced Programming 2', courseNumCredits: 4, courseNumHoursPerWeek: 4},
     {courseCode: 'COSC295', courseName: 'Advanced Mobile Application Programming', courseNumCredits: 4, courseNumHoursPerWeek: 4},
-    {courseCode: 'CPMG290 ', courseName: 'IT Development Project Management 2', courseNumCredits: 2, courseNumHoursPerWeek: 2},
+    {courseCode: 'CPMG290', courseName: 'IT Development Project Management 2', courseNumCredits: 2, courseNumHoursPerWeek: 2},
     {courseCode: 'TCOM291', courseName: 'Career Path Search', courseNumCredits: 1, courseNumHoursPerWeek: 1},
   ],
   validTerms: [
