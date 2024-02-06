@@ -169,16 +169,16 @@
                                class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eID"
                                name="ID" value="{{submittedCO.id}}">
                         <div class="invalid-feedback">{{putErr.id}}</div>
-<!--                        TODO: Switch course to combobox-->
                         <div>
                             <label for="cCourse">Course</label>
-                            <select id="cCourse" class="form-label" onchange="selectedCourseCreate()">Course
-                                <option></option>
+<!--                            TODO: switch function call to after they are done typing-->
+                            <input id="cCourse" type="text" list="courses" oninput="selectedCourseCreate()"/>
+                            <datalist id="courses" class="form-label">Course
                                 {{#each listCourse}}
-                                    <option value="{{id}}" id="optionCreateCourse{{id}}"
-                                            data-coursename="{{courseName}}">{{courseCode}}</option>
+                                    <option id="optionCreateCourse{{courseCode}}"
+                                            value="{{courseCode}}" data-courseid="{{id}}" data-coursename="{{courseName}}"></option>
                                 {{/each}}
-                            </select>
+                            </datalist>
                         </div>
 
                         <label for="cName">Name:</label>
@@ -259,8 +259,13 @@
      * This function autofills the name field with the course name when the course is selected
      */
     function selectedCourseCreate() {
-        let courseID = document.getElementById('cCourse').value;
-        document.getElementById('cName').value = document.getElementById('optionCreateCourse' + courseID).dataset.coursename;
+      console.log('entered check')
+        let courseCode = document.getElementById('cCourse').value;
+      try {
+          document.getElementById('cName').value = document.getElementById('optionCreateCourse'+courseCode).dataset.coursename;
+      } catch (e) {
+          // TODO: display message when this fails
+      }
         checkCreateEnable();
     }
 
@@ -281,13 +286,22 @@
      */
     function checkCreateEnable() {
         let bTermSelected = document.getElementById('cTerm').value !== '';
-        let bCourseSelected = document.getElementById('cCourse').value !== '';
+        let courseCode = document.getElementById('cCourse').value;
+        let bCourseSelected = false
+        try {
+            bCourseSelected = document.getElementById('optionCreateCourse'+courseCode).dataset.courseid;
+        } catch (e) {
+          bCourseSelected = false;
+
+        }
         let bInstructorSelected = document.getElementById('cInstructor').value !== '';
         let bProgramSelected = document.getElementById('cProgram').value !== '';
 
         if (bTermSelected && bProgramSelected && bCourseSelected && bInstructorSelected) {
+            console.log('btn enabled');
             document.getElementById('createCO').removeAttribute('disabled');
         } else {
+            console.log('btn disabled');
             document.getElementById('createCO').disabled = 'disabled';
         }
     }
@@ -343,6 +357,10 @@
      * @returns {Promise<void>}
      */
     async function handleCreateCO() {
+        let courseCode = document.getElementById('cCourse').value;
+
+
+        let courseID = document.getElementById('optionCreateCourse'+courseCode).dataset.courseid;
         const response = await fetch('http://localhost:3000/courseOffering', {
             method: 'POST',
             headers: {
@@ -354,7 +372,7 @@
                 startDate: $('#cStartDate').val(),
                 endDate: $('#cEndDate').val(),
                 group: $('#cGroup').val(),
-                course: $('#cCourse').val(),
+                course: courseID,
                 program: $('#cProgram').val(),
                 instructor: $('#cInstructor').val(),
                 term: $('#cTerm').val(),
