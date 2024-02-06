@@ -135,5 +135,11 @@ async function formatCourseOffering(coObj) {
   };
 }
 
+/**
+ This function will handle the schedule changes.
+ @param req
+ */
+async function handleScheduleSave(req) {}
+
 
 module.exports = router;
