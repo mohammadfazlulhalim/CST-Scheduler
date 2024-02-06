@@ -136,10 +136,11 @@ async function formatCourseOffering(coObj) {
 }
 
 /**
- This function will handle the schedule changes.
- @param req
+ *  This function will handle the schedule changes.
+ * @param saveArray - This array will contain the edit schedule timeslots to save to the database
+ * @param deleteArray - This array will contain the timeslots to delete from the database
  */
-async function handleScheduleSave(req) {}
+async function handleScheduleSave(saveArray, deleteArray) {}
 
 
 module.exports = router;
