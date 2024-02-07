@@ -185,7 +185,7 @@ describe('Test Program Report Page', () => {
 
     /**
          * testNewReportAndPrintButtonsAreVisible
-         */
+    //      */
     // Wait for the buttons to be visible
     cy.get('#newProgramBtn').should('be.visible');
     cy.get('#printRptBtn').should('be.visible');
