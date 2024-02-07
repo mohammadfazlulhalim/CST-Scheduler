@@ -89,7 +89,7 @@ describe('Test Instructor Report Page', () => {
     // Check the content of the date generated element
     cy.get('#dateGenDisplayer').invoke('text').then((text) => {
       // Validate that the date matches the format DD-Mmm-YYYY
-      const datePattern = /^(0[1-9]|[12][0-9]|3[01])-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-\d{4}$/;
+      const datePattern = /^([1-9]|[12][0-9]|3[01])-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-\d{4}$/;
       expect(text).to.match(datePattern);
     });
     /**

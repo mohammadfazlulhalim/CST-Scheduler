@@ -125,6 +125,7 @@ router.post('/', async function(req, res, next) {
     termList = undefined;
   }
 
+
   // Find the groups to list in the select box
   try {
     // groupList= await CourseOffering.findAll({order: ['group']});

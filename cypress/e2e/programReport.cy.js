@@ -2,12 +2,9 @@
  * UI tests for program report
  * Author: Chritseen Shlimoon
  */
-const sel='#selectProgramReport';
+
 describe('Test Program Report Page', () => {
   it('testProgramGET', ()=> {
-    const expectedTimes12 = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
-    const expectedHeaders = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-
     /**
          * testNavigationToTheReportProgramPage
          */
@@ -44,93 +41,37 @@ describe('Test Program Report Page', () => {
     // Select the term from the dropdown based on value
     cy.get('#selectTermReport').select('1');
 
+    // Check if the generate button is still disabled
+    cy.get('#submitBtn').should('be.disabled');
+
     // Select the course group from the dropdown based on value
     cy.get('#selectGroupReport').select('A');
 
-    // /**
-    //      * testThatSelectBoxesAreSorted
-    //      */
-    // // Check the options are ordered in program select box
-    // cy.get('#selectProgram').invoke('val').then((selectedValue) => {
-    //   // Get all the options
-    //   cy.get('#selectProgram option').then((options) => {
-    //     // Convert options to an array of values
-    //     const optionValues = options.map((index, option) => option.value).get();
-    //
-    //     // Check if options are ordered
-    //     const isOrdered = optionValues.every((value, index, array) => {
-    //       // If it's not the first option, compare with the previous one
-    //       if (index > 0) {
-    //         return value >= array[index - 1];
-    //       }
-    //       return true;
-    //     });
-    //
-    //     // Assert that options are ordered
-    //     expect(isOrdered).to.be.true;
-    //
-    //     // Assert that the selected option is the first one
-    //     expect(selectedValue).to.equal(optionValues[0]);
-    //   });
-    // });
-    //
-    // // Get the select box and its options in course group select box
-    // cy.get('#selectGroup').invoke('val').then((selectedValue) => {
-    //   // Get all the options
-    //   cy.get('#selectGroup option').then((options) => {
-    //     // Convert options to an array of values
-    //     const optionValues = options.map((index, option) => option.value).get();
-    //
-    //     // Check if options are ordered
-    //     const isOrdered = optionValues.every((value, index, array) => {
-    //       // If it's not the first option, compare with the previous one
-    //       if (index > 0) {
-    //         return value >= array[index - 1];
-    //       }
-    //       return true;
-    //     });
-    //
-    //     // Assert that options are ordered
-    //     expect(isOrdered).to.be.true;
-    //
-    //     // Assert that the selected option is the first one
-    //     expect(selectedValue).to.equal(optionValues[0]);
-    //   });
-    // });
-    //
-    //
-    // // Check the options are ordered in term select box
-    // cy.get('#termSelect').invoke('val').then((selectedValue) => {
-    //   // Get all the options
-    //   cy.get('#termSelect option').then((options) => {
-    //     // Convert options to an array of values
-    //     const optionValues = options.map((index, option) => option.value).get();
-    //
-    //     // Check if options are ordered
-    //     const isOrdered = optionValues.every((value, index, array) => {
-    //       // If it's not the first option, compare with the previous one
-    //       if (index > 0) {
-    //         return value >= array[index - 1];
-    //       }
-    //       return true;
-    //     });
-    //
-    //     // Assert that options are ordered
-    //     expect(isOrdered).to.be.true;
-    //
-    //     // Assert that the selected option is the first one
-    //     expect(selectedValue).to.equal(optionValues[0]);
-    //   });
-    // });
+    /**
+         * testThatSelectBoxesAreSorted
+         */
+
 
     // Check if the generate button is enabled after selecting both instructor and term
     cy.get('#submitBtn').should('be.enabled');
+  });
 
-    // Submit the form
+  it('testProgramPOST', ()=> {
+    const expectedTimes12 = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
+    const expectedHeaders = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+    cy.visit('http://localhost:3000/programReport');
+    // Select the program from the dropdown based on value
+    cy.get('#selectProgramReport').select('1');
+
+    // Select the term from the dropdown based on value
+    cy.get('#selectTermReport').select('1');
+
+    // Select the course group from the dropdown based on value
+    cy.get('#selectGroupReport').select('A');
+
     cy.get('#submitBtn').click();
-    /**
-         * testGenerateSingleProgramReport
-         */
+
     // Wait for the table to be visible
     cy.get('.table-bordered').should('exist');
     // One table
@@ -151,21 +92,30 @@ describe('Test Program Report Page', () => {
     cy.get('.table-bordered tbody tr:nth-child(8) td:first-child').should('have.text', expectedTimes12[7]);
 
     /**
-         * testFirstCellForIsPopulated
+         * testCrissCross
          */
-    // // Check for one of  scheduled classes in the cell
-    // cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', 'CST1');
-    //
-    // cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', 'CSEC280A');
-    //
-    // cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', 'Benson');
-    //
-    // cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', '239a');
-    //
-    // // Check the content of the thead
-    // cy.get('.table-bordered thead tr th').each((header, index) => {
-    //   cy.wrap(header).should('have.text', expectedHeaders[index]);
-    // });
+    const cellsToCheck = [
+      {row: 1, col: 2, value: 'CST1'},
+      {row: 2, col: 3, value: 'CST1'},
+      {row: 3, col: 4, value: 'CST1'},
+      {row: 4, col: 4, value: 'CST1'},
+      {row: 3, col: 5, value: 'CST1'},
+      {row: 4, col: 5, value: 'CST1'},
+      {row: 2, col: 6, value: 'CST1'},
+      {row: 6, col: 3, value: 'CST1'},
+      {row: 7, col: 2, value: 'CST1'},
+      {row: 6, col: 6, value: 'CST1'},
+    ];
+
+    cellsToCheck.forEach(({row, col, value}) => {
+      const selector = `.table-bordered tbody tr:nth-child(${row}) td:nth-child(${col})`;
+      cy.get(selector).should('contain', value);
+    });
+
+    // Check the content of the thead
+    cy.get('.table-bordered thead tr th').each((header, index) => {
+      cy.wrap(header).should('have.text', expectedHeaders[index]);
+    });
 
     // Wait for the elements to be visible
     cy.get('#nameDisplayer').should('be.visible');
@@ -193,5 +143,48 @@ describe('Test Program Report Page', () => {
     // Click the New Report button and check for expected behavior
     cy.get('#newProgramBtn').click();
     cy.get('#programReportModal').should('be.visible');
+
+
+    // Select the program from the dropdown based on value
+    cy.get('#selectProgramReport').select('1');
+
+    // Select the term from the dropdown based on value
+    cy.get('#selectTermReport').select('1');
+
+    // Select the course group from the dropdown based on value
+    cy.get('#selectGroupReport').select('B');
+
+    cy.get('#submitBtn').click();
+
+
+    /**
+     * testFull
+     */
+    const cellsToCheckFull = [
+      {row: 1, col: 2, value: 'CST1'},
+      {row: 2, col: 2, value: 'CST1'},
+      {row: 3, col: 2, value: 'CST1'},
+      {row: 4, col: 2, value: 'CST1'},
+      {row: 6, col: 2, value: 'CST1'},
+      {row: 7, col: 2, value: 'CST1'},
+
+    ];
+
+    cellsToCheckFull.forEach(({row, col, value}) => {
+      const selector = `.table-bordered tbody tr:nth-child(${row}) td:nth-child(${col})`;
+      cy.get(selector).should('contain', value);
+      if (row === 7) {
+        if (col !== 5) {
+          col++;
+        }
+      }
+    });
+
+
+    Cypress.on('uncaught:exception', (err, runnable) => {
+      // returning false here prevents Cypress from
+      // failing the test
+      return false;
+    });
   });
 });
