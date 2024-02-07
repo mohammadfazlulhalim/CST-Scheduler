@@ -1,6 +1,6 @@
 const groupLetters = ['A', 'B', 'C', 'E'];
 
-describe('Test that it works bozo', () => {
+describe('Test Editing the Schedule', () => {
   // Goes to the page and loads test schedule
   cy.visit('localhost:3000');
   cy.contains('Schedule Builder').click();
@@ -92,7 +92,7 @@ describe('Test that it works bozo', () => {
     for (let t = 0; t < 8; t++) {
       for (let d = 1; d < 6; d++) {
         cy.get('#'+t+'-'+d+'-'+letter).click();
-        cy.get('#'+t+'-'+d+'-'+letter).contains('Ben Benson');
+        cy.get('#'+t+'-'+d+'-'+letter).should('have.text', 'Ben Benson');
       }
     }
 

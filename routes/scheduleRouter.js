@@ -88,11 +88,12 @@ router.post('/', async (req, res, next) => {
 
       // getting each course offering for this group
       const tempCOArray = [groupArray[i].COArray.length];
-      for (let k =0; k < tempCOArray.length; k++) {
+      for (let k =0; k < groupArray[i].COArray.length; k++) {
         tempCOArray[k] = await formatCourseOffering(groupArray[i].COArray[k]);
       }
       groupArray[i].COArray=tempCOArray;
     } catch (error) {
+
     }
 
 
@@ -104,6 +105,7 @@ router.post('/', async (req, res, next) => {
     }
     groupLetters[i] = GROUP_LETTERS[i];
   }
+
 
   res.render('schedule', {
     groups: groupLetters,
