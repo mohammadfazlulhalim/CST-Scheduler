@@ -5,6 +5,7 @@ const classroom = require('../private/javascript/Classroom');
 const timeslot = require('../private/javascript/Timeslot');
 const {addAssociations} = require('../private/javascript/Associations');
 const createAllTables = require('../fixtures/createTables.fix');
+const {Op} = require('../dataSource')
 
 router.get('/', async (req, res, next) => {
   const termList = await term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'DESC']]});
@@ -23,6 +24,8 @@ router.get('/', async (req, res, next) => {
     showModal: true,
   });
 });
+
+
 router.post('/', async (req, res, next) => {
   await addAssociations();
   await createAllTables(false);
@@ -33,14 +36,16 @@ router.post('/', async (req, res, next) => {
 
   const TimeSlots = await generateSchedule(realTerm.startDate, realTerm.endDate, realClassroom);
 
+  calculateTotalUniqueDates();   //todo - fix dis // returns 5 unique dates
+
   const hasTimeSlots = TimeSlots.length >0;
-  let ScheduleArray;
+  let ScheduleArray; //todo  Make it into an array based on total unique
   const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   const TIMES = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
 
   if (hasTimeSlots) {
     ScheduleArray = Array.from({length: 8}, () => Array(5));
-
+//todo make another loop for every schedule array
     for (let i = 0; i < ScheduleArray.length; i++) {
       for (let j = 0; j < ScheduleArray[i].length; j++) {
         ScheduleArray[i][j] = null;
@@ -76,9 +81,23 @@ router.post('/', async (req, res, next) => {
 /*
 
  */
+
+
+function calculateTotalUniqueDates() {
+
+}
+
+
+
 function generateSchedule(startDate, endDate, classroom) {
   return timeslot.findAll({
-    where: {startDate, endDate, ClassroomId: classroom.id},
+    where: {
+      startDate: {
+        [Op.between]: [startDate, endDate] // startDate should be between startDate and endDate
+      },
+      ClassroomId: classroom.id
+    },
+    order: [['startDate', 'ASC']]
   });
 }
 
