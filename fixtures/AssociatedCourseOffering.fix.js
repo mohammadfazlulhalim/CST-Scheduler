@@ -38,7 +38,6 @@ async function loadRelationships() {
     progObj = await Program.create(testConst.program1);
   }
 
-
   courseOfferingObj.offering1 = {
     name: testConst.courseOffering1.name,
     startDate: testConst.courseOffering1.startDate,

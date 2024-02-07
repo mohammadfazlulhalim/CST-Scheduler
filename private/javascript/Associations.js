@@ -9,11 +9,12 @@ const Timeslot = require('../../private/javascript/Timeslot');
 addAssociations = () => {
   // Course offering associations:
   Term.hasMany(CourseOffering);
-  Course.hasMany(CourseOffering);
+  Course.hasMany(CourseOffering, {foreignKey: {allowNull: false}});
   Instructor.hasMany(CourseOffering);
   Program.hasMany(CourseOffering);
 
   CourseOffering.belongsTo(Term);
+  // TODO: Make Course required
   CourseOffering.belongsTo(Course);
   CourseOffering.belongsTo(Instructor);
   CourseOffering.belongsTo(Program);

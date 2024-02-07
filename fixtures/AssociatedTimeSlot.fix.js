@@ -12,17 +12,17 @@ async function loadTimeslots() {
   // Create course offering fixtures
   const courseObj = await CourseOfferingScript();
 
+  courseObj.offering1.CourseId = courseObj.offering1.courseID.id;
   // Creating course offerings into the database
   const coObj1 = await CourseOffering.create(courseObj.offering1);
   await coObj1.setTerm(courseObj.offering1.termID);
   await coObj1.setInstructor(courseObj.offering1.instructorID);
-  await coObj1.setCourse(courseObj.offering1.courseID);
   await coObj1.setProgram(courseObj.offering1.programID);
 
+  courseObj.offering2.CourseId = courseObj.offering2.courseID.id;
   const coObj2 =await CourseOffering.create(courseObj.offering2);
   await coObj2.setTerm(courseObj.offering2.termID);
   await coObj2.setInstructor(courseObj.offering2.instructorID);
-  await coObj2.setCourse(courseObj.offering2.courseID);
   await coObj2.setProgram(courseObj.offering2.programID);
 
   const ClassroomObj = await Classroom.create(testConst.classroom1);

@@ -168,12 +168,13 @@
                         <div class="invalid-feedback">{{putErr.id}}</div>
                         <div>
                             <label for="cCourse">Course</label>
-<!--                            TODO: switch function call to after they are done typing-->
-                            <input id="cCourse" type="text" list="courses" oninput="selectedCourseCreate"/>
+                            <!--                            TODO: switch function call to after they are done typing-->
+                            <input id="cCourse" type="text" list="courses" oninput="selectedCourseCreate()"/>
                             <datalist id="courses" class="form-label">Course
                                 {{#each listCourse}}
                                     <option id="optionCreateCourse{{courseCode}}"
-                                            value="{{courseCode}}" data-courseid="{{id}}" data-coursename="{{courseName}}"></option>
+                                            value="{{courseCode}}" data-courseid="{{id}}"
+                                            data-coursename="{{courseName}}"></option>
                                 {{/each}}
                             </datalist>
                         </div>
@@ -184,7 +185,7 @@
                         <div class="invalid-feedback">{{err.name}}</div>
                         <div>
                             <label for="cTerm">Term</label>
-                            <select id="cTerm" class="form-label" onchange="selectedTermCreate">Course
+                            <select id="cTerm" class="form-label" onchange="selectedTermCreate()">Course
                                 <option></option>
                                 {{#each listTerm}}
                                     <option value="{{id}}" id="optionCreateTerm{{id}}" data-termstart="{{startDate}}"
@@ -255,14 +256,14 @@
     /**
      * This function autofills the name field with the course name when the course is selected
      */
-    function selectedCourseCreate(e) {
-      // e.target.dataset.courseName;
+    function selectedCourseCreate() {
+        // e.target.dataset.courseName;
         let courseCode = document.getElementById('cCourse').value;
-      try {
-          document.getElementById('cName').value = document.getElementById('optionCreateCourse'+courseCode).dataset.coursename;
-      } catch (e) {
-          // TODO: display message when this fails
-      }
+        try {
+            document.getElementById('cName').value = document.getElementById('optionCreateCourse' + courseCode).dataset.coursename;
+        } catch (e) {
+            // TODO: display message when this fails
+        }
         checkCreateEnable();
     }
 
@@ -284,21 +285,18 @@
     function checkCreateEnable() {
         let bTermSelected = document.getElementById('cTerm').value !== '';
         let courseCode = document.getElementById('cCourse').value;
-        let bCourseSelected = false
+        let bCourseSelected = false;
         try {
-            bCourseSelected = document.getElementById('optionCreateCourse'+courseCode).dataset.courseid;
+            bCourseSelected = document.getElementById('optionCreateCourse' + courseCode).dataset.courseid;
         } catch (e) {
-          bCourseSelected = false;
-
+            bCourseSelected = false;
         }
         let bInstructorSelected = document.getElementById('cInstructor').value !== '';
         let bProgramSelected = document.getElementById('cProgram').value !== '';
 
         if (bTermSelected && bProgramSelected && bCourseSelected && bInstructorSelected) {
-            console.log('btn enabled');
             document.getElementById('createCO').removeAttribute('disabled');
         } else {
-            console.log('btn disabled');
             document.getElementById('createCO').disabled = 'disabled';
         }
     }
@@ -355,9 +353,8 @@
      */
     async function handleCreateCO() {
         let courseCode = document.getElementById('cCourse').value;
+        let courseID = document.getElementById('optionCreateCourse' + courseCode).dataset.courseid;
 
-
-        let courseID = document.getElementById('optionCreateCourse'+courseCode).dataset.courseid;
         const response = await fetch('http://localhost:3000/courseOffering', {
             method: 'POST',
             headers: {

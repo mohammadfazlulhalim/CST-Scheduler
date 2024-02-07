@@ -39,8 +39,8 @@ it('testThatCourseOfferingHasAssociations', () => {
   }
 
 
+  // TODO: expand testing for combobox
   cy.get('#cCourse').type('MATH282');
-  // cy.get('#cCourse').select('MATH282');
   cy.get('#createCO').should('be.disabled');
   cy.get('#cName').should('have.value', 'Mathematics of Computation');
   // Associated field
