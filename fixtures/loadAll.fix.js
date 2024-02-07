@@ -6,7 +6,6 @@ const fillTermTable = require('./Term.fix');
 const fillClassroomTable = require('./Classroom.fix');
 const fillProgramTable = require('./Program.fix');
 const fillTimeslotTable = require('./Timeslot.fix');
-const {addAssociations} = require('../private/javascript/Associations');
 const createAllTables = require('./createTables.fix');
 const fillTimeslot = require('./AssociatedTimeSlot.fix');
 

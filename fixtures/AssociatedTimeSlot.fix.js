@@ -25,6 +25,12 @@ async function loadTimeslots() {
   await coObj2.setCourse(courseObj.offering2.courseID);
   await coObj2.setProgram(courseObj.offering2.programID);
 
+  // coObj1.setTerm(3);
+  // coObj2.setTerm(3);
+  // coObj2.setGroup('A');
+  // const coObj1 = await CourseOffering.create(courseObj.offering1);
+  // const coObj2 =await CourseOffering.create(courseObj.offering2);
+
   const ClassroomObj = await Classroom.create(testConst.classroom1);
 
   // creating the object literals for easy use
