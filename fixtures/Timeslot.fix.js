@@ -7,6 +7,36 @@ const courseOffering = require('../private/javascript/CourseOffering');
 const constants = require('../constants');
 const {GenerateTimeSlotData, testConst} = require('../constants');
 
+// TODO refine the s48 timeslots
+const s48validTimeslots = [
+  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '8:00', endTime: '9:00', day: 1, group: 'A'},
+  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '14:00', endTime: '15:00', day: 1, group: 'A'},
+  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '9:00', endTime: '10:00', day: 2, group: 'A'},
+  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
+  // TODO watch for conflicts
+  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
+  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '11:00', endTime: '12:00', day: 3, group: 'A'},
+  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '10:00', endTime: '11:00', day: 4, group: 'A'},
+  // {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
+  // {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '9:00', endTime: '10:00', day: 5, group: 'A'},
+  // {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
+  // {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '8:00', endTime: '9:00', day: 1, group: 'A'},
+  // {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '14:00', endTime: '15:00', day: 1, group: 'A'},
+  // {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '9:00', endTime: '10:00', day: 2, group: 'A'},
+  // {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
+
+  // {startDate: '2023-01-02', endDate: '2023-03-06', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
+  {startDate: '2023-01-02', endDate: '2023-03-06', startTime: '11:00', endTime: '12:00', day: 3, group: 'A'},
+
+  // {startDate: '2023-02-06', endDate: '2023-03-06', startTime: '10:00', endTime: '11:00', day: 4, group: 'A'},
+  {startDate: '2023-02-06', endDate: '2023-03-06', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
+
+  //   {startDate: '2023-03-06', endDate: '2023-03-20', startTime: '9:00', endTime: '10:00', day: 5, group: 'A'},
+  {startDate: '2023-03-06', endDate: '2023-03-20', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
+  //   TODO timeslots for room 241 - term 2 - either separately from the list or dynamically use existing list - but with changed start and end date values - could algorithmic
+  // {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
+];
+
 /**
  * This clears the table for Classroom and then recreates the table
  * with valid entries
@@ -62,7 +92,7 @@ async function createTimeslot() {
 
   // -----s48-----
   // TODO try out two loops - one to create a new series of timeslots - reuse the validTimeslots for the time being and setTerm to term2! - classroom id 2 for now
-  const RealTimeSlots3 = await Timeslot.bulkCreate(constants.testConst.s48validTimeslots);
+  const RealTimeSlots3 = await Timeslot.bulkCreate(s48validTimeslots);
 
   const classroom3 = await Classroom.findOne({
     where: {roomNumber: '241'},

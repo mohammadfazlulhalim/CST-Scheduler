@@ -5,7 +5,8 @@ const classroom = require('../private/javascript/Classroom');
 const timeslot = require('../private/javascript/Timeslot');
 const {addAssociations} = require('../private/javascript/Associations');
 const createAllTables = require('../fixtures/createTables.fix');
-const {Op} = require('../dataSource')
+const {Op, sequelize} = require('../dataSource');
+const {QueryTypes} = require('sequelize');
 
 router.get('/', async (req, res, next) => {
   const termList = await term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'DESC']]});
@@ -36,16 +37,16 @@ router.post('/', async (req, res, next) => {
 
   const TimeSlots = await generateSchedule(realTerm.startDate, realTerm.endDate, realClassroom);
 
-  calculateTotalUniqueDates();   //todo - fix dis // returns 5 unique dates
+  await calculateTotalUniqueDates(realTerm); // todo - fix dis // returns 5 unique dates
 
   const hasTimeSlots = TimeSlots.length >0;
-  let ScheduleArray; //todo  Make it into an array based on total unique
+  let ScheduleArray; // todo  Make it into an array based on total unique
   const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   const TIMES = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
 
   if (hasTimeSlots) {
     ScheduleArray = Array.from({length: 8}, () => Array(5));
-//todo make another loop for every schedule array
+    // todo make another loop for every schedule array
     for (let i = 0; i < ScheduleArray.length; i++) {
       for (let j = 0; j < ScheduleArray[i].length; j++) {
         ScheduleArray[i][j] = null;
@@ -78,26 +79,40 @@ router.post('/', async (req, res, next) => {
   });
 });
 
-/*
+/**
 
  */
+async function calculateTotalUniqueDates(term) {
+  // todo ADD a union to join the values -  UNION SELECT DISTINCT endDate FROM Timeslots WHERE endDate BETWEEN ${ter}
 
+    const sqlstatement = `SELECT DISTINCT date
+    FROM (
+      SELECT startDate AS date FROM timeslots
+    UNION
+    SELECT endDate AS date FROM timeslots
+  ) AS combined_dates
+    WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
 
-function calculateTotalUniqueDates() {
-
+  try {
+    const sqlresults = await sequelize.query(sqlstatement, {
+      type: QueryTypes.SELECT,
+    });
+    console.log('Breakpoint');
+  } catch (e) {
+    console.log(e);
+  }
 }
-
 
 
 function generateSchedule(startDate, endDate, classroom) {
   return timeslot.findAll({
     where: {
       startDate: {
-        [Op.between]: [startDate, endDate] // startDate should be between startDate and endDate
+        [Op.between]: [startDate, endDate], // startDate should be between startDate and endDate
       },
-      ClassroomId: classroom.id
+      ClassroomId: classroom.id,
     },
-    order: [['startDate', 'ASC']]
+    order: [['startDate', 'ASC']],
   });
 }
 
