@@ -327,6 +327,8 @@ describe('courseNumCredits', ()=>{
      testCourse= testConst.course1; //test Course is created with the course properties defined in the constant.js file
      err='';  //empty the error message (if any)
    });
+
+
    /**
     * test creating course with invalid courseNumHoursPerWeek which is null.
     * we are using the constant.js file for other valid information
@@ -418,9 +420,11 @@ describe('courseNumCredits', ()=>{
     * we are using the constant.js file for other valid information
     */
    test ('testCreatingCourseWithCourseNumberOfHoursOverLimit', async()=>{
+
      try{
        testCourse.courseNumHoursPerWeek=169;
        course= await Course.create(testCourse);
+       course.courseNumHoursPerWeek=169;
      }catch(error){
        err= error.message;
        errCount= error.errors.length;
@@ -440,6 +444,7 @@ describe('courseNumCredits', ()=>{
      try{
        testCourse.courseNumHoursPerWeek=0;
        course= await Course.create(testCourse);
+       course.courseNumHoursPerWeek=0;
      }catch(error){
        err= error.message;
        errCount =error.errors.length;

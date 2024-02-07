@@ -1,37 +1,36 @@
-
-const CourseRouter = require('../private/javascript/Course');
-
+const Course = require('../private/javascript/Course');
 const express = require('express');
 const router = express.Router();
 
-/* course page. */
-router.get('/', getHandler);
+router.get('/', async (req, res,next)=>{
+  //Declaring the array
+  const courseLists= await readAllCourses();
 
-/**
- * // separate GET Handler for http://localhost:3000/courses
- * @param {*} req request
- * @param {*} res response
- * @param {*} next next
- */
-async function getHandler(req, res, next) {
-  let courses;
-  try {
-    // read the whole table from scheduler.db -
-    courses = await CourseRouter.findAll({
-      attributes: ['courseCode', 'courseName', 'courseNumCredits', 'courseNumHoursPerWeek'],
-      order: [['courseName', 'ASC']],
-    });
-    console.log(`COURSES: \n ${courses}`);
-  } catch (error) {
-    console.log(`courses is undefined`);
-    // send courses=undefined to course.hbs which will then not show a table
-    courses = undefined;
-  }
-
-  res.render('course', {
-    title: 'List of Courses',
-    courses,
+  res.render ('course',{
+    title: 'Course Listings',
+    courseList: courseLists,
   });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+const readAllCourses = async ()=>{
+  try {
+    //calling the database, for all course entries, ordered by course number
+    return await Course.findAll({order:['courseCode']});
+  }catch(err){
+    // If course not found in database it will return undefined so that courseList will be empty
+    return undefined;
+  }
 }
 
 module.exports = router;

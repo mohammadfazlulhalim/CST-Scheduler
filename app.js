@@ -12,7 +12,7 @@ const termRouter = require('./routes/termRouter').router;
 const programRouter = require('./routes/programRouter').router;
 const classroomReportRouter = require('./routes/classroomReportRouter').router;
 const instructorReportRouter = require('./routes/instructorReportRouter');
-const viewCoursesRouter = require('./routes/course');
+const viewCoursesRouter = require('./routes/courseRouter');
 const scheduleRouter = require('./routes/scheduleRouter');
 
 const app = express();
