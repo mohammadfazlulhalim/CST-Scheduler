@@ -96,7 +96,6 @@
                             <div>
                                 <label for="eTerm">Term</label>
                                 <select id="eTerm" class="form-label" onchange="selectedTermUpdate()">Course
-                                    <option></option>
                                     {{#each listTerm}}
                                         <option value="{{id}}" id="optionEditTerm{{id}}" data-termstart="{{startDate}}"
                                                 data-termend="{{endDate}}">{{title}}</option>
@@ -123,7 +122,6 @@
                             <div>
                                 <label for="eProgram">Program</label>
                                 <select id="eProgram" class="form-label" onchange="checkUpdateEnable()">Program
-                                    <option></option>
                                     {{#each listProgram}}
                                         <option value="{{id}}">{{programAbbreviation}}</option>
                                     {{/each}}
@@ -132,7 +130,6 @@
                             <div>
                                 <label for="eInstructor">Instructor</label>
                                 <select id="eInstructor" class="form-label" onchange="checkUpdateEnable()">Instructor
-                                    <option></option>
                                     {{#each listInstructor}}
                                         <option value="{{id}}">{{lastName}}</option>
                                     {{/each}}
@@ -172,7 +169,7 @@
                         <div>
                             <label for="cCourse">Course</label>
 <!--                            TODO: switch function call to after they are done typing-->
-                            <input id="cCourse" type="text" list="courses" oninput="selectedCourseCreate()"/>
+                            <input id="cCourse" type="text" list="courses" oninput="selectedCourseCreate"/>
                             <datalist id="courses" class="form-label">Course
                                 {{#each listCourse}}
                                     <option id="optionCreateCourse{{courseCode}}"
@@ -187,7 +184,7 @@
                         <div class="invalid-feedback">{{err.name}}</div>
                         <div>
                             <label for="cTerm">Term</label>
-                            <select id="cTerm" class="form-label" onchange="selectedTermCreate()">Course
+                            <select id="cTerm" class="form-label" onchange="selectedTermCreate">Course
                                 <option></option>
                                 {{#each listTerm}}
                                     <option value="{{id}}" id="optionCreateTerm{{id}}" data-termstart="{{startDate}}"
@@ -258,8 +255,8 @@
     /**
      * This function autofills the name field with the course name when the course is selected
      */
-    function selectedCourseCreate() {
-      console.log('entered check')
+    function selectedCourseCreate(e) {
+      // e.target.dataset.courseName;
         let courseCode = document.getElementById('cCourse').value;
       try {
           document.getElementById('cName').value = document.getElementById('optionCreateCourse'+courseCode).dataset.coursename;

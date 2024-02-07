@@ -10,109 +10,118 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.contains('Add New Course Offering').click();
   cy.get('#addModal').should('be.visible');
 
-  // TODO: Check sort orders on all associated fields before starting - See instructor.cy.js
-
   // Terms
-  cy.get('#cTerm > option:nth-child(2)').should('have.text', '2024-5')
-  cy.get('#cTerm > option:nth-child(3)').should('have.text', '2023-1')
-  cy.get('#cTerm > option:nth-child(4)').should('have.text', '2023-4')
-  cy.get('#cTerm > option:nth-child(5)').should('have.text', '2023-3')
-  cy.get('#cTerm > option:nth-child(6)').should('have.text', '2023-6')
-  cy.get('#cTerm > option:nth-child(7)').should('have.text', '2023-2')
-  cy.get('#cTerm > option:nth-child(8)').should('have.text', '2023-5')
+  let termList = ['2024-5', '2023-1', '2023-4', '2023-3', '2023-6', '2023-2', '2023-5'];
+  for (let i = 0; i < termList.length; i++) {
+    let nChild = i + 2;
+    cy.get('#cTerm > option:nth-child(' + nChild + ')').should('have.text', termList[i]);
+  }
+
   // Program
-  cy.get('#cProgram > option:nth-child(2)').should('have.text', 'CNT')
-  cy.get('#cProgram > option:nth-child(3)').should('have.text', 'CST')
-  cy.get('#cProgram > option:nth-child(4)').should('have.text', 'ECE')
+  let programList = ['CNT', 'CST', 'ECE'];
+  for (let i = 0; i < programList.length; i++) {
+    let nChild = i + 2;
+    cy.get('#cProgram > option:nth-child(' + nChild + ')').should('have.text', programList[i]);
+  }
+
   // Instructor
-  cy.get('#cInstructor > option:nth-child(2)').should('have.text', 'Barrie')
-  cy.get('#cInstructor > option:nth-child(3)').should('have.text', 'Basoalto')
-  cy.get('#cInstructor > option:nth-child(4)').should('have.text', 'Benson')
-  cy.get('#cInstructor > option:nth-child(5)').should('have.text', 'Caron')
-  cy.get('#cInstructor > option:nth-child(6)').should('have.text', 'Grzesina')
-  cy.get('#cInstructor > option:nth-child(7)').should('have.text', 'Holtslan')
-  cy.get('#cInstructor > option:nth-child(8)').should('have.text', 'Kaban')
-  cy.get('#cInstructor > option:nth-child(9)').should('have.text', 'Lahoda')
-  cy.get('#cInstructor > option:nth-child(10)').should('have.text', 'New')
-  cy.get('#cInstructor > option:nth-child(11)').should('have.text', 'Onishenko')
-  cy.get('#cInstructor > option:nth-child(12)').should('have.text', 'Schmidt')
+  let instructorList = ['Barrie', 'Basoalto', 'Benson', 'Caron', 'Grzesina', 'Holtslan', 'Kaban', 'Lahoda', 'New', 'Onishenko', 'Schmidt'];
+  for (let i = 0; i < instructorList.length; i++) {
+    let nChild = i + 2;
+    cy.get('#cInstructor > option:nth-child(' + nChild + ')').should('have.text', instructorList[i]);
+  }
 
-  cy.get('#courses > option:nth-child(1)').should('have.value', 'CDBM280')
-  cy.get('#courses > option:nth-child(2)').should('have.value', 'COHS280')
-  cy.get('#courses > option:nth-child(3)').should('have.value', 'COOS291')
-  cy.get('#courses > option:nth-child(4)').should('have.value', 'COOS293')
-  cy.get('#courses > option:nth-child(5)').should('have.value', 'COOS294')
-  cy.get('#courses > option:nth-child(6)').should('have.value', 'COSA280')
-  cy.get('#courses > option:nth-child(7)').should('have.value', 'COSA290')
-  cy.get('#courses > option:nth-child(8)').should('have.value', 'COSC292')
-  cy.get('#courses > option:nth-child(9)').should('have.value', 'COSC295')
-  cy.get('#courses > option:nth-child(10)').should('have.value', 'CPMG290 ')
-  cy.get('#courses > option:nth-child(11)').should('have.value', 'CSEC280')
-  cy.get('#courses > option:nth-child(12)').should('have.value', 'CWEB280')
-  cy.get('#courses > option:nth-child(13)').should('have.value', 'MATH282')
-  cy.get('#courses > option:nth-child(14)').should('have.value', 'SEM283')
-  cy.get('#courses > option:nth-child(15)').should('have.value', 'TCOM291')
+  // Courses
+  let courseList = ['CDBM280', 'COHS280', 'COOS291', 'COOS293', 'COOS294', 'COSA280', 'COSA290', 'COSC292', 'COSC295', 'CPMG290 ', 'CSEC280', 'CWEB280', 'MATH282', 'SEM283', 'TCOM291'];
+  for (let i = 0; i < instructorList.length; i++) {
+    let nChild = i + 1;
+    cy.get('#courses > option:nth-child(' + nChild + ')').should('have.value', courseList[i]);
+  }
 
 
-
-  cy.get('#cCourse').type('MATH282')
+  cy.get('#cCourse').type('MATH282');
   // cy.get('#cCourse').select('MATH282');
   cy.get('#createCO').should('be.disabled');
-  cy.get('#cName').should('have.value','Mathematics of Computation');
+  cy.get('#cName').should('have.value', 'Mathematics of Computation');
   // Associated field
   cy.get('#cTerm').select('2023-4');
   cy.get('#createCO').should('be.disabled');
-  cy.get('#cStartDate').should('have.value','2023-08-01');
+  cy.get('#cStartDate').should('have.value', '2023-08-01');
   cy.get('#cEndDate').should('have.value', '2023-12-01');
   cy.get('#cGroup').type('A');
   // Associated field
 
   cy.get('#createCO').should('be.disabled');
   // Associated field
-  cy.get('#cInstructor').select('Grzesina')
+  cy.get('#cInstructor').select('Grzesina');
   cy.get('#createCO').should('be.disabled');
   // Last associated field
   cy.get('#cProgram').select('CST');
   cy.get('#createCO').should('be.enabled');
 
   cy.get('#createCO').click();
-
+  cy.get('#addModal').should('be.hidden');
 
 
   // created, now check that it exists
-  // TODO switch to checking the entire row at once
-  const newRow = '#tableBody > tr:nth-child(17) > '
-  cy.get(newRow + 'td:nth-child(1)').should('have.text', 'Mathematics of Computation');
-  cy.get(newRow + 'td:nth-child(2)').should('have.text', 'A');
-  cy.get(newRow + 'td:nth-child(3)').should('have.text', 'MATH282');
-  cy.get(newRow + 'td:nth-child(4)').should('have.text', '2023-4');
-  cy.get(newRow + 'td:nth-child(5)').should('have.text', '2023-08-01');
-  cy.get(newRow + 'td:nth-child(6)').should('have.text', '2023-12-01');
-  cy.get(newRow + 'td:nth-child(7)').should('have.text', 'Micheal Grzesina');
-  cy.get(newRow + 'td:nth-child(8)').should('have.text', 'CST');
+  const newRow = '#tableBody > tr:nth-child(17) > ';
+  const newRow2 = '#tableBody > tr:nth-child(17)';
+  cy.get(newRow2).should('have.text',
+    '\n                    Mathematics of Computation\n                    A\n                    MATH282\n                    2023-4\n                    2023-08-01\n                    2023-12-01\n                    Micheal Grzesina\n                    CST\n                    \n                        Edit\n                        \n                        Delete\n                        \n                    \n                ');
 
-  /*
-
-  cy.get('2edit').click();
+  // Now test the update
+  // click the edit button to open modal
+  cy.get(newRow + 'td:nth-child(9) > button:nth-child(1)').click();
   cy.get('#editModal').should('be.visible');
 
-  // TODO: Check sort orders on all associated fields before starting
+  // Checking the order of the dropdowns
+  // Terms
+  for (let i = 0; i < termList.length; i++) {
+    let nChild = i + 2;
+    cy.get('#cTerm > option:nth-child(' + nChild + ')').should('have.text', termList[i]);
+  }
+
+  // Program
+  for (let i = 0; i < programList.length; i++) {
+    let nChild = i + 2;
+    cy.get('#cProgram > option:nth-child(' + nChild + ')').should('have.text', programList[i]);
+  }
+
+  // Instructor
+  for (let i = 0; i < instructorList.length; i++) {
+    let nChild = i + 2;
+    cy.get('#cInstructor > option:nth-child(' + nChild + ')').should('have.text', instructorList[i]);
+  }
+
+  // checking the fields to make sure they pre-filled correctly
+  cy.get('#eName').should('have.value', 'Mathematics of Computation');
+  cy.get('#eTerm').find('option:selected').should('have.text', '2023-4');
+  cy.get('#eStartDate').should('have.value', '2023-08-01');
+  cy.get('#eEndDate').should('have.value', '2023-12-01');
+  cy.get('#eGroup').should('have.value', 'A');
+  cy.get('#eProgram').find('option:selected').should('have.text', 'CST');
+  cy.get('#eInstructor').find('option:selected').should('have.text', 'Grzesina');
+
 
   // Changing associated fields
-  cy.get('eTerm').select('4-2023');
-  cy.get('eInstructor').select('Barrie');
-  cy.get('eProgram').select('CNT');
+  cy.get('#eTerm').select('2023-5');
+
+  cy.get('#eStartDate').should('have.value', '2023-01-01');
+  cy.get('#eEndDate').should('have.value', '2023-04-01');
+
+
+  cy.get('#eInstructor').select('Barrie');
+  cy.get('#eProgram').select('CNT');
   cy.get('#editCO').click();
+  cy.get('#editModal').should('be.hidden');
 
-  cy.get('2Term').contains('2-2023');
-  cy.get('2Instructor').contains('Barrie');
-  cy.get('2Program').contains('CNT');
-
-
-  //TODO revert all changes at the end back to how they started
+  cy.get(newRow2).should('have.text',
+    '\n                    Mathematics of Computation\n                    A\n                    MATH282\n                    2023-5\n                    2023-01-01\n                    2023-04-01\n                    Bryce Barrie\n                    CNT\n                    \n                        Edit\n                        \n                        Delete\n                        \n                    \n                ');
 
 
 
-   */
+  cy.get(newRow + 'td:nth-child(9) > button:nth-child(2)').click();
+  cy.get('#deleteCO').click();
 
-})
+
+});
