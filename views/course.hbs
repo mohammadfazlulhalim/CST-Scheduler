@@ -117,14 +117,16 @@
     reLinkButtons();
 
 
-
-
     /**
      * This function links the buttons on the page to their appropriate handlers
      */
     function reLinkButtons(){
+
+        console.log("its here" );
         $('#createCourse').click(handleCreateCourse);
         $('#deleteCourse').click(handleDeleteCourse);
+        $('.deleteButton').click(function() {
+            handleDeleteModal(this.id.replace('delete', ''));
 
         $('.modal').on('hidden.bs.modal', function() {
             clearErrors();
@@ -133,12 +135,39 @@
 
     /**
      * This function handles what happens when a user clicks on the "delete" button
-     * in the delete instructor modal
+     * in the delete course modal
      * @returns {Promise<void>}
      */
     async function handleDeleteCourse() {
 
+    console.log("its here");
+        const response = await fetch ('http://localhost:3000/course',{
+            method:'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: $('#deleteCourse').val(),
+            }),
+        });
+
+        console.log(">>>>>>response>>>>>");
+        console.log(response);
+
+        // get the HTML text response
+        const data = await response.text();
+        const modalID = '#deleteModal';
+
+        loadResponse(modalID, data, !response.ok);
     }
+
+        /**
+         * This function loads a hidden form input in the delete modal with the ID of the term to delete
+         * @param idToDelete    - The ID of the term to delete
+         */
+        function handleDeleteModal(idToDelete) {
+            $('#deleteCourse').val(idToDelete);
+        }
 
     /**
      * This function handles what happens when a user clicks on the "create" button

@@ -57,6 +57,44 @@ router.post('/',async (req,res,next)=>{
 
 
 /**
+ * Attempts to delete the given course from the database.
+ * @param {Object} course       - The course to delete
+ * @return {Promise<number>}  - The number of rows deleted; should only be 1 if successful
+ */
+async function deleteCourse(course) {
+  
+try{
+  return await course.destroy({where: {id: course.id}});
+} catch (err) {
+  // if an error occurred, state that 0 rows were deleted
+  return 0;
+}
+
+}
+
+
+
+/**
+ * DELETE handler for http://localhost:3000/course
+ */
+router.delete('/', async function(req, res, next) {
+  const result = await deleteCourse({id: req.body.id});
+  let violations;
+  if (result <= 0) {
+    res.status(404);
+    violations = {id: 'Course not found; cannot delete'};
+  }
+  const courseLists = await readAllCourses();
+  res.render('course', {
+    title: 'Course List',
+    courseList: courseLists,
+    err: violations,
+    submittedCourse: violations ? req.body : undefined,
+  });
+});
+
+
+/**
  * this method weill be used to call database for all course entries ordered by courseCode
  * @returns {Promise<undefined|Model<any, TModelAttributes>[]>}
  */
