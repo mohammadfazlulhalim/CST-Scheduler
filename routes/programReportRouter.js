@@ -45,7 +45,7 @@ router.get('/', async function(req, res, next) {
     });
     // add the year
     newTermList= termList.map((item)=>{
-      return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
+      return {id: item.id, displayTerm: item.startDate + ' - ' + item.termNumber};
     });
     // sort based on the year
     newTermList.sort((a, b)=>{
@@ -115,7 +115,7 @@ router.post('/', async function(req, res, next) {
     });
     // add the year
     newTermList= termList.map((item)=>{
-      return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
+      return {id: item.id, displayTerm: item.startDate + ' - ' + item.termNumber};
     });
     // sort based on the year
     newTermList.sort((a, b)=>{

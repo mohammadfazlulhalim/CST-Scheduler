@@ -35,12 +35,41 @@ describe('Test Program Report Page', () => {
     // Select the program from the dropdown based on value
     cy.get('#selectProgramReport').select('1');
 
+    // Get the options from the select box
+    cy.get('#selectProgramReport').find('option').then((options) => {
+      // Check if options are present and there is more than one option
+      if (options.length > 1) {
+        // Iterate over options to check ascending order
+        for (let i = 0; i < options.length - 1; i++) {
+          const currentOption = options.eq(i).text();
+          const nextOption = options.eq(i + 1).text();
+
+          // Compare current option with the next option
+          expect(currentOption.localeCompare(nextOption)).to.be.lessThan(2);
+        }
+      }
+    });
+
     // Check if the generate button is still disabled
     cy.get('#submitBtn').should('be.disabled');
 
     // Select the term from the dropdown based on value
     cy.get('#selectTermReport').select('1');
 
+    // Get the options from the select box
+    cy.get('#selectTermReport').find('option').then((options) => {
+      // Check if options are present and there is more than one option
+      if (options.length > 1) {
+        // Iterate over options to check ascending order
+        for (let i = 0; i < options.length - 1; i++) {
+          const currentOption = options.eq(i).text().substring(0, 4);
+          const nextOption = options.eq(i + 1).text().substring(0, 4);
+
+          // Compare current option with the next option using localeCompare
+          expect(currentOption.localeCompare(nextOption, undefined, {numeric: true})).to.be.lessThan(2);
+        }
+      }
+    });
     // Check if the generate button is still disabled
     cy.get('#submitBtn').should('be.disabled');
 
@@ -50,7 +79,20 @@ describe('Test Program Report Page', () => {
     /**
          * testThatSelectBoxesAreSorted
          */
+    // Get the options from the select box
+    cy.get('#selectGroupReport').find('option').then((options) => {
+      // Check if options are present and there is more than one option
+      if (options.length > 1) {
+        // Iterate over options to check ascending order
+        for (let i = 0; i < options.length - 1; i++) {
+          const currentOption = options.eq(i).text();
+          const nextOption = options.eq(i + 1).text();
 
+          // Compare current option with the next option
+          expect(currentOption.localeCompare(nextOption)).to.be.lessThan(2);
+        }
+      }
+    });
 
     // Check if the generate button is enabled after selecting both instructor and term
     cy.get('#submitBtn').should('be.enabled');
@@ -59,6 +101,36 @@ describe('Test Program Report Page', () => {
   it('testProgramPOST', ()=> {
     const expectedTimes12 = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
     const expectedHeaders = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+    /**
+     * testFull
+     */
+    const cellsToCheckFull = [
+      {row: 1, col: 2, value: 'CST1'},
+      {row: 2, col: 2, value: 'CST1'},
+      {row: 3, col: 2, value: 'CST1'},
+      {row: 4, col: 2, value: 'CST1'},
+      {row: 6, col: 2, value: 'CST1'},
+      {row: 7, col: 2, value: 'CST1'},
+
+    ];
+
+    /**
+     * testCrissCross
+     */
+    const cellsToCheckCrissCross = [
+      {row: 1, col: 2, value: 'CST1'},
+      {row: 2, col: 3, value: 'CST1'},
+      {row: 3, col: 4, value: 'CST1'},
+      {row: 4, col: 4, value: 'CST1'},
+      {row: 3, col: 5, value: 'CST1'},
+      {row: 4, col: 5, value: 'CST1'},
+      {row: 2, col: 6, value: 'CST1'},
+      {row: 6, col: 3, value: 'CST1'},
+      {row: 7, col: 2, value: 'CST1'},
+      {row: 6, col: 6, value: 'CST1'},
+    ];
+
 
     cy.visit('http://localhost:3000/programReport');
     // Select the program from the dropdown based on value
@@ -91,23 +163,8 @@ describe('Test Program Report Page', () => {
     cy.get('.table-bordered tbody tr:nth-child(7) td:first-child').should('have.text', expectedTimes12[6]);
     cy.get('.table-bordered tbody tr:nth-child(8) td:first-child').should('have.text', expectedTimes12[7]);
 
-    /**
-         * testCrissCross
-         */
-    const cellsToCheck = [
-      {row: 1, col: 2, value: 'CST1'},
-      {row: 2, col: 3, value: 'CST1'},
-      {row: 3, col: 4, value: 'CST1'},
-      {row: 4, col: 4, value: 'CST1'},
-      {row: 3, col: 5, value: 'CST1'},
-      {row: 4, col: 5, value: 'CST1'},
-      {row: 2, col: 6, value: 'CST1'},
-      {row: 6, col: 3, value: 'CST1'},
-      {row: 7, col: 2, value: 'CST1'},
-      {row: 6, col: 6, value: 'CST1'},
-    ];
 
-    cellsToCheck.forEach(({row, col, value}) => {
+    cellsToCheckCrissCross.forEach(({row, col, value}) => {
       const selector = `.table-bordered tbody tr:nth-child(${row}) td:nth-child(${col})`;
       cy.get(selector).should('contain', value);
     });
@@ -156,19 +213,6 @@ describe('Test Program Report Page', () => {
 
     cy.get('#submitBtn').click();
 
-
-    /**
-     * testFull
-     */
-    const cellsToCheckFull = [
-      {row: 1, col: 2, value: 'CST1'},
-      {row: 2, col: 2, value: 'CST1'},
-      {row: 3, col: 2, value: 'CST1'},
-      {row: 4, col: 2, value: 'CST1'},
-      {row: 6, col: 2, value: 'CST1'},
-      {row: 7, col: 2, value: 'CST1'},
-
-    ];
 
     cellsToCheckFull.forEach(({row, col, value}) => {
       const selector = `.table-bordered tbody tr:nth-child(${row}) td:nth-child(${col})`;
