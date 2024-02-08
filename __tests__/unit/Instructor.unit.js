@@ -1,6 +1,6 @@
 const Instructor = require('../../private/javascript/Instructor');
 const testConst = require('../../constants').testConst;
-const constants = require('../../constants');
+const validInstructor = require('../../fixtures/Instructor.fix').validInstructor
 /**
  * These are tests for the firstName attribute of Instructor
  */
@@ -132,7 +132,7 @@ describe('lastName', () => {
   let err = '';
   beforeAll(async function() {
     await Instructor.sync({force: true}); // wipes instructor table if it exists
-    testInstructor = {...constants.testConst.validInstructor[0]};
+    testInstructor = {...validInstructor[0]};
   });
 
   beforeEach(async function() {

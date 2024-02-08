@@ -22,7 +22,9 @@ describe('Functional Course Offering', () => {
     courseObj = await CourseOfferingScript();
     await CourseOffering.sync({force: true});
     testCourseOffering1 = courseObj.offering1;
+    testCourseOffering1.course =1;
     testCourseOffering2 = courseObj.offering2;
+    testCourseOffering2.course =1;
   });
 
   // destroy course offering table after each test

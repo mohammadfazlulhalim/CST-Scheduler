@@ -2,7 +2,7 @@
 const Term = require('../../private/javascript/Term.js');
 const supertest = require('supertest');
 const app = require('../../app');
-const constants = require('../../constants');
+const validTerms = require('../../fixtures/Term.fix').validTerms
 
 // this set of tests ensures that Term objects are handled within the database properly
 describe('Terms in database', () => {
@@ -12,7 +12,8 @@ describe('Terms in database', () => {
   beforeEach(async () => {
     // drop the table and re-create it
     await Term.sync({force: true});
-    testTerm = {...constants.testConst.validTerms[0]};
+    // doing a deep copy of the term
+    testTerm = JSON.parse(JSON.stringify(validTerms[0]));
   });
 
   test('testThatValidTermPostAddsToEmptyList', async () => {
@@ -22,7 +23,7 @@ describe('Terms in database', () => {
 
   test('testThatValidTermPostAddsToPopulatedList', async () => {
     // create a few valid terms in the database
-    for (const term of constants.testConst.validTerms) {
+    for (const term of validTerms) {
       await Term.create(term);
     }
 
@@ -51,7 +52,7 @@ describe('Terms in database', () => {
 
   test('testThatValidTermDeleteRemovesFromPopulatedList', async () => {
     // create a few valid terms in the database
-    for (const term of constants.testConst.validTerms) {
+    for (const term of validTerms) {
       await Term.create(term);
     }
     // do the DELETE test now that there are some Terms in the database

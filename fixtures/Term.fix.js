@@ -8,14 +8,20 @@ const {testConst} = require('../constants');
  * @return {Promise<void>}
  */
 async function fillTermTable() {
-  // Clear table
-
-
   // Fill with the six terms, with valid start and end dates
-  for (const term of constants.testConst.validTerms) {
+  for (const term of validTerms) {
     await Term.create(term);
   }
   // await Term.create(testConst.term1);
 }
 
-module.exports = fillTermTable;
+const validTerms = [
+  {termNumber: 1, startDate: '2023-08-01', endDate: '2023-12-01'},
+  {termNumber: 2, startDate: '2023-01-01', endDate: '2023-04-01'},
+  {termNumber: 3, startDate: '2023-05-01', endDate: '2023-05-31'},
+  {termNumber: 4, startDate: '2023-08-01', endDate: '2023-12-01'},
+  {termNumber: 5, startDate: '2023-01-01', endDate: '2023-04-01'},
+  {termNumber: 6, startDate: '2023-05-01', endDate: '2023-05-31'},
+]
+
+module.exports = {validTerms, fillTermTable};

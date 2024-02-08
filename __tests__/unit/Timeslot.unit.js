@@ -3,6 +3,7 @@ const {sequelize} = require('../../dataSource');
 const {testConst} = require('../../constants');
 
 const CourseOffering = require('../../private/javascript/CourseOffering');
+const Course = require('../../private/javascript/Course');
 const Classroom = require('../../private/javascript/Classroom');
 const Timeslot = require('../../private/javascript/Timeslot.js');
 const Term = require('../../private/javascript/Term');
@@ -19,6 +20,7 @@ describe('timeslotStartTime', () => {
     await CreateTables();
 
     Associations.addAssociations();
+    await Course.create(testConst.course1);
     await Term.create(testConst.term1);
     await Instructor.create(testConst.instructor1);
     await Program.create(testConst.program1);

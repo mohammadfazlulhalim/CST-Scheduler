@@ -2,6 +2,7 @@ const Instructor = require('../../private/javascript/Instructor');
 const supertest = require('supertest');
 const app = require('../../app');
 const constants = require('../../constants');
+const validInstructor = require('../../fixtures/Instructor.fix').validInstructor
 
 describe('Instructors in database', () => {
   let testInstructor;
@@ -21,7 +22,7 @@ describe('Instructors in database', () => {
 
   test('testThatValidInstructorPostAddsToPopulatedList', async () => {
     // create a few valid Instructors in the database
-    for (const instructor of constants.testConst.validInstructor) {
+    for (const instructor of validInstructor) {
       await Instructor.create(instructor);
     }
 
@@ -53,7 +54,7 @@ describe('Instructors in database', () => {
 
   test('testThatValidInstructorDeleteRemovesFromPopulatedList', async () => {
     // create a few valid instructors in the database
-    for (const instructor of constants.testConst.validInstructor) {
+    for (const instructor of validInstructor) {
       await Instructor.create(instructor);
     }
     // do the DELETE test now that there are some Instructors in the database

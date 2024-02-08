@@ -1,7 +1,8 @@
 // Importing the ORM object
 const Term = require('../../private/javascript/Term.js');
 const {sequelize} = require('../../dataSource');
-const constants = require('../../constants');
+const validTerms = require('../../fixtures/Term.fix').validTerms
+
 
 // This describe checks validators on start dates based on what term number it is
 // It tests if it accepts valid start dates and rejects invalid start dates
@@ -547,7 +548,7 @@ describe('fields cannot be null', () => {
   let invalidTerm;
   beforeEach(async () => {
     await Term.sync();
-    invalidTerm = {...constants.testConst.validTerms[0]};
+    invalidTerm = JSON.parse(JSON.stringify(validTerms[0]));
   });
 
   test('testThatTermNumberCannotBeEmpty', async () => {

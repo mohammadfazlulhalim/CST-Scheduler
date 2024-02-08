@@ -1,8 +1,8 @@
 // import individual fixture files here
 const fillCourseOfferingTable = require('./CourseOffering.fix');
-const fillInstructorTable = require('./Instructor.fix');
-const fillCourseTable = require('./Course.fix'); // story34
-const fillTermTable = require('./Term.fix');
+const fillInstructorTable = require('./Instructor.fix').fillInstructorTable;
+const fillCourseTable = require('./Course.fix').fillCourseTable; // story34
+const fillTermTable = require('./Term.fix').fillTermTable;
 const fillClassroomTable = require('./Classroom.fix');
 const fillProgramTable = require('./Program.fix');
 const fillTimeslotTable = require('./Timeslot.fix');
