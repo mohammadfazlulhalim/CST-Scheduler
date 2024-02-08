@@ -77,8 +77,8 @@ async function fillCourseOfferingTable() {
   COHD.setCourse(15);
   COSD.setCourse(4);
 
-  
-  
+  testConst.courseOffering1.group = 'A';
+  testConst.courseOffering2.group = 'B';
 }
 
 

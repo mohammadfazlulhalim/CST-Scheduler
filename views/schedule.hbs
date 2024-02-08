@@ -90,8 +90,12 @@
                                     <!--                                    Then the 'each' will have different attributes and be loaded differently-->
                                     <!--                                    via html and the router sends attributes-->
                                     <td oncontextmenu="onCellRightClick('{{this.cellID}}')"
-                                        onclick="onCellClick('{{this.cellID}}')"
-                                        id="{{this.cellID}}" cellCO="{{this.CO}}">{{this.timeslot}}</td>
+                                        onclick="onCellClick('{{this.cellID}}, {{this.timeslot.co}}')"
+                                        id="{{this.cellID}}" cellCO="{{this.timeslot.co}}">
+                                        <p>{{this.timeslot.program}}<br/></p>
+                                        <p>{{this.timeslot.course}}<br/></p>
+                                        <p>{{this.timeslot.insLast}}<br/></p>
+                                    </td>
                                 {{/each}}
                             </tr>
                         {{/each}}
@@ -103,8 +107,8 @@
                         <div class="card" style="width: 12rem;" onclick="onCOClick('{{this.name}}-{{this.group}}')"
                              id="{{this.name}}-{{this.group}}">
                             <h3>{{this.name}}</h3>
-                            <ul>{{this.iName}}</ul>
-                            <ul>{{this.date}}</ul>
+                            <ul>{{this.insFirst}} {{this.insLast}}</ul>
+                            <ul>{{this.startDate}} - {{this.endDate}}</ul>
                         </div>
                     {{/each}}
                 </div>
@@ -120,6 +124,9 @@
     'use strict';
 
     let currCO = null;
+
+    let delArray = [];
+    let createArray = [];
 
 
     window.onload = function () {
@@ -185,12 +192,20 @@
 
     }
 
-    function onCellClick(idCell){/*
-        if (currCO)
+    function onCellClick(idCell, cellCO){
+
+        //If there is a timeslot there
+        if (cellCO)
         {
-            if(idCell)
-        }*/
+            //If the selected CO is not the same as the current CO
+            if(cellCO !== currCO)
+            {
+                //
+            }
+        }
     }
+
+
 
 
     function onCellRightClick(idCell) {

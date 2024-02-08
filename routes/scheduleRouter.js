@@ -64,7 +64,6 @@ router.post('/', async (req, res, next) => {
           hasObj: false,
           cellID: t + '-' + d + '-' + GROUP_LETTERS[i], // dynamic id
           timeslot: timeOb, // always empty except for time column
-          CO: null,
         };
       }
     }
@@ -88,11 +87,11 @@ router.post('/', async (req, res, next) => {
       });
 
       // getting each course offering for this group
-      const tempCOArray = [groupArray[i].COArray.length];
       for (let k =0; k < groupArray[i].COArray.length; k++) {
-        tempCOArray[k] = await formatCourseOffering(groupArray[i].COArray[k]);
+        const insObj = await groupArray[i].COArray[k].getInstructor();
+        groupArray[i].COArray[k].insFirst = insObj.firstName;
+        groupArray[i].COArray[k].insLast = insObj.lastName;
       }
-      groupArray[i].COArray=tempCOArray;
     } catch (error) {
 
     }
@@ -100,12 +99,19 @@ router.post('/', async (req, res, next) => {
 
     // mapping each timeslot in this group to the matrix
     for (const tSlot of timeslotArray) {
-      const formattedTSlot = await formatCellInfo(tSlot);
+      // const formattedTSlot = await formatCellInfo(tSlot);
       coObj = await tSlot.getCourseOffering();
+      prObj = await tSlot.getProgram();
+      insObj = await tSlot.getInstructor();
+      cObj = await coObj.getCourse();
 
-      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = formattedTSlot;// outer array is days, each inner array is times
-      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].CO = coObj.name + '-' + coObj.group; // get the current Course offering
+      tSlot.program = prObj.programAbbreviation;
+      tSlot.insLast = insObj.lastName;
 
+      tSlot.course = cObj.courseCode;
+      tSlot.co = coObj;
+
+      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;// outer array is days, each inner array is times
     }
     groupLetters[i] = GROUP_LETTERS[i];
   }
@@ -130,7 +136,7 @@ async function formatCellInfo(tSlot) {
 }
 
 // formatting each course offering for easier display
-async function formatCourseOffering(coObj) {
+/* async function formatCourseOffering(coObj) {
   const insObj = await coObj.getInstructor();
   return {
     id: coObj.id,
@@ -139,7 +145,7 @@ async function formatCourseOffering(coObj) {
     group: coObj.group,
     date: coObj.startDate + '-' + coObj.endDate,
   };
-}
+} */
 
 /**
  *  This function will handle the schedule changes.
