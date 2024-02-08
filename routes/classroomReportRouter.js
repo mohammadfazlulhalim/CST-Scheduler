@@ -37,21 +37,24 @@ router.post('/', async (req, res, next) => {
 
   const TimeSlots = await generateSchedule(realTerm.startDate, realTerm.endDate, realClassroom);
 
-  await calculateTotalUniqueDates(realTerm); // todo - fix dis // returns 5 unique dates
+  const uniqueDates =  await getUniqueDates(realTerm, realClassroom);
 
   const hasTimeSlots = TimeSlots.length >0;
-  let ScheduleArray; // todo  Make it into an array based on total unique
+  let ScheduleArray = [uniqueDates.length];
   const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   const TIMES = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
 
   if (hasTimeSlots) {
     ScheduleArray = Array.from({length: 8}, () => Array(5));
-    // todo make another loop for every schedule array
-    for (let i = 0; i < ScheduleArray.length; i++) {
-      for (let j = 0; j < ScheduleArray[i].length; j++) {
-        ScheduleArray[i][j] = null;
+    if(uniqueDates.length > 2) {
+
+      for (let i = 0; i < ScheduleArray.length; i++) {
+        for (let j = 0; j < ScheduleArray[i].length; j++) {
+          ScheduleArray[i][j] = null;
+        }
       }
     }
+
 
     for (const ts of TimeSlots) {
       const currentCourseOffering = await ts.getCourseOffering();
@@ -82,22 +85,21 @@ router.post('/', async (req, res, next) => {
 /**
 
  */
-async function calculateTotalUniqueDates(term) {
-  // todo ADD a union to join the values -  UNION SELECT DISTINCT endDate FROM Timeslots WHERE endDate BETWEEN ${ter}
-
+async function getUniqueDates(term, classroom) {
     const sqlstatement = `SELECT DISTINCT date
     FROM (
-      SELECT startDate AS date FROM timeslots
+      SELECT startDate  AS date FROM timeslots where ClassroomId = ${classroom.id}
     UNION
-    SELECT endDate AS date FROM timeslots
+    SELECT endDate AS date FROM timeslots where ClassroomId = ${classroom.id}
   ) AS combined_dates
     WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
 
   try {
-    const sqlresults = await sequelize.query(sqlstatement, {
+    let sqlResults = await sequelize.query(sqlstatement, {
       type: QueryTypes.SELECT,
     });
-    console.log('Breakpoint');
+    console.log(sqlResults);
+    return sqlResults;
   } catch (e) {
     console.log(e);
   }
