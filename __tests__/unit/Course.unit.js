@@ -323,10 +323,11 @@ describe('courseNumCredits', ()=>{
    let errCount;
 
    beforeEach(async()=>{
-     await Course.sync({force: true}); // wipes course table if it exists
+     // await Course.sync({force: true}); // wipes course table if it exists
      testCourse= testConst.course1; //test Course is created with the course properties defined in the constant.js file
      err='';  //empty the error message (if any)
    });
+
 
 
    /**
@@ -388,6 +389,7 @@ describe('courseNumCredits', ()=>{
     * we are using the constant.js file for other valid information
     */
    test ('testCreatingCourseWithCourseNumberOfHoursUpperLimit ', async()=>{
+      await Course.sync({force: true}); // wipes course table if it exists
      try{
        testCourse.courseNumHoursPerWeek=168;
        course= await Course.create(testCourse);
@@ -404,6 +406,7 @@ describe('courseNumCredits', ()=>{
     * we are using the constant.js file for other valid information
     */
    test ('testCreatingCourseWithCourseNumberOfHoursLowerLimit', async()=>{
+     await Course.sync({force: true}); // wipes course table if it exists
      try{
        testCourse.courseNumHoursPerWeek=1;
        course= await Course.create(testCourse);
@@ -420,11 +423,11 @@ describe('courseNumCredits', ()=>{
     * we are using the constant.js file for other valid information
     */
    test ('testCreatingCourseWithCourseNumberOfHoursOverLimit', async()=>{
-
+ await Course.sync({force: true}); // wipes course table if it exists
      try{
        testCourse.courseNumHoursPerWeek=169;
        course= await Course.create(testCourse);
-       course.courseNumHoursPerWeek=169;
+
      }catch(error){
        err= error.message;
        errCount= error.errors.length;
@@ -440,11 +443,11 @@ describe('courseNumCredits', ()=>{
     * we are using the constant.js file for other valid information
     */
    test ('testCreatingCourseWithCourseNumberOfHoursBelowLimit ', async()=>{
-
+ await Course.sync({force: true}); // wipes course table if it exists
      try{
        testCourse.courseNumHoursPerWeek=0;
        course= await Course.create(testCourse);
-       course.courseNumHoursPerWeek=0;
+
      }catch(error){
        err= error.message;
        errCount =error.errors.length;
