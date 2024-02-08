@@ -110,4 +110,5 @@ const mapErrors = (err) => {
   return violations;
 };
 
-module.exports = {router, createCourse};
+module.exports = {router, createCourse };
+
