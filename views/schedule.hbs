@@ -89,7 +89,9 @@
                                     <!--                                    Do an if/else if it has data - bool created in router-->
                                     <!--                                    Then the 'each' will have different attributes and be loaded differently-->
                                     <!--                                    via html and the router sends attributes-->
-                                    <td id="{{this.cellID}}">{{this.timeslot}}</td>
+                                    <td oncontextmenu="onCellRightClick('{{this.cellID}}')"
+                                        onclick="onCellClick('{{this.cellID}}')"
+                                        id="{{this.cellID}}" cellCO="{{this.CO}}">{{this.timeslot}}</td>
                                 {{/each}}
                             </tr>
                         {{/each}}
@@ -98,7 +100,8 @@
                 <div id="courseList{{groupLetter}}" class=" col-md-4">
                     <h2>Group {{groupLetter}} Courses</h2>
                     {{#each COArray}}
-                        <div class="card" style="width: 12rem;" onclick="onCOClick('{{this.name}}-{{this.group}}')" id="{{this.name}}-{{this.group}}">
+                        <div class="card" style="width: 12rem;" onclick="onCOClick('{{this.name}}-{{this.group}}')"
+                             id="{{this.name}}-{{this.group}}">
                             <h3>{{this.name}}</h3>
                             <ul>{{this.iName}}</ul>
                             <ul>{{this.date}}</ul>
@@ -119,7 +122,7 @@
     let currCO = null;
 
 
-    window.onload = function() {
+    window.onload = function () {
         const modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
         {{#if getrequest}}
             modal.show();
@@ -162,23 +165,35 @@
      * onclick handler for course offerings
      * @param idCO
      */
-    function onCOClick(idCO){
+    function onCOClick(idCO) {
         //retrieving DOM objects by id
-         const objCO = document.getElementById(idCO);
-         const currObjCO = document.getElementById(currCO)
+        const objCO = document.getElementById(idCO);
+        const currObjCO = document.getElementById(currCO)
 
-         if(currCO === idCO) //if clicked CO is alreaady highlighted
-         {
-             objCO.removeAttribute('class', 'bg-info');
-             currCO = null;
-         } else {
-             if(currCO !== null) { // if there's a differnt CO highlighted, otherwise its jusst null
-                 currObjCO.removeAttribute('class', 'bg-info');
-             }
+        if (currCO === idCO) //if clicked CO is alreaady highlighted
+        {
+            objCO.removeAttribute('class', 'bg-info');
+            currCO = null;
+        } else {
+            if (currCO !== null) { // if there's a differnt CO highlighted, otherwise its jusst null
+                currObjCO.removeAttribute('class', 'bg-info');
+            }
 
-             objCO.setAttribute('class', 'bg-info');
-             currCO = idCO;
-         }
+            objCO.setAttribute('class', 'bg-info');
+            currCO = idCO;
+        }
+
+    }
+
+    function onCellClick(idCell){/*
+        if (currCO)
+        {
+            if(idCell)
+        }*/
+    }
+
+
+    function onCellRightClick(idCell) {
 
     }
 

@@ -32,15 +32,53 @@ async function fillCourseOfferingTable() {
   COHA.setCourse(15);
   COSA.setCourse(4);
 
+  let COHB = testConst.courseOffering1;
+  let COSB = testConst.courseOffering2;
+  COHB.group = 'B';
+  COSB.group = 'B';
+  COHB = await CourseOffering.create(COHB);
+  COSB = await CourseOffering.create(COSB);
+  COHB.setTerm(3);
+  COSB.setTerm(3);
+  COHB.setProgram(1);
+  COSB.setProgram(1);
+  COHB.setInstructor(11);
+  COSB.setInstructor(3);
+  COHB.setCourse(15);
+  COSB.setCourse(4);
 
-  const COHB = testConst.courseOffering1;
-  const COSB = testConst.courseOffering2;
+  let COHC = testConst.courseOffering1;
+  let COSC = testConst.courseOffering2;
+  COHC.group = 'C';
+  COSC.group = 'C';
+  COHC = await CourseOffering.create(COHC);
+  COSC = await CourseOffering.create(COSC);
+  COHC.setTerm(3);
+  COSC.setTerm(3);
+  COHC.setProgram(1);
+  COSC.setProgram(1);
+  COHC.setInstructor(11);
+  COSC.setInstructor(3);
+  COHC.setCourse(15);
+  COSC.setCourse(4);
 
-  const COHC = testConst.courseOffering1;
-  const COSC = testConst.courseOffering2;
+  let COHD = testConst.courseOffering1;
+  let COSD = testConst.courseOffering2;
+  COHD.group = 'D';
+  COSD.group = 'D';
+  COHD = await CourseOffering.create(COHD);
+  COSD = await CourseOffering.create(COSD);
+  COHD.setTerm(3);
+  COSD.setTerm(3);
+  COHD.setProgram(1);
+  COSD.setProgram(1);
+  COHD.setInstructor(11);
+  COSD.setInstructor(3);
+  COHD.setCourse(15);
+  COSD.setCourse(4);
 
-  const COHD = testConst.courseOffering1;
-  const COSD = testConst.courseOffering2;
+  
+  
 }
 
 

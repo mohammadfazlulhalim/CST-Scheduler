@@ -64,6 +64,7 @@ router.post('/', async (req, res, next) => {
           hasObj: false,
           cellID: t + '-' + d + '-' + GROUP_LETTERS[i], // dynamic id
           timeslot: timeOb, // always empty except for time column
+          CO: null,
         };
       }
     }
@@ -100,8 +101,11 @@ router.post('/', async (req, res, next) => {
     // mapping each timeslot in this group to the matrix
     for (const tSlot of timeslotArray) {
       const formattedTSlot = await formatCellInfo(tSlot);
+      coObj = await tSlot.getCourseOffering();
 
       groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = formattedTSlot;// outer array is days, each inner array is times
+      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].CO = coObj.name + '-' + coObj.group; // get the current Course offering
+
     }
     groupLetters[i] = GROUP_LETTERS[i];
   }
