@@ -7,6 +7,10 @@ const {addAssociations} = require('../private/javascript/Associations');
 const createAllTables = require('../fixtures/createTables.fix');
 const {Op, sequelize} = require('../dataSource');
 const {QueryTypes} = require('sequelize');
+const {globalConsts} = require('../constants');
+const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
+const hours12 = globalConsts.timeColumn8amTo3pmDisplayArray;
+const weekdaysAllFullySpelled = globalConsts.weekdaysFullySpelled;
 
 router.get('/', async (req, res, next) => {
   const termList = await term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'DESC']]});
@@ -37,23 +41,29 @@ router.post('/', async (req, res, next) => {
 
   const TimeSlots = await generateSchedule(realTerm.startDate, realTerm.endDate, realClassroom);
 
-  const uniqueDates =  await getUniqueDates(realTerm, realClassroom);
+  const uniqueDates = await getUniqueDates(realTerm, realClassroom);
 
   const hasTimeSlots = TimeSlots.length >0;
-  let ScheduleArray = [uniqueDates.length];
-  const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  const TIMES = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+  let ScheduleArray;
+  const DAYS = weekdaysAllFullySpelled;
+  const TIMES = hours12;
 
   if (hasTimeSlots) {
     ScheduleArray = Array.from({length: 8}, () => Array(5));
-    if(uniqueDates.length > 2) {
+    // if (uniqueDates.length > 2) {
+
+    for (let k=0; k<=uniqueDates.length; k++) {
+      const timeslotsListFromLoop = await generateSchedule(uniqueDates[i], uniqueDates[i+1]);
 
       for (let i = 0; i < ScheduleArray.length; i++) {
+
         for (let j = 0; j < ScheduleArray[i].length; j++) {
           ScheduleArray[i][j] = null;
+
         }
       }
     }
+    // }
 
 
     for (const ts of TimeSlots) {
@@ -86,7 +96,7 @@ router.post('/', async (req, res, next) => {
 
  */
 async function getUniqueDates(term, classroom) {
-    const sqlstatement = `SELECT DISTINCT date
+  const sqlstatement = `SELECT DISTINCT date
     FROM (
       SELECT startDate  AS date FROM timeslots where ClassroomId = ${classroom.id}
     UNION
@@ -95,11 +105,9 @@ async function getUniqueDates(term, classroom) {
     WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
 
   try {
-    let sqlResults = await sequelize.query(sqlstatement, {
+    return await sequelize.query(sqlstatement, {
       type: QueryTypes.SELECT,
     });
-    console.log(sqlResults);
-    return sqlResults;
   } catch (e) {
     console.log(e);
   }
@@ -116,6 +124,61 @@ function generateSchedule(startDate, endDate, classroom) {
     },
     order: [['startDate', 'ASC']],
   });
+}
+
+/**
+ * Copied from InstructorReportRouter.js
+ * -
+ * Helper for creating one full table
+ * @returns {*[]}
+ */
+function generateTable(timeSlots) {
+  const matrixTable = [];
+  let currentCourseOffering;
+  let currentClassroom;
+  let currentCourse;
+
+  // import both the 24 hr and 12 hr array to use them for checks and display respectively
+  for (let i = 0; i < hours24.length; i++) {
+    matrixTable[i] = [
+      // columns:
+      // time  m   t  w   r  f
+      {timeRow: ''}, {}, {}, {}, {}, {},
+    ];
+  }
+
+  // eslint-disable-next-line guard-for-in
+  // for every entry in the timeslots
+  for (const timeslot of timeSlots) {
+    // make day one less (offset)
+    const tDay= timeslot.day-1;
+    const tHour = hours24.findIndex((st)=> st === timeslot.startTime);
+
+    // try to find the course, courseoffering and course for this timeslot object entry
+    try {
+      currentCourseOffering = await timeslot.getCourseOffering();
+      currentClassroom = await timeslot.getClassroom();
+      currentCourse = await currentCourseOffering.getCourse();
+    } catch (e) {
+      console.error(e);
+    }
+    // put the items in the array
+    matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
+      courseOffering: currentCourseOffering,
+      classRoom: currentClassroom,
+      course: currentCourse};
+  }
+
+  // place the hours
+  for (let i = 0; i < matrixTable.length; i++) {
+    for (let j = 0; j < matrixTable[i].length; j++) {
+      matrixTable[i][0].timeRow = hours12[i];
+    }
+  }
+
+
+  return matrixTable;
+
 }
 
 module.exports = {router};

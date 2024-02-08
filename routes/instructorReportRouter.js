@@ -7,13 +7,13 @@ const CourseOffering = require('../private/javascript/CourseOffering');
 const Course = require('../private/javascript/Course');
 const Classroom = require('../private/javascript/Classroom');
 const {sequelize} = require('../dataSource');
-const {testConst} = require('../constants');
+const {globalConsts} = require('../constants');
 const constants = require('constants');
 const defineDB = require('../fixtures/createTables.fix');
 
 // global constants here to work with time arrays
-const hours24 = testConst.timeColumn8amTo3pmDisplayArray24Hr;
-const hours12 = testConst.timeColumn8amTo3pmDisplayArray;
+const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
+const hours12 = globalConsts.timeColumn8amTo3pmDisplayArray;
 
 // TODO Promise issues to resolve!
 
@@ -26,7 +26,7 @@ router.get('/', async function(req, res, next) {
   await defineDB(false);
   const program='';
   const dateGenerated= new Date();
-  const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
+  const timeDisplayHours = hours12;
   let instructorList;
   let termList;
   let newTermList;
@@ -80,7 +80,7 @@ router.post('/', async function(req, res, next) {
   const dateGenerated= new Date();
   const monthArray=['Jan', 'Feb', 'Mar', 'Apr', 'May',
     'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-  const timeDisplayHours = testConst.timeColumn8amTo3pmDisplayArray;
+  const timeDisplayHours = hours12;
   let instructorList;
   let termList;
   let newTermList;
