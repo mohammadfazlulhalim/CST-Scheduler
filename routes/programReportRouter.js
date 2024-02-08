@@ -139,6 +139,7 @@ router.post('/', async function(req, res, next) {
   // try to find the program selected
   try {
     programName = await Program.findOne({where: {id: programID}});
+    // append to program name to be displayed in cell
     program=''+programName.programAbbreviation;
   } catch (e) {
     programName = undefined;
@@ -147,13 +148,8 @@ router.post('/', async function(req, res, next) {
   // try to find the term selected
   try {
     termName = await Term.findOne({where: {id: termID}});
+    // append to program name to be displayed in cell
     program+=''+termName.year;
-    // based on the term define the program year
-    // if (termName.termNumber <= 3) {
-    //   program= 'CST 1';
-    // } else {
-    //   program = 'CST 2';
-    // }
   } catch (e) {
     termName = undefined;
   }
@@ -176,7 +172,7 @@ router.post('/', async function(req, res, next) {
     console.log('the time slot is');
     console.log(instRepTimeslots);
   } catch (e) {
-    // instRepTimeslots=undefined;
+    instRepTimeslots=undefined;
   }
 
   // generates the schedule
@@ -262,15 +258,5 @@ async function generateSchedule(instRepTimeslots) {
 }
 
 
-/**
- * Helper method to generare the time slot object
- * @param startDate
- * @param endDate
- * @param term
- * @param group
- */
-// function generateSchedule(startDate, endDate, term, group) {
-//
-// }
 
 module.exports = router;

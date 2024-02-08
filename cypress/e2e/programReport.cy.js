@@ -11,7 +11,6 @@ describe('Test Program Report Page', () => {
     // Opens the landing page
     cy.visit('localhost:3000');
     // Click on the "Reports" dropdown toggle
-    // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
     cy.get('#reportDropdown > a').click();
 
     // Assert that the dropdown menu is hidden
@@ -35,6 +34,9 @@ describe('Test Program Report Page', () => {
     // Select the program from the dropdown based on value
     cy.get('#selectProgramReport').select('1');
 
+    /**
+     * testThatProgramSelectBoxesAreSorted
+     */
     // Get the options from the select box
     cy.get('#selectProgramReport').find('option').then((options) => {
       // Check if options are present and there is more than one option
@@ -56,6 +58,9 @@ describe('Test Program Report Page', () => {
     // Select the term from the dropdown based on value
     cy.get('#selectTermReport').select('1');
 
+    /**
+     * testThatTermSelectBoxesAreSorted
+     */
     // Get the options from the select box
     cy.get('#selectTermReport').find('option').then((options) => {
       // Check if options are present and there is more than one option
@@ -77,7 +82,7 @@ describe('Test Program Report Page', () => {
     cy.get('#selectGroupReport').select('A');
 
     /**
-         * testThatSelectBoxesAreSorted
+         * testThatGroupSelectBoxesAreSorted
          */
     // Get the options from the select box
     cy.get('#selectGroupReport').find('option').then((options) => {
@@ -102,9 +107,6 @@ describe('Test Program Report Page', () => {
     const expectedTimes12 = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
     const expectedHeaders = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-    /**
-     * testFull
-     */
     const cellsToCheckFull = [
       {row: 1, col: 2, value: 'CST1'},
       {row: 2, col: 2, value: 'CST1'},
@@ -115,9 +117,6 @@ describe('Test Program Report Page', () => {
 
     ];
 
-    /**
-     * testCrissCross
-     */
     const cellsToCheckCrissCross = [
       {row: 1, col: 2, value: 'CST1'},
       {row: 2, col: 3, value: 'CST1'},
@@ -164,6 +163,9 @@ describe('Test Program Report Page', () => {
     cy.get('.table-bordered tbody tr:nth-child(8) td:first-child').should('have.text', expectedTimes12[7]);
 
 
+    /**
+     * testCrissCross
+     */
     cellsToCheckCrissCross.forEach(({row, col, value}) => {
       const selector = `.table-bordered tbody tr:nth-child(${row}) td:nth-child(${col})`;
       cy.get(selector).should('contain', value);
@@ -213,7 +215,9 @@ describe('Test Program Report Page', () => {
 
     cy.get('#submitBtn').click();
 
-
+    /**
+     * testFull
+     */
     cellsToCheckFull.forEach(({row, col, value}) => {
       const selector = `.table-bordered tbody tr:nth-child(${row}) td:nth-child(${col})`;
       cy.get(selector).should('contain', value);

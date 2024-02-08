@@ -26,7 +26,7 @@
     </tr>
     </thead>
     <tbody>
-    <!-- 2D array looping through to display instuctor report -->
+    <!-- 2D array looping through to display program report -->
     {{#each matrixTable}}
         <tr>
             <!-- innerloop starts here-->
@@ -117,6 +117,7 @@
 
 <script defer>
     'use strict';
+    // global variables
     let submitBtn;
     let selectedProgram;
     let selectedTerm;
@@ -134,11 +135,9 @@
         selectedProgram = document.getElementById("selectProgramReport");
         selectedTerm = document.getElementById("selectTermReport");
         selectedGroup = document.getElementById("selectGroupReport");
-        //closeBtn = document.getElementById("modalCloseBtn");
-        //xBtn = document.getElementById("xBtn");
         newProgramBtn = document.getElementById("newProgramBtn");
-        //const modal = new bootstrap.Modal(document.getElementById("programReportModal"));
         submitBtn.disabled = true;
+
         // only open upon first arrival
         {{#if showModal}}
             // check if the "close" button was clicked
@@ -151,6 +150,7 @@
                 modal.hide();
             });
 
+            // show the modal
             modal.show();
 
         {{/if}}
@@ -192,11 +192,11 @@
         printWindow.document.write('</style>');
         printWindow.document.write('</head><body>');
 
-        // Print date and instructor name
+        // Print date and name
         const dateGen = document.getElementById("dateGenDisplayer").innerText;
-        const instructorName = document.getElementById("nameDisplayer").innerText;
+        const programName = document.getElementById("nameDisplayer").innerText;
 
-        printWindow.document.write('<h2>Instructor Report For: ' + instructorName + '</h2>');
+        printWindow.document.write('<h2>Program Report For: ' + programName + '</h2>');
         printWindow.document.write('<p>Report Generated: ' + dateGen + '</p>');
 
         // Print the table
