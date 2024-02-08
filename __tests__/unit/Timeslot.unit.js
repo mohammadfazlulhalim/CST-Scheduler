@@ -11,6 +11,8 @@ const Instructor = require('../../private/javascript/Instructor');
 const Program = require('../../private/javascript/Program');
 const Associations = (require('../../private/javascript/Associations'));
 const CreateTables = require('../../fixtures/ClearAndDefineTables');
+const instructor1 = require('../../fixtures/Instructor.fix').instructor1;
+const courseOffering1 = require('../../fixtures/CourseOffering.fix').courseOffering1;
 
 let timeSlotInstance;
 
@@ -22,9 +24,9 @@ describe('timeslotStartTime', () => {
     Associations.addAssociations();
     await Course.create(testConst.course1);
     await Term.create(testConst.term1);
-    await Instructor.create(testConst.instructor1);
+    await Instructor.create(instructor1);
     await Program.create(testConst.program1);
-    await CourseOffering.create(testConst.courseOffering1);
+    await CourseOffering.create(courseOffering1);
     await Classroom.create(testConst.classroom1);
   });
   beforeEach(async () => {

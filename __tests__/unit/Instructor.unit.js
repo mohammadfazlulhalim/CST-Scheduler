@@ -1,6 +1,7 @@
 const Instructor = require('../../private/javascript/Instructor');
-const testConst = require('../../constants').testConst;
+// const testConst = require('../../constants').testConst;
 const validInstructor = require('../../fixtures/Instructor.fix').validInstructor
+const instructor1 = require('../../fixtures/Instructor.fix').instructor1
 /**
  * These are tests for the firstName attribute of Instructor
  */
@@ -10,7 +11,7 @@ describe('firstName', () => {
   let err = '';
   beforeAll(async function() {
     await Instructor.sync({force: true}); // wipes instructor table if it exists
-    testInstructor = testConst.instructor1;
+    testInstructor = instructor1;
   });
 
   beforeEach(async function() {
@@ -251,7 +252,7 @@ describe('officeNum', () => {
   let err = '';
   beforeAll(async function() {
     await Instructor.sync({force: true}); // wipes instructor table if it exists
-    testInstructor = testConst.instructor1;
+    testInstructor = instructor1;
   });
 
   beforeEach(async function() {
@@ -353,7 +354,7 @@ describe('phoneNum', () => {
   let err = '';
   beforeAll(async function() {
     await Instructor.sync({force: true}); // wipes instructor table if it exists
-    testInstructor = testConst.instructor1;
+    testInstructor = instructor1;
   });
 
   beforeEach(async function() {
@@ -477,7 +478,7 @@ describe('email', () => {
   let err = '';
   beforeAll(async function() {
     await Instructor.sync({force: true}); // wipes instructor table if it exists
-    testInstructor = testConst.instructor1;
+    testInstructor = instructor1;
   });
 
   beforeEach(async function() {

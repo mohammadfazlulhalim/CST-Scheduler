@@ -35,5 +35,27 @@ const validInstructor = [
   {firstName: 'Ben', lastName: 'Benson', officeNum: '123B.1', phoneNum: '(306)-456-6859', email: 'benson@saskpolytech.ca'},
 ];
 
+const instructor1 ={
+  firstName: 'Ben',
+  lastName: 'Benson',
+  officeNum: '222',
+  phoneNum: '3067158888',
+  email: 'test@gmail.com',
+};
+const instructorDonovan1 = {
+  firstName: 'Donovan',
+  lastName: 'Onishenko',
+  officeNum: '222',
+  phoneNum: '3067158888',
+  email: 'tes1@gmail.com',
+};
+const instructorBryce1 ={
+  firstName: 'Bryce',
+  lastName: 'Barrie',
+  officeNum: '222',
+  phoneNum: '3067158888',
+  email: 'test2@gmail.com',
+};
 
-module.exports = {validInstructor, fillInstructorTable};
+
+module.exports = {instructor1, instructorDonovan1,instructorBryce1, validInstructor, fillInstructorTable};

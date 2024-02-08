@@ -2,6 +2,7 @@ const supertest = require('supertest');
 const app = require('../../app');
 const Program = require('../../private/javascript/Program');
 const constants = require('../../constants');
+const programList = require('../../fixtures/Program.fix').programList;
 
 // This set of tests ensures that Program objects are handled within the database properly
 describe('Programs in the database', () => {
@@ -26,7 +27,7 @@ describe('Programs in the database', () => {
 
   test('testThatValidProgramAddsToPopulatedList', async () => {
     // Create a few valid programs in the database
-    for (const program of constants.testConst.programList) {
+    for (const program of programList) {
       await Program.create(program);
     }
     const res = await supertest(app).post('/program').send(testProgram).expect(201); // Expect 201: Created
@@ -51,7 +52,7 @@ describe('Programs in the database', () => {
 
   test('testThatValidProgramDeletedFromPopulatedList', async () => {
     // Create a few valid programs in the database
-    for (const program of constants.testConst.programList) {
+    for (const program of programList) {
       await Program.create(program);
     }
 

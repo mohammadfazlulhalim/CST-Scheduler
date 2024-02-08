@@ -26,4 +26,9 @@ async function createProgram() {
   }
 }
 
-module.exports = fillProgramTable;
+const programList = [
+  {programAbbreviation: 'CNT', programName: 'Computer Network Technology'},
+  {programAbbreviation: 'ECE', programName: 'Early Childhood Education'},
+];
+
+module.exports = {programList, fillProgramTable};

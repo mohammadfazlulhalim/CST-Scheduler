@@ -1,8 +1,8 @@
 const Instructor = require('../../private/javascript/Instructor');
 const supertest = require('supertest');
 const app = require('../../app');
-const constants = require('../../constants');
 const validInstructor = require('../../fixtures/Instructor.fix').validInstructor
+const instructor1 = require('../../fixtures/Instructor.fix').instructor1
 
 describe('Instructors in database', () => {
   let testInstructor;
@@ -11,7 +11,7 @@ describe('Instructors in database', () => {
   beforeEach(async () => {
     // drop the table and re-create it
     await Instructor.sync({force: true});
-    testInstructor = {...constants.testConst.instructor1};
+    testInstructor = {...instructor1};
 
   });
 

@@ -4,9 +4,10 @@ const Program = require('../private/javascript/Program');
 const Classroom = require('../private/javascript/Classroom');
 const Term = require('../private/javascript/Term');
 const courseOffering = require('../private/javascript/CourseOffering');
-const constants = require('../constants');
 const validInstructor = require('./Instructor.fix').validInstructor;
-const {GenerateTimeSlotData, testConst} = require('../constants');
+const validCourseOfferingsA = require('./CourseOffering.fix').validCourseOfferingsA;
+const validCourseOfferingsB = require('./CourseOffering.fix').validCourseOfferingsB;
+// const {GenerateTimeSlotData, testConst} = require('../constants');
 
 /**
  * This clears the table for Classroom and then recreates the table
@@ -21,11 +22,7 @@ async function fillTimeslotTable() {
 async function createTimeslot() {
   const TimeSlotsArray = GenerateTimeSlotData();
   const RealTimeSlots = await Timeslot.bulkCreate(TimeSlotsArray);
-  const RealTimeSlots2 = await Timeslot.bulkCreate(constants.testConst.validTimeslots);
-
-  // for (const timeslot of constants.testConst.story9v2Timeslot) {
-  //   await Timeslot.create(timeslot);
-  // }
+  const RealTimeSlots2 = await Timeslot.bulkCreate(validTimeslots);
 
   const instructor = await Instructor.findByPk(4);
   const program = await Program.findByPk(1);
@@ -37,7 +34,7 @@ async function createTimeslot() {
     RealTimeSlots[i].setInstructor(instructor);
     RealTimeSlots[i].setClassroom(classroom);
     RealTimeSlots[i].setInstructor(await Instructor.findByPk((i%validInstructor.length)+1));
-    RealTimeSlots[i].setCourseOffering(await courseOffering.findByPk((i%constants.testConst.validCourseOfferingsB.length)+2));
+    RealTimeSlots[i].setCourseOffering(await courseOffering.findByPk((i%validCourseOfferingsB.length)+2));
   }
 
   classroom = await Classroom.findByPk(1);
@@ -48,8 +45,40 @@ async function createTimeslot() {
     RealTimeSlots2[i].setInstructor(instructor);
     RealTimeSlots2[i].setClassroom(classroom);
     RealTimeSlots2[i].setInstructor(await Instructor.findByPk((i % validInstructor.length) + 1));
-    RealTimeSlots2[i].setCourseOffering(await courseOffering.findByPk((i % constants.testConst.validCourseOfferingsA.length) + 9));
+    RealTimeSlots2[i].setCourseOffering(await courseOffering.findByPk((i % validCourseOfferingsA.length) + 9));
   }
 }
 
-module.exports = fillTimeslotTable;
+function GenerateTimeSlotData() {
+  const TimeArray = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+  const TimeSlotDataArray = [];
+
+  for (let i = 1; i < 6; i++) {
+    for (let j = 0; j < 7; j++) {
+      if (j === 4) {
+        continue;
+      }
+      TimeSlotDataArray.push({
+        startDate: '2023-01-01', endDate: '2023-04-01',
+        startTime: TimeArray[j], endTime: TimeArray[j+1], day: i, group: 'B',
+      });
+    }
+  }
+
+  return TimeSlotDataArray;
+}
+
+validTimeslots = [
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '8:00', endTime: '9:00', day: 1, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '14:00', endTime: '15:00', day: 1, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '9:00', endTime: '10:00', day: 2, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '11:00', endTime: '12:00', day: 3, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '10:00', endTime: '11:00', day: 4, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '9:00', endTime: '10:00', day: 5, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
+];
+
+module.exports = {validTimeslots, fillTimeslotTable};
