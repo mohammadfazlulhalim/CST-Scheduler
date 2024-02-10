@@ -2,8 +2,10 @@ const Course = require('../private/javascript/Course');
 const express = require('express');
 const {sequelize} = require("../dataSource");
 const router = express.Router();
+
+
 /**
- * GET handler for http://localhost:3000/instructor
+ * GET handler for http://localhost:3000/course
  */
 router.get('/', async (req, res,next)=>{
   //Declaring the array
@@ -13,13 +15,12 @@ router.get('/', async (req, res,next)=>{
     title: 'Course Listings',
     courseList: courseLists,
   });
-
 });
 
 
 
 /**
- * POST handler for http://localhost:3000/instructor
+ * POST handler for http://localhost:3000/course
  *
  */
 router.post('/',async (req,res,next)=>{
@@ -27,6 +28,7 @@ router.post('/',async (req,res,next)=>{
   await sequelize.sync();
   //Attempt to create the given course
   const result= await createCourse({
+    id: req.body.id,
     courseCode:req.body.courseCode,
     courseName:req.body.courseName,
     courseNumCredits:req.body.courseNumCredits,
@@ -56,21 +58,7 @@ router.post('/',async (req,res,next)=>{
 });
 
 
-/**
- * Attempts to delete the given course from the database.
- * @param {Object} course       - The course to delete
- * @return {Promise<number>}  - The number of rows deleted; should only be 1 if successful
- */
-async function deleteCourse(course) {
-  
-try{
-  return await course.destroy({where: {id: course.id}});
-} catch (err) {
-  // if an error occurred, state that 0 rows were deleted
-  return 0;
-}
 
-}
 
 
 
@@ -78,7 +66,9 @@ try{
  * DELETE handler for http://localhost:3000/course
  */
 router.delete('/', async function(req, res, next) {
+
   const result = await deleteCourse({id: req.body.id});
+
   let violations;
   if (result <= 0) {
     res.status(404);
@@ -92,6 +82,72 @@ router.delete('/', async function(req, res, next) {
     submittedCourse: violations ? req.body : undefined,
   });
 });
+
+/**
+ * PUT request handler for http://localhost:3000/course
+ */
+router.put('/', async function(req, res, next) {
+  const result = await updateCourse({
+    id: req.body.id,
+    courseCode: req.body.courseCode,
+    courseName: req.body.courseName,
+    courseNumCredits: req.body.courseNumCredits,
+    courseNumHoursPerWeek: req.body.courseNumHoursPerWeek,
+  });
+
+  let violations;
+  if (result.error) {
+    if (result.error.invalidKey) {
+      // if the invalidKey message is defined, then a non-existent course is trying to update
+      res.status(404);
+    } else {
+      // if the course does not have a start/end date, that means it's invalid and errors were sent back
+      res.status(422);
+    }
+    violations = result.error;
+  }
+  const putSubmittedCourse= req.body;
+  const courseLists = await readAllCourses();
+
+
+  res.render('course', {
+    title: 'Course List',
+    courseList: courseLists,
+    putErr: violations,
+    putSubmittedCourse,
+
+  });
+});
+
+
+/**
+ * Attempts to update the given course in the database.
+ * @param {Object} course     - The course to update
+ * @return {Promise<any>}  - The updated course if successful, a list of errors otherwise
+ */
+const updateCourse = async (course) => {
+  // find the course to update
+  const courseToUpdate = await Course.findByPk(course.id);
+
+  if (courseToUpdate) {
+    // only try to update the course if it already exists
+    try {
+      return await courseToUpdate.update({
+        id: course.id,
+        courseCode: course.courseCode,
+        courseName: course.courseName,
+        courseCredits: course.courseNumCredits,
+        courseNumHoursPerWeek: course.courseNumHoursPerWeek,
+      });
+    } catch (err) {
+      // return formatted validation errors when invalid
+      return mapErrors(err);
+    }
+  } else {
+    // if not found, return an invalid key error message
+    return {error: {invalidKey: 'Could not find an existing course to update'}};
+  }
+};
 
 
 /**
@@ -129,6 +185,21 @@ try {
 };
 
 /**
+ * Attempts to delete the given course from the database.
+ * @param {Object} course       - The course to delete
+ * @return {Promise<number>}  - The number of rows deleted; should only be 1 if successful
+ */
+
+const deleteCourse = async (course) => {
+
+  try{
+    return await Course.destroy({where: {id: course.id}});
+  } catch (err) {
+    // if an error occurred, state that 0 rows were deleted
+    return 0;
+  }
+};
+/**
  * Given an error object, this function maps it to a more presentable format for the hbs template.
  * @param err
  * @returns {{error: {}}}
@@ -148,5 +219,5 @@ const mapErrors = (err) => {
   return violations;
 };
 
-module.exports = {router, createCourse };
+module.exports = {router, createCourse, deleteCourse, updateCourse };
 

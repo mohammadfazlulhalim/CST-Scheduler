@@ -80,6 +80,50 @@
         </div>
     </div>
 
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" role="dialog" tabindex="-1" aria-labelledby="editModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-warning" id="editModalLabel">Edit Existing Course</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/course" method="POST">
+                        <div class="modal-body">
+                            <label for="eCourseCode">Course Code:</label>
+                            <input class="form-control {{#if putErr.courseCode}}is-invalid{{/if}}" id="eCourseCode"
+                                   name="courseCode" value="{{putSubmittedCourse.courseCode}}">
+                            <div class="invalid-feedback">{{putErr.courseCode}}</div>
+
+                            <label for="eCourseName">Course Name:</label>
+                            <input class="form-control {{#if putErr.courseName}}is-invalid{{/if}}" id="eCourseName"
+                                   name="courseName" value="{{putSubmittedCourse.courseName}}">
+                            <div class="invalid-feedback">{{putErr.courseName}}</div>
+
+                            <label for="eCourseNumCredits">Number of Credits:</label>
+                            <input class="form-control {{#if putErr.courseNumCredits}}is-invalid{{/if}}" id="eCourseNumCredits"
+                                   name="courseNumCredits" value="{{putSubmittedCourse.courseNumCredits}}">
+                            <div class="invalid-feedback">{{putErr.courseNumCredits}}</div>
+
+                            <label for="eCourseNumHoursPerWeek">Number of Hours Per Week:</label>
+                            <input class="form-control {{#if putErr.courseNumHoursPerWeek}}is-invalid{{/if}}" id="eCourseNumHoursPerWeek"
+                                   name="courseNumHoursPerWeek" value="{{putSubmittedCourse.courseNumHoursPerWeek}}">
+                            <div class="invalid-feedback">{{putErr.courseNumHoursPerWeek}}</div>
+
+                            <input type="text" id="editID" name="id" hidden />
+                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="editInstructor" class="btn btn-outline-success">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Modal -->
     <div class="modal fade" id="deleteModal" role="dialog" tabindex="-1" aria-labelledby="deleteModalLabel"
          aria-hidden="true">
@@ -116,21 +160,24 @@
     'use strict';
     reLinkButtons();
 
-
     /**
      * This function links the buttons on the page to their appropriate handlers
      */
     function reLinkButtons(){
 
-        console.log("its here" );
         $('#createCourse').click(handleCreateCourse);
         $('#deleteCourse').click(handleDeleteCourse);
+        $('#editCourse').click(handleEditCourse);
         $('.deleteButton').click(function() {
             handleDeleteModal(this.id.replace('delete', ''));
-
+        });
+        $('.editButton').click(function() {
+            handleEditModal(this.id.replace('edit', ''));
+        });
         $('.modal').on('hidden.bs.modal', function() {
             clearErrors();
         });
+
     }
 
     /**
@@ -140,8 +187,7 @@
      */
     async function handleDeleteCourse() {
 
-    console.log("its here");
-        const response = await fetch ('http://localhost:3000/course',{
+            const response = await fetch ('http://localhost:3000/course',{
             method:'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -150,9 +196,6 @@
                 id: $('#deleteCourse').val(),
             }),
         });
-
-        console.log(">>>>>>response>>>>>");
-        console.log(response);
 
         // get the HTML text response
         const data = await response.text();
@@ -199,7 +242,55 @@
 
     }
 
+
+
+        /**
+         * This function handles what happens when a user clicks the "Save" button
+         * in the Edit Existing Course modal
+         * @returns {Promise<void>}
+         */
+        async function handleEditCourse() {
+            const id = $('#editID').val();
+            // send a PUT request to the router
+            const response = await fetch('http://localhost:3000/course', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    // use the val() method to get the value of a form input
+                    courseCode: $("#eCourseCode").val(),
+                    courseName: $("#eCourseName").val(),
+                    courseNumCredits: $("#eCourseNumCredits").val(),
+                    courseNumHoursPerWeek: $("#eCourseNumHoursPerWeek").val(),
+                    id,
+                }),
+            });
+
+            // get the HTML text response
+            const data = await response.text();
+            const modalID = '#editModal';
+
+            loadResponse(modalID, data, !response.ok);
+
+            // re-load the ID
+            handleEditModal(id);
+        }
     /**
+     * This function loads the form in the Edit Existing Course modal with the information
+     * of the course the user wants to edit
+     * @param idToEdit    - The ID of the course being edited
+     */
+    function handleEditModal(idToEdit) {
+        $("#editID").val(idToEdit);
+        $("#eCourseCode").val($(`#${idToEdit}courseCode`).text());
+        $("#eCourseName").val($(`#${idToEdit}courseName`).text());
+        $("#eCourseNumCredits").val($(`#${idToEdit}courseNumCredits`).text());
+        $("#eCourseNumHoursPerWeek").val($(`#${idToEdit}courseNumHoursPerWeek`).text());
+
+    }
+
+            /**
      * As the server gives responses in HTML, the client needs to be able to parse that data.
      * This function replaces the HTML of the current page with the new HTML from the server
      * and pops up the last used modal if there were errors.
@@ -220,6 +311,18 @@
         if (showModal) {
             modal.modal('show');
         }
+    }
+
+    function clearErrors() {
+        // Clear error messages or styling for input fields
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').text('');
+
+        $('#cCourseCode').val('');
+        $('#cCourseName').val('');
+        $('#cCourseNumCredits').val('');
+        $('#cCourseNumHoursPerWeek').val('');
+
     }
 
 </script>

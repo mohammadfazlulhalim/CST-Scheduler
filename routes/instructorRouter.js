@@ -54,6 +54,7 @@ router.post('/', async function(req, res, next) {
  * DELETE handler for http://localhost:3000/instructor
  */
 router.delete('/', async function(req, res, next) {
+
   const result = await deleteInstructor({id: req.body.id});
   let violations;
   if (result <= 0) {
