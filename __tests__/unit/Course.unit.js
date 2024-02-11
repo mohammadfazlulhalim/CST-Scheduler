@@ -384,6 +384,53 @@ describe('courseNumCredits', ()=>{
 
    });
 
+
+
+
+   /**
+    * test creating course with invalid courseNumHoursPerWeek over the upper limit.
+    * we are using the constant.js file for other valid information
+    */
+   test ('testCreatingCourseWithCourseNumberOfHoursOverLimit', async()=>{
+     await Course.sync({force: true}); // wipes course table if it exists
+     try{
+       testCourse.courseNumHoursPerWeek=169;
+       course= await Course.create(testCourse);
+
+
+     }catch(error){
+       err= error.message;
+       errCount= error.errors.length;
+     }
+     expect (errCount).toBe(1);
+     expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
+     expect(course).toBeFalsy();
+
+   });
+
+   /**
+    * test creating course with invalid courseNumHoursPerWeek below the Lower limit.
+    * we are using the constant.js file for other valid information
+    */
+   test ('testCreatingCourseWithCourseNumberOfHoursBelowLimit ', async()=>{
+     await Course.sync({force: true}); // wipes course table if it exists
+
+     try{
+       testCourse.courseNumHoursPerWeek=0;
+       course= await Course.create(testCourse);
+
+
+     }catch(error){
+       err= error.message;
+       errCount =error.errors.length;
+     }
+     expect(errCount).toBe(1);
+     expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
+     expect(course).toBeFalsy();
+
+   });
+
+
    /**
     * test creating course with invalid courseNumHoursPerWeek over the upper limit.
     * we are using the constant.js file for other valid information
@@ -415,46 +462,6 @@ describe('courseNumCredits', ()=>{
      }
      expect (err).toBe('');
      expect(course).toBeTruthy();
-
-   });
-
-   /**
-    * test creating course with invalid courseNumHoursPerWeek over the upper limit.
-    * we are using the constant.js file for other valid information
-    */
-   test ('testCreatingCourseWithCourseNumberOfHoursOverLimit', async()=>{
- await Course.sync({force: true}); // wipes course table if it exists
-     try{
-       testCourse.courseNumHoursPerWeek=169;
-       course= await Course.create(testCourse);
-
-     }catch(error){
-       err= error.message;
-       errCount= error.errors.length;
-     }
-     expect (errCount).toBe(1);
-     expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
-     expect(course).toBeFalsy();
-
-   });
-
-   /**
-    * test creating course with invalid courseNumHoursPerWeek below the Lower limit.
-    * we are using the constant.js file for other valid information
-    */
-   test ('testCreatingCourseWithCourseNumberOfHoursBelowLimit ', async()=>{
- await Course.sync({force: true}); // wipes course table if it exists
-     try{
-       testCourse.courseNumHoursPerWeek=0;
-       course= await Course.create(testCourse);
-
-     }catch(error){
-       err= error.message;
-       errCount =error.errors.length;
-     }
-     expect(errCount).toBe(1);
-     expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
-     expect(course).toBeFalsy();
 
    });
 

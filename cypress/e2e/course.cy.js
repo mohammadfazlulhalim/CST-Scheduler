@@ -9,22 +9,23 @@ describe('Testing Course CRUD options', () => {
     const tableThirdHeader='body > div > div > div > table > thead > tr > th:nth-child(3)';
     const tableFourthHeader= 'body > div > div > div > table > thead > tr > th:nth-child(4)';
     const tableFifthHeader='body > div > div > div > table > thead > tr > th:nth-child(5)';
-    const addCourseModalFirstTextBoxLabel='#addModal > div > div > form > div.modal-body > label:nth-child(2)';
-    const addCourseModalSecondTextBoxLabel='#addModal > div > div > form > div.modal-body > label:nth-child(5)';
-    const addCourseModalThirdTextBoxLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(8)';
-    const addCourseModalFourthTextBoxLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(11)';
+    const addCourseModalFirstTextBoxLabel='#addModal > div > div > form > div.modal-body > label:nth-child(1)';
+    const addCourseModalSecondTextBoxLabel='#addModal > div > div > form > div.modal-body > label:nth-child(4)';
+    const addCourseModalThirdTextBoxLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(7)';
+    const addCourseModalFourthTextBoxLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(10)';
     const createCourseButton= 'body > div > div > div > button';
     const newCourseCourseCodeInputTextBox='#cCourseCode';
     const newCourseCourseNameInputTextBox='#cCourseName';
     const newCourseNumOfCreditsInputBox='#cCourseNumCredits';
     const newCourseCourseNumHoursPerWeekInputBox='#cCourseNumHoursPerWeek';
     const createCourseButtonOnNewInsModal='#createCourse';
-    const courseListEditButtonOnFourthColumn = '#\\34 2edit';
-    const editModalHeader='#addModalLabel';
+    const courseListEditButtonOnFourthColumn = '#\\31 6edit';
+    const editModalHeader='#editModalLabel';
     const firstTextBoxOnEditModal='#eCourseCode'
     const secondTextBoxOnEditModal ='#eCourseName';
     const saveButtonOnEditModal ='#editCourse';
-    const courseListDeleteButtonOnFourthColumnForDeleteTest ='#\\34 2delete';
+    const newCourseCode=' #\\31 6courseCode';
+    const courseListDeleteButtonOnFourthColumnForDeleteTest ='#\\31 6delete';
     const confirmDeleteButtonOnDeleteModal='#deleteCourse';
     const firstRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(1)';
     const secondRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(2)';
@@ -32,8 +33,18 @@ describe('Testing Course CRUD options', () => {
     const fourthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(4)';
     const fifthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(5)';
     const sixthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(6)';
+    const seventhRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(7)';
+    const eighthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(8)';
+    const ninthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(9)';
+    const tenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(10)';
+    const eleventhRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(11)';
+    const twelfthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(12)';
+    const thirteenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(13)';
+    const fourteenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(14)';
+    const fifteenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(15)';
+
     const navMenuSelector ='#navbarColor04 > ul > li:nth-child(3) > a';
-    const navMenuItem= '#navbarColor04 > ul > li:nth-child(4) > div > a:nth-child(4)';
+    const navMenuItem= '#navbarColor04 > ul > li:nth-child(3) > div > a:nth-child(6)';
     const fourthItemOnTheCourseList='';
 
     /* Navigating to our expected page "http://localhost:3000/course"*/
@@ -44,30 +55,38 @@ describe('Testing Course CRUD options', () => {
         cy.get(navMenuItem, {timeout:10000}).click();
     });
 
-    /* checking the availability of course lists headers*/
+
     it('testCourseListsAreShownUnderCertainHeaders  ', () => {
-        cy.get(courseListingsPageHeader).should('have.text', 'Instructor Listings');
-        cy.get(tableFirstHeader).should('have.text', 'Course Code ');
+
+        /* checking the availability of course lists headers*/
+        cy.get(courseListingsPageHeader).should('have.text', 'Course Listings');
+        cy.get(tableFirstHeader).should('have.text', 'Course Code');
         cy.get(tableSecondHeader).should('have.text', 'Course Name');
         cy.get(tableThirdHeader).should('have.text', 'Number of Credits');
-        cy.get(tableFourthHeader).should('have.text', 'Number of Hours Per Week');
-        cy.get(tableFifthHeader).should('have.text', 'Action');
+        cy.get(tableFourthHeader).should('have.text', 'Number of Hours');
+        cy.get(tableFifthHeader).should('have.text', 'Actions');
 
-    })
-
-    /* Test to confirm the availability of course's name according to the fixture data*/
-    it('testAvailabilityOfAllCourseInfo',()=>{
-        cy.get(firstRowOfListings).should('have.text', '\n                    CDBM280\n                    Database Management Systems\n                    5\n                    5\n\n                              Edit\n                        Delete\n                    \n                ');
-        cy.get(secondRowOfListings).should ('have.text', '\n                    COHS280\n                    Internet Programming/Web Applications 2\n                    6\n                    5\n\n                              Edit\n                        Delete\n                    \n                ');
-        cy.get (thirdRowOfListings).should ('have.text', '\n                    COSA280\n                    IT Development Project 1\n                    3\n                    3\n\n                              Edit\n                        Delete\n                    \n                ');
-        cy.get (fourthRowOfListings).should ('have.text', '\n                    MATH282\n                    Mathematics of Computation\n                    3\n                    3\n\n                              Edit\n                        Delete\n                    \n                ');
-        cy.get (fifthRowOfListings).should ('have.text', '\n                    SEM283\n                    Seminar\n                    1\n                    1\n\n                              Edit\n                        Delete\n                    \n                ');
-
+        /* Test to confirm the availability of course's name according to the fixture data*/
+        cy.get(firstRowOfListings).should('have.text', '\n                    CDBM280\n                    Database Management Systems\n                    5\n                    5\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get(secondRowOfListings).should ('have.text', '\n                    COHS280\n                    Enterprise Systems Support\n                    3\n                    3\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (thirdRowOfListings).should ('have.text', '\n                    COOS291\n                    Advanced Operating Systems\n                    5\n                    5\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (fourthRowOfListings).should ('have.text', '\n                    COOS293\n                    Systems Administration 2\n                    4\n                    4\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (fifthRowOfListings).should ('have.text', '\n                    COOS294\n                    Cloud Infrastructure Administration\n                    4\n                    4\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (sixthRowOfListings).should ('have.text', '\n                    COSA280\n                    IT Development Project 1\n                    3\n                    3\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (seventhRowOfListings).should ('have.text',  '\n                    COSA290\n                    IT Development Project 2\n                    6\n                    6\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (eighthRowOfListings).should ('have.text', '\n                    COSC292\n                    Advanced Programming 2\n                    4\n                    4\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (ninthRowOfListings).should ('have.text', '\n                    COSC295\n                    Advanced Mobile Application Programming\n                    4\n                    4\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (tenthRowOfListings).should ('have.text',  '\n                    CPMG290 \n                    IT Development Project Management 2\n                    2\n                    2\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (eleventhRowOfListings).should ('have.text',  '\n                    CSEC280\n                    Security 1\n                    4\n                    4\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (twelfthRowOfListings).should ('have.text', '\n                    CWEB280\n                    Internet Programming/Web Applications 2\n                    6\n                    5\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (thirteenthRowOfListings).should ('have.text',  '\n                    MATH282\n                    Mathematics of Computation\n                    3\n                    3\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (fourteenthRowOfListings).should ('have.text',   '\n                    SEM283\n                    Seminar\n                    1\n                    1\n                    \n                        Edit\n                        Delete\n                    \n                ');
+        cy.get (fifteenthRowOfListings).should ('have.text', '\n                    TCOM291\n                    Career Path Search\n                    1\n                    1\n                    \n                        Edit\n                        Delete\n                    \n                ');
     })
 
     /* Test to confirm the unavailability of new course's name (to be created/ added)  according to the fixture data*/
     it ('testUnavailabilityOfNewCourseInfo',()=>{
-        cy.contains('CSEC280').should('not.exist');
+        cy.contains('CSEC290').should('not.exist');
 
 
     })
@@ -86,32 +105,37 @@ describe('Testing Course CRUD options', () => {
     /* Test to  create a new course CSEC280 and confirm the availability inside course Listings*/
     it('testAddingInformationOfNewCourse ', () => {
         cy.get(createCourseButton).click();
-        cy.get(newCourseCourseCodeInputTextBox).type('CSEC280');
-        cy.get(newCourseCourseNameInputTextBox).type('Security');
+        cy.get(newCourseCourseCodeInputTextBox).type('CSEC290');
+        cy.wait(1000);
+        cy.get(newCourseCourseNameInputTextBox).type('Advanced Security');
         cy.get(newCourseNumOfCreditsInputBox).type('4');
         cy.get(newCourseCourseNumHoursPerWeekInputBox).type('4');
         cy.get(createCourseButtonOnNewInsModal ).click();
-        cy.get(fourthItemOnTheCourseList).should('have.text', 'CSEC280');
+        cy.wait(1000);
+        cy.get(newCourseCode).should('have.text', 'CSEC290');
+
+
     });
 
-    /* Test to  edit Course CSEC280's course code and course name and confirm the availability of edited course inside Course Listings*/
+    /* Test to  edit Course CSEC290's course code and course name and confirm the availability of edited course inside Course Listings*/
     it('testEditCourseInformation', () => {
         cy.get(courseListEditButtonOnFourthColumn).click();
         cy.get(editModalHeader).should('have.text', 'Edit Existing Course');
         cy.get(firstTextBoxOnEditModal).clear();
-        cy.get(firstTextBoxOnEditModal).type('CSEC290');
+        cy.get(firstTextBoxOnEditModal).type('CSEC295');
         cy.get(secondTextBoxOnEditModal).clear();
-        cy.get(secondTextBoxOnEditModal).type('Advanced Security');
+        cy.get(secondTextBoxOnEditModal).type('More Advanced Security');
         cy.get(saveButtonOnEditModal).click();
-        cy.get(fourthItemOnTheCourseList).should('have.text', 'CSEC280');
+        cy.contains('CSEC295').should('exist');
+        // cy.get(newCourseCode).should('have.text', 'CSEC295');
     });
 
     /* Test to  delete course CSEC290's information and confirm the unavailability of deleted course inside Course Listings*/
-    it('testDeleteCourseButton  ', () => {
+    it('testDeleteCourseOption  ', () => {
 
         cy.get(courseListDeleteButtonOnFourthColumnForDeleteTest).click();
         cy.get(confirmDeleteButtonOnDeleteModal).click();
-        cy.contains('CSEC290').should('not.exist');
+        cy.contains('CSEC295').should('not.exist');
 
     });
 });
