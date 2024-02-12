@@ -150,9 +150,9 @@
         </div>
     </div>
 
-<!--    <a href="http://localhost:3000/administration"><button class="btn btn-success">Return</button></a>-->
+
 </div>
-<!-- My own handlers for the form submits -->
+<!-- Handlers for the form submits -->
 <script>
     "use strict";
 
@@ -183,7 +183,7 @@
      */
     async function handleCreateCourse() {
         // send a POST request to the router
-        const response = await fetch("http://localhost:3000/course", {
+        const response = await fetch("{{URL}}/course", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -211,7 +211,7 @@
      */
     async function handleDeleteCourse() {
         // send a DELETE request to the router
-        const response = await fetch("http://localhost:3000/course", {
+        const response = await fetch('{{URL}}/course', {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -237,7 +237,7 @@
     async function handleEditCourse() {
         const id = $("#editID").val();
         // send a PUT request to the router
-        const response = await fetch("http://localhost:3000/course", {
+        const response = await fetch("{{url}}/course", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

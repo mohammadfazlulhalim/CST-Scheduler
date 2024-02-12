@@ -207,5 +207,6 @@ const termConstraints = {
   termNumberLowerLimit: 1,
 };
 
-module.exports = {instructorConstraints, testConst, termConstraints, GenerateTimeSlotData};
+const URL = 'http://localhost:3000'
+module.exports = {instructorConstraints, testConst, termConstraints, GenerateTimeSlotData, URL};
 

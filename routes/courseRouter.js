@@ -2,6 +2,7 @@ const Course = require('../private/javascript/Course');
 const express = require('express');
 const {sequelize} = require("../dataSource");
 const router = express.Router();
+const URL=require('../constants').URL;
 
 
 /**
@@ -13,7 +14,7 @@ router.get('/', async (req, res,next)=>{
 
   res.render ('course',{
     title: 'Course Listings',
-    courseList: courseLists,
+    courseList: courseLists, URL
   });
 });
 
@@ -53,7 +54,7 @@ router.post('/',async (req,res,next)=>{
     title: 'Course List',
     courseList: courseLists,
     err: violations,
-    submittedCourse: violations ? req.body: undefined,
+    submittedCourse: violations ? req.body: undefined,URL
   });
 });
 
@@ -79,7 +80,7 @@ router.delete('/', async function(req, res, next) {
     title: 'Course List',
     courseList: courseLists,
     err: violations,
-    submittedCourse: violations ? req.body : undefined,
+    submittedCourse: violations ? req.body : undefined,URL
   });
 });
 
@@ -114,7 +115,7 @@ router.put('/', async function(req, res, next) {
     title: 'Course List',
     courseList: courseLists,
     putErr: violations,
-    putSubmittedCourse,
+    putSubmittedCourse,URL
 
   });
 });
