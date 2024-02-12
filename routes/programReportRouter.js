@@ -12,13 +12,13 @@ const CourseOffering = require('../private/javascript/CourseOffering');
 const Course = require('../private/javascript/Course');
 const Classroom = require('../private/javascript/Classroom');
 const {sequelize} = require('../dataSource');
-const {testConst} = require('../constants');
+const {globalConsts} = require('../constants');
 const constants = require('constants');
 const {Sequelize} = require('sequelize');
 
 // global constants here to work with time arrays
-const hours24 = testConst.timeColumn8amTo3pmDisplayArray24Hr;
-const hours12 = testConst.timeColumn8amTo3pmDisplayArray;
+const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
+const hours12 = globalConsts.timeColumn8amTo3pmDisplayArray;
 
 /**
  * Processing GET request for rendering the program report page.
