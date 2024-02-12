@@ -46,12 +46,14 @@ router.post('/', async (req, res, next) => {
   const hasTimeSlots = TimeSlots.length > 0;
   const DAYS = weekdaysAllFullySpelled;
   const TIMES = hours24;
-  let ScheduleArray = [];
+
+  const ScheduleArray = [];
   if (hasTimeSlots) {
     for (let i=0; i<uniqueDates.length-1; i++) {
-      ScheduleArray[i] = await generateScheduleTable(TimeSlots, TIMES);
-    }
+      const retTSList = await generateSchedule(uniqueDates[i].date, uniqueDates[i+1].date, realClassroom);
 
+      ScheduleArray[i] = await generateScheduleTable(retTSList, TIMES);
+    }
   }
 
   res.render('classroomReport', {
@@ -101,7 +103,7 @@ function generateSchedule(startDate, endDate, classroom) {
 }
 
 async function generateScheduleTable(TimeSlots, TIMES) {
-  let ScheduleArray = Array.from({length: 8}, () => Array(5));
+  const ScheduleArray = Array.from({length: 8}, () => Array(5));
   for (let i = 0; i < ScheduleArray.length; i++) {
     for (let j = 0; j < ScheduleArray[i].length; j++) {
       ScheduleArray[i][j] = null;
@@ -113,19 +115,17 @@ async function generateScheduleTable(TimeSlots, TIMES) {
     const currentCourseOffering = await ts.getCourseOffering();
     const currentInstructorOffering = await ts.getInstructor();
     const currentCourse= await currentCourseOffering.getCourse();
-  try{
-    ScheduleArray[TIMES.indexOf(ts.startTime)][ts.day - 1] =
+    try {
+      ScheduleArray[TIMES.indexOf(ts.startTime)][ts.day - 1] =
         {
           timeSlot: ts,
           courseOffering: currentCourseOffering,
           course: currentCourse,
           Instructor: currentInstructorOffering,
         };
-  }
-  catch(e){
-    console.log('Goofed');
-  }
-
+    } catch (e) {
+      console.log('Goofed');
+    }
   }
   return ScheduleArray;
 }
@@ -134,7 +134,7 @@ async function generateScheduleTable(TimeSlots, TIMES) {
  * Copied from InstructorReportRouter.js
  * -
  * Helper for creating one full table
- * @returns {*[]}
+ * @return {*[]}
  */
 async function generateTable(timeSlots) {
   const matrixTable = [];
@@ -182,7 +182,6 @@ async function generateTable(timeSlots) {
 
 
   return matrixTable;
-
 }
 
 module.exports = {router};

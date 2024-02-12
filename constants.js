@@ -175,7 +175,7 @@ const globalConsts = {
   ],
   weekdaysFullySpelled: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
 
-}
+};
 
 
 function GenerateTimeSlotData() {
