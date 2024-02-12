@@ -43,41 +43,15 @@ router.post('/', async (req, res, next) => {
 
   const uniqueDates = await getUniqueDates(realTerm, realClassroom);
 
-  const hasTimeSlots = TimeSlots.length >0;
-  let ScheduleArray;
+  const hasTimeSlots = TimeSlots.length > 0;
   const DAYS = weekdaysAllFullySpelled;
-  const TIMES = hours12;
-
+  const TIMES = hours24;
+  let ScheduleArray = [];
   if (hasTimeSlots) {
-    ScheduleArray = Array.from({length: 8}, () => Array(5));
-    // if (uniqueDates.length > 2) {
-
-    for (let k=0; k<=uniqueDates.length; k++) {
-      const timeslotsListFromLoop = await generateSchedule(uniqueDates[i], uniqueDates[i+1]);
-
-      for (let i = 0; i < ScheduleArray.length; i++) {
-
-        for (let j = 0; j < ScheduleArray[i].length; j++) {
-          ScheduleArray[i][j] = null;
-
-        }
-      }
+    for (let i=0; i<uniqueDates.length-1; i++) {
+      ScheduleArray[i] = await generateScheduleTable(TimeSlots, TIMES);
     }
-    // }
 
-
-    for (const ts of TimeSlots) {
-      const currentCourseOffering = await ts.getCourseOffering();
-      const currentInstructorOffering = await ts.getInstructor();
-      const currentCourse= await currentCourseOffering.getCourse();
-
-      ScheduleArray[TIMES.indexOf(ts.startTime)][ts.day -1] =
-        {timeSlot: ts,
-          courseOffering: currentCourseOffering,
-          course: currentCourse,
-          Instructor: currentInstructorOffering,
-        };
-    }
   }
 
   res.render('classroomReport', {
@@ -126,13 +100,43 @@ function generateSchedule(startDate, endDate, classroom) {
   });
 }
 
+async function generateScheduleTable(TimeSlots, TIMES) {
+  let ScheduleArray = Array.from({length: 8}, () => Array(5));
+  for (let i = 0; i < ScheduleArray.length; i++) {
+    for (let j = 0; j < ScheduleArray[i].length; j++) {
+      ScheduleArray[i][j] = null;
+    }
+  }
+
+
+  for (const ts of TimeSlots) {
+    const currentCourseOffering = await ts.getCourseOffering();
+    const currentInstructorOffering = await ts.getInstructor();
+    const currentCourse= await currentCourseOffering.getCourse();
+  try{
+    ScheduleArray[TIMES.indexOf(ts.startTime)][ts.day - 1] =
+        {
+          timeSlot: ts,
+          courseOffering: currentCourseOffering,
+          course: currentCourse,
+          Instructor: currentInstructorOffering,
+        };
+  }
+  catch(e){
+    console.log('Goofed');
+  }
+
+  }
+  return ScheduleArray;
+}
+
 /**
  * Copied from InstructorReportRouter.js
  * -
  * Helper for creating one full table
  * @returns {*[]}
  */
-function generateTable(timeSlots) {
+async function generateTable(timeSlots) {
   const matrixTable = [];
   let currentCourseOffering;
   let currentClassroom;
