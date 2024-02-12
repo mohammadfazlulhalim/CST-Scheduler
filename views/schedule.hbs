@@ -89,9 +89,9 @@
                                     <!--                                    Do an if/else if it has data - bool created in router-->
                                     <!--                                    Then the 'each' will have different attributes and be loaded differently-->
                                     <!--                                    via html and the router sends attributes-->
-                                    {{#unless this.timeslot.program}}
+                                    {{#if this.hTime}}
                                         <td id="{{this.cellID}}">
-                                            <p>{{this.timeslot}}</p>
+                                            <p>{{this.hTime}}</p>
                                         </td>
                                     {{ else }}
                                         <td oncontextmenu="onCellRightClick('{{this.cellID}}')"
@@ -102,7 +102,7 @@
                                             <p>{{this.timeslot.insLast}}<br/></p>
                                         </td>
 
-                                    {{/unless}}
+                                    {{/if}}
                                 {{/each}}
                             </tr>
                         {{/each}}
@@ -197,12 +197,17 @@
 
     async function onCellClick(idCell, tSlot) {
 
+      console.log("Pre Co Select");
+      console.log(tSlot);
         //If there is a timeslot there
         if (currCO) {
+            console.log("If currCo");
             //if not blank
-            if (tSlot.co){
+            if (tSlot){
+                console.log("If tSlot.co");
                 //If the selected CO is not the same as the current CO
                 if (tSlot.co !== currCO) {
+                    console.log("tSlot.co !==CurrCo");
                     await fetch('/schedule', {
                         method: 'DELETE',
                         headers: {
@@ -216,6 +221,7 @@
                     return;
                 }
             }
+            console.log("await Fetch");
             const res = await fetch('/schedule', {
                 method: 'PUT',
                 headers: {
@@ -226,6 +232,7 @@
                     CO: currCO,
                 }),
             });
+            console.log("done fetch");
 
             addTSToCell(idCell, res.tSlot);
         }
