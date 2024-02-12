@@ -10,6 +10,7 @@
     "cypress": "node electron-dev.js"
   },
   "dependencies": {
+    "@electron/remote": "^2.1.2",
     "await-exec": "^0.1.2",
     "bootstrap": "^5.3.2",
     "bootswatch": "^5.3.2",

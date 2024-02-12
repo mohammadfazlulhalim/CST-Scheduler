@@ -182,15 +182,14 @@ describe('template spec', () => {
 
   it('testSplitClassRoomReport', () => {
     const homepageurl = 'http://localhost:3000/';
-    const splitclassroomreportRoute = '/splitClassroomReport';
-    const splitclassroomreportURLFull = homepageurl + 'splitClassroomReport/';
+    const classroomReportRouter = '/classroomReport';
+    const classroomReportURLFull = homepageurl + 'classroomReport/';
 
-    cy.visit(splitclassroomreportURLFull);
-    cy.intercept('GET', splitclassroomreportRoute).as('splitClassroomReportGET');
-    cy.get('#splitClassroomReportInfoModal').should('be.visible'); // Check that the modal correctly popped up
+    cy.visit(classroomReportURLFull);
+    cy.intercept('GET', classroomReportRouter).as('classroomReportGET');
+    cy.get('#classroomReportInfoModal').should('be.visible'); // Check that the modal correctly popped up
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check the button is initially disabled
 
-    // TODO - copied from classroomreport - make corrections to values
     cy.get('#classroomSelect').children('option').then((options) => {
       const selectOptions = [...options].map((option) => option.textContent);
       const expectedOptions = ['Select Classroom', '239A', '239B', '239a', '240B', '241', '242C'];
@@ -208,117 +207,81 @@ describe('template spec', () => {
     cy.get('#btnGenerateSchedule').should('be.enabled'); // Check that the button is now enabled
     cy.get('#btnGenerateSchedule').click(); // Click generate schedule
 
-    //todo Add check to make sure left arrow is disabled, and right arrow is enabled, if theres
-    //todo more than one page to be shown
-
     let classesInOrder = [
-      ['MATH282', 'COOS291', 'COHS280', 'CDBM280', 'MATH282'],
-      ['COSA280', 'COOS293', 'CWEB280', 'SEM283', 'COSA280'],
-      ['CDBM280', 'MATH282', 'COOS291', 'COHS280', 'CDBM280'],
-      ['SEM283', 'COSA280', 'COOS293', 'CWEB280', 'SEM283'],
+      ['MATH282', '', '', '', ''],
+      ['', 'CDBM280', '', '', ''],
+      ['', '', 'COHS280', '', ''],
+      ['', '', 'COOS293', '', 'CWEB280'],
       ['', '', '', '', ''], // 12:00 slot appears empty
-      ['COHS280', 'CDBM280', 'MATH282', 'COOS291', 'COHS280'],
-      ['CWEB280', 'SEM283', 'COSA280', 'COOS293', 'CWEB280'],
+      ['', 'SEM283', '', '', ''],
+      ['COSA280', '', '', '', ''],
       ['', '', '', '', ''],
     ];
 
     let namesInOrder = [
-      ['Barrie', 'Onishenko', 'Kaban', 'Lahoda', 'New'],
-      ['Kaban', 'Lahoda', 'New', 'Schmidt', 'Caron'],
-      ['New', 'Schmidt', 'Caron', 'Grzesina', 'Basoalto'],
-      ['Caron', 'Grzesina', 'Basoalto', 'Benson', 'Holtslan'],
+      ['Barrie', '', '', '', ''],
+      ['', 'New', '', '', ''],
+      ['', '', 'Basoalto', '', ''],
+      ['', '', 'Lahoda', '', 'Holtslan'],
       ['', '', '', '', ''], // 12:00 slot appears empty
-      ['Basoalto', 'Benson', 'Holtslan', 'Barrie', 'Onishenko'],
-      ['Holtslan', 'Barrie', 'Onishenko', 'Kaban', 'Lahoda'],
+      ['', 'Caron', '', '', ''],
+      ['Kaban', '', '', '', ''],
       ['', '', '', '', ''],
     ];
 
     checkCorrectSchedule(classesInOrder, namesInOrder)
-    //TODO Add arrow click check both buttons are enabled after clicking right (if theres more than 1)
+    cy.get('#btnRight').click();
 
-    classesInOrder = [
-      ['MATH282', 'COOS291', 'COHS280', 'CDBM280', 'MATH282'],
-      ['COSA280', 'COOS293', 'CWEB280', 'SEM283', 'COSA280'],
-      ['CDBM280', 'MATH282', 'COOS291', 'COHS280', 'CDBM280'],
-      ['SEM283', 'COSA280', 'COOS293', 'CWEB280', 'SEM283'],
+     classesInOrder = [
+      ['MATH282', '', '', '', ''],
+      ['', 'CDBM280', '', '', ''],
+      ['', '', 'COHS280', 'COOS291', ''],
+      ['', '', 'COOS293', 'MATH282', 'CWEB280'],
       ['', '', '', '', ''], // 12:00 slot appears empty
-      ['COHS280', 'CDBM280', 'MATH282', 'COOS291', 'COHS280'],
-      ['CWEB280', 'SEM283', 'COSA280', 'COOS293', 'CWEB280'],
+      ['', 'SEM283', '', '', ''],
+      ['COSA280', '', '', '', ''],
       ['', '', '', '', ''],
     ];
 
-    namesInOrder = [
-      ['Barrie', 'Onishenko', 'Kaban', 'Lahoda', 'New'],
-      ['Kaban', 'Lahoda', 'New', 'Schmidt', 'Caron'],
-      ['New', 'Schmidt', 'Caron', 'Grzesina', 'Basoalto'],
-      ['Caron', 'Grzesina', 'Basoalto', 'Benson', 'Holtslan'],
+     namesInOrder = [
+      ['Barrie', '', '', '', ''],
+      ['', 'New', '', '', ''],
+      ['', '', 'Basoalto', 'Onishenko', ''],
+      ['', '', 'Lahoda', 'Schmidt', 'Holtslan'],
       ['', '', '', '', ''], // 12:00 slot appears empty
-      ['Basoalto', 'Benson', 'Holtslan', 'Barrie', 'Onishenko'],
-      ['Holtslan', 'Barrie', 'Onishenko', 'Kaban', 'Lahoda'],
+      ['', 'Caron', '', '', ''],
+      ['Kaban', '', '', '', ''],
       ['', '', '', '', ''],
     ];
+
 
     checkCorrectSchedule(classesInOrder, namesInOrder)
+    cy.get('#btnRight').click();
 
-    //todo MORE CHECKS
-
-    classesInOrder = [
-      ['MATH282', 'COOS291', 'COHS280', 'CDBM280', 'MATH282'],
-      ['COSA280', 'COOS293', 'CWEB280', 'SEM283', 'COSA280'],
-      ['CDBM280', 'MATH282', 'COOS291', 'COHS280', 'CDBM280'],
-      ['SEM283', 'COSA280', 'COOS293', 'CWEB280', 'SEM283'],
+     classesInOrder = [
+      ['MATH282', '', '', '', ''],
+      ['', 'CDBM280', '', '', ''],
+      ['', '', 'COHS280', 'COOS291', ''],
+      ['', '', '', '', 'CWEB280'],
       ['', '', '', '', ''], // 12:00 slot appears empty
-      ['COHS280', 'CDBM280', 'MATH282', 'COOS291', 'COHS280'],
-      ['CWEB280', 'SEM283', 'COSA280', 'COOS293', 'CWEB280'],
+      ['', 'SEM283', '', '', 'Grzesina'],
+      ['COSA280', '', '', '', ''],
       ['', '', '', '', ''],
     ];
 
-    namesInOrder = [
-      ['Barrie', 'Onishenko', 'Kaban', 'Lahoda', 'New'],
-      ['Kaban', 'Lahoda', 'New', 'Schmidt', 'Caron'],
-      ['New', 'Schmidt', 'Caron', 'Grzesina', 'Basoalto'],
-      ['Caron', 'Grzesina', 'Basoalto', 'Benson', 'Holtslan'],
+     namesInOrder = [
+      ['Barrie', '', '', '', ''],
+      ['', 'New', '', '', ''],
+      ['', '', 'Basoalto', 'Onishenko', ''],
+      ['', '', '', '', 'Holtslan'],
       ['', '', '', '', ''], // 12:00 slot appears empty
-      ['Basoalto', 'Benson', 'Holtslan', 'Barrie', 'Onishenko'],
-      ['Holtslan', 'Barrie', 'Onishenko', 'Kaban', 'Lahoda'],
+      ['', 'Caron', '', '', 'Grzesina'],
+      ['Kaban', '', '', '', ''],
       ['', '', '', '', ''],
     ];
+
 
     checkCorrectSchedule(classesInOrder, namesInOrder)
-
-    //todo MORE CHECKS
-
-
-    classesInOrder = [
-      ['MATH282', 'COOS291', 'COHS280', 'CDBM280', 'MATH282'],
-      ['COSA280', 'COOS293', 'CWEB280', 'SEM283', 'COSA280'],
-      ['CDBM280', 'MATH282', 'COOS291', 'COHS280', 'CDBM280'],
-      ['SEM283', 'COSA280', 'COOS293', 'CWEB280', 'SEM283'],
-      ['', '', '', '', ''], // 12:00 slot appears empty
-      ['COHS280', 'CDBM280', 'MATH282', 'COOS291', 'COHS280'],
-      ['CWEB280', 'SEM283', 'COSA280', 'COOS293', 'CWEB280'],
-      ['', '', '', '', ''],
-    ];
-
-    namesInOrder = [
-      ['Barrie', 'Onishenko', 'Kaban', 'Lahoda', 'New'],
-      ['Kaban', 'Lahoda', 'New', 'Schmidt', 'Caron'],
-      ['New', 'Schmidt', 'Caron', 'Grzesina', 'Basoalto'],
-      ['Caron', 'Grzesina', 'Basoalto', 'Benson', 'Holtslan'],
-      ['', '', '', '', ''], // 12:00 slot appears empty
-      ['Basoalto', 'Benson', 'Holtslan', 'Barrie', 'Onishenko'],
-      ['Holtslan', 'Barrie', 'Onishenko', 'Kaban', 'Lahoda'],
-      ['', '', '', '', ''],
-    ];
-
-    checkCorrectSchedule(classesInOrder, namesInOrder)
-
-    //TODO last check to make sure left arrow is enabled but right arrow is disabled
-
-
-
-
-    // TODO check if a visit and intercept call to page is necessary...
 
     cy.get("#table")
 

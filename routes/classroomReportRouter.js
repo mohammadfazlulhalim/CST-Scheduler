@@ -50,10 +50,11 @@ router.post('/', async (req, res, next) => {
   const ScheduleArray = [];
   if (hasTimeSlots) {
     for (let i=0; i<uniqueDates.length-1; i++) {
-      console.log(uniqueDates[i+1]);
       const retTSList = await generateSchedule(uniqueDates[i].date, uniqueDates[i+1].date, realClassroom);
 
       ScheduleArray[i] = await generateScheduleTable(retTSList, TIMES);
+      ScheduleArray[i].startDate = uniqueDates[i];
+      ScheduleArray[i].endDate = uniqueDates[i+1]
     }
   }
 
@@ -63,9 +64,11 @@ router.post('/', async (req, res, next) => {
     realTerm,
     ScheduleArray,
     TIMES,
+    hours12,
     realClassroom,
     DAYS,
     hasTimeSlots,
+    uniqueDates,
   });
 });
 
