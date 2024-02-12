@@ -96,9 +96,9 @@ function generateSchedule(startDate, endDate, classroom) {
     where: {
       [Op.and]: [
         // Timeslot starts before the endDate of the range
-        { startDate: {[Op.lt]: endDate} },
+        {startDate: {[Op.lt]: endDate}},
         // Timeslot ends after the startDate of the range
-        { endDate: {[Op.gt]: startDate} }
+        {endDate: {[Op.gt]: startDate}},
       ],
       ClassroomId: classroom.id,
     },

@@ -15,7 +15,7 @@ const s48validTimeslots = [
   {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
   // TODO watch for conflicts
   {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
-  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '11:00', endTime: '12:00', day: 3, group: 'A'},
+  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '11:00', endTime: '12:00', day: 5, group: 'A'},
   {startDate: '2023-02-06', endDate: '2023-04-28', startTime: '10:00', endTime: '11:00', day: 4, group: 'A'},
   // {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
   // {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '9:00', endTime: '10:00', day: 5, group: 'A'},

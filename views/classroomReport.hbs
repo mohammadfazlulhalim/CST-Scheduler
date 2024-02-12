@@ -1,12 +1,13 @@
 {{#if hasTimeSlots}}
+    {{#each ScheduleArray}}
     <div>
         <div class="row">
             <div class="col-9">
-                <h2><i>Lab Schedule for:</i> {{realClassroom.roomNumber}}</h2>
-                <p>Dates: {{realTerm.startDate}} to {{realTerm.endDate}} </p>
+                <h2><i>Lab Schedule for:</i> {{../realClassroom.roomNumber}}</h2>
+                <p>Dates: {{../realTerm.startDate}} to {{../realTerm.endDate}} </p>
             </div>
             <div class="col-3">
-                <small>Report Generated:{{dateGen}}</small>
+                <small>Report Generated:{{../dateGen}}</small>
             </div>
         </div>
     </div>
@@ -18,15 +19,15 @@
                         <thead class="thead-dark">
                         <tr>
                             <th class="text-center align-content-center m-auto" scope="col">Time</th>
-                            {{#each DAYS}}
+                            {{#each ../DAYS}}
                                 <th scope="col" class="text-center align-content-center m-auto">{{this}}</th>
                             {{/each}}
                         </tr>
                         </thead>
                         <tbody>
-                        {{#each ScheduleArray.[1]}}
+                        {{#each this}}
                             <tr>
-                                <th class="text-center align-content-center m-auto">{{lookup ../TIMES @index}}</th>
+                                <th class="text-center align-content-center m-auto">{{lookup ../../TIMES @index}}</th>
                                 {{#each this}}
                                     <td>
                                         <div class="d-flex flex-column justify-content-center align-items-center h-100">
@@ -43,11 +44,33 @@
             </div>
         </div>
     </div>
+    {{/each}}
 {{else}}
     {{#if routerPost}}
         <h1 id="EmptyMessage">Nothing to display at the moment</h1>
     {{/if}}
 {{/if}}
+
+
+<!--TODO Attempting pagination-->
+<nav aria-label="...">
+    <ul class="pagination">
+        <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item active">
+      <span class="page-link">
+        2
+        <span class="sr-only">(current)</span>
+      </span>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+        </li>
+    </ul>
+</nav>
 
 
 <div id="classroomReportInfoModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
