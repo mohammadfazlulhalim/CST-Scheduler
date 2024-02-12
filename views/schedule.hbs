@@ -89,13 +89,20 @@
                                     <!--                                    Do an if/else if it has data - bool created in router-->
                                     <!--                                    Then the 'each' will have different attributes and be loaded differently-->
                                     <!--                                    via html and the router sends attributes-->
-                                    <td oncontextmenu="onCellRightClick('{{this.cellID}}')"
-                                        onclick="onCellClick('{{this.cellID}}, {{this.timeslot.co}}')"
-                                        id="{{this.cellID}}" cellCO="{{this.timeslot.co}}">
-                                        <p>{{this.timeslot.program}}<br/></p>
-                                        <p>{{this.timeslot.course}}<br/></p>
-                                        <p>{{this.timeslot.insLast}}<br/></p>
-                                    </td>
+                                    {{#unless this.timeslot.program}}
+                                        <td id="{{this.cellID}}">
+                                            <p>{{this.timeslot}}</p>
+                                        </td>
+                                    {{ else }}
+                                        <td oncontextmenu="onCellRightClick('{{this.cellID}}')"
+                                            onclick="onCellClick('{{this.cellID}}', '{{this.timeslot}}')"
+                                            id="{{this.cellID}}" cellCO="{{this.timeslot.co}}">
+                                            <p>{{this.timeslot.program}}<br/></p>
+                                            <p>{{this.timeslot.course}}<br/></p>
+                                            <p>{{this.timeslot.insLast}}<br/></p>
+                                        </td>
+
+                                    {{/unless}}
                                 {{/each}}
                             </tr>
                         {{/each}}
@@ -124,10 +131,6 @@
     'use strict';
 
     let currCO = null;
-
-    let delArray = [];
-    let createArray = [];
-
 
     window.onload = function () {
         const modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
@@ -192,20 +195,56 @@
 
     }
 
-    function onCellClick(idCell, cellCO){
+    async function onCellClick(idCell, tSlot) {
 
         //If there is a timeslot there
-        if (cellCO)
-        {
-            //If the selected CO is not the same as the current CO
-            if(cellCO !== currCO)
-            {
-                //
+        if (currCO) {
+            //if not blank
+            if (tSlot.co){
+                //If the selected CO is not the same as the current CO
+                if (tSlot.co !== currCO) {
+                    await fetch('/schedule', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': "application/json"
+                        },
+                        body: JSON.stringify({id: tSlot.id}),
+                    })
+                }
+                else
+                {
+                    return;
+                }
             }
+            const res = await fetch('/schedule', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    idCell: idCell,
+                    CO: currCO,
+                }),
+            });
+
+            addTSToCell(idCell, res.tSlot);
         }
     }
 
 
+    function addTSToCell(idCell, tSlot) {
+        let oldTD = document.getElementById(idCell);
+
+        let newTD = "<td oncontextmenu=\"onCellRightClick('" + idCell + "')\" " +
+                "onclick=\"onCellClick('" + idCell + "', '" + tSlot.co + "')\" " +
+                "id=\"" + idCell + "\" cellCO=\"" + tSlot.co + "\">" +
+                "<p>" + tSlot.program + "<br/></p>" +
+                "<p>" + tSlot.course + "<br/></p>" +
+                "<p>" + tSlot.insLast + "<br/></p>" +
+                "</td>";
+
+        oldTD.outerHTML = newTD;
+    }
 
 
     function onCellRightClick(idCell) {
