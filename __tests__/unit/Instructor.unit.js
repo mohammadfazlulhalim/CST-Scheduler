@@ -1,5 +1,4 @@
 const Instructor = require('../../private/javascript/Instructor');
-// const testConst = require('../../constants').testConst;
 const validInstructor = require('../../fixtures/Instructor.fix').validInstructor
 const instructor1 = require('../../fixtures/Instructor.fix').instructor1
 /**

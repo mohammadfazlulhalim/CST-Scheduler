@@ -9,6 +9,9 @@ const instructorDonovan1 = require('./Instructor.fix').instructorDonovan1;
 const instructorBryce1 = require('./Instructor.fix').instructorBryce1;
 const courseOffering1 = require('./CourseOffering.fix').courseOffering1;
 const courseOffering2 = require('./CourseOffering.fix').courseOffering2;
+const term1 = require('./Term.fix').term1;
+const course1 = require('./Course.fix').course1;
+const program1 = require('./Program.fix').program1;
 
 
 // eslint-disable-next-line require-jsdoc
@@ -17,12 +20,12 @@ async function loadRelationships() {
   const courseOfferingObj = {offering1: {}, offering2: {}};
 
   // Checking the DB to see if the entry already exists
-  let courseObj = await Course.findOne({where: {courseCode: testConst.course1.courseCode}});
+  let courseObj = await Course.findOne({where: {courseCode: course1.courseCode}});
   // If it does not exist, create it
   if (!courseObj) {
-    courseObj = await Course.create(testConst.course1);
+    courseObj = await Course.create(course1);
   }
-  const termObj = await Term.create(testConst.term1);
+  const termObj = await Term.create(term1);
   // const termObj = await Term.findByPk(testConst.term1.id);
   let insObj = await Instructor.findOne({where: {lastName: instructor1.lastName}});
   if (!insObj) {
@@ -38,9 +41,9 @@ async function loadRelationships() {
     insObj3 = await Instructor.create(instructorBryce1);
   }
 
-  let progObj = await Program.findOne({where: {programAbbreviation: testConst.program1.programAbbreviation}});
+  let progObj = await Program.findOne({where: {programAbbreviation: program1.programAbbreviation}});
   if (!progObj) {
-    progObj = await Program.create(testConst.program1);
+    progObj = await Program.create(program1);
   }
 
   courseOfferingObj.offering1 = {

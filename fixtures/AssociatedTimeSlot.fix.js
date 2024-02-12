@@ -2,7 +2,7 @@ const CourseOfferingScript = require('./AssociatedCourseOffering.fix');
 const Timeslot = require('../private/javascript/Timeslot');
 const CourseOffering = require('../private/javascript/CourseOffering');
 const Classroom = require('../private/javascript/Classroom');
-const {testConst} = require('../constants');
+const classroom1 = require('./Classroom.fix').classroom1;
 
 /**
  * Calls AssociatedCourseOffering, creates those course offerings
@@ -25,7 +25,7 @@ async function loadTimeslots() {
   await coObj2.setInstructor(courseObj.offering2.instructorID);
   await coObj2.setProgram(courseObj.offering2.programID);
 
-  const ClassroomObj = await Classroom.create(testConst.classroom1);
+  const ClassroomObj = await Classroom.create(classroom1);
 
   // creating the object literals for easy use
   const TimeslotAObj = {

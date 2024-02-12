@@ -127,4 +127,11 @@ const validCourses = [{courseCode: 'MATH282', courseName: 'Mathematics of Comput
   {courseCode: 'TCOM291', courseName: 'Career Path Search', courseNumCredits: 1, courseNumHoursPerWeek: 1},
 ];
 
-module.exports = {validCourses, fillCourseTable};
+const course1 = {
+  courseCode: 'CSEC280',
+  courseName: 'Security 1',
+  courseNumCredits: 4,
+  courseNumHoursPerWeek: 4,
+};
+
+module.exports = {course1, validCourses, fillCourseTable};

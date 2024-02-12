@@ -4,7 +4,6 @@
  */
 const Program = require('../../private/javascript/Program');
 const {sequelize} = require('../../dataSource');
-// const {sequelize} = require('../../dataSource');
 
 // The pre test setup
 describe('Program Model Validation', () => {

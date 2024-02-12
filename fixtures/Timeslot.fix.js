@@ -81,4 +81,13 @@ validTimeslots = [
   {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
 ];
 
-module.exports = {validTimeslots, fillTimeslotTable};
+const timeSlot1 = {
+  startTime: '10:00', // The value is 24h for now
+    endTime: '11:00', // replaced duration for now
+    startDate: '2023-09-01',
+    endDate: '2023-12-15',
+    day: 3,
+    group: 'B',
+};
+
+module.exports = { timeSlot1, validTimeslots, fillTimeslotTable};

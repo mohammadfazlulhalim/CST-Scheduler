@@ -1,8 +1,8 @@
 const supertest = require('supertest');
 const app = require('../../app');
 const Program = require('../../private/javascript/Program');
-const constants = require('../../constants');
 const programList = require('../../fixtures/Program.fix').programList;
+const program1 = require('../../fixtures/Program.fix').program1;
 
 // This set of tests ensures that Program objects are handled within the database properly
 describe('Programs in the database', () => {
@@ -12,7 +12,7 @@ describe('Programs in the database', () => {
   beforeEach(async () => {
     // Drop the table and re-create it
     await Program.sync({force: true});
-    testProgram = {...constants.testConst.program1};
+    testProgram = {...program1};
   });
 
   test('testThatValidProgramAddsToEmptyList', async () => {

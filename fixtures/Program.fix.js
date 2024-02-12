@@ -31,4 +31,9 @@ const programList = [
   {programAbbreviation: 'ECE', programName: 'Early Childhood Education'},
 ];
 
-module.exports = {programList, fillProgramTable};
+const program1 = {
+  programAbbreviation: 'CST',
+    programName: 'Computer Systems Technology',
+};
+
+module.exports = {program1, programList, fillProgramTable};

@@ -24,4 +24,10 @@ const validTerms = [
   {termNumber: 6, startDate: '2023-05-01', endDate: '2023-05-31'},
 ]
 
-module.exports = {validTerms, fillTermTable};
+const term1 = {
+  termNumber: 5,
+  startDate: '2024-01-02',
+  endDate: '2024-04-25',
+};
+
+module.exports = {term1, validTerms, fillTermTable};

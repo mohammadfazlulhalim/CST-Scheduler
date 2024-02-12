@@ -1,11 +1,5 @@
-// const Course = require('../../private/javascript/Course');
-// const Term = require('../../private/javascript/Term');
-// const Instructor = require('../../private/javascript/Instructor');
-// const Program = require('../../private/javascript/Program');
 const CourseOffering = require('../../private/javascript/CourseOffering');
-// const testConst = require('../../constants').testConst;
 const app = require('../../app');
-// const Associations = require("../../private/javascript/Associations");
 const SuperTest = require('supertest');
 const CourseOfferingScript = require('../../fixtures/AssociatedCourseOffering.fix');
 const CreateAllTables = require('../../Fixtures/createTables.fix');

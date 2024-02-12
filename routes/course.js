@@ -1,6 +1,4 @@
-
 const Course = require('../private/javascript/Course');
-
 const express = require('express');
 const router = express.Router();
 

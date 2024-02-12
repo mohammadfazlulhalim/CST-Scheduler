@@ -5,12 +5,7 @@ const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
 const Instructor = require('../private/javascript/Instructor');
 const Course = require('../private/javascript/Course');
-
-// const Course = require('../private/javascript/Course');
-// const Term = require('../private/javascript/Term');
-// const Instructor = require('../private/javascript/Instructor');
-// const Program = require('../private/javascript/Program');
-
+const URL = require('../constants').URL
 
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
@@ -28,7 +23,8 @@ router.get('/', async function(req, res, next) {
     listTerm,
     listProgram,
     listInstructor,
-    listCourse
+    listCourse,
+    URL
   });
 });
 
@@ -74,7 +70,8 @@ router.post('/', async function(req, res, next) {
     listTerm,
     listProgram,
     listInstructor,
-    listCourse
+    listCourse,
+    URL
   });
 });
 
@@ -121,7 +118,8 @@ router.put('/', async function(req, res, next) {
     listTerm,
     listProgram,
     listInstructor,
-    listCourse
+    listCourse,
+    URL
   });
 });
 
@@ -148,7 +146,8 @@ router.delete('/', async function(req, res, next) {
     listTerm,
     listProgram,
     listInstructor,
-    listCourse
+    listCourse,
+    URL
   });
 });
 

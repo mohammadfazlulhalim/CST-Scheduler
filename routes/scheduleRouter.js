@@ -5,7 +5,6 @@ const CourseOffering = require('../private/javascript/CourseOffering');
 const Timeslot = require('../private/javascript/Timeslot');
 const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
-const {testConst} = require('../constants');
 const defineDB = require('../fixtures/createTables.fix');
 
 router.get('/', async (req, res, next) => {

@@ -1,7 +1,4 @@
 const {sequelize} = require('../../dataSource');
-
-const {testConst} = require('../../constants');
-
 const CourseOffering = require('../../private/javascript/CourseOffering');
 const Course = require('../../private/javascript/Course');
 const Classroom = require('../../private/javascript/Classroom');
@@ -13,6 +10,12 @@ const Associations = (require('../../private/javascript/Associations'));
 const CreateTables = require('../../fixtures/ClearAndDefineTables');
 const instructor1 = require('../../fixtures/Instructor.fix').instructor1;
 const courseOffering1 = require('../../fixtures/CourseOffering.fix').courseOffering1;
+const term1 = require('../../fixtures/Term.fix').term1;
+const course1 = require('../../fixtures/Course.fix').course1;
+const program1 = require('../../fixtures/Program.fix').program1;
+const classroom1 = require('../../fixtures/Classroom.fix').classroom1;
+const timeSlot1 = require('../../fixtures/Timeslot.fix').timeSlot1
+
 
 let timeSlotInstance;
 
@@ -22,15 +25,15 @@ describe('timeslotStartTime', () => {
     await CreateTables();
 
     Associations.addAssociations();
-    await Course.create(testConst.course1);
-    await Term.create(testConst.term1);
+    await Course.create(course1);
+    await Term.create(term1);
     await Instructor.create(instructor1);
-    await Program.create(testConst.program1);
+    await Program.create(program1);
     await CourseOffering.create(courseOffering1);
-    await Classroom.create(testConst.classroom1);
+    await Classroom.create(classroom1);
   });
   beforeEach(async () => {
-    timeSlotInstance = testConst.timeSlot1;
+    timeSlotInstance = timeSlot1;
   });
 
   afterEach(async function() {

@@ -207,7 +207,7 @@
                         <label for="cGroup">Group:</label>
                         <input type="text" class="form-control {{#if err.group}}is-invalid{{/if}}" id="cGroup"
                                name="group" value="{{submittedCO.group}}">
-                        <div class="invalid-feedback">{{err.group}}</div>
+                        <div class="invalid-feedback">{{err.group}}</div>git 
 
                         <div>
                             <label for="cProgram">Program</label>
@@ -250,7 +250,6 @@
 <!-- My own handlers for the form submits -->
 <script>
     'use strict';
-
     reLinkButtons();
 
     /**
@@ -355,7 +354,7 @@
         let courseCode = document.getElementById('cCourse').value;
         let courseID = document.getElementById('optionCreateCourse' + courseCode).dataset.courseid;
 
-        const response = await fetch('http://localhost:3000/courseOffering', {
+        const response = await fetch('{{URL}}/courseOffering', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -387,7 +386,7 @@
      */
     async function handleDeleteCO() {
         // send a DELETE request to the router
-        const response = await fetch('http://localhost:3000/courseOffering', {
+        const response = await fetch('{{URL}}/courseOffering', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -413,7 +412,7 @@
     async function handleEditCO() {
         const id = $('#editID').val();
         // send a PUT request to the router
-        const response = await fetch('http://localhost:3000/courseOffering', {
+        const response = await fetch('{{URL}}/courseOffering', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
