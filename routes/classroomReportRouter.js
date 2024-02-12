@@ -50,6 +50,7 @@ router.post('/', async (req, res, next) => {
   const ScheduleArray = [];
   if (hasTimeSlots) {
     for (let i=0; i<uniqueDates.length-1; i++) {
+      console.log(uniqueDates[i+1]);
       const retTSList = await generateSchedule(uniqueDates[i].date, uniqueDates[i+1].date, realClassroom);
 
       ScheduleArray[i] = await generateScheduleTable(retTSList, TIMES);
@@ -93,15 +94,17 @@ async function getUniqueDates(term, classroom) {
 function generateSchedule(startDate, endDate, classroom) {
   return timeslot.findAll({
     where: {
-      startDate: {
-        [Op.between]: [startDate, endDate], // startDate should be between startDate and endDate
-      },
+      [Op.and]: [
+        // Timeslot starts before the endDate of the range
+        { startDate: {[Op.lt]: endDate} },
+        // Timeslot ends after the startDate of the range
+        { endDate: {[Op.gt]: startDate} }
+      ],
       ClassroomId: classroom.id,
     },
     order: [['startDate', 'ASC']],
   });
 }
-
 async function generateScheduleTable(TimeSlots, TIMES) {
   const ScheduleArray = Array.from({length: 8}, () => Array(5));
   for (let i = 0; i < ScheduleArray.length; i++) {
@@ -128,60 +131,6 @@ async function generateScheduleTable(TimeSlots, TIMES) {
     }
   }
   return ScheduleArray;
-}
-
-/**
- * Copied from InstructorReportRouter.js
- * -
- * Helper for creating one full table
- * @return {*[]}
- */
-async function generateTable(timeSlots) {
-  const matrixTable = [];
-  let currentCourseOffering;
-  let currentClassroom;
-  let currentCourse;
-
-  // import both the 24 hr and 12 hr array to use them for checks and display respectively
-  for (let i = 0; i < hours24.length; i++) {
-    matrixTable[i] = [
-      // columns:
-      // time  m   t  w   r  f
-      {timeRow: ''}, {}, {}, {}, {}, {},
-    ];
-  }
-
-  // eslint-disable-next-line guard-for-in
-  // for every entry in the timeslots
-  for (const timeslot of timeSlots) {
-    // make day one less (offset)
-    const tDay= timeslot.day-1;
-    const tHour = hours24.findIndex((st)=> st === timeslot.startTime);
-
-    // try to find the course, courseoffering and course for this timeslot object entry
-    try {
-      currentCourseOffering = await timeslot.getCourseOffering();
-      currentClassroom = await timeslot.getClassroom();
-      currentCourse = await currentCourseOffering.getCourse();
-    } catch (e) {
-      console.error(e);
-    }
-    // put the items in the array
-    matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
-      courseOffering: currentCourseOffering,
-      classRoom: currentClassroom,
-      course: currentCourse};
-  }
-
-  // place the hours
-  for (let i = 0; i < matrixTable.length; i++) {
-    for (let j = 0; j < matrixTable[i].length; j++) {
-      matrixTable[i][0].timeRow = hours12[i];
-    }
-  }
-
-
-  return matrixTable;
 }
 
 module.exports = {router};
