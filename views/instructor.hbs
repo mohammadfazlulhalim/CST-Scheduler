@@ -205,7 +205,7 @@
      */
     async function handleCreateInstructor() {
         // send a POST request to the router
-        const response = await fetch('http://localhost:3000/instructor', {
+        const response = await fetch('{{URL}}/instructor', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -235,7 +235,7 @@
      */
     async function handleDeleteInstructor() {
         // send a DELETE request to the router
-        const response = await fetch('http://localhost:3000/instructor', {
+        const response = await fetch('{{URL}}/instructor', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -261,7 +261,7 @@
     async function handleEditInstructor() {
         const id = $('#editID').val();
         // send a PUT request to the router
-        const response = await fetch('http://localhost:3000/instructor', {
+        const response = await fetch('{{URL}}/instructor', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

@@ -3,12 +3,14 @@ const router = express.Router();
 const TermRouter = require('../private/javascript/Term');
 const {sequelize} = require('../dataSource');
 const termConstraints = require('../constants').termConstraints;
+const URL = require('../constants').URL
 router.get('/', async function(req, res, next) {
   // Declaring the array
   const termLists = await readAllTerms();
   res.render('term', {
     title: 'Manage Terms',
     termEntries: termLists,
+    URL
   });
 });
 
@@ -43,6 +45,7 @@ router.post('/', async function(req, res, next) {
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
     title: 'Manage Terms',
+    URL
   });
 });
 
@@ -63,6 +66,7 @@ router.delete('/', async function(req, res, next) {
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
     title: 'Manage Terms',
+    URL
   });
 });
 
@@ -96,6 +100,7 @@ router.put('/', async function(req, res, next) {
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
     title: 'Manage Terms',
+    URL
   });
 });
 

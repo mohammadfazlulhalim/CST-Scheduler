@@ -124,8 +124,7 @@ router.put('/', async function(req, res, next) {
 });
 
 router.delete('/', async function(req, res, next) {
-  // console.log('DELETE: ' + JSON.stringify(req.body));
-  const listTerm = await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'DESC']]});
+  const listTerm = await getTerms();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
   const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});

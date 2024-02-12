@@ -86,7 +86,7 @@ const timeSlot1 = {
     endTime: '11:00', // replaced duration for now
     startDate: '2023-09-01',
     endDate: '2023-12-15',
-    day: 3,
+    day: 0,
     group: 'B',
 };
 

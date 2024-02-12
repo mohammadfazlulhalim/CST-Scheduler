@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Instructor = require('../private/javascript/Instructor');
 const {sequelize} = require('../dataSource');
+const URL = require('../constants').URL
 router.get('/', async function(req, res, next) {
   // Declaring the array
   const instructorLists = await readAllInstructors();
@@ -9,6 +10,7 @@ router.get('/', async function(req, res, next) {
    res.render('instructor', {
     title: 'Instructor Listings',
     instructorList: instructorLists,
+     URL
   });
 });
 
@@ -47,6 +49,7 @@ router.post('/', async function(req, res, next) {
     instructorList: instructorLists,
     err: violations,
     submittedInstructor: violations ? req.body : undefined,
+    URL
   });
 });
 
@@ -66,6 +69,7 @@ router.delete('/', async function(req, res, next) {
     instructorList: instructorLists,
     err: violations,
     submittedInstructor: violations ? req.body : undefined,
+    URL
   });
 });
 
@@ -102,10 +106,8 @@ router.put('/', async function(req, res, next) {
     instructorList: instructorLists,
     putErr: violations,
     putSubmittedInstructor,
-
+    URL
   });
-
-
 });
 
 /**

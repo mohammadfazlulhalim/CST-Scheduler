@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Program = require('../private/javascript/Program');
 const {sequelize} = require('../dataSource');
+const URL = require('../constants').URL
 
 // Reading the programs
 router.get('/', async function(req, res, next) {
@@ -17,6 +18,7 @@ router.get('/', async function(req, res, next) {
   // render the page
   res.render('program', {
     program: programList,
+    URL
   });
 });
 
@@ -27,7 +29,6 @@ router.post('/', async function(req, res, next) {
   const result = await createProgram({
     programName: req.body.programName,
     programAbbreviation: req.body.programAbbreviation,
-
   });
 
   // initialize errors/violations
@@ -51,6 +52,7 @@ router.post('/', async function(req, res, next) {
     program: programLists,
     err: violations,
     submittedProgram: violations ? req.body : undefined,
+    URL,
   });
 });
 
@@ -94,6 +96,7 @@ router.put('/', async function(req, res, next) {
     program: programLists,
     putErr: violations,
     putSubmittedProgram: violations ? req.body : undefined,
+    URL
   });
 });
 
@@ -133,6 +136,7 @@ router.delete('/', async function(req, res, next) {
     program: programLists,
     err: violations,
     submittedProgram: violations ? req.body : undefined,
+    URL
   });
 });
 

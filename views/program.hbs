@@ -194,7 +194,7 @@
     }
     async function handleCreateProgram() {
         // send a POST request to the router
-        const response = await fetch('http://localhost:3000/program', {
+        const response = await fetch('{{URL}}/program', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -225,7 +225,7 @@
 
     async function handleUpdateProgram(index, progID) {
 
-        const response = await fetch('http://localhost:3000/program', {
+        const response = await fetch('{{URL}}/program', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -270,7 +270,7 @@
         // Get the program ID from the button's data attribute
         programID = programID.replace('deleteProgram', '');
         // Send a DELETE request to the router
-        const response = await fetch(`http://localhost:3000/program`, {
+        const response = await fetch(`{{URL}}/program`, {
 
 
             method: 'DELETE',

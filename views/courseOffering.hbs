@@ -168,7 +168,7 @@
                         <div class="invalid-feedback">{{putErr.id}}</div>
                         <div>
                             <label for="cCourse">Course</label>
-                            <!--                            TODO: switch function call to after they are done typing-->
+<!--                            TODO: Improve event handler-->
                             <input id="cCourse" type="text" list="courses" oninput="selectedCourseCreate()"/>
                             <datalist id="courses" class="form-label">Course
                                 {{#each listCourse}}
@@ -177,8 +177,9 @@
                                             data-coursename="{{courseName}}"></option>
                                 {{/each}}
                             </datalist>
+<!--                            TODO: get better styling for this-->
+                            <div class="" id="cCourseInvalid"></div>
                         </div>
-
                         <label for="cName">Name:</label>
                         <input type="text" class="form-control {{#if err.name}}is-invalid{{/if}}" id="cName"
                                name="name" value="{{submittedCO.name}}">
@@ -207,7 +208,7 @@
                         <label for="cGroup">Group:</label>
                         <input type="text" class="form-control {{#if err.group}}is-invalid{{/if}}" id="cGroup"
                                name="group" value="{{submittedCO.group}}">
-                        <div class="invalid-feedback">{{err.group}}</div>git 
+                        <div class="invalid-feedback">{{err.group}}</div>
 
                         <div>
                             <label for="cProgram">Program</label>
@@ -260,8 +261,10 @@
         let courseCode = document.getElementById('cCourse').value;
         try {
             document.getElementById('cName').value = document.getElementById('optionCreateCourse' + courseCode).dataset.coursename;
+            document.getElementById('cCourseInvalid').innerText="";
         } catch (e) {
-            // TODO: display message when this fails
+            document.getElementById('cCourseInvalid').innerText="Please select a Course Code from the list";
+            document.getElementById('cName').value = "";
         }
         checkCreateEnable();
     }

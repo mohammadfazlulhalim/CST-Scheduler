@@ -148,6 +148,34 @@ describe('timeslotStartTime', () => {
     }
   });
 
+  test('testDayLowerValid', async() => {
+    timeSlotInstance.day = 0;
+    const createdTimeSlot = await Timeslot.create(timeSlotInstance);
+    expect(createdTimeSlot).toBeTruthy();
+    expect(createdTimeSlot.day).toBe(0);
+  });
+
+  test('testDayLowerInvalid', async() => {
+    try {
+      timeSlotInstance.day = -2;
+
+      const createdTimeSlot = await Timeslot.create(timeSlotInstance);
+      fail();
+    } catch (error) {
+      expect(error.errors.length).toBe(1);
+      expect(error.errors[0].message)
+        .toBe('Invalid Day for TimeSlot');
+    }
+    timeSlotInstance.day = 0;
+  })
+
+  test('testDayUpperValid', async() => {
+    timeSlotInstance.day = 6;
+    const createdTimeSlot = await Timeslot.create(timeSlotInstance);
+    expect(createdTimeSlot).toBeTruthy();
+    expect(createdTimeSlot.day).toBe(6);
+  });
+
   test('testNoAssociationsValid', async () => {
     try {
       timeSlotInstance.day = 3;

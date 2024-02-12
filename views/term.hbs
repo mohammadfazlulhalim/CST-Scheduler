@@ -169,7 +169,7 @@
      */
     async function handleCreateTerm() {
         // send a POST request to the router
-        const response = await fetch("http://localhost:3000/term", {
+        const response = await fetch('{{URL}}/term', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -196,7 +196,7 @@
      */
     async function handleDeleteTerm() {
         // send a DELETE request to the router
-        const response = await fetch("http://localhost:3000/term", {
+        const response = await fetch('{{URL}}/term', {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -222,7 +222,7 @@
     async function handleEditTerm() {
         const id = $("#editID").val();
         // send a PUT request to the router
-        const response = await fetch("http://localhost:3000/term", {
+        const response = await fetch('{{URL}}/term', {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

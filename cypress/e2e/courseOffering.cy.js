@@ -39,10 +39,10 @@ it('testThatCourseOfferingHasAssociations', () => {
   }
 
 
-  // TODO: expand testing for combobox
   cy.get('#cCourse').type('MATH282');
   cy.get('#createCO').should('be.disabled');
   cy.get('#cName').should('have.value', 'Mathematics of Computation');
+  cy.get('#cCourseInvalid').should('have.text', '');
   // Associated field
   cy.get('#cTerm').select('2023-4');
   cy.get('#createCO').should('be.disabled');
@@ -117,11 +117,37 @@ it('testThatCourseOfferingHasAssociations', () => {
 
   cy.get(newRow2).should('have.text',
     '\n                    Mathematics of Computation\n                    A\n                    MATH282\n                    2023-5\n                    2023-01-01\n                    2023-04-01\n                    Bryce Barrie\n                    CNT\n                    \n                        Edit\n                        \n                        Delete\n                        \n                    \n                ');
-
-
-
   cy.get(newRow + 'td:nth-child(9) > button:nth-child(2)').click();
   cy.get('#deleteCO').click();
+
+  // TODO: add more testing on course dropdown selection
+  // prefilling out add modal to get ready for further testing
+  cy.contains('Add New Course Offering').click();
+  cy.get('#addModal').should('be.visible');
+
+  cy.get('#cCourse').type('MATH282');
+  cy.get('#cCourseInvalid').should('have.text', '');
+  cy.get('#cName').should('have.value', 'Mathematics of Computation');
+  cy.get('#cTerm').select('2023-4');
+  cy.get('#cGroup').type('A');
+  cy.get('#cInstructor').select('Grzesina');
+  cy.get('#cProgram').select('CST');
+  cy.get('#createCO').should('be.enabled');
+
+  // adding inerrant data
+  cy.get('#cCourse').clear().type('MAATH282');
+  cy.get('#createCO').should('be.disabled');
+  cy.get('#cName').should('have.value', '');
+  cy.get('#cCourseInvalid').should('have.text', 'Please select a Course Code from the list');
+
+  // switching to different valid data
+  cy.get('#cCourse').clear().type('COOS291');
+  cy.get('#cName').should('have.value', 'Advanced Operating Systems');
+  cy.get('#cCourseInvalid').should('have.text', '');
+  cy.get('#createCO').should('be.enabled');
+
+
+
 
 
 });
