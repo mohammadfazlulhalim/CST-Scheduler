@@ -230,9 +230,10 @@ describe('template spec', () => {
     ];
 
     checkCorrectSchedule(classesInOrder, namesInOrder)
+    cy.wait(200);
     cy.get('#btnRight').click();
 
-     classesInOrder = [
+    classesInOrder = [
       ['MATH282', '', '', '', ''],
       ['', 'CDBM280', '', '', ''],
       ['', '', 'COHS280', 'COOS291', ''],
@@ -243,7 +244,7 @@ describe('template spec', () => {
       ['', '', '', '', ''],
     ];
 
-     namesInOrder = [
+    namesInOrder = [
       ['Barrie', '', '', '', ''],
       ['', 'New', '', '', ''],
       ['', '', 'Basoalto', 'Onishenko', ''],
@@ -256,20 +257,21 @@ describe('template spec', () => {
 
 
     checkCorrectSchedule(classesInOrder, namesInOrder)
+    cy.wait(200);
     cy.get('#btnRight').click();
 
-     classesInOrder = [
+    classesInOrder = [
       ['MATH282', '', '', '', ''],
       ['', 'CDBM280', '', '', ''],
       ['', '', 'COHS280', 'COOS291', ''],
       ['', '', '', '', 'CWEB280'],
       ['', '', '', '', ''], // 12:00 slot appears empty
-      ['', 'SEM283', '', '', 'Grzesina'],
+      ['', 'SEM283', '', '', 'COSA280'],
       ['COSA280', '', '', '', ''],
       ['', '', '', '', ''],
     ];
 
-     namesInOrder = [
+    namesInOrder = [
       ['Barrie', '', '', '', ''],
       ['', 'New', '', '', ''],
       ['', '', 'Basoalto', 'Onishenko', ''],
@@ -280,11 +282,7 @@ describe('template spec', () => {
       ['', '', '', '', ''],
     ];
 
-
     checkCorrectSchedule(classesInOrder, namesInOrder)
-
-    cy.get("#table")
-
   });
 
   function checkCorrectSchedule(classesInOrder, namesInOrder) {
@@ -310,5 +308,4 @@ describe('template spec', () => {
       }
     }
   }
-
 });

@@ -54,7 +54,7 @@ router.post('/', async (req, res, next) => {
 
       ScheduleArray[i] = await generateScheduleTable(retTSList, TIMES);
       ScheduleArray[i].startDate = uniqueDates[i];
-      ScheduleArray[i].endDate = uniqueDates[i+1]
+      ScheduleArray[i].endDate = uniqueDates[i+1];
     }
   }
 
