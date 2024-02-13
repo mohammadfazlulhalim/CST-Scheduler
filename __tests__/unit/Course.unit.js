@@ -361,7 +361,7 @@ describe('courseNumCredits', ()=>{
        errCount= error.errors.length;
      }
      expect (errCount).toBe(1);
-     expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
+     expect (err).toBe('Validation error: Enter a whole number between 1 and 40 as a valid number of hours.');
      expect(course).toBeFalsy();
 
    });
@@ -379,7 +379,7 @@ describe('courseNumCredits', ()=>{
        errCount= error.errors.length;
      }
      expect (errCount).toBe(1);
-     expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
+     expect (err).toBe('Validation error: Enter a whole number between 1 and 40 as a valid number of hours.');
      expect(course).toBeFalsy();
 
    });
@@ -394,7 +394,7 @@ describe('courseNumCredits', ()=>{
    test ('testCreatingCourseWithCourseNumberOfHoursOverLimit', async()=>{
      await Course.sync({force: true}); // wipes course table if it exists
      try{
-       testCourse.courseNumHoursPerWeek=169;
+       testCourse.courseNumHoursPerWeek=41;
        course= await Course.create(testCourse);
 
 
@@ -403,7 +403,7 @@ describe('courseNumCredits', ()=>{
        errCount= error.errors.length;
      }
      expect (errCount).toBe(1);
-     expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
+     expect (err).toBe('Validation error: Enter a whole number between 1 and 40 as a valid number of hours.');
      expect(course).toBeFalsy();
 
    });
@@ -425,7 +425,7 @@ describe('courseNumCredits', ()=>{
        errCount =error.errors.length;
      }
      expect(errCount).toBe(1);
-     expect (err).toBe('Validation error: Enter a whole number between 1 and 168 as a valid number of hours.');
+     expect (err).toBe('Validation error: Enter a whole number between 1 and 40 as a valid number of hours.');
      expect(course).toBeFalsy();
 
    });
@@ -438,7 +438,7 @@ describe('courseNumCredits', ()=>{
    test ('testCreatingCourseWithCourseNumberOfHoursUpperLimit ', async()=>{
       await Course.sync({force: true}); // wipes course table if it exists
      try{
-       testCourse.courseNumHoursPerWeek=168;
+       testCourse.courseNumHoursPerWeek=40;
        course= await Course.create(testCourse);
      }catch(error){
        err= error.message;

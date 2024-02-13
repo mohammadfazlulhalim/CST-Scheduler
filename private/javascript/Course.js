@@ -69,15 +69,15 @@ const Course = sequelize.define('Course', {
     allowNull: false,
     validate: {
       isInt: {
-        msg: 'Enter a whole number between 1 and 168 as a valid number of hours.',
+        msg: 'Enter a whole number between 1 and 40 as a valid number of hours.',
       },
       min: {
         args: [1],
-        msg: 'Enter a whole number between 1 and 168 as a valid number of hours.',
+        msg: 'Enter a whole number between 1 and 40 as a valid number of hours.',
       },
       max: {
-        args: [168],
-        msg: 'Enter a whole number between 1 and 168 as a valid number of hours.',
+        args: [40],
+        msg: 'Enter a whole number between 1 and 40 as a valid number of hours.',
       },
     },
   },
