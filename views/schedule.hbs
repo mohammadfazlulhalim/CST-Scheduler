@@ -93,10 +93,10 @@
                                         <td id="{{this.cellID}}">
                                             <p>{{this.hTime}}</p>
                                         </td>
-                                    {{ else }}
-                                        <td oncontextmenu="onCellRightClick('{{this.cellID}}')"
-                                            onclick="onCellClick('{{this.cellID}}', '{{this.timeslot}}')"
-                                            id="{{this.cellID}}" cellCO="{{this.timeslot.co}}">
+                                    {{else}}
+                                        <td oncontextmenu="onCellRightClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')"
+                                            onclick="onCellClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')"
+                                            id="{{this.cellID}}">
                                             <p>{{this.timeslot.program}}<br/></p>
                                             <p>{{this.timeslot.course}}<br/></p>
                                             <p>{{this.timeslot.insLast}}<br/></p>
@@ -111,8 +111,8 @@
                 <div id="courseList{{groupLetter}}" class=" col-md-4">
                     <h2>Group {{groupLetter}} Courses</h2>
                     {{#each COArray}}
-                        <div class="card" style="width: 12rem;" onclick="onCOClick('{{this.name}}-{{this.group}}')"
-                             id="{{this.name}}-{{this.group}}">
+                        <div class="card" style="width: 12rem;" onclick="onCOClick('{{this.id}}')"
+                             id="{{this.id}}">
                             <h3>{{this.name}}</h3>
                             <ul>{{this.insFirst}} {{this.insLast}}</ul>
                             <ul>{{this.startDate}} - {{this.endDate}}</ul>
@@ -195,60 +195,70 @@
 
     }
 
-    async function onCellClick(idCell, tSlot) {
-
-      console.log("Pre Co Select");
-      console.log(tSlot);
-        //If there is a timeslot there
+    async function onCellClick(idCell, tSlot, cellCO) {
         if (currCO) {
-            console.log("If currCo");
             //if not blank
-            if (tSlot){
-                console.log("If tSlot.co");
+            if (tSlot) {
                 //If the selected CO is not the same as the current CO
-                if (tSlot.co !== currCO) {
-                    console.log("tSlot.co !==CurrCo");
+                console.log("co log" + cellCO)
+                if (cellCO !== currCO) {
                     await fetch('/schedule', {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': "application/json"
                         },
-                        body: JSON.stringify({id: tSlot.id}),
+                        body: JSON.stringify({id: tSlot}),
                     })
-                }
-                else
-                {
+                } else { // timeslots are the same
                     return;
                 }
             }
             console.log("await Fetch");
-            const res = await fetch('/schedule', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': "application/json"
-                },
-                body: JSON.stringify({
-                    idCell: idCell,
-                    CO: currCO,
-                }),
-            });
-            console.log("done fetch");
+            try {
+                const response = await fetch('/schedule', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        idCell: idCell,
+                        CO: currCO
+                    }),
+                });
 
-            addTSToCell(idCell, res.tSlot);
+                if (!response.ok) {
+                    throw new Error('Failed to update schedule');
+                }
+
+                const data = await response.json();
+                // Access retTSlot data here
+                console.log('Retrieved retTSlot:', data.retTSlot);
+
+                addTSToCell(idCell, data.retTSlot, data.xtraInfo);
+            } catch (error) {
+                // Handle errors
+                console.error('Error updating schedule:', error);
+            }
+
+
         }
     }
 
 
-    function addTSToCell(idCell, tSlot) {
+    function addTSToCell(idCell, tSlot, xtraInfo) {
         let oldTD = document.getElementById(idCell);
+        console.log(tSlot.program + ":program");
 
+        console.log(tSlot.CourseOfferingId);
         let newTD = "<td oncontextmenu=\"onCellRightClick('" + idCell + "')\" " +
-                "onclick=\"onCellClick('" + idCell + "', '" + tSlot.co + "')\" " +
-                "id=\"" + idCell + "\" cellCO=\"" + tSlot.co + "\">" +
-                "<p>" + tSlot.program + "<br/></p>" +
-                "<p>" + tSlot.course + "<br/></p>" +
-                "<p>" + tSlot.insLast + "<br/></p>" +
+                "onclick=\"onCellClick('" + idCell + "', '" + tSlot.id + "')\" " +
+                "id=\"" + idCell + "\">" +
+                "<p>" + xtraInfo.program + "<br/></p>" +
+                "<p>" + xtraInfo.course + "<br/></p>" +
+                "<p>" + xtraInfo.insLast + "<br/></p>" +
                 "</td>";
+
+        console.log(newTD)
 
         oldTD.outerHTML = newTD;
     }
