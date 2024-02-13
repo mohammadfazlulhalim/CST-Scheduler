@@ -1,11 +1,11 @@
 <div class="container p-2">
     <h2>Programs</h2>
-    <table class="table">
+    <table class="table table-striped">
         <thead>
         <tr>
-            <th scope="col">Program Name</th>
-            <th scope="col">Program Abbreviation</th>
-            <th scope="col">Actions</th>
+            <th>Program Name</th>
+            <th>Program Abbreviation</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -16,10 +16,11 @@
                     <td>{{this.programName}}</td>
                     <td>{{this.programAbbreviation}}</td>
                     <td>
-                        <button type="button" class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
+                        <button type="button" class="btn btn-primary edit-btn" data-toggle="modal"
                                 data-target="#editModal{{@index}}">Edit
                         </button>
-                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+<!--                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton" data-toggle="modal" data-target="#editModal{{@index}}">edBrandon</button>-->
+                        <button type="button" class="btn btn-danger" data-toggle="modal"
                                 data-target="#deleteModal{{@index}}">Delete
                         </button>
                     </td>
@@ -56,8 +57,6 @@
                                     <div class="invalid-feedback">{{putErr.programAbbreviation}}</div>
                                     <div id="editModalErrorContainer{{index}}"
                                          class="invalid-feedback">{{putErr.programName}}</div>
-
-                                    <!--                                    <input type="text" class="form-control" id="editAbbr{{@index}}" name="editID" value="{{this.id}}" hidden>-->
                                     <div class="mt-3 d-flex justify-content-end">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel
                                         </button>
@@ -111,14 +110,12 @@
         </tbody>
     </table>
 
-    <div>
-        <a class="btn btn-outline-success" href="{{URL}}">Return</a>
-        <div class="float-end">
-            <button type="button" class="btn btn-outline-success" data-toggle="modal" onclick="openAddModal()">Add new
-                Program
-            </button>
-        </div>
-    </div>
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" onclick="openAddModal()"
+            id="openCreateModal">Add New Program
+    </button>
+    <a href="{{URL}}">
+        <button class="btn btn-success">Return</button>
+    </a>
     <div>
         <p></p>
         {{#if putErr}}
@@ -136,7 +133,8 @@
         {{/if}}
     </div>
     <!-- Add Modal -->
-    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -180,18 +178,17 @@
     // create handler; needs to be reassigned after html loads again
     $('#createProgram').click(handleCreateProgram);
 
-    function openAddModal()
-    {
-        $(".is-invalid").removeClass("is-invalid");
-        $(".invalid-feedback").text("");
-        $('#createAbbr').val("");
-        $('#createName').val("");
-
+    function openAddModal() {
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').text('');
+        $('#createAbbr').val('');
+        $('#createName').val('');
 
 
         const modal = $('#addModal');
         modal.modal('show');
     }
+
     async function handleCreateProgram() {
         // send a POST request to the router
         const response = await fetch('{{URL}}/program', {

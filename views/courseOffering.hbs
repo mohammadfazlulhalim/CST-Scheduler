@@ -13,6 +13,7 @@
                 <th>End Date</th>
                 <th>Instructor</th>
                 <th>Program</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <!--Here is where I loop through my array object and add in a <tr> for each loop, and a <td> for each object-->
@@ -177,8 +178,7 @@
                                             data-coursename="{{courseName}}"></option>
                                 {{/each}}
                             </datalist>
-<!--                            TODO: get better styling for this-->
-                            <div class="" id="cCourseInvalid"></div>
+                            <div class="invalid-feedback" id="cCourseInvalid"></div>
                         </div>
                         <label for="cName">Name:</label>
                         <input type="text" class="form-control {{#if err.name}}is-invalid{{/if}}" id="cName"
@@ -239,7 +239,6 @@
             </div>
         </div>
     </div>
-
     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal"
             id="openCreateModal">Add New Course
         Offering
@@ -262,7 +261,9 @@
         try {
             document.getElementById('cName').value = document.getElementById('optionCreateCourse' + courseCode).dataset.coursename;
             document.getElementById('cCourseInvalid').innerText="";
+            document.getElementById('cCourse').classList.remove('is-invalid');
         } catch (e) {
+            document.getElementById('cCourse').classList.add('is-invalid');
             document.getElementById('cCourseInvalid').innerText="Please select a Course Code from the list";
             document.getElementById('cName').value = "";
         }

@@ -44,7 +44,6 @@ router.post('/', async function(req, res, next) {
     TermId: req.body.term,
     InstructorId: req.body.instructor,
     ProgramId: req.body.program,
-
   };
 
   const retCreate = await createCourseOffering(newCO);
