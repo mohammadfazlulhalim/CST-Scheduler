@@ -111,8 +111,8 @@
                 <div id="courseList{{groupLetter}}" class=" col-md-4">
                     <h2>Group {{groupLetter}} Courses</h2>
                     {{#each COArray}}
-                        <div class="card" style="width: 12rem;" onclick="onCOClick('{{this.id}}')"
-                             id="{{this.id}}">
+                        <div class="card bg-secondary" style="width: 12rem;" onclick="onCOClick('{{this.id}}', '{{this.dName}}')"
+                             id="{{this.dName}}">
                             <h3>{{this.name}}</h3>
                             <ul>{{this.insFirst}} {{this.insLast}}</ul>
                             <ul>{{this.startDate}} - {{this.endDate}}</ul>
@@ -131,6 +131,7 @@
     'use strict';
 
     let currCO = null;
+    let currDOM = null;
 
     window.onload = function () {
         const modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
@@ -175,22 +176,26 @@
      * onclick handler for course offerings
      * @param idCO
      */
-    function onCOClick(idCO) {
+    function onCOClick(idCO, domObj) {
         //retrieving DOM objects by id
-        const objCO = document.getElementById(idCO);
-        const currObjCO = document.getElementById(currCO)
+        const objCO = document.getElementById(domObj);
+        const currObjCO = document.getElementById(currDOM)
 
         if (currCO === idCO) //if clicked CO is alreaady highlighted
         {
             objCO.removeAttribute('class', 'bg-info');
+            objCO.setAttribute('class', 'bg-secondary');
             currCO = null;
+            currDOM = null;
         } else {
             if (currCO !== null) { // if there's a differnt CO highlighted, otherwise its jusst null
                 currObjCO.removeAttribute('class', 'bg-info');
+                currObjCO.setAttribute('class', 'bg-secondary');
             }
-
+            objCO.removeAttribute('class', 'bg-secondary');
             objCO.setAttribute('class', 'bg-info');
             currCO = idCO;
+            currDOM = domObj;
         }
 
     }
@@ -250,8 +255,8 @@
         console.log(tSlot.program + ":program");
 
         console.log(tSlot.CourseOfferingId);
-        let newTD = "<td oncontextmenu=\"onCellRightClick('" + idCell + "')\" " +
-                "onclick=\"onCellClick('" + idCell + "', '" + tSlot.id + "')\" " +
+        let newTD = "<td oncontextmenu=\"onCellRightClick('" + idCell + "', '" + tSlot.id + "', '" + tSlot.CourseOfferingId + "')\" " +
+                "onclick=\"onCellClick('" + idCell + "', '" + tSlot.id + "', '" + tSlot.CourseOfferingId + "')\" " +
                 "id=\"" + idCell + "\">" +
                 "<p>" + xtraInfo.program + "<br/></p>" +
                 "<p>" + xtraInfo.course + "<br/></p>" +
@@ -264,8 +269,24 @@
     }
 
 
-    function onCellRightClick(idCell) {
+    async function onCellRightClick(idCell, tSlot, cellCO) {
+        await fetch('/schedule', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': "application/json"
+            },
+            body: JSON.stringify({id: tSlot}),
+        })
 
+        let oldTD = document.getElementById(idCell);
+        let newTD = "<td oncontextmenu=\"onCellRightClick('" + idCell + "', '" + "" + "', '" + "" + "')\" " +
+                "onclick=\"onCellClick('" + idCell + "', '" + "" + "', '" + "" + "')\" " +
+                "id=\"" + idCell + "\">" +
+                "<p><br/></p>" +
+                "<p><br/></p>" +
+                "<p><br/></p>" +
+                "</td>";
+        oldTD.outerHTML = newTD;
     }
 
 
