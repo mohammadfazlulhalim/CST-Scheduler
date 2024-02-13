@@ -124,7 +124,7 @@
             </div>
         </div>
     </div>
-    <a  href="http://localhost:3000/administration"><button class="btn btn-success">Return</button></a>
+    <a href="{{URL}}"><button class="btn btn-success">Return</button></a>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -160,7 +160,7 @@
      */
     async function createClassroom() {
         // Calling the API POST
-        const response = await fetch('http://localhost:3000/classroom', {
+        const response = await fetch('{{URL}}/classroom', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -191,7 +191,7 @@
         const location = $('#eLocation').val()
 
         // Calling the API PUT
-        const response = await fetch('http://localhost:3000/classroom', {
+        const response = await fetch('{{URL}}/classroom', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -219,7 +219,7 @@
     async function delClassroom() {
         const id = $('#delID').val();
 
-        const response = await fetch('http://localhost:3000/classroom', {
+        const response = await fetch('{{URL}}/classroom', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

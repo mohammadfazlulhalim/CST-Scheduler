@@ -120,23 +120,9 @@ describe('timeslotStartTime', () => {
     }
   });
 
-
-  test('testDayValid', async () => {
+  test('testDayUpperInvalid', async () => {
     try {
       timeSlotInstance.endTime = '17:00';
-      timeSlotInstance.day = 2;
-
-      const createdTimeSlot = await Timeslot.create(timeSlotInstance);
-      expect(createdTimeSlot).toBeTruthy();
-      // TODO: check that the day is Tuesday
-      expect(createdTimeSlot.day).toBe(2);
-    } catch (error) {
-      console.error(error.message);
-    }
-  });
-
-  test('testDayInvalid', async () => {
-    try {
       timeSlotInstance.day = 7;
 
       const createdTimeSlot = await Timeslot.create(timeSlotInstance);

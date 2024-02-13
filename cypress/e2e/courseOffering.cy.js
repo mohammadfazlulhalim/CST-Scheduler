@@ -102,7 +102,6 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#eProgram').find('option:selected').should('have.text', 'CST');
   cy.get('#eInstructor').find('option:selected').should('have.text', 'Grzesina');
 
-
   // Changing associated fields
   cy.get('#eTerm').select('2023-5');
 
@@ -120,7 +119,6 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get(newRow + 'td:nth-child(9) > button:nth-child(2)').click();
   cy.get('#deleteCO').click();
 
-  // TODO: add more testing on course dropdown selection
   // prefilling out add modal to get ready for further testing
   cy.contains('Add New Course Offering').click();
   cy.get('#addModal').should('be.visible');

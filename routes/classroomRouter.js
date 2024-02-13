@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Classroom = require('../private/javascript/Classroom');
 const {sequelize} = require('../dataSource');
+const URL = require('../constants').URL
 
 const getClassrooms = async () => {
   try {
@@ -21,7 +22,7 @@ router.get('/', async (req, res, next) => {
   const classroomList = await getClassrooms();
   // console.log('Returned classrooms');
   // console.log(JSON.stringify(classroomList));
-  res.render('classroom', {classroomList, title: 'Classrooms'});
+  res.render('classroom', {classroomList, title: 'Classrooms', URL});
 });
 
 /**
@@ -54,6 +55,7 @@ router.post('/', async (req, res, next) => {
     classroomList: classrooms,
     err: violations,
     submittedClassroom: violations ? req.body : undefined,
+    URL
   });
 });
 
@@ -88,6 +90,7 @@ router.put('/', async (req, res, next) => {
     classroomList: classrooms,
     err: violations,
     putClassroom: violations ? req.body : undefined,
+    URL
   });
 });
 
@@ -120,6 +123,7 @@ router.delete('/', async (req, res, next) => {
     classroomList: classrooms,
     err: violations,
     delClassroom: violations ? req.body : undefined,
+    URL
   });
 });
 

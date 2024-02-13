@@ -55,12 +55,12 @@ const Timeslot = sequelize.define('Timeslot', {
     type: DataTypes.NUMBER,
     validate: {
       min: {
-        args: 1,
+        args: [0],
         msg: 'Invalid Day for TimeSlot',
       },
 
       max: {
-        args: 6,
+        args: [6],
         msg: 'Invalid Day for TimeSlot',
       },
     },

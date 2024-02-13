@@ -9,8 +9,8 @@ const defineDB = require('../fixtures/createTables.fix');
 
 router.get('/', async (req, res, next) => {
 
-  terms = await Term.findAll();
-  programs = await Program.findAll();
+  terms = await Term.findAll({order: [['startDate', 'DESC'],['termNumber', 'ASC']]});
+  programs = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
 
 
   // formatting the time
