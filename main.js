@@ -9,7 +9,6 @@ let mainWindow = null;
 
 
  This function starts the Electron application*/
-
 function main() {
   mainWindow = new BrowserWindow({
     minWidth: 1280, // Minimum width of the window
