@@ -73,7 +73,11 @@ router.post('/', async (req, res, next) => {
 });
 
 /**
-
+ * Gather unique dates from timeslots table
+ * between start and end date of a given term
+ * @param term
+ * @param classroom
+ * @returns {Promise<object[]>}
  */
 async function getUniqueDates(term, classroom) {
   const sqlstatement = `SELECT DISTINCT date
@@ -93,7 +97,14 @@ async function getUniqueDates(term, classroom) {
   }
 }
 
-
+/**
+ * Calls database for timeslot objects
+ * between certain start and end dates for a given classroom
+ * @param startDate
+ * @param endDate
+ * @param classroom
+ * @returns {Promise<Model<any, TModelAttributes>[]>}
+ */
 function generateSchedule(startDate, endDate, classroom) {
   return timeslot.findAll({
     where: {
@@ -108,6 +119,13 @@ function generateSchedule(startDate, endDate, classroom) {
     order: [['startDate', 'ASC']],
   });
 }
+
+/**
+ * Fill the table up so that it shows up with the timeslot in right spots
+ * @param TimeSlots
+ * @param TIMES
+ * @returns {Promise<any[][]>}
+ */
 async function generateScheduleTable(TimeSlots, TIMES) {
   const ScheduleArray = Array.from({length: 8}, () => Array(5));
   for (let i = 0; i < ScheduleArray.length; i++) {
