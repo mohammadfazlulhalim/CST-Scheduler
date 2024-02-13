@@ -1,8 +1,7 @@
 // Tests for Classroom Report three seperate
 describe('template spec', () => {
-
-  let classroomList = ['Select Classroom', '239A', '239B', '239a', '240B', '241', '242C'];
-  let termList = ['Select Term', '2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2024 - 5', '2023 - 5', '2023 - 6'];
+  const classroomList = ['Select Classroom', '239A', '239B', '239a', '240B', '241', '242C'];
+  const termList = ['Select Term', '2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2024 - 5', '2023 - 5', '2023 - 6'];
 
   it('testThatGeneratingAReportWithAFullyScheduledClassWorks', () => {
     cy.visit('http://localhost:3000'); // Visit the home page
@@ -229,7 +228,7 @@ describe('template spec', () => {
       ['', '', '', '', ''],
     ];
 
-    checkCorrectSchedule(classesInOrder, namesInOrder)
+    checkCorrectSchedule(classesInOrder, namesInOrder);
     cy.wait(200);
     cy.get('#btnRight').click();
 
@@ -256,7 +255,7 @@ describe('template spec', () => {
     ];
 
 
-    checkCorrectSchedule(classesInOrder, namesInOrder)
+    checkCorrectSchedule(classesInOrder, namesInOrder);
     cy.wait(200);
     cy.get('#btnRight').click();
 
@@ -282,7 +281,7 @@ describe('template spec', () => {
       ['', '', '', '', ''],
     ];
 
-    checkCorrectSchedule(classesInOrder, namesInOrder)
+    checkCorrectSchedule(classesInOrder, namesInOrder);
   });
 
   function checkCorrectSchedule(classesInOrder, namesInOrder) {
