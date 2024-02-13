@@ -1,22 +1,22 @@
-{{#if hasTimeSlots}}
-    <div>
-        <div class="row">
-            <div class="col-9">
-                <h2><i>Lab Schedule for:</i> {{realClassroom.roomNumber}}</h2>
-                <p>Overall Range: {{realTerm.startDate}} to {{realTerm.endDate}}</p>
-            </div>
-            <div class="col-3">
-                <small>Report Generated: {{dateGen}}</small>
-            </div>
+<div>
+    <div class="row">
+        <div class="col-9">
+            <h2><i>Lab Schedule for:</i> {{realClassroom.roomNumber}}</h2>
+            <p>Overall Range: {{realTerm.startDate}} to {{realTerm.endDate}}</p>
+        </div>
+        <div class="col-3">
+            <small>Report Generated: {{dateGen}}</small>
         </div>
     </div>
+</div>
+{{#if hasTimeSlots}}
 
     <!-- Schedule Carousel -->
     <div class="container mt-4">
         <div id="scheduleCarousel" class="carousel slide" data-bs-interval="false">
             <!-- Carousel Inner -->
             <div class="carousel-inner">
-                {{#each ScheduleArray}}
+                {{#each scheduleArray}}
                     <div class="carousel-item {{#if @first}}active{{/if}}">
                         <p>Schedule Range: {{this.startDate.date}} to {{this.endDate.date}}</p>
                         <div class="table-responsive">
@@ -35,7 +35,7 @@
                                         <th class="text-center align-content-center m-auto">{{lookup ../../hours12 @index}}</th>
                                         {{#each this}}
                                             <td>
-                                                <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                                                <div class="d-flex flex-column justify-content-start align-items-start h-100">
                                                     <p class="text-break mb-0">{{this.course.courseCode}}</p>
                                                     <p class="text-break mb-0">{{this.Instructor.lastName}}</p>
                                                 </div>

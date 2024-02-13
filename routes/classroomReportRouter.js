@@ -47,14 +47,14 @@ router.post('/', async (req, res, next) => {
   const DAYS = weekdaysAllFullySpelled;
   const TIMES = hours24;
 
-  const ScheduleArray = [];
+  const scheduleArray = [];
   if (hasTimeSlots) {
     for (let i=0; i<uniqueDates.length-1; i++) {
       const retTSList = await generateSchedule(uniqueDates[i].date, uniqueDates[i+1].date, realClassroom);
 
-      ScheduleArray[i] = await generateScheduleTable(retTSList, TIMES);
-      ScheduleArray[i].startDate = uniqueDates[i];
-      ScheduleArray[i].endDate = uniqueDates[i+1];
+      scheduleArray[i] = await generateScheduleTable(retTSList, TIMES);
+      scheduleArray[i].startDate = uniqueDates[i];
+      scheduleArray[i].endDate = uniqueDates[i+1];
     }
   }
 
@@ -62,7 +62,7 @@ router.post('/', async (req, res, next) => {
     dateGen: dateGenerated.getFullYear()+'-'+dateGenerated.getMonth()+'-'+dateGenerated.getDate(),
     routerPost: true,
     realTerm,
-    ScheduleArray,
+    scheduleArray,
     TIMES,
     hours12,
     realClassroom,
@@ -127,10 +127,10 @@ function generateSchedule(startDate, endDate, classroom) {
  * @returns {Promise<any[][]>}
  */
 async function generateScheduleTable(TimeSlots, TIMES) {
-  const ScheduleArray = Array.from({length: 8}, () => Array(5));
-  for (let i = 0; i < ScheduleArray.length; i++) {
-    for (let j = 0; j < ScheduleArray[i].length; j++) {
-      ScheduleArray[i][j] = null;
+  const scheduleArray = Array.from({length: 8}, () => Array(5));
+  for (let i = 0; i < scheduleArray.length; i++) {
+    for (let j = 0; j < scheduleArray[i].length; j++) {
+      scheduleArray[i][j] = null;
     }
   }
 
@@ -140,7 +140,7 @@ async function generateScheduleTable(TimeSlots, TIMES) {
     const currentInstructorOffering = await ts.getInstructor();
     const currentCourse= await currentCourseOffering.getCourse();
     try {
-      ScheduleArray[TIMES.indexOf(ts.startTime)][ts.day - 1] =
+      scheduleArray[TIMES.indexOf(ts.startTime)][ts.day - 1] =
         {
           timeSlot: ts,
           courseOffering: currentCourseOffering,
@@ -151,7 +151,7 @@ async function generateScheduleTable(TimeSlots, TIMES) {
       console.log('Goofed');
     }
   }
-  return ScheduleArray;
+  return scheduleArray;
 }
 
 module.exports = {router};
