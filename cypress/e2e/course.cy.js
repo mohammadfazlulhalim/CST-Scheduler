@@ -44,19 +44,21 @@ describe('Testing Course CRUD options', () => {
     const fifteenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(15)';
 
     const navMenuSelector ='#navbarColor04 > ul > li:nth-child(3) > a';
-    const navMenuItem= '#navbarColor04 > ul > li:nth-child(3) > div > a:nth-child(6)';
+    const navMenuItem= '#navbarColor04 > ul > li:nth-child(3) > div > a:nth-child(2)';
     const fourthItemOnTheCourseList='';
 
     /* Navigating to our expected page "http://localhost:3000/course"*/
 
     beforeEach(()=>{
-        cy.visit('http://localhost:3000');
-        cy.get(navMenuSelector,{timeout:10000}).trigger('click')
-        cy.get(navMenuItem, {timeout:10000}).click();
+        cy.visit('http://localhost:3000/course');
+
     });
 
 
     it('testCourseListsAreShownUnderCertainHeaders  ', () => {
+        cy.visit('http://localhost:3000');
+        cy.get(navMenuSelector,{timeout:10000}).trigger('click')
+        cy.get(navMenuItem, {timeout:10000}).click();
 
         /* checking the availability of course lists headers*/
         cy.get(courseListingsPageHeader).should('have.text', 'Course Listings');
@@ -111,7 +113,6 @@ describe('Testing Course CRUD options', () => {
         cy.get(newCourseNumOfCreditsInputBox).type('4');
         cy.get(newCourseCourseNumHoursPerWeekInputBox).type('4');
         cy.get(createCourseButtonOnNewInsModal ).click();
-        cy.wait(1000);
         cy.get(newCourseCode).should('have.text', 'CSEC290');
 
 
