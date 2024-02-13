@@ -56,7 +56,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="instructorReportModalLabel">Create an Instructor Report For: </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button  id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
             <div class="modal-body">
@@ -100,13 +100,17 @@
     <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
 </div>
 <script defer>
-    'use strict';
+
     // Variables that will be used
     let submitBtn;
     let selectedInstructor;
     let selectedTerm;
+    let xBtn;
+    let newProgramBtn;
     // On arrival the modal will open
     window.onload = function(){
+        closeBtn = document.getElementById("modalCloseBtn");
+        xBtn = document.getElementById("xBtn");
          submitBtn= document.getElementById("submitBtn");
          selectedInstructor = document.getElementById("selectInstructorInstructorReport");
         selectedTerm = document.getElementById("selectTermInstructorReport");
@@ -114,7 +118,19 @@
         submitBtn.disabled = true;
     // only open upon first arrival
         {{#if showModal}}
+            // check if the "close" button was clicked
+            closeBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+
+            // check if the 'x' button was clicked
+            xBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+
+            // show the modal
             modal.show();
+
         {{/if}}
         selectedInstructor.onchange = checkFormSelections;
         selectedTerm.onchange = checkFormSelections;
@@ -158,6 +174,8 @@
             submitBtn.disabled = true;
         }
     }
+
+
 
 
 

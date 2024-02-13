@@ -29,9 +29,9 @@ const CourseOffering = sequelize.define('CourseOffering', {
   group: {
     type: DataTypes.STRING(1),
     validate: {
-      isAlphanumeric: {
+      isAlpha: {
         args: true,
-        msg: 'Course Offering group can only contain letters and numbers',
+        msg: 'Course Offering group can only contain letters',
       },
       isUppercase: {
         args: true,
