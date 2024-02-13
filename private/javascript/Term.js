@@ -135,6 +135,18 @@ const Term = sequelize.define('Term', {
       },
     },
   },
+  year: {
+    type: DataTypes.INTEGER,
+    get() {
+      if (this.termNumber >= 1 && this.termNumber <= 3) {
+        return 1;
+      } else if (this.termNumber >= 4 && this.termNumber <= 6) {
+        return 2;
+      } else {
+        return 3;
+      }
+    },
+  },
 },
 );
 

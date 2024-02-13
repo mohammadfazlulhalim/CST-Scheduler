@@ -1,0 +1,223 @@
+{{#if matrixTable}}
+    <div>
+        <div class="row">
+            <div class="col-9">
+                <h2><i>Program Report For:</i>
+                    <span id="nameDisplayer">{{programName.programAbbreviation}} Term {{termName.termNumber}}{{group}}</span>
+                </h2>
+            </div>
+            <div class="col-3">
+                <small>Report Generated: <span id="dateGenDisplayer">{{dateGen}}</span></small>
+            </div>
+        </div>
+    </div>
+<table class="table table-bordered table-hover border-dark">
+    <thead>
+
+    <!--        Header Row-->
+    <tr>
+        <!--            6 columns designated    -->
+        <th class="text-center" scope="col">Time</th>
+        <th class="text-center" scope="col">Monday</th>
+        <th class="text-center" scope="col">Tuesday</th>
+        <th class="text-center" scope="col">Wednesday</th>
+        <th class="text-center" scope="col">Thursday</th>
+        <th class="text-center" scope="col">Friday</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 2D array looping through to display program report -->
+    {{#each matrixTable}}
+        <tr>
+            <!-- innerloop starts here-->
+            {{#each this}}
+                {{#if timeSlot}}
+                    <td>{{../../program}}<br>{{course.courseCode}}{{courseOffering.group}}<br>{{instructor.lastName}}
+                        <br>{{classroom.roomNumber}}
+                    </td>
+                {{else}}
+                    {{#if timeRow}}
+                        <td class="text-center">{{timeRow}}</td>
+                    {{else}}
+                        <td></td>
+                    {{/if}}
+                {{/if}}
+            {{/each}}
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+{{else}}
+<h1 id="nothingToShow">Nothing to display at the moment</h1>
+{{/if}}
+
+<!-- modal -->
+<!-- Vertically centered scrollable modal -->
+<div class="modal fade" id="programReportModal" tabindex="-1" aria-labelledby="programReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="programReportModalLabel">Create a Program Report For: </h5>
+                <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
+            <div class="modal-body">
+                <!--                form begins here-->
+                <form method="POST" action="/programReport">
+                    <small class="text-info"> <b>Please select program, term, and a group.</b></small>
+                    <!-- Select box for program -->
+                    <div class="form-group">
+                        <label for="selectProgramReport" class="form-label mt-4">Program</label>
+                        <select name="selectProgramReport" class="form-select" id="selectProgramReport" required>
+                            <option value="" disabled selected>Select Program</option>
+                            {{#each programList}}
+                                <option value="{{this.id}}">{{this.programName}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <!-- Select box for term -->
+                    <div class="form-group">
+                        <label for="selectTermReport" class="form-label mt-4">Terms</label>
+                        <select name="selectTermReport" class="form-select" id="selectTermReport" required>
+                            <option value="" disabled selected>Select Term</option>
+                            {{#each newTermList}}
+                                <option value="{{this.id}}">{{this.displayTerm}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <!-- Select box for group -->
+                    <div class="form-group">
+                        <label for="selectGroupReport" class="form-label mt-4">Groups</label>
+                        <select name="selectGroupReport" class="form-select" id="selectGroupReport" required>
+                            <option value="" disabled selected>Select group</option>
+                            {{#each groupList}}
+                                <option value="{{this.group}}">{{this.group}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                        <button id="submitBtn"
+                                type="submit" class="btn btn-outline-success" >Save changes</button>
+                    </div>
+                </form>
+                <!--                Form ends here-->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New report and print buttons -->
+<div class="btnPairsCustom">
+    <button id="newProgramBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#instructorReportModal">
+        New Report</button>
+    <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
+</div>
+
+<script defer>
+    'use strict';
+    // global variables
+    let submitBtn;
+    let selectedProgram;
+    let selectedTerm;
+    let selectedGroup;
+    let closeBtn;
+    let xBtn;
+    let newProgramBtn;
+    const modal = new bootstrap.Modal(document.getElementById("programReportModal"));
+    closeBtn = document.getElementById("modalCloseBtn");
+    xBtn = document.getElementById("xBtn");
+
+    // On arrival the modal will open
+    window.onload = function(){
+        submitBtn= document.getElementById("submitBtn");
+        selectedProgram = document.getElementById("selectProgramReport");
+        selectedTerm = document.getElementById("selectTermReport");
+        selectedGroup = document.getElementById("selectGroupReport");
+        newProgramBtn = document.getElementById("newProgramBtn");
+        submitBtn.disabled = true;
+
+        // only open upon first arrival
+        {{#if showModal}}
+            // check if the "close" button was clicked
+            closeBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+
+            // check if the 'x' button was clicked
+            xBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+
+            // show the modal
+            modal.show();
+
+        {{/if}}
+        selectedProgram.onchange = checkFormSelections;
+        selectedTerm.onchange = checkFormSelections;
+        selectedGroup.onchange = checkFormSelections;
+
+        // check if the "new report" button was clicked
+        newProgramBtn.addEventListener("click", function () {
+            modal.show();
+        });
+
+    }
+
+    /**
+     * This function will enable and disable the modal submit button
+     */
+    function checkFormSelections(){
+      console.log(selectedGroup.value)
+        // If not enough selections disable the button
+        if(selectedProgram.value !== ""  && selectedTerm.value !== "" && selectedGroup.value !== "")
+        {
+            submitBtn.disabled = false;
+        }
+        // Else enable it
+        else{
+            submitBtn.disabled = true;
+        }
+    }
+    function printReport() {
+        const printWindow = window.open('', '_blank');
+
+        // Add styles or additional content if needed
+        printWindow.document.write('<html><head><title>Program Report</title>');
+        printWindow.document.write('<style>');
+        printWindow.document.write('@media print { @page { size: landscape; } }'); // Set page orientation to landscape
+        printWindow.document.write('.table-bordered { border-collapse: collapse; width: 100%; }');
+        printWindow.document.write('.table-bordered th, .table-bordered td { border: 1px solid black; padding: 8px; }');
+        printWindow.document.write('</style>');
+        printWindow.document.write('</head><body>');
+
+        // Print date and name
+        const dateGen = document.getElementById("dateGenDisplayer").innerText;
+        const programName = document.getElementById("nameDisplayer").innerText;
+
+        printWindow.document.write('<h2>Program Report For: ' + programName + '</h2>');
+        printWindow.document.write('<p>Report Generated: ' + dateGen + '</p>');
+
+        // Print the table
+        const tableHtml = document.querySelector('.table-bordered').outerHTML;
+        printWindow.document.write(tableHtml);
+
+        printWindow.document.write('</body></html>');
+
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+
+    // check if the "close" button was clicked
+    closeBtn.addEventListener("click", function () {
+        modal.hide();
+    });
+
+    // check if the 'x' button was clicked
+    xBtn.addEventListener("click", function () {
+        modal.hide();
+    });
+
+</script>

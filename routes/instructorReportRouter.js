@@ -105,6 +105,7 @@ router.post('/', async function(req, res, next) {
     termName=undefined;
   }
 
+
   // try to find the time slots based on selections
   try {
     instRepTimeslots = await Timeslot.findAll( {
@@ -114,8 +115,6 @@ router.post('/', async function(req, res, next) {
   } catch (e) {
     instRepTimeslots=undefined;
   }
-
-
   // generates the schedule
   // eslint-disable-next-line prefer-const
   matrixTable = await generateSchedule(instRepTimeslots);
