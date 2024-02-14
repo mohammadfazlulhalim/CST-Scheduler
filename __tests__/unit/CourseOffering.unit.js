@@ -26,6 +26,31 @@ describe('Functional Course Offering', () => {
     await CourseOffering.truncate();
   });
 
+
+  test('testThatInvalidAlphanumericGroupIsNotCreated', async function() {
+    // variable to catch errors
+    let err;
+    let foundCO;
+
+    // Set an invalid alphanumeric group (non-alphanumeric characters)
+    testCourseOffering1.group = 'Group123!';
+
+    // Post the invalid course offering to the router, expects a bad return code
+    const res = await SuperTest(app)
+        .post('/courseOffering')
+        .send(testCourseOffering1)
+        .expect(422);
+
+    // Expects to get an error from the database
+    try {
+      foundCO = await CourseOffering.findOne({where: {id: parseInt(res.get('id'))}});
+    } catch (error) {
+      err = error;
+    }
+    expect(err).toBeTruthy();
+    expect(foundCO).toBeFalsy();
+  });
+
   // test that course Offering is successfully added to empty darabase
   test('testThatCourseOfferingIsCreatedInEmptyDatabase', async function() {
     await testPost(testCourseOffering1);

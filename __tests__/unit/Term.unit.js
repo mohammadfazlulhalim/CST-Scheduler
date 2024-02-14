@@ -584,3 +584,30 @@ describe('fields cannot be null', () => {
     }
   });
 });
+
+
+// Test new field added "year"
+describe('year field', () => {
+  let term;
+
+  beforeAll(async () => {
+    try {
+      await sequelize.sync();
+    } catch (error) {
+      console.error('Error creating Term table: ', error);
+    }
+  });
+
+  beforeEach(async () => {
+    // create a term before testing
+    term = await Term.create({termNumber: 1, startDate: '2023-08-01', endDate: '2023-12-01'});
+  });
+
+  test('should correctly derive year based on termNumber', async () => {
+    // Set the termNumber to 1, which should derive the year as 1
+    term.termNumber = 1;
+    await term.save();
+
+    expect(term.year).toBe(1);
+  });
+});

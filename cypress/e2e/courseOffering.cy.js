@@ -32,7 +32,7 @@ it('testThatCourseOfferingHasAssociations', () => {
   }
 
   // Courses
-  let courseList = ['CDBM280', 'COHS280', 'COOS291', 'COOS293', 'COOS294', 'COSA280', 'COSA290', 'COSC292', 'COSC295', 'CPMG290 ', 'CSEC280', 'CWEB280', 'MATH282', 'SEM283', 'TCOM291'];
+  let courseList = ['CDBM280', 'COHS190', 'COHS280', 'COOS291', 'COOS293', 'COOS294', 'COSA280', 'COSA290', 'COSC292', 'COSC295', 'CPMG290 ', 'CSEC280', 'CWEB280', 'MATH282', 'SEM283', 'TCOM291'];
   for (let i = 0; i < instructorList.length; i++) {
     let nChild = i + 1;
     cy.get('#courses > option:nth-child(' + nChild + ')').should('have.value', courseList[i]);
@@ -65,8 +65,8 @@ it('testThatCourseOfferingHasAssociations', () => {
 
 
   // created, now check that it exists
-  const newRow = '#tableBody > tr:nth-child(17) > ';
-  const newRow2 = '#tableBody > tr:nth-child(17)';
+  const newRow = '#tableBody > tr:nth-child(21) > ';
+  const newRow2 = '#tableBody > tr:nth-child(21)';
   cy.get(newRow2).should('have.text',
     '\n                    Mathematics of Computation\n                    A\n                    MATH282\n                    2023-4\n                    2023-08-01\n                    2023-12-01\n                    Micheal Grzesina\n                    CST\n                    \n                        Edit\n                        \n                        Delete\n                        \n                    \n                ');
 

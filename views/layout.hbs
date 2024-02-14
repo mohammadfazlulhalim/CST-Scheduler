@@ -15,18 +15,19 @@
         <div class="collapse navbar-collapse" id="navbarColor04">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="http://localhost:3000/#">Home
+                    <a id="homeBtn" class="nav-link active" href="http://localhost:3000/#">Home
                         <span class="visually-hidden">(current)</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="http://localhost:3000/schedule">Schedule Builder
+                    <a  class="nav-link active" href="http://localhost:3000/schedule">Schedule Builder
                         <span class="visually-hidden">(current)</span>
                     </a>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Administration</a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="/classroom">Classroom</a>
+                        <a class="dropdown-item" href="/course">Course</a>
                         <a class="dropdown-item" href="/courseOffering">Course Offerings</a>
                         <a class="dropdown-item" href="/instructor">Instructor</a>
                         <a class="dropdown-item" href="/program">Program</a>
@@ -39,12 +40,19 @@
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="/classroomReport" id="navClassroomReport">Classroom Report</a>
                         <a class="dropdown-item" href="/instructorReport">Instructor Report</a>
+                        <a class="dropdown-item" href="/programReport">Program Report</a>
                     </div>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link active" href="http://localhost:3000/#">Exit
+                <a class="nav-link active" id="exit" href="http://localhost:3000/#">Exit
                     <span class="visually-hidden">(current)</span>
                 </a>
+                    <script>
+                        document.getElementById('exit').addEventListener('click', (e) => {
+                            e.preventDefault();
+                            window.location.href = 'app://exit';
+                        });
+                    </script>
             </li>
             </ul>
         </div>

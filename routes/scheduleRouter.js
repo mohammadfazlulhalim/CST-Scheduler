@@ -14,15 +14,13 @@ router.get('/', async (req, res, next) => {
 
 
   // formatting the time
-  for (let i=0; i<terms.length; i++) {
+  for (let i = 0; i < terms.length; i++) {
     const splitDate = terms[i].startDate.split('-');
     terms[i].title = splitDate[0] + '-' + terms[i].termNumber;
   }
 
   res.render('schedule', {
-    getrequest: true,
-    terms,
-    programs,
+    getrequest: true, terms, programs,
   });
 });
 
@@ -43,8 +41,7 @@ router.post('/', async (req, res, next) => {
   for (let i = 0; i < req.body.group; i++) {
     groupArray.push({
       timeslotMatrix: [[], [], [], [], [], [], [], []], // outer array is times, each inner array is days
-      COArray: new Array(req.body.group),
-      groupLetter: GROUP_LETTERS[i],
+      COArray: new Array(req.body.group), groupLetter: GROUP_LETTERS[i],
     });
 
     // Creating the 2D array with empty values
@@ -55,9 +52,9 @@ router.post('/', async (req, res, next) => {
           timeOb = DISPLAY_TIMES[t];
         }
         groupArray[i].timeslotMatrix[t][d] = {
-          hasObj: false,
-          cellID: t + '-' + d + '-' + GROUP_LETTERS[i], // dynamic id
-          timeslot: timeOb, // always empty except for time column
+          hasObj: false, cellID: t + '-' + d + '-' + GROUP_LETTERS[i], // dynamic id
+          hTime: timeOb, // always empty except for time column
+          empty: 'empty',
         };
       }
     }
@@ -66,45 +63,100 @@ router.post('/', async (req, res, next) => {
       // fetch all timeslots that match filters
       timeslotArray = await Timeslot.findAll({
         where: {
-          group: GROUP_LETTERS[i],
-          ProgramId: req.body.program,
-          TermId: req.body.term,
+          group: GROUP_LETTERS[i], ProgramId: req.body.program, TermId: req.body.term,
         },
       });
       // fetch all course offerings that match filters
       groupArray[i].COArray = await CourseOffering.findAll({
         where: {
-          group: GROUP_LETTERS[i],
-          ProgramId: req.body.program,
-          TermId: req.body.term,
+          group: GROUP_LETTERS[i], ProgramId: req.body.program, TermId: req.body.term,
         },
       });
 
       // getting each course offering for this group
-      const tempCOArray = [groupArray[i].COArray.length];
-      for (let k =0; k < tempCOArray.length; k++) {
-        tempCOArray[k] = await formatCourseOffering(groupArray[i].COArray[k]);
+      for (let k = 0; k < groupArray[i].COArray.length; k++) {
+        const COObj = groupArray[i].COArray[k];
+        const insObj = await COObj.getInstructor();
+        COObj.insFirst = insObj.firstName;
+        COObj.insLast = insObj.lastName;
+        COObj.dName = COObj.name + '-' + COObj.group;
       }
-      groupArray[i].COArray=tempCOArray;
     } catch (error) {
+
     }
 
 
     // mapping each timeslot in this group to the matrix
     for (const tSlot of timeslotArray) {
-      const formattedTSlot = await formatCellInfo(tSlot);
+      // const formattedTSlot = await formatCellInfo(tSlot);
+      coObj = await tSlot.getCourseOffering();
+      prObj = await tSlot.getProgram();
+      insObj = await tSlot.getInstructor();
+      cObj = await coObj.getCourse();
 
-      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = formattedTSlot;// outer array is days, each inner array is times
+      tSlot.program = prObj.programAbbreviation;
+      tSlot.insLast = insObj.lastName;
+
+      tSlot.course = cObj.courseCode;
+      tSlot.co = coObj.id;
+
+      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
+      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;// outer array is days, each inner array is times
     }
     groupLetters[i] = GROUP_LETTERS[i];
   }
 
+
   res.render('schedule', {
-    groups: groupLetters,
-    groupArray,
-    DAYS,
-    TIMES,
+    groups: groupLetters, groupArray, DAYS, TIMES,
   });
+});
+
+
+router.put('/', async (req, res, next) => {
+  const TIMES = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
+
+  const cellID = req.body.idCell.split('-');
+  const CO = await CourseOffering.findByPk(req.body.CO);
+
+  const newtSlot = {
+    startDate: CO.startDate,
+    endDate: CO.endDate,
+    CourseOfferingId: CO.id,
+    InstructorId: CO.InstructorId,
+    ClassroomId: 1,
+    TermId: CO.TermId,
+    ProgramId: CO.ProgramId,
+    startTime: TIMES[parseInt(cellID[0])],
+    endTime: TIMES[parseInt(cellID[0]) + 1], // Corrected
+    day: cellID[1],
+    group: cellID[2],
+  };
+
+  const retTSlot = await Timeslot.create(newtSlot);
+
+  coObj = await retTSlot.getCourseOffering();
+  prObj = await retTSlot.getProgram();
+  insObj = await retTSlot.getInstructor();
+  cObj = await coObj.getCourse();
+
+  const xtraInfo = {};
+
+  xtraInfo.program = prObj.programAbbreviation;
+  xtraInfo.insLast = insObj.lastName;
+
+  xtraInfo.course = cObj.courseCode;
+  xtraInfo.co = coObj;
+
+
+  res.status(200).json({retTSlot, xtraInfo});
+});
+
+
+router.delete('/', async (req, res, next) => {
+  await Timeslot.destroy({where: {id: req.body.id}});
+
+  res.status(200).json();
 });
 
 // formatting each timeslot for easier displaying
@@ -117,16 +169,13 @@ async function formatCellInfo(tSlot) {
   return prObj.programAbbreviation + '\n' + cObj.courseCode + '\n' + insObj.lastName;
 }
 
-// formatting each course offering for easier display
-async function formatCourseOffering(coObj) {
-  const insObj = await coObj.getInstructor();
-  return {
-    id: coObj.id,
-    name: coObj.name,
-    iName: insObj.firstName + ' ' + insObj.lastName,
-    group: coObj.group,
-    date: coObj.startDate + '-' + coObj.endDate,
-  };
+
+/**
+ *  This function will handle the schedule changes.
+ * @param saveArray - This array will contain the edit schedule timeslots to save to the database
+ * @param deleteArray - This array will contain the timeslots to delete from the database
+ */
+async function handleScheduleSave(saveArray, deleteArray) {
 }
 
 

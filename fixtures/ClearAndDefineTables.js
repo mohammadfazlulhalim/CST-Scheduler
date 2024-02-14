@@ -20,7 +20,7 @@ async function createTables() {
   await Associations.addAssociations();
 
   await CourseOffering.sync({force: true});
-  await Classroom.sync({force:true});
+  await Classroom.sync({force: true});
   await Timeslot.sync({force: true});
 }
 

@@ -1,46 +1,64 @@
-{{#if hasTimeSlots}}
-    <div>
-        <div class="row">
-            <div class="col-9">
-                <h2><i>Lab Schedule for:</i> {{realClassroom.roomNumber}}</h2>
-                <p>Dates: {{realTerm.startDate}} to {{realTerm.endDate}} </p>
-            </div>
-            <div class="col-3">
-                <small>Report Generated:{{dateGen}}</small>
-            </div>
+<div>
+    <div class="row">
+        <div class="col-9">
+            <h2><i>Lab Schedule for:</i> {{realClassroom.roomNumber}}</h2>
+            <p>Overall Range: {{realTerm.startDate}} to {{realTerm.endDate}}</p>
+        </div>
+        <div class="col-3">
+            <small>Report Generated: {{dateGen}}</small>
         </div>
     </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="table-responsive">
-                    <table class="table table-bordered border-dark">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th class="text-center align-content-center m-auto" scope="col">Time</th>
-                            {{#each DAYS}}
-                                <th scope="col" class="text-center align-content-center m-auto">{{this}}</th>
-                            {{/each}}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{#each ScheduleArray}}
-                            <tr>
-                                <th class="text-center align-content-center m-auto">{{lookup ../TIMES @index}}</th>
+</div>
+{{#if hasTimeSlots}}
+
+    <!-- Schedule Carousel -->
+    <div class="container mt-4">
+        <div id="scheduleCarousel" class="carousel slide" data-bs-interval="false">
+            <!-- Carousel Inner -->
+            <div class="carousel-inner">
+                {{#each scheduleArray}}
+                    <div class="carousel-item {{#if @first}}active{{/if}}">
+                        <p>Schedule Range: {{this.startDate.date}} to {{this.endDate.date}}</p>
+                        <div class="table-responsive">
+                            <table class="table table-bordered border-dark">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th class="text-center align-content-center m-auto" scope="col">Time</th>
+                                    {{#each ../DAYS}}
+                                        <th scope="col" class="text-center align-content-center m-auto">{{this}}</th>
+                                    {{/each}}
+                                </tr>
+                                </thead>
+                                <tbody>
                                 {{#each this}}
-                                    <td>
-                                        <div class="d-flex flex-column justify-content-center align-items-center h-100">
-                                            <p class="text-break mb-0">{{this.course.courseCode}}</p>
-                                            <p class=" text-break mb-0">{{this.Instructor.lastName}}</p>
-                                        </div>
-                                    </td>
+                                    <tr>
+                                        <th class="text-center align-content-center m-auto">{{lookup ../../hours12 @index}}</th>
+                                        {{#each this}}
+                                            <td>
+                                                <div class="d-flex flex-column justify-content-start align-items-start h-100">
+                                                    <p class="text-break mb-0">{{this.course.courseCode}}</p>
+                                                    <p class="text-break mb-0">{{this.Instructor.lastName}}</p>
+                                                </div>
+                                            </td>
+                                        {{/each}}
+                                    </tr>
                                 {{/each}}
-                            </tr>
-                        {{/each}}
-                        </tbody>
-                    </table>
-                </div>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {{/each}}
             </div>
+
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev custom-carousel-control" id="btnLeft" type="button" data-bs-target="#scheduleCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon custom-carousel-control-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next custom-carousel-control" id="btnRight" type="button" data-bs-target="#scheduleCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon custom-carousel-control-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
     </div>
 {{else}}
@@ -114,3 +132,21 @@
         }
     };
 </script>
+
+<style>
+    .custom-carousel-control {
+        color: black;
+    }
+
+    .carousel-control-prev.custom-carousel-control {
+        left: -150px;
+    }
+
+    .carousel-control-next.custom-carousel-control {
+        right: -150px;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        background-color: black;
+    }
+</style>

@@ -100,6 +100,12 @@ async function createCourses() {
       courseNumCredits: 1,
       courseNumHoursPerWeek: 1,
     },
+    {
+      courseCode: 'COHS190',
+      courseName: 'Hardware',
+      courseNumCredits: 1,
+      courseNumHoursPerWeek: 1,
+    },
 
   ];
 
