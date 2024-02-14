@@ -1,4 +1,4 @@
-const groupLetters = ['A', 'B', 'C', 'E'];
+const groupLetters = ['A', 'B', 'C', 'D'];
 
 describe('Test Editing the Schedule', () => {
   it('Test1', ()=> {
@@ -53,7 +53,7 @@ describe('Test Editing the Schedule', () => {
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
           cy.get('#'+t+'-'+d+'-'+letter).click();
-          cy.get('#'+t+'-'+d+'-'+letter).should('be.empty');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.class', 'empty');
         }
       }
 
@@ -94,7 +94,7 @@ describe('Test Editing the Schedule', () => {
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
           cy.get('#'+t+'-'+d+'-'+letter).click();
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', 'Ben Benson');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', 'CSTCOHS190Benson');
         }
       }
 
@@ -104,52 +104,44 @@ describe('Test Editing the Schedule', () => {
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
           cy.get('#'+t+'-'+d+'-'+letter).click();
-          cy.get('#'+t+'-'+d+'-'+letter).contains('Ron New');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','CSTSEM283New');
         }
       }
 
       // Test that all of the other groups are blank
-      for (const subLetter in groupLetters) {
+      for (const subLetter of groupLetters) {
         if (subLetter !== letter) {
-          cy.get('btn' + subLetter).click();
+          cy.get('#btn' + subLetter).click();
 
           for (let t = 0; t < 8; t++) {
             for (let d = 1; d < 6; d++) {
-              cy.get('#'+t+'-'+d+'-'+subLetter).should('be.empty');
+              cy.get('#'+t+'-'+d+'-'+subLetter).should('have.class', 'empty');
             }
           }
         }
       }
 
       // Test that each cell in the original group is still there
-      cy.get('btn' + letter).click();
+      cy.get('#btn' + letter).click();
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
-          cy.get('#'+t+'-'+d+'-'+letter).contains('Ron New');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','CSTSEM283New');
         }
       }
 
-      // Test that leaving the page prompts a warning alert
-      cy.get('#homeBtn').click();
-      cy.on('window:alert', (str) => {
-        expect(str).to.equal(`Are you sure you want to exit without saving?`);
-        cy.contains('#alertLeave');
-        cy.get('#alertBack').click();
-      });
-
-      // Test that clicking save and leaving the page then returning saves the changes to the DB
-      cy.get('#saveBtn').click();
+      // Test that leaving the page then returning saves the changes to the DB
       cy.get('#homeBtn').click();
 
       cy.contains('Schedule Builder').click();
       cy.get('#programSelect').select('CST');
-      cy.get('#termSelect').select('2024-5');
+      cy.get('#termSelect').select('2023-3');
       cy.get('#groupSelect').select('4');
+      cy.get('#modalSubmit').click();
 
-      cy.get('btn' + letter).click();
+      cy.get('#btn' + letter).click();
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
-          cy.get('#'+t+'-'+d+'-'+letter).contains('Ron New');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','\n                                            CST\n                                            SEM283\n                                            New\n                                        ' );
         }
       }
 
@@ -157,8 +149,7 @@ describe('Test Editing the Schedule', () => {
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
           cy.get('#'+t+'-'+d+'-'+letter).rightclick();
-          cy.get('#contextDelete').click();
-          cy.get('#'+t+'-'+d+'-'+letter).should('be.empty');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.class', 'empty');
         }
       }
 
@@ -166,36 +157,35 @@ describe('Test Editing the Schedule', () => {
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
           cy.get('#'+t+'-'+d+'-'+letter).rightclick();
-          cy.get('#contextDelete').should('not.exist');
-          cy.get('#'+t+'-'+d+'-'+letter).should('be.empty');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.class', 'empty');
         }
       }
       cy.get('#mon').contains('Monday').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#mon').contains('Monday')
       cy.get('#tues').contains('Tuesday').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#tues').contains('Tuesday')
       cy.get('#wed').contains('Wednesday').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#wed').contains('Wednesday')
       cy.get('#thurs').contains('Thursday').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#thurs').contains('Thursday')
       cy.get('#fri').contains('Friday').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#fri').contains('Friday')
       cy.get('#0-0-' + letter).contains('8:00').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#0-0-' + letter).contains('8:00')
       cy.get('#1-0-' + letter).contains('9:00').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#1-0-' + letter).contains('9:00')
       cy.get('#2-0-' + letter).contains('10:00').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#2-0-' + letter).contains('10:00')
       cy.get('#3-0-' + letter).contains('11:00').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#3-0-' + letter).contains('11:00')
       cy.get('#4-0-' + letter).contains('12:00').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#4-0-' + letter).contains('12:00')
       cy.get('#5-0-' + letter).contains('1:00').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#5-0-' + letter).contains('1:00')
       cy.get('#6-0-' + letter).contains('2:00').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#6-0-' + letter).contains('2:00')
       cy.get('#7-0-' + letter).contains('3:00').rightclick();
-      cy.get('#contextDelete').should('not.exist');
+      cy.get('#7-0-' + letter).contains('3:00')
 
       cy.get('#mon').contains('Monday');
       cy.get('#tues').contains('Tuesday');

@@ -56,27 +56,27 @@
             {{/each}}
         </div>
         {{#each groupArray}}
-            <div id="group{{groupLetter}}" class="row" hidden>
-                <div id="calender{{groupLetter}}" class="col-md-8">
+            <div id="group{{groupLetter}}" class="row container" hidden>
+                <div id="calender{{groupLetter}}" class="col container-fluid ">
                     <h2>Group {{groupLetter}} Calendar</h2>
-                    <table class="table table-bordered bordered-dark">
+                    <table class="table table-bordered table-hover border-dark">
                         <thead class="thead-dark">
-                        <th scope="col" id="time">
+                        <th class="text-center"  scope="col" id="time">
                             Time
                         </th>
-                        <th scope="col" id="mon">
+                        <th class="text-center"  scope="col" id="mon">
                             Monday
                         </th>
-                        <th scope="col" id="tues">
+                        <th class="text-center"  scope="col" id="tues">
                             Tuesday
                         </th>
-                        <th scope="col" id="wed">
+                        <th class="text-center"  scope="col" id="wed">
                             Wednesday
                         </th>
-                        <th scope="col" id="thurs">
+                        <th class="text-center"  scope="col" id="thurs">
                             Thursday
                         </th>
-                        <th scope="col" id="fri">
+                        <th class="text-center"  scope="col" id="fri">
                             Friday
                         </th>
                         </thead>
@@ -90,13 +90,13 @@
                                     <!--                                    Then the 'each' will have different attributes and be loaded differently-->
                                     <!--                                    via html and the router sends attributes-->
                                     {{#if this.hTime}}
-                                        <td id="{{this.cellID}}">
+                                        <td class="text-center"  id="{{this.cellID}}">
                                             <p>{{this.hTime}}</p>
                                         </td>
                                     {{else}}
                                         <td oncontextmenu="onCellRightClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')"
                                             onclick="onCellClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')"
-                                            id="{{this.cellID}}">
+                                            id="{{this.cellID}}" class="{{ this.empty }} text-center">
                                             <p>{{this.timeslot.program}}<br/></p>
                                             <p>{{this.timeslot.course}}<br/></p>
                                             <p>{{this.timeslot.insLast}}<br/></p>
@@ -108,7 +108,7 @@
                         {{/each}}
                     </table>
                 </div>
-                <div id="courseList{{groupLetter}}" class=" col-md-4">
+                <div id="courseList{{groupLetter}}" class="col container-fluid">
                     <h2>Group {{groupLetter}} Courses</h2>
                     {{#each COArray}}
                         <div class="card bg-secondary" style="width: 12rem;" onclick="onCOClick('{{this.id}}', '{{this.dName}}')"
@@ -255,7 +255,7 @@
         console.log(tSlot.program + ":program");
 
         console.log(tSlot.CourseOfferingId);
-        let newTD = "<td oncontextmenu=\"onCellRightClick('" + idCell + "', '" + tSlot.id + "', '" + tSlot.CourseOfferingId + "')\" " +
+        let newTD = "<td class=\"text-center\" oncontextmenu=\"onCellRightClick('" + idCell + "', '" + tSlot.id + "', '" + tSlot.CourseOfferingId + "')\" " +
                 "onclick=\"onCellClick('" + idCell + "', '" + tSlot.id + "', '" + tSlot.CourseOfferingId + "')\" " +
                 "id=\"" + idCell + "\">" +
                 "<p>" + xtraInfo.program + "<br/></p>" +
@@ -279,7 +279,7 @@
         })
 
         let oldTD = document.getElementById(idCell);
-        let newTD = "<td oncontextmenu=\"onCellRightClick('" + idCell + "', '" + "" + "', '" + "" + "')\" " +
+        let newTD = "<td class='empty text-center' nu=\"onCellRightClick('" + idCell + "', '" + "" + "', '" + "" + "')\" " +
                 "onclick=\"onCellClick('" + idCell + "', '" + "" + "', '" + "" + "')\" " +
                 "id=\"" + idCell + "\">" +
                 "<p><br/></p>" +
