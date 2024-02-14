@@ -41,7 +41,7 @@ describe('Testing Instructor CRUD options', () => {
   const tenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(10)';
   const eleventhRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(11)'
   const navMenuSelector ='#navbarColor04 > ul > li:nth-child(3) > a';
-  const navMenuItem= '#navbarColor04 > ul > li:nth-child(3) > div > a:nth-child(3)';
+  const navMenuItem= '#navbarColor04 > ul > li:nth-child(3) > div > a:nth-child(4)';
 
 /* Navigating to our expected page "http://localhost:3000/instructor"*/
 

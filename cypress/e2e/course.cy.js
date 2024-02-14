@@ -42,6 +42,11 @@ describe('Testing Course CRUD options', () => {
     const thirteenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(13)';
     const fourteenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(14)';
     const fifteenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(15)';
+    const errorMessageForCourseCode='#addModal > div > div > form > div.modal-body > div:nth-child(3)';
+    const errorMessageForCourseName='#addModal > div > div > form > div.modal-body > div:nth-child(6)';
+    const errorMessageForCourseCredit='#addModal > div > div > form > div.modal-body > div:nth-child(9)';
+    const errorMessageForCourseHours='#addModal > div > div > form > div.modal-body > div:nth-child(12)';
+
 
     const navMenuSelector ='#navbarColor04 > ul > li:nth-child(3) > a';
     const navMenuItem= '#navbarColor04 > ul > li:nth-child(3) > div > a:nth-child(2)';
@@ -104,6 +109,8 @@ describe('Testing Course CRUD options', () => {
     });
 
 
+
+
     /* Test to  create a new course CSEC280 and confirm the availability inside course Listings*/
     it('testAddingInformationOfNewCourse ', () => {
         cy.get(createCourseButton).click();
@@ -114,6 +121,18 @@ describe('Testing Course CRUD options', () => {
         cy.get(newCourseCourseNumHoursPerWeekInputBox).type('4');
         cy.get(createCourseButtonOnNewInsModal ).click();
         cy.get(newCourseCode).should('have.text', 'CSEC290');
+
+    });
+
+    /* Test to  create a new course CSEC280 and confirm the availability inside course Listings*/
+    it('testAddingInformationOfNewCourseWithEmptyTestBox ', () => {
+        cy.get(createCourseButton).click();
+        cy.wait(1000);
+        cy.get(createCourseButtonOnNewInsModal ).click();
+        cy.get(errorMessageForCourseCode).should('have.text', 'Course Code can have 3-4 characters and 3-4 digits only');
+        cy.get(errorMessageForCourseName).should('have.text', 'Course Name must have 1 to 50 characters.');
+        cy.get(errorMessageForCourseCredit).should('have.text', 'Enter a whole number between 0 and 6 as a valid number of credits.');
+        cy.get(errorMessageForCourseHours).should('have.text', 'Enter a whole number between 1 and 40 as a valid number of hours.');
 
 
     });

@@ -53,7 +53,7 @@ router.post('/',async (req,res,next)=>{
   res.render('course', {
     title: 'Course List',
     courseList: courseLists,
-    err: violations,
+    putErr: violations,
     submittedCourse: violations ? req.body: undefined,URL
   });
 });
@@ -79,7 +79,7 @@ router.delete('/', async function(req, res, next) {
   res.render('course', {
     title: 'Course List',
     courseList: courseLists,
-    err: violations,
+    putErr: violations,
     submittedCourse: violations ? req.body : undefined,URL
   });
 });
