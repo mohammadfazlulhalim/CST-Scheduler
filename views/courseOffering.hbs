@@ -99,7 +99,7 @@
                                 <select id="eTerm" class="form-label" onchange="selectedTermUpdate()">Course
                                     {{#each listTerm}}
                                         <option value="{{id}}" id="optionEditTerm{{id}}" data-termstart="{{startDate}}"
-                                                data-termend="{{endDate}}">{{title}}</option>
+                                                data-termend="{{endDate}}">{{startDate}} - {{termNumber}}</option>
                                     {{/each}}
                                 </select>
                             </div>
@@ -190,7 +190,7 @@
                                 <option></option>
                                 {{#each listTerm}}
                                     <option value="{{id}}" id="optionCreateTerm{{id}}" data-termstart="{{startDate}}"
-                                            data-termend="{{endDate}}">{{title}}</option>
+                                            data-termend="{{endDate}}">{{startDate}} - {{termNumber}}</option>
                                 {{/each}}
                             </select>
                         </div>

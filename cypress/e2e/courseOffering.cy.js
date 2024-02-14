@@ -11,7 +11,7 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#addModal').should('be.visible');
 
   // Terms
-  let termList = ['2024-5', '2023-1', '2023-4', '2023-3', '2023-6', '2023-2', '2023-5'];
+  let termList = ['2024-01-02 - 5', '2023-08-01 - 1', '2023-08-01 - 4', '2023-05-01 - 3', '2023-05-01 - 6', '2023-01-01 - 2', '2023-01-01 - 5'];
   for (let i = 0; i < termList.length; i++) {
     let nChild = i + 2;
     cy.get('#cTerm > option:nth-child(' + nChild + ')').should('have.text', termList[i]);
@@ -45,7 +45,7 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#cName').should('have.value', 'Mathematics of Computation');
   cy.get('#cCourseInvalid').should('have.text', '');
   // Associated field
-  cy.get('#cTerm').select('2023-4');
+  cy.get('#cTerm').select('2023-08-01 - 4');
   cy.get('#createCO').should('be.disabled');
   cy.get('#cStartDate').should('have.value', '2023-08-01');
   cy.get('#cEndDate').should('have.value', '2023-12-01');
@@ -96,7 +96,7 @@ it('testThatCourseOfferingHasAssociations', () => {
 
   // checking the fields to make sure they pre-filled correctly
   cy.get('#eName').should('have.value', 'Mathematics of Computation');
-  cy.get('#eTerm').find('option:selected').should('have.text', '2023-4');
+  cy.get('#eTerm').find('option:selected').should('have.text', '2023-08-01 - 4');
   cy.get('#eStartDate').should('have.value', '2023-08-01');
   cy.get('#eEndDate').should('have.value', '2023-12-01');
   cy.get('#eGroup').should('have.value', 'A');
@@ -104,7 +104,7 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#eInstructor').find('option:selected').should('have.text', 'Grzesina');
 
   // Changing associated fields
-  cy.get('#eTerm').select('2023-5');
+  cy.get('#eTerm').select('2023-01-01 - 5');
 
   cy.get('#eStartDate').should('have.value', '2023-01-01');
   cy.get('#eEndDate').should('have.value', '2023-04-01');
@@ -127,7 +127,7 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#cCourse').type('MATH282');
   cy.get('#cCourseInvalid').should('have.text', '');
   cy.get('#cName').should('have.value', 'Mathematics of Computation');
-  cy.get('#cTerm').select('2023-4');
+  cy.get('#cTerm').select('2023-08-01 - 4');
   cy.get('#cGroup').type('A');
   cy.get('#cInstructor').select('Grzesina');
   cy.get('#cProgram').select('CST');
