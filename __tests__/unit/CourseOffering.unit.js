@@ -60,6 +60,21 @@ describe('Functional Course Offering', () => {
     expect(foundCO).toBeFalsy();
   });
 
+  test('testThatCourseIsRequired', async function() {
+    let bCaughtErr=false;
+    testCourseOffering1.CourseId= '';
+    try {
+      const res = await CourseOffering.create(testCourseOffering1)
+    } catch (err) {
+      bCaughtErr = true;
+      expect(err.message).toBe("SQLITE_CONSTRAINT: FOREIGN KEY constraint failed");
+    }
+
+    if (!bCaughtErr) {
+      expect(1).toBe(2);
+    }
+  });
+
   // test that course Offering is successfully updated in the database
   test('testThatCourseOfferingIsUpdated ', async function() {
     // //posts offering to router, expects return code
@@ -74,6 +89,7 @@ describe('Functional Course Offering', () => {
 
     // now change info in object
     testCO.group = 'A';
+    testCO.CourseId=1;
 
     // posts offering to router, expects return code
     const res = await SuperTest(app)

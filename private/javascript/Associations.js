@@ -14,7 +14,6 @@ addAssociations = () => {
   Program.hasMany(CourseOffering);
 
   CourseOffering.belongsTo(Term);
-  // TODO: Make Course required
   CourseOffering.belongsTo(Course);
   CourseOffering.belongsTo(Instructor);
   CourseOffering.belongsTo(Program);

@@ -39,6 +39,7 @@ it('testThatCourseOfferingHasAssociations', () => {
   }
 
 
+  // Adding new course offering
   cy.get('#cCourse').type('MATH282');
   cy.get('#createCO').should('be.disabled');
   cy.get('#cName').should('have.value', 'Mathematics of Computation');
