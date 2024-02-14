@@ -150,9 +150,6 @@ const testConst = {
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '9:00', endTime: '10:00', day: 5, group: 'A'},
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
   ],
-};
-
-const globalConsts = {
 
   timeColumn8amTo3pmDisplayArray: [
     '8:00',
@@ -175,8 +172,8 @@ const globalConsts = {
   ],
   weekdaysFullySpelled: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
 
-};
 
+};
 
 function GenerateTimeSlotData() {
   const TimeArray = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
@@ -210,5 +207,31 @@ const termConstraints = {
   termNumberLowerLimit: 1,
 };
 
-module.exports = {instructorConstraints, testConst, globalConsts, termConstraints, GenerateTimeSlotData};
 
+const globalConsts = {
+
+  timeColumn8amTo3pmDisplayArray: [
+    '8:00',
+    '9:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '1:00',
+    '2:00',
+    '3:00',
+  ], timeColumn8amTo3pmDisplayArray24Hr: [
+    '8:00',
+    '9:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+  ],
+  weekdaysFullySpelled: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+
+};
+
+const URL = 'http://localhost:3000'
+module.exports = {instructorConstraints, testConst, termConstraints, GenerateTimeSlotData, URL, globalConsts};
