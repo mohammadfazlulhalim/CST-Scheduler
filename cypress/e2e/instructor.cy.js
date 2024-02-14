@@ -1,7 +1,6 @@
-/*The following tests are created to check functionality of the app to create, update and delete Instructors */
+/* The following tests are created to check functionality of the app to create, update and delete Instructors */
 describe('Testing Instructor CRUD options', () => {
-
-  //these are the selectors for HTML elements
+  // these are the selectors for HTML elements
   const addNewInsModalHeader='#addModalLabel';
   const insListingsPageHeader='body > div > div > div > h1';
   const tableFirstHeader ='body > div > div > div > table > thead > tr > th:nth-child(1)';
@@ -39,19 +38,19 @@ describe('Testing Instructor CRUD options', () => {
   const eighthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(8)';
   const ninthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(9)';
   const tenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(10)';
-  const eleventhRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(11)'
+  const eleventhRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(11)';
   const navMenuSelector ='#navbarColor04 > ul > li:nth-child(3) > a';
-  const navMenuItem= '#navbarColor04 > ul > li:nth-child(3) > div > a:nth-child(3)';
+  const navMenuItem= '#navbarColor04 > ul > li:nth-child(3) > div > a:nth-child(4)';
 
-/* Navigating to our expected page "http://localhost:3000/instructor"*/
+  /* Navigating to our expected page "http://localhost:3000/instructor"*/
 
-   beforeEach(()=>{
+  beforeEach(()=>{
     cy.visit('http://localhost:3000');
-    cy.get(navMenuSelector,{timeout:10000}).trigger('click')
-    cy.get(navMenuItem, {timeout:10000}).click();
+    cy.get(navMenuSelector, {timeout: 10000}).trigger('click');
+    cy.get(navMenuItem, {timeout: 10000}).click();
   });
 
-   /* checking the availability of instructor lists headers*/
+  /* checking the availability of instructor lists headers*/
   it('testInstructorListsAreShownUnderCertainHeaders  ', () => {
     cy.get(insListingsPageHeader).should('have.text', 'Instructor Listings');
     cy.get(tableFirstHeader).should('have.text', 'First Name');
@@ -60,32 +59,31 @@ describe('Testing Instructor CRUD options', () => {
     cy.get(tableFourthHeader).should('have.text', 'Phone Number');
     cy.get(tableFifthHeader).should('have.text', 'Email');
     cy.get(tableSixthHeader).should('have.text', 'Actions');
-  })
+  });
 
   /* Test to confirm the availability of instructor's name according to the fixture data*/
-  it('testAvailabilityOfAllInstructorInfo',()=>{
+  it('testAvailabilityOfAllInstructorInfo', ()=>{
     cy.get(firstRowOfListings).should('have.text', '\n                    Ben\n                    Benson\n                    123B.1\n                    (306)-456-6859\n                    benson@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get(secondRowOfListings).should ('have.text', '\n                    Bryce\n                    Barrie\n                    123A.1\n                    (306)-456-5467\n                    barrie@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (thirdRowOfListings).should ('have.text', '\n                    Coralee\n                    Kaban\n                    123A.2\n                    (306)-567-5676\n                    kaban@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (fourthRowOfListings).should ('have.text', '\n                    Donovan\n                    Onishenko\n                    123B.1\n                    (306)-456-6859\n                    onishenko@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (fifthRowOfListings).should ('have.text', '\n                    Ernesto\n                    Basoalto\n                    123B.1\n                    (306)-456-6859\n                    basalto@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (eighthRowOfListings).should ('have.text', '\n                    Rick\n                    Caron\n                    123A.3\n                    (306)-123-7895\n                    caron@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (ninthRowOfListings).should ('have.text', '\n                    Ron\n                    New\n                    123B.0\n                    (306)-678-6585\n                    new@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ')
-    cy.get (sixthRowOfListings).should ('have.text', '\n                    Jason\n                    Schmidt\n                    123B.1\n                    (306)-456-6859\n                    schmidt@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (seventhRowOfListings).should ('have.text', '\n                    Micheal\n                    Grzesina\n                    123B.1\n                    (306)-456-6859\n                    grzesina@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (tenthRowOfListings).should ('have.text', '\n                    Wade\n                    Lahoda\n                    123B.1\n                    (306)-456-6859\n                    wade@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
-    cy.get (eleventhRowOfListings).should ('have.text', '\n                    firstName\n                    Holtslan\n                    125B.1\n                    (306)-456-6859\n                    holtslan@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ')
-  })
+    cy.get(secondRowOfListings).should('have.text', '\n                    Bryce\n                    Barrie\n                    123A.1\n                    (306)-456-5467\n                    barrie@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(thirdRowOfListings).should('have.text', '\n                    Coralee\n                    Kaban\n                    123A.2\n                    (306)-567-5676\n                    kaban@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(fourthRowOfListings).should('have.text', '\n                    Donovan\n                    Onishenko\n                    123B.1\n                    (306)-456-6859\n                    onishenko@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(fifthRowOfListings).should('have.text', '\n                    Ernesto\n                    Basoalto\n                    123B.1\n                    (306)-456-6859\n                    basalto@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(eighthRowOfListings).should('have.text', '\n                    Rick\n                    Caron\n                    123A.3\n                    (306)-123-7895\n                    caron@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(ninthRowOfListings).should('have.text', '\n                    Ron\n                    New\n                    123B.0\n                    (306)-678-6585\n                    new@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(sixthRowOfListings).should('have.text', '\n                    Jason\n                    Schmidt\n                    123B.1\n                    (306)-456-6859\n                    schmidt@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(seventhRowOfListings).should('have.text', '\n                    Micheal\n                    Grzesina\n                    123B.1\n                    (306)-456-6859\n                    grzesina@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(tenthRowOfListings).should('have.text', '\n                    Wade\n                    Lahoda\n                    123B.1\n                    (306)-456-6859\n                    wade@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+    cy.get(eleventhRowOfListings).should('have.text', '\n                    firstName\n                    Holtslan\n                    125B.1\n                    (306)-456-6859\n                    holtslan@saskpolytech.ca\n\n                    \n                        Edit\n                        Delete\n                    \n                ');
+  });
 
   /* Test to confirm the unavailability of new instructor's name (to be created/ added)  according to the fixture data*/
-  it ('testUnavailabilityOfNewInstructorInfo',()=>{
+  it('testUnavailabilityOfNewInstructorInfo', ()=>{
     cy.contains('Bin').should('not.exist');
+  });
 
-  })
-
-/* Test  "Add New Instructor" button navigates us to "Create New Instructor" modal, and it has required input boxes */
+  /* Test  "Add New Instructor" button navigates us to "Create New Instructor" modal, and it has required input boxes */
   it('testCreateNewInstructorModal ', () => {
-    cy.get(createInsButton, {timeout:10000}).click();
+    cy.get(createInsButton, {timeout: 10000}).click();
     cy.get(addNewInsModalHeader).should('have.text', 'Create New Instructor');
     cy.get(addInsModalFirstTextBoxLabel).should('have.text', 'First Name:');
     cy.get(addInsModalSecondTextBoxLabel).should('have.text', 'Last Name:');
@@ -121,10 +119,8 @@ describe('Testing Instructor CRUD options', () => {
 
   /* Test to  delete instructor John's information and confirm the unavailability of deleted instructor inside Instructor Listings*/
   it('testDeleteInstructorButton  ', () => {
-
     cy.get(insListDeleteButtonOnFirstColumnForDeleteTest).click();
     cy.get(confirmDeleteButtonOnDeleteModal).click();
     cy.contains('John').should('not.exist');
-
   });
 });

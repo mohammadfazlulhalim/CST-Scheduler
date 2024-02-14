@@ -11,8 +11,8 @@ const defineDB = require('../fixtures/createTables.fix');
 router.get('/', async (req, res, next) => {
   await defineDB(false);
 
-  terms = await Term.findAll();
-  programs = await Program.findAll();
+  const terms = await Term.findAll();
+  const programs = await Program.findAll();
 
 
   // formatting the time
@@ -60,7 +60,7 @@ router.post('/', async (req, res, next) => {
         groupArray[i].timeslotMatrix[t][d] = {
           hasObj: false, cellID: t + '-' + d + '-' + GROUP_LETTERS[i], // dynamic id
           hTime: timeOb, // always empty except for time column
-          empty: 'empty'
+          empty: 'empty',
         };
       }
     }
@@ -106,7 +106,7 @@ router.post('/', async (req, res, next) => {
       tSlot.course = cObj.courseCode;
       tSlot.co = coObj.id;
 
-      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = ''
+      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
       groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;// outer array is days, each inner array is times
     }
     groupLetters[i] = GROUP_LETTERS[i];

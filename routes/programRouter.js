@@ -56,7 +56,6 @@ router.post('/', async function(req, res, next) {
 
 // Update programs
 router.put('/', async function(req, res, next) {
-
   await sequelize.sync();
   // From the hbs form gather the data
   const programID = req.body.progID;

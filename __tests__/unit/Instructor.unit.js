@@ -37,7 +37,7 @@ describe('firstName', () => {
 
     if (instructor) { // destroy instructor if created
       await instructor.destroy();
-    }
+      }
   });
 
   test('testThatFirstNameCanNotBeEmpty', async function() {
@@ -256,7 +256,7 @@ describe('officeNum', () => {
 
   beforeEach(async function() {
     testInstructor.officeNum = '123A.1';
-    testInstructor.firstName = 'sALLY'
+    testInstructor.firstName = 'sALLY';
     instructor = '';
     err = '';
   });
@@ -275,11 +275,12 @@ describe('officeNum', () => {
     if (instructor) { // destroy instructor if created
       await instructor.destroy();
     }
+
   });
 
   test('testCreatingInstructorWithEmptyOfficeNumber', async function() {
     testInstructor.officeNum = '';
-    testInstructor.firstName = 'sALLY'
+    testInstructor.firstName = 'sALLY';
     let err; let errCount; let instructor;
 
     try {
@@ -471,7 +472,6 @@ describe('phoneNum', () => {
  * These are tests for the Email address attribute of Instructor
  */
 describe('email', () => {
-  
   let instructor;
   let testInstructor;
   let err = '';

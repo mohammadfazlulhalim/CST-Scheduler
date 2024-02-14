@@ -17,9 +17,18 @@ const {sequelize, DataTypes} = require('../../datasource');
 // MODEL STUB START
 const Course = sequelize.define('Course', {
   courseCode: {
-    // might have been tested elsewhere
-    // unsure if story34 branch needs testing
     type: DataTypes.STRING,
+    //this field is mandatory.
+    allowNull: false,
+    //course code has to be unique
+    unique: true,
+    validate:{
+      //course code consisting of 3 or 4 characters followed by 3 or 4 digits
+    is: {
+      args: /^[A-Za-z]{3,4}\s*[0-9]{3,4}\s*$/,
+      msg: 'Course Code can have 3-4 characters and 3-4 digits only'
+}
+    }
 
   },
   courseName: {
@@ -27,25 +36,31 @@ const Course = sequelize.define('Course', {
     allowNull: false,
     validate: {
       len: {
-        args: [1, 100],
-        msg: 'Error: Course Name must have 1 to 100 characters.',
+        args: [1, 50],
+        msg: 'Course Name must have 1 to 50 characters.',
       },
     },
   },
   courseNumCredits: {
     type: DataTypes.INTEGER,
+    //allowNull: false,
     allowNull: false,
+
     validate: {
+      notEmpty:{
+        msg:'Credit unit cannot be empty',
+      },
+
       isInt: {
-        msg: 'Error: Enter a whole number between 0 and 6 as a valid number of credits.',
+        msg: 'Enter a whole number between 0 and 6 as a valid number of credits.',
       },
       min: {
         args: [0],
-        msg: 'Error: Enter a whole number between 0 and 6 as a valid number of credits.',
+        msg: 'Enter a whole number between 0 and 6 as a valid number of credits.',
       },
       max: {
         args: [6],
-        msg: 'Error: Enter a whole number between 0 and 6 as a valid number of credits.',
+        msg: 'Enter a whole number between 0 and 6 as a valid number of credits.',
       },
     },
   },
@@ -54,15 +69,15 @@ const Course = sequelize.define('Course', {
     allowNull: false,
     validate: {
       isInt: {
-        msg: 'Error: Enter a whole number between 1 and 168 as a valid number of hours.',
+        msg: 'Enter a whole number between 1 and 40 as a valid number of hours.',
       },
       min: {
         args: [1],
-        msg: 'Error: Enter a whole number between 1 and 168 as a valid number of hours.',
+        msg: 'Enter a whole number between 1 and 40 as a valid number of hours.',
       },
       max: {
-        args: [168],
-        msg: 'Error: Enter a whole number between 1 and 168 as a valid number of hours.',
+        args: [40],
+        msg: 'Enter a whole number between 1 and 40 as a valid number of hours.',
       },
     },
   },

@@ -243,8 +243,11 @@
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
                 id: $('#deleteInstructor').val(),
+
             }),
+
         });
+
 
         // get the HTML text response
         const data = await response.text();

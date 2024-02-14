@@ -99,15 +99,15 @@ const testConst = {
   ],
   validTerms: [
     {termNumber: 1, startDate: '2023-08-01', endDate: '2023-12-01'},
-    {termNumber: 2, startDate: '2023-01-01', endDate: '2023-04-01'},
+    {termNumber: 2, startDate: '2023-01-02', endDate: '2023-04-28'},
     {termNumber: 3, startDate: '2023-05-01', endDate: '2023-05-31'},
     {termNumber: 4, startDate: '2023-08-01', endDate: '2023-12-01'},
     {termNumber: 5, startDate: '2023-01-01', endDate: '2023-04-01'},
     {termNumber: 6, startDate: '2023-05-01', endDate: '2023-05-31'},
   ],
   validInstructor: [
-    {firstName: 'Bryce', lastName: 'Barrie',officeNum: '123A.1', phoneNum: '(306)-456-5467', email: 'barrie@saskpolytech.ca' },
-    {firstName: 'Coralee', lastName: 'Kaban',officeNum: '123A.2', phoneNum: '(306)-567-5676', email: 'kaban@saskpolytech.ca' },
+    {firstName: 'Bryce', lastName: 'Barrie', officeNum: '123A.1', phoneNum: '(306)-456-5467', email: 'barrie@saskpolytech.ca'},
+    {firstName: 'Coralee', lastName: 'Kaban', officeNum: '123A.2', phoneNum: '(306)-567-5676', email: 'kaban@saskpolytech.ca'},
     {firstName: 'Ron', lastName: 'New', officeNum: '123B.0', phoneNum: '(306)-678-6585', email: 'new@saskpolytech.ca'},
     {firstName: 'Rick', lastName: 'Caron', officeNum: '123A.3', phoneNum: '(306)-123-7895', email: 'caron@saskpolytech.ca'},
     {firstName: 'Ernesto', lastName: 'Basoalto', officeNum: '123B.1', phoneNum: '(306)-456-6859', email: 'basalto@saskpolytech.ca'},
@@ -207,5 +207,31 @@ const termConstraints = {
   termNumberLowerLimit: 1,
 };
 
-module.exports = {instructorConstraints, testConst, termConstraints, GenerateTimeSlotData};
 
+const globalConsts = {
+
+  timeColumn8amTo3pmDisplayArray: [
+    '8:00',
+    '9:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '1:00',
+    '2:00',
+    '3:00',
+  ], timeColumn8amTo3pmDisplayArray24Hr: [
+    '8:00',
+    '9:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+  ],
+  weekdaysFullySpelled: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+
+};
+
+const URL = 'http://localhost:3000'
+module.exports = {instructorConstraints, testConst, termConstraints, GenerateTimeSlotData, URL, globalConsts};

@@ -8,11 +8,10 @@ const Classroom = require('../private/javascript/Classroom');
 async function fillClassroomTable() {
   await createClassrooms();
 }
-
 // eslint-disable-next-line require-jsdoc
 async function createClassrooms() {
   const createdClassrooms = [
-    '239A', '239B', '240B', '242C',
+    '239A', '239B', '240B', '242C', '241',
   ];
   for (const roomNumber of createdClassrooms) {
     await Classroom.create({
