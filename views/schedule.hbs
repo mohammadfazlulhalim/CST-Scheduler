@@ -1,4 +1,4 @@
-<div>
+
     <div id="scheduleModal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="scheduleModalLabel"
          aria-hidden="false">
         <div class="modal-dialog" role="document">
@@ -45,44 +45,32 @@
             </div>
         </div>
     </div>
-
-    <div id="main">
-        <!--change this to a loop later-->
-        <div id="tabBar">
+    <div class="container-fluid">
+        <!-- Change this to a loop later -->
+        <div id="tabBar" class="column">
             {{#each groupArray}}
-                <button id="btn{{groupLetter}}" onclick="changeGroup('{{groupLetter}}')" class=" btn btn-primary">
-                    Group {{groupLetter}}</button>
-
+                <button id="btn{{groupLetter}}" onclick="changeGroup('{{groupLetter}}')" class="btn btn-primary">
+                    Group {{groupLetter}}
+                </button>
             {{/each}}
         </div>
         {{#each groupArray}}
             <div id="group{{groupLetter}}" class="row container" hidden>
-                <div id="calender{{groupLetter}}" class="col container-fluid ">
+                <div id="calender{{groupLetter}}" class=" col container-fluid">
                     <h2>Group {{groupLetter}} Calendar</h2>
                     <table class="table table-bordered table-hover border-dark">
                         <thead class="thead-dark">
-                        <th class="text-center"  scope="col" id="time">
-                            Time
-                        </th>
-                        <th class="text-center"  scope="col" id="mon">
-                            Monday
-                        </th>
-                        <th class="text-center"  scope="col" id="tues">
-                            Tuesday
-                        </th>
-                        <th class="text-center"  scope="col" id="wed">
-                            Wednesday
-                        </th>
-                        <th class="text-center"  scope="col" id="thurs">
-                            Thursday
-                        </th>
-                        <th class="text-center"  scope="col" id="fri">
-                            Friday
-                        </th>
-                        </thead>
                         <tr>
+                            <th class="text-center" scope="col" id="time">Time</th>
+                            <th class="text-center" scope="col" id="mon">Monday</th>
+                            <th class="text-center" scope="col" id="tues">Tuesday</th>
+                            <th class="text-center" scope="col" id="wed">Wednesday</th>
+                            <th class="text-center" scope="col" id="thurs">Thursday</th>
+                            <th class="text-center" scope="col" id="fri">Friday</th>
                         </tr>
-                        {{#each timeslotMatrix }}
+                        </thead>
+                        <tbody>
+                        {{#each timeslotMatrix}}
                             <!--loops each timeslot, outer loop is hours, inner loop is days  -->
                             <tr>
                                 {{#each this}}
@@ -90,44 +78,43 @@
                                     <!--                                    Then the 'each' will have different attributes and be loaded differently-->
                                     <!--                                    via html and the router sends attributes-->
                                     {{#if this.hTime}}
-                                        <td class="text-center"  id="{{this.cellID}}">
+                                        <td class="text-center time-cell" id="{{this.cellID}}">
                                             <p>{{this.hTime}}</p>
                                         </td>
                                     {{else}}
-                                        <td oncontextmenu="onCellRightClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')"
-                                            onclick="onCellClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')"
-                                            id="{{this.cellID}}" class="{{ this.empty }} text-center">
+                                        <td oncontextmenu="onCellRightClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')" onclick="onCellClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')" id="{{this.cellID}}" class="time-slot {{ this.empty }} text-center">
                                             <p>{{this.timeslot.program}}<br/></p>
                                             <p>{{this.timeslot.course}}<br/></p>
                                             <p>{{this.timeslot.insLast}}<br/></p>
                                         </td>
-
                                     {{/if}}
                                 {{/each}}
                             </tr>
                         {{/each}}
+                        </tbody>
                     </table>
                 </div>
-                <div id="courseList{{groupLetter}}" class="col container-fluid">
+                <div class="col container-fluid">
                     <h2>Group {{groupLetter}} Courses</h2>
-                    {{#each COArray}}
-                        <div class="card bg-secondary" style="width: 12rem;" onclick="onCOClick('{{this.id}}', '{{this.dName}}')"
-                             id="{{this.dName}}">
-                            <h3>{{this.name}}</h3>
-                            <ul>{{this.insFirst}} {{this.insLast}}</ul>
-                            <ul>{{this.startDate}} - {{this.endDate}}</ul>
-                        </div>
-                    {{/each}}
+                    <div class="row">
+                        {{#each COArray}}
+                            <div class="mb-3">
+                                <div class="card bg-secondary course-offering" style="width: 12rem;" onclick="onCOClick('{{this.id}}', '{{this.dName}}')" id="{{this.dName}}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{this.name}}</h5>
+                                        <p class="card-text">{{this.insFirst}} {{this.insLast}}</p>
+                                        <p class="card-text">{{this.startDate}} - {{this.endDate}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
                 </div>
             </div>
         {{/each}}
+        <a href="http://localhost:3000" class="btn btn-success mt-3">Return</a>
     </div>
-    <a href="http://localhost:3000">
-        <button class="btn btn-success">Return</button>
-    </a>
-</div>
-
-<script>
+    <script>
     'use strict';
 
     let currCO = null;
@@ -183,17 +170,17 @@
 
         if (currCO === idCO) //if clicked CO is alreaady highlighted
         {
-            objCO.removeAttribute('class', 'bg-info');
-            objCO.setAttribute('class', 'bg-secondary');
+            objCO.removeAttribute('class', 'card bg-info mb-3 course-offering');
+            objCO.setAttribute('class', 'card bg-secondary mb-3 course-offering');
             currCO = null;
             currDOM = null;
         } else {
             if (currCO !== null) { // if there's a differnt CO highlighted, otherwise its jusst null
-                currObjCO.removeAttribute('class', 'bg-info');
-                currObjCO.setAttribute('class', 'bg-secondary');
+                currObjCO.removeAttribute('class', 'card bg-info mb-3 course-offering');
+                currObjCO.setAttribute('class', 'card bg-secondary mb-3 course-offering');
             }
-            objCO.removeAttribute('class', 'bg-secondary');
-            objCO.setAttribute('class', 'bg-info');
+            objCO.removeAttribute('class', 'card bg-secondary mb-3 course-offering');
+            objCO.setAttribute('class', 'card bg-info mb-3 course-offering');
             currCO = idCO;
             currDOM = domObj;
         }
