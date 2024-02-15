@@ -81,12 +81,12 @@ router.post('/', async (req, res, next) => {
  */
 async function getUniqueDates(term, classroom) {
   const sqlstatement = `SELECT DISTINCT date
-    FROM (
-      SELECT startDate  AS date FROM timeslots where ClassroomId = ${classroom.id}
-    UNION
-    SELECT endDate AS date FROM timeslots where ClassroomId = ${classroom.id}
-  ) AS combined_dates
-    WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
+                        FROM (
+                            SELECT startDate  AS date FROM timeslots where ClassroomId = ${classroom.id}
+                            UNION
+                            SELECT endDate AS date FROM timeslots where ClassroomId = ${classroom.id}
+                            ) AS combined_dates
+                        WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
 
   try {
     return await sequelize.query(sqlstatement, {

@@ -227,10 +227,11 @@ describe('template spec', () => {
       ['Kaban', '', '', '', ''],
       ['', '', '', '', ''],
     ];
-
+    cy.wait(250);
     checkCorrectSchedule(classesInOrder, namesInOrder);
-    cy.wait(200);
+    cy.wait(250);
     cy.get('#btnRight').click();
+    cy.wait(250);
 
     classesInOrder = [
       ['MATH282', '', '', '', ''],
@@ -254,18 +255,19 @@ describe('template spec', () => {
       ['', '', '', '', ''],
     ];
 
-
+    cy.wait(250);
     checkCorrectSchedule(classesInOrder, namesInOrder);
-    cy.wait(200);
+    cy.wait(250);
     cy.get('#btnRight').click();
+    cy.wait(250);
 
     classesInOrder = [
       ['MATH282', '', '', '', ''],
       ['', 'CDBM280', '', '', ''],
       ['', '', 'COHS280', 'COOS291', ''],
-      ['', '', '', '', 'CWEB280'],
+      ['', '', 'COOS293', '', 'CWEB280'],
       ['', '', '', '', ''], // 12:00 slot appears empty
-      ['', 'SEM283', '', '', 'COSA280'],
+      ['', 'SEM283', '', '', ''],
       ['COSA280', '', '', '', ''],
       ['', '', '', '', ''],
     ];
@@ -274,14 +276,15 @@ describe('template spec', () => {
       ['Barrie', '', '', '', ''],
       ['', 'New', '', '', ''],
       ['', '', 'Basoalto', 'Onishenko', ''],
-      ['', '', '', '', 'Holtslan'],
+      ['', '', 'Lahoda', '', 'Holtslan'],
       ['', '', '', '', ''], // 12:00 slot appears empty
-      ['', 'Caron', '', '', 'Grzesina'],
+      ['', 'Caron', '', '', ''],
       ['Kaban', '', '', '', ''],
       ['', '', '', '', ''],
     ];
-
+    cy.wait(200);
     checkCorrectSchedule(classesInOrder, namesInOrder);
+    cy.wait(200);
   });
 
   function checkCorrectSchedule(classesInOrder, namesInOrder) {

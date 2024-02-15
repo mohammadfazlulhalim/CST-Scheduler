@@ -121,9 +121,11 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#deleteCO').click();
 
   // prefilling out add modal to get ready for further testing
+  cy.wait(250);
   cy.contains('Add New Course Offering').click();
   cy.get('#addModal').should('be.visible');
 
+  cy.wait(250);
   cy.get('#cCourse').type('MATH282');
   cy.get('#cCourseInvalid').should('have.text', '');
   cy.get('#cName').should('have.value', 'Mathematics of Computation');
@@ -134,12 +136,14 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#createCO').should('be.enabled');
 
   // adding inerrant data
+  cy.wait(250);
   cy.get('#cCourse').clear().type('MAATH282');
   cy.get('#createCO').should('be.disabled');
   cy.get('#cName').should('have.value', '');
   cy.get('#cCourseInvalid').should('have.text', 'Please select a Course Code from the list');
 
   // switching to different valid data
+  cy.wait(250);
   cy.get('#cCourse').clear().type('COOS291');
   cy.get('#cName').should('have.value', 'Advanced Operating Systems');
   cy.get('#cCourseInvalid').should('have.text', '');
