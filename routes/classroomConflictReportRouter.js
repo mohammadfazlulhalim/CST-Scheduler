@@ -5,7 +5,7 @@
  * @param res
  * @param next
  */
-function routerPost(req, res, next){
+function routerPost(req, res, next) {
 
 }
 
@@ -15,7 +15,7 @@ function routerPost(req, res, next){
  * @param res
  * @param next
  */
-function routerGet(req, res, next){
+function routerGet(req, res, next) {
 
 }
 
@@ -25,6 +25,6 @@ function routerGet(req, res, next){
  * are experiencing class conflicts
  * @param timeSlots, classroom, term
  */
-function checkForConflict(timeSlots, classroom, term){
+function checkForConflict(timeSlots, classroom, term) {
 
 }
