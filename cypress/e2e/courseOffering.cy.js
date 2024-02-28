@@ -11,7 +11,7 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#addModal').should('be.visible');
 
   // Terms
-  let termList = ['2024-01-02 - 5', '2023-08-01 - 1', '2023-08-01 - 4', '2023-05-01 - 3', '2023-05-01 - 6', '2023-01-01 - 2', '2023-01-01 - 5'];
+  let termList = ['2024-01-02 - 5', '2023-08-01 - 1', '2023-08-01 - 4', '2023-05-01 - 3', '2023-05-01 - 6', '2023-01-02 - 2', '2023-01-01 - 5'];
   for (let i = 0; i < termList.length; i++) {
     let nChild = i + 2;
     cy.get('#cTerm > option:nth-child(' + nChild + ')').should('have.text', termList[i]);
