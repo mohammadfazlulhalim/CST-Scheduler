@@ -93,3 +93,32 @@ it('testThatTermSkipsAutogeneratesCourseOfferings', () => {
   cy.get('#tableBody > tr:nth-child(1) > td:nth-child(4) > button:nth-child(2)').click();
   cy.get('#deleteTerm').click();
 });
+
+/**
+ * Test for checking that the autogenerate displays message when no Course Offerings are found
+ */
+it('testThatTermWithNoAutogenerateOptionsDisplaysMessage ', () => {
+  cy.visit('localhost:3000');
+  cy.contains('Administration').click();
+  cy.contains('Term').click();
+  cy.url().should('include', '/term');
+
+  // Opening
+  cy.contains('Add New Term').click();
+  cy.get('#addModal').should('be.visible');
+
+  // Fill out the add modal form
+  cy.get('#cTermNumber').type('1');
+  cy.get('#cStartDate').type('2024-08-15');
+  cy.get('#cEndDate').type('2024-12-15');
+  cy.get('#cAuto').check();
+  cy.get('#createTerm').click();
+
+  // checking the Course Offering modal
+  cy.get('#createCO').should('be-visible');
+  cy.get('#createCOError').should('have.text', 'No Course Offerings found');
+
+  // Deleting the Term
+  cy.get('#tableBody > tr:nth-child(1) > td:nth-child(4) > button:nth-child(2)').click();
+  cy.get('#deleteTerm').click();
+});

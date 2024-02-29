@@ -196,7 +196,7 @@ const mapErrors = (err) => {
  * @param courseOfferings
  * @returns {*}
  */
-function mapCourseOfferings(courseOfferings, term) {
+function mapCourseOfferings(courseOfferings, newTerm) {
   return courseOfferings;
 }
 
