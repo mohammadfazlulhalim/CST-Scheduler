@@ -15,15 +15,24 @@ const CourseOffering = sequelize.define('CourseOffering', {
   },
   name: {
     type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      len: {
+        args: [1, 50],
+        msg: 'Name must have 1 to 50 characters.',
+      },
+    }
   },
 
   // Dates - YYYY-MM-DD
   startDate: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
 
   endDate: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
 
   group: {

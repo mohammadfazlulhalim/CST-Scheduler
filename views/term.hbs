@@ -126,6 +126,9 @@
                         <input type="date" class="form-control {{#if err.endDate}}is-invalid{{/if}}" id="cEndDate"
                                name="endDate" value="{{submittedTerm.endDate}}">
                         <div class="invalid-feedback">{{err.endDate}}</div>
+                        <label for="cAuto">Autogenerate Course Offerings?</label>
+                        <input type="checkbox" class="form-check" id="cAuto" value="auto"
+                               name="auto">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -179,6 +182,7 @@
                 termNumber: $("#cTermNumber").val(),
                 startDate: $("#cStartDate").val(),
                 endDate: $("#cEndDate").val(),
+                auto: $("#cAuto").is(':checked'),
             }),
         });
 

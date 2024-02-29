@@ -41,7 +41,6 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   const numEntries =8;
   const expectedNames = ['Hardware', 'Seminar'];
   const expectedGroup = ['A', 'B', 'C', 'D'];
-  const expectedCourse = ['Hardware', 'Seminar'];
   const expectedInstructor = ['Ben Benson', 'Ron New'];
 
   // checking that it autofilled correctly
@@ -78,24 +77,26 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.contains('Course Offerings').click();
 
   // TODO finalize CO layout with Jonah so that testing does not get broken
-  // Talk with Jonah about option to sort COs by Term, would simplify check, if not
-  // do tests similar to this:
-  // const newRow2 = '#tableBody > tr:nth-child(21)';
-  // cy.get(newRow2).should('have.text',
-  //   '\n                    Mathematics of Computation\n                    A\n                    MATH282\n                    2023-5\n                    2023-01-01\n                    2023-04-01\n                    Bryce Barrie\n                    CNT\n                    \n                        Edit\n                        \n                        Delete\n                        \n                    \n                ');
   const newCOs = [
-    'Hardware \n A \n COHS190 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Ben Benson \n CST',
-    'Hardware \n B \n COHS190 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Ben Benson \n CST',
-    'Hardware \n C \n COHS190 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Ben Benson \n CST',
+    'Hardware \n A \n COHS190 \n 2024-3 \n 2024-05-05 \n 2024-05-29 \n Ben Benson \n CST',
+    'Hardware \n B \n COHS190 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Bryce Barrie \n CST',
     'Hardware \n D \n COHS190 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Ben Benson \n CST',
-    'Seminar \n A \n SEM283 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Ron New \n CST',
-    'Seminar \n B \n SEM283 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Ron New \n CST',
+    'The Seminar \n A \n SEM283 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Ron New \n CST',
+    'Seminar \n B \n SEM283 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Ron New \n CNT',
     'Seminar \n C \n SEM283 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Ron New \n CST',
     'Seminar \n D \n SEM283 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Ron New \n CST',
   ];
+  // TODO: Get correct index of new entries
+  const newCOsIndex =[1,2,3,4,5,6,7]
+  for (let i =0; i < newCOs.length; i++) {
+    cy.get('#tableBody > tr:nth-child(' + newCOsIndex[i] + ')').should('have.text', newCOs[i]);
+  }
 
-  // Calculate that one was skipped by calculating out total number of rows
-  // TODO delete newly created COs
+  // Deleting in reverse order
+  for (let i =newCOs.length -1; i >= 0; i++) {
+    cy.get('#tableBody > tr:nth-child(' + newCOsIndex[i] + ') > button:nth-child(2)').click()
+    cy.get('#deleteCO').click();
+  }
 
   // Deleting the Term
   cy.visit('localhost:3000/term');
@@ -160,6 +161,115 @@ it('testThatTermWithNoAutogenerateOptionsDisplaysMessage ', () => {
   cy.get('#createCOError').should('have.text', 'No Course Offerings found');
 
   // Deleting the Term
+  cy.get('#tableBody > tr:nth-child(1) > td:nth-child(4) > button:nth-child(2)').click();
+  cy.get('#deleteTerm').click();
+});
+
+
+it('testThatTermAutogeneratesCourseOfferingsHasValidation', () => {
+  cy.visit('localhost:3000');
+  cy.contains('Administration').click();
+  cy.contains('Term').click();
+  cy.url().should('include', '/term');
+
+  // Expected lists in order for programs and instructors
+  const programList = ['CNT', 'CST', 'ECE'];
+  const instructorList =
+    ['Barrie', 'Basoalto', 'Benson', 'Caron', 'Grzesina', 'Holtslan', 'Kaban', 'Lahoda', 'New', 'Onishenko', 'Schmidt'];
+
+  // Opening
+  cy.contains('Add New Term').click();
+  cy.get('#addModal').should('be.visible');
+
+  // Fill out the add modal form
+  cy.get('#cTermNumber').type('3');
+  cy.get('#cStartDate').type('2024-05-03');
+  cy.get('#cEndDate').type('2024-06-02');
+  cy.get('#cAuto').check();
+  cy.get('#createTerm').click();
+
+  // checking the Course Offering modal
+  cy.get('#createCO').should('be-visible');
+
+  // Checking sort order for instructor list
+  for (let i = 0; i < instructorList.length; i++) {
+    const nChild = i + 2;
+    cy.get('#createCOInstructor > option:nth-child(' + nChild + ')').should('have.text', instructorList[i]);
+  }
+  // Checking sort order for program list
+  for (let i = 0; i < programList.length; i++) {
+    const nChild = i + 2;
+    cy.get('#createCOInstructor > option:nth-child(' + nChild + ')').should('have.text', programList[i]);
+  }
+
+  // expected number of entries
+  let numEntries =8;
+  const expectedNames = ['Hardware', 'Seminar'];
+  const expectedGroup = ['A', 'B', 'C', 'D'];
+  const expectedInstructor = ['Ben Benson', 'Ron New'];
+
+  // checking that it autofilled correctly
+  for (let i =0; i< numEntries; i++) {
+    const nChild = i+1;
+    const keyBinary = (i/2).floor();
+    const keyGroup = (i/4).floor();
+    cy.get('ph-off' + nChild + 'ph-name').should('have.value', expectedNames[keyBinary]);
+    cy.get('ph-off' + nChild + 'ph-start').should('have.value', '2024-05-03');
+    cy.get('ph-off' + nChild + 'ph-end').should('have.value', '2024-06-02');
+    cy.get('ph-off' + nChild + 'ph-group').should('have.value', expectedGroup[keyGroup]);
+    cy.get('ph-off' + nChild + 'ph-course').should('have.value', expectedNames[keyBinary]);
+    cy.get('ph-off' + nChild + 'ph-instructor').should('have.value', expectedInstructor[keyBinary]);
+    cy.get('ph-off' + nChild + 'ph-program').should('have.value', 'CST');
+  }
+
+  // Date change - invalid empty
+  cy.get('ph-off' + 1 + 'ph-start').type('');
+  cy.get('ph-off' + 1 + 'ph-end').type('');
+  // Name invalid - too short
+  cy.get('ph-off' + 2 + 'ph-name').type('');
+  // Name invalid - too long
+  cy.get('ph-off' + 3 + 'ph-name').select('abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy'); // 51 char length
+
+  cy.get('ph-save').click();
+
+  cy.get('#createCO').should('be-visible');
+  numEntries =3;
+
+  // check that it autofills will default data again
+  for (let i =0; i< numEntries; i++) {
+    const nChild = i+1;
+    const keyBinary = (i/2).floor();
+    const keyGroup = (i/4).floor();
+    cy.get('ph-off' + nChild + 'ph-name').should('have.value', expectedNames[keyBinary]);
+    cy.get('ph-off' + nChild + 'ph-start').should('have.value', '2024-05-03');
+    cy.get('ph-off' + nChild + 'ph-end').should('have.value', '2024-06-02');
+    cy.get('ph-off' + nChild + 'ph-group').should('have.value', expectedGroup[keyGroup]);
+    cy.get('ph-off' + nChild + 'ph-course').should('have.value', expectedNames[keyBinary]);
+    cy.get('ph-off' + nChild + 'ph-instructor').should('have.value', expectedInstructor[keyBinary]);
+    cy.get('ph-off' + nChild + 'ph-program').should('have.value', 'CST');
+  }
+
+  // check that error message is displayed
+  cy.get('ph-off' + 1 + 'ph-err-start').should('have.text', 'startDate is required');
+  cy.get('ph-off' + 1 + 'ph-err-end').should('have.text', 'endDate is required');
+  cy.get('ph-off' + 2 + 'ph-err-name').should('have.text', 'Name must have 1 to 50 characters.');
+  cy.get('ph-off' + 3 + 'ph-err-name').should('have.text', 'Name must have 1 to 50 characters.');
+
+
+  // Check that new term is added:
+  cy.get('#tableBody > tr:nth-child(1)').should('have.text', '\n 3 \n 2024-05-03 \n 2024-06-02');
+
+  // deleting errant rows
+  cy.visit('localhost:3000/courseofferings');
+  const newCOsIndex =[1,2,3,4,5];
+  // going in reverse order to not mess up length
+  for (let i =newCOs.length -1; i >= 0; i++) {
+    cy.get('#tableBody > tr:nth-child(' + newCOsIndex[i] + ') > button:nth-child(2)').click()
+    cy.get('#deleteCO').click();
+  }
+
+  // Deleting the Term
+  cy.visit('localhost:3000/term');
   cy.get('#tableBody > tr:nth-child(1) > td:nth-child(4) > button:nth-child(2)').click();
   cy.get('#deleteTerm').click();
 });

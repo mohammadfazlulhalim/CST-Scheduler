@@ -37,6 +37,12 @@ router.post('/', async function(req, res, next) {
     // put the ID in the response so tests can access it
     res.set('id', result.id);
   }
+
+  // checking if autogenerating
+  if (req.body.auto) {
+    // We need to autogenerate
+  }
+
   const termLists = await readAllTerms();
   res.render('term', {
     termEntries: termLists,
