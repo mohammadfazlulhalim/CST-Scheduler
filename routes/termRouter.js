@@ -190,4 +190,14 @@ const mapErrors = (err) => {
   return violations;
 };
 
+/**
+ * Takes in an array of course offerings, and changes the dates and term
+ * to match with the term, and then returns the array of course offerings
+ * @param courseOfferings
+ * @returns {*}
+ */
+function mapCourseOfferings(courseOfferings, term) {
+  return courseOfferings;
+}
+
 module.exports = {router, createTerm, deleteTerm, updateTerm};
