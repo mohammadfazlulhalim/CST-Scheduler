@@ -1,16 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const TermRouter = require('../private/javascript/Term');
+const Term = require('../private/javascript/Term');
 const {sequelize} = require('../dataSource');
 const termConstraints = require('../constants').termConstraints;
-const URL = require('../constants').URL
+const URL = require('../constants').URL;
+const CourseOffering = require('../private/javascript/CourseOffering');
+const Program = require('../private/javascript/Program');
+const Instructor = require('../private/javascript/Instructor');
+
 router.get('/', async function(req, res, next) {
   // Declaring the array
   const termLists = await readAllTerms();
   res.render('term', {
     title: 'Manage Terms',
     termEntries: termLists,
-    URL
+    URL,
   });
 });
 
@@ -38,21 +42,66 @@ router.post('/', async function(req, res, next) {
     res.set('id', result.id);
   }
 
-  // checking if autogenerating
+  const termLists = await readAllTerms();
+
+
+  // checking if autogenerating - if so, using separate res.render
   if (req.body.auto) {
     // We need to autogenerate
+    const calcYearSplit = result.calendarYear.split('-');
+    const lastYear = ((+calcYearSplit[0]) - 1) + '-' + calcYearSplit[0];
+    let lastCO = null;
+    // now get the last year termID
+
+    try {
+      console.log('Last year: ' + lastYear);
+      // TODO: Get this where clause to properly filter
+      const lastYearTerm = await Term.findAll({
+        where: {
+          calendarYear: lastYear,
+          termNumber: result.termNumber,
+        },
+      });
+      console.log(JSON.stringify(lastYearTerm));
+      lastCO = await CourseOffering.findAll({where: {
+          TermId: lastYearTerm[0].id,
+        }});
+    } catch (e) {
+      console.log(e);
+    };
+
+    const instructors = Instructor.findAll();
+    const programs = Program.findAll();
+
+    res.render('term', {
+      termEntries: termLists,
+      err: violations,
+      submittedTerm: violations ? req.body : undefined,
+      maxTerms: termConstraints.termNumberUpperLimit,
+      minTerms: termConstraints.termNumberLowerLimit,
+      title: 'Manage Terms',
+      courseOfferings: lastCO,
+      instructors,
+      programs,
+      URL,
+    });
+
+  } else {
+    // Not autogenerating, use old res.render
+    res.render('term', {
+      termEntries: termLists,
+      err: violations,
+      submittedTerm: violations ? req.body : undefined,
+      maxTerms: termConstraints.termNumberUpperLimit,
+      minTerms: termConstraints.termNumberLowerLimit,
+      title: 'Manage Terms',
+      URL,
+    });
+
   }
 
-  const termLists = await readAllTerms();
-  res.render('term', {
-    termEntries: termLists,
-    err: violations,
-    submittedTerm: violations ? req.body : undefined,
-    maxTerms: termConstraints.termNumberUpperLimit,
-    minTerms: termConstraints.termNumberLowerLimit,
-    title: 'Manage Terms',
-    URL
-  });
+
+
 });
 
 /**
@@ -72,7 +121,7 @@ router.delete('/', async function(req, res, next) {
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
     title: 'Manage Terms',
-    URL
+    URL,
   });
 });
 
@@ -106,7 +155,7 @@ router.put('/', async function(req, res, next) {
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
     title: 'Manage Terms',
-    URL
+    URL,
   });
 });
 
@@ -117,7 +166,7 @@ router.put('/', async function(req, res, next) {
  */
 const createTerm = async (term) => {
   try {
-    return await TermRouter.create({
+    return await Term.create({
       termNumber: parseInt(term.termNumber),
       startDate: term.startDate,
       endDate: term.endDate,
@@ -136,7 +185,7 @@ const createTerm = async (term) => {
 const deleteTerm = async (term) => {
   try {
     // try to delete the term
-    return await TermRouter.destroy({where: {id: term.id}});
+    return await Term.destroy({where: {id: term.id}});
   } catch (err) {
     // if an error occurred, state that 0 rows were deleted
     return 0;
@@ -150,7 +199,7 @@ const deleteTerm = async (term) => {
  */
 const updateTerm = async (term) => {
   // find the term to update
-  const termToUpdate = await TermRouter.findByPk(term.id);
+  const termToUpdate = await Term.findByPk(term.id);
   if (termToUpdate) {
     // only try to update the term if it already exists
     try {
@@ -175,7 +224,7 @@ const updateTerm = async (term) => {
 const readAllTerms = async () => {
   try {
     // Calling the database, for all term entries, ordered by term number
-    return await TermRouter.findAll({order: ['startDate']});
+    return await Term.findAll({order: ['startDate']});
   } catch (err) {
     // If it is not found, declaring termEntries as undefined so that table will not be viewed on term.hbs
     // and instead a sentence declaring no term entries found is displayed

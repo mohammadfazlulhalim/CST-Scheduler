@@ -149,7 +149,14 @@ const Term = sequelize.define('Term', {
     },
     calendarYear: {
       type: DataTypes.INTEGER,
-      // TODO: Implement this as a computed property
+      get() {
+        const yearVal = +(this.startDate.split('-'))[0];
+        if (this.termNumber == 1 || this.termNumber == 4) {
+          return yearVal + '-' + (yearVal+1);
+        } else {
+          return (yearVal-1) + '-' + yearVal;
+        }
+      },
     },
   },
 );

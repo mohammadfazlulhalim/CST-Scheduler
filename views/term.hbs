@@ -8,6 +8,7 @@
                 <th>Term Number</th>
                 <th>Start Date</th>
                 <th>End Date</th>
+                <th>Year</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -18,6 +19,7 @@
                     <td id="{{this.id}}number">{{this.termNumber}}</td>
                     <td id="{{this.id}}start">{{this.startDate}}</td>
                     <td id="{{this.id}}end">{{this.endDate}}</td>
+                    <td id="{{this.id}}year">{{this.calendarYear}}</td>
                     <td>
                         <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton" data-toggle="modal" data-target="#editModal">Edit</button>
                         <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton" data-toggle="modal" data-target="#deleteModal">Delete</button>
