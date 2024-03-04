@@ -7,6 +7,7 @@ const URL = require('../constants').URL;
 const CourseOffering = require('../private/javascript/CourseOffering');
 const Program = require('../private/javascript/Program');
 const Instructor = require('../private/javascript/Instructor');
+const { Op } = require("sequelize");
 
 router.get('/', async function(req, res, next) {
   // Declaring the array
@@ -49,20 +50,24 @@ router.post('/', async function(req, res, next) {
   if (req.body.auto) {
     // We need to autogenerate
     const calcYearSplit = result.calendarYear.split('-');
-    const lastYear = ((+calcYearSplit[0]) - 1) + '-' + calcYearSplit[0];
+    let lastYear;
     let lastCO = null;
-    // now get the last year termID
 
+    // need to calculate out the previous year, and then from that we can filter using startdate and regex
+    if (result.termNumber == 1 || result.termNumber == 4) {
+      lastYear = (+calcYearSplit[0])-1;
+    } else {
+      lastYear = calcYearSplit[0];
+    }
     try {
-      console.log('Last year: ' + lastYear);
-      // TODO: Get this where clause to properly filter
       const lastYearTerm = await Term.findAll({
         where: {
-          calendarYear: lastYear,
+          startDate: {[Op.startsWith]: lastYear},
           termNumber: result.termNumber,
         },
       });
-      console.log(JSON.stringify(lastYearTerm));
+      console.log(JSON.stringify(lastYearTerm[0]));
+      // console.log(JSON.stringify(lastYearTerm[0].id));
       lastCO = await CourseOffering.findAll({where: {
           TermId: lastYearTerm[0].id,
         }});
@@ -97,11 +102,7 @@ router.post('/', async function(req, res, next) {
       title: 'Manage Terms',
       URL,
     });
-
   }
-
-
-
 });
 
 /**
