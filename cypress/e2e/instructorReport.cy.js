@@ -132,11 +132,12 @@ describe('Test Instructor Report Page', () => {
     // Submit the form
     cy.get('#submitBtn').click();
 
+    //Test that the timeframe is correct
     /**
      * TEST THE TIME THING
      * @type {string[][]}
      */
-
+    //map for valid timeslot locations
     let classesInOrder = [
       ['COOS293B', '', '', '', ''],
       ['', '', '', '', ''],
@@ -147,11 +148,72 @@ describe('Test Instructor Report Page', () => {
       ['', 'SEM283B', '', '', ''],
       ['', '', '', '', ''],
     ];
+    //Check that theyre correct
+    checkCorrectSchedule(classesInOrder);
 
-    for(let i = 1; i < 6; i++)
-    {
-      for(let j = 1, )
-    }
+    //go to the next split
+    cy.get('#btnRight').click();
+    //Test that the timeframe is correct
+    /**
+     * TEST THE TIME THING
+     * @type {string[][]}
+     */
+  //map for valid timeslot locations
+    classesInOrder = [
+      ['', '', 'COOS293A', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''], // 12:00 slot appears empty
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+    ];
+    //Check that theyre correct
+    checkCorrectSchedule(classesInOrder);
 
+    //check that there's only 2 splits
+    cy.get('#btnRight').click();
+    classesInOrder = [
+      ['COOS293B', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', 'COOS291B', ''],
+      ['', 'SEM283B', '', '', ''],
+      ['', '', '', '', ''],
+    ];
+    checkCorrectSchedule(classesInOrder);
+
+    //check that the left button works
+    cy.get('#btnLeft').click();
+    classesInOrder = [
+      ['', '', 'COOS293A', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+    ];
+    checkCorrectSchedule(classesInOrder);
   });
 });
+
+function checkCorrectSchedule(classesInOrder) {
+  for(let i = 1; i < 6; i++)
+  {
+    for(let j = 1; j < 8; j++) {
+      const classText = classesInOrder[i - 1][j - 1];
+      const classSelector = `table tbody tr:nth-of-type(${i}) td:nth-of-type(${j}) div p:first-of-type`;
+
+      if (classText) {
+        cy.get(classSelector).contains(classText);
+      } else {
+        cy.get(classSelector).should('be.empty');
+      }
+    }
+  }
+}
