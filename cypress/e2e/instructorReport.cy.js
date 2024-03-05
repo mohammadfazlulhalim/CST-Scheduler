@@ -109,4 +109,49 @@ describe('Test Instructor Report Page', () => {
     cy.get('#newInstructorReportBtn').click();
     cy.get('#instructorReportModal').should('be.visible');
   });
+
+  /**
+   * STORY 44 SPLITS TESTS
+   */
+  it('testNavigationToTheReportInstructorPage', ()=> {
+    //Opens the landing page
+    cy.visit('localhost:3000');
+    // Click on the "Reports" dropdown toggle
+    // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
+    cy.get('#reportDropdown > a').click();
+
+    // Click on the "Instructor Report" option
+    cy.get('.nav-item.dropdown .dropdown-menu a[href="/instructorReport"]').click();
+
+    // Select the instructor from the dropdown based on value
+    cy.get('#selectInstructorInstructorReport').select('1');
+
+    // Select the term from the dropdown based on value
+    cy.get('#selectTermInstructorReport').select('1');
+
+    // Submit the form
+    cy.get('#submitBtn').click();
+
+    /**
+     * TEST THE TIME THING
+     * @type {string[][]}
+     */
+
+    let classesInOrder = [
+      ['COOS293B', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''], // 12:00 slot appears empty
+      ['', '', '', 'COOS291B', ''],
+      ['', 'SEM283B', '', '', ''],
+      ['', '', '', '', ''],
+    ];
+
+    for(let i = 1; i < 6; i++)
+    {
+      for(let j = 1, )
+    }
+
+  });
 });
