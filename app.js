@@ -20,13 +20,6 @@ const createAllTables = require('./fixtures/createTables.fix');
 
 const app = express();
 
-// creating functions for express that is used in term
-const expressHbs = require('express-handlebars');
-app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}))
-
-
-// end creating function
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');

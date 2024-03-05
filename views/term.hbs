@@ -159,16 +159,22 @@
                                                     </td>
                                                     <td>{{this.group}}</td>
                                                     <td>{{this.CourseId}}</td>
-                                                    <td>{{this.InstructorId}}
-                                                        <!-- TODO: autoselect-->
+                                                    <td>
                                                         <select id="{{this.count}}coInstructor" class="form-label">
-                                                            <option></option>
-                                                            {{#each ../instructors}}
-                                                                <option value="{{id}}" {{#if ../InstructorID == id}}{{/if}}>{{id}}-{{lastName}}</option>
+                                                            {{#each instructors}}
+                                                                <option value="{{id}}"
+                                                                        {{#if selected}}selected{{/if}}>{{firstName}} {{lastName}}</option>
                                                             {{/each}}
                                                         </select>
                                                     </td>
-                                                    <td>{{this.ProgramId}}</td>
+                                                    <td>
+                                                        <select id="{{this.count}}coProgram" class="form-label">
+                                                            {{#each programs}}
+                                                                <option value="{{id}}"
+                                                                        {{#if selected}}selected{{/if}}>{{programAbbreviation}}</option>
+                                                            {{/each}}
+                                                        </select>
+                                                    </td>
                                                     <td>checkbox</td>
                                                 </tr>
                                             {{/each}}
