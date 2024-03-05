@@ -104,23 +104,23 @@ const validCourseOfferingsA = [
 
 const courseOffering1 = {
   name: 'Hardware',
-    startDate: '2023-09-01',
-    endDate: '2023-12-15',
-    group: 'A',
-    CourseId: 1,
-    termID: 1,
-    instructorID: 1,
-    programID: 1,
+  startDate: '2023-09-01',
+  endDate: '2023-12-15',
+  group: 'A',
+  CourseId: 1,
+  termID: 1,
+  instructorID: 1,
+  programID: 1,
 };
 const courseOffering2 = {
   name: 'Seminar',
-    startDate: '2023-09-01',
-    endDate: '2023-12-15',
-    group: 'B',
-    CourseId: 1,
-    termID: 1,
-    instructorID: 1,
-    programID: 1,
+  startDate: '2023-09-01',
+  endDate: '2023-12-15',
+  group: 'B',
+  CourseId: 1,
+  termID: 1,
+  instructorID: 1,
+  programID: 1,
 };
 
 
