@@ -23,8 +23,11 @@ function routerGet(req, res, next) {
 /**
  * This function helps to finding and collecting  timeslots which
  * are experiencing class conflicts
- * @param timeSlots, classroom, term
+ * @param classroom   is an instance of Classroom object
  */
-function checkForConflict(timeSlots, classroom, term) {
+function checkForConflict(classroom) {
 
 }
+
+
+
