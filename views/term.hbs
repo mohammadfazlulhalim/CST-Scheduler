@@ -143,6 +143,7 @@
                                                 <tr>
                                                     <td>{{this.count}}</td>
                                                     <td>
+                                                        <input hidden id="{{this.count}}coTerm" value="{{this.TermId}}" />
                                                         <input type="text" class="form-control"
                                                                id="{{this.count}}coName"
                                                                name="name" value="{{this.name}}"/>
@@ -157,8 +158,8 @@
                                                                id="{{this.count}}coEndDate"
                                                                value="{{this.endDate}}"/>
                                                     </td>
-                                                    <td>{{this.group}}</td>
-                                                    <td>{{this.CourseId}}</td>
+                                                    <td id="{{this.count}}coGroup">{{this.group}}</td>
+                                                    <td id="{{this.count}}coCourse">{{this.CourseId}}</td>
                                                     <td>
                                                         <select id="{{this.count}}coInstructor" class="form-label">
                                                             {{#each instructors}}
@@ -175,7 +176,9 @@
                                                             {{/each}}
                                                         </select>
                                                     </td>
-                                                    <td>checkbox</td>
+                                                    <td>
+                                                        <input type="checkbox" class="form-check" id="{{this.count}}coSkip" value="skip">
+                                                    </td>
                                                 </tr>
                                             {{/each}}
                                             </tbody>
@@ -289,23 +292,24 @@
 
         const coToCreateArray=[];
 
-        // TODO: loop through CO table, and add to array of course offerings to create
-        const coTable = document.getElementById("coTable");
-        console.log("Table is: " + coTable);
-
-        // skipping first row, since that is headers
-        // let r=0;
-        // let row={};
-        console.log("All rows are: " + coTable.rows);
-        for(let row of coTable.rows) {
-          // Have selected each row, now need to figure out how to access it
-            console.log("Inner html for row is: " + row.innerHTML);
-            // for (let cell of row.cells) {
-            //   let val = cell.innerHTML;
-            //   console.log("Inner html is: " + val);
-            // }
-
+        const numRows = document.getElementById("coTable").rows.length;
+        for (let i =1; i < numRows; i++) {
+            if (!$('#'+i+'coSkip').is(':checked')) {
+              const tempObj = {
+                name: $('#'+i+'coName').val(),
+                startDate: $('#'+i+'coStartDate').val(),
+                endDate: $('#'+i+'coEndDate').val(),
+                group: $('#'+i+'coGroup').text(),
+                CourseId: $('#'+i+'coCourse').text(),
+                InstructorId: $('#'+i+'coInstructor').val(),
+                ProgramId: $('#'+i+'coProgram').val(),
+                TermId: $('#'+i+'coTerm').val(),
+              }
+              console.log('Created object is: ' + JSON.stringify(tempObj));
+              coToCreateArray.push(tempObj);
+            }
         }
+
 
         const response = await fetch('{{URL}}/term/course-offerings', {
           method: 'POST',
@@ -318,6 +322,7 @@
 
         })
 
+        // TODO: Handle errors and properly display the errors
         const data = await response.text();
         const modal = '#coModal';
 
