@@ -8,6 +8,7 @@ const CourseOffering = require('../private/javascript/CourseOffering');
 const Program = require('../private/javascript/Program');
 const Instructor = require('../private/javascript/Instructor');
 const {Op} = require('sequelize');
+const createCourseOffering = require('./courseOfferingRouter').createCourseOffering;
 
 router.get('/', async function(req, res, next) {
   // Declaring the array
@@ -112,6 +113,34 @@ router.post('/', async function(req, res, next) {
   }
 });
 
+
+router.post('/course-offerings',async function(req, res, next){
+  const termLists = await readAllTerms();
+  const coCreateArray = [];
+  // TODO: loop through and save each course offering
+  res.status(201);
+  for(const tempCO of req.body.listCourseOfferings) {
+    const retCreate = await createCourseOffering(tempCO);
+    // TODO: check for errors on each submission and modify status
+    if (retCreate.error) {
+      coCreateArray.push(retCreate);
+      res.status(422);
+    }
+  }
+
+
+
+  // TODO: load errors, and call res.render properly
+
+
+  res.render('term', {
+    termEntries: termLists,
+    maxTerms: termConstraints.termNumberUpperLimit,
+    minTerms: termConstraints.termNumberLowerLimit,
+    title: 'Manage Terms',
+    URL,
+  });
+});
 /**
  * DELETE handler for http://localhost:3000/term
  */
