@@ -100,9 +100,23 @@ router.post('/', async (req, res, next) => {
       tSlot.course = cObj.courseCode;
       tSlot.co = coObj.id;
 
-      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
-      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;// outer array is days, each inner array is times
+      // Check if timeslotMatrix and the corresponding indices are defined
+      if (
+          groupArray[i].timeslotMatrix &&
+          TIMES.indexOf(tSlot.startTime) !== -1 &&
+          groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)] &&
+          groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day]
+      ) {
+        // Update properties only if the necessary objects and indices exist
+        groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
+        groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;
+      } else {
+        // Handle the case where the structure or indices are not as expected
+        console.error('Invalid structure or indices in timeslotMatrix:', groupArray[i].timeslotMatrix);
+      }
     }
+
+
     groupLetters[i] = GROUP_LETTERS[i];
   }
 
