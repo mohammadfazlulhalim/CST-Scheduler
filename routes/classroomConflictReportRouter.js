@@ -1,3 +1,6 @@
+const express= require('express');
+const router = express.Router();
+
 
 /**
  * Post Handler for classroom conflict report router
@@ -5,9 +8,9 @@
  * @param res
  * @param next
  */
-function routerPost(req, res, next) {
+router.post('/', async (req, res, next)=>{
 
-}
+});
 
 /**
  * Get Handler for classroom conflict report router
@@ -15,9 +18,9 @@ function routerPost(req, res, next) {
  * @param res
  * @param next
  */
-function routerGet(req, res, next) {
-
-}
+router.get('/', async (req, res, next)=>{
+   ;
+});
 
 
 /**
@@ -25,9 +28,10 @@ function routerGet(req, res, next) {
  * are experiencing class conflicts
  * @param classroom   is an instance of Classroom object
  */
-function checkForConflict(classroom) {
+async function checkForConflict(classroom) {
 
 }
 
 
 
+module.exports = {router, checkForConflict};
