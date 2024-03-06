@@ -207,5 +207,9 @@ async function generateSchedule(instRepTimeslots) {
   return matrixTable;
 }
 
+async function getUniqueDates(Instructor, Term){
+
+}
+
 
 module.exports = router;

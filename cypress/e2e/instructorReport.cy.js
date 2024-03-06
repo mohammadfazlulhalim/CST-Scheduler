@@ -133,10 +133,7 @@ describe('Test Instructor Report Page', () => {
     cy.get('#submitBtn').click();
 
     //Test that the timeframe is correct
-    /**
-     * TEST THE TIME THING
-     * @type {string[][]}
-     */
+    cy.get('#curTime1').contains('Schedule Range: 2023-01-01 to 2023-02-28')
     //map for valid timeslot locations
     let classesInOrder = [
       ['COOS293B', '', '', '', ''],
@@ -154,10 +151,7 @@ describe('Test Instructor Report Page', () => {
     //go to the next split
     cy.get('#btnRight').click();
     //Test that the timeframe is correct
-    /**
-     * TEST THE TIME THING
-     * @type {string[][]}
-     */
+    cy.get('#curTime2').contains('Schedule Range: 2023-03-01 to 2023-04-01')
   //map for valid timeslot locations
     classesInOrder = [
       ['', '', 'COOS293A', '', ''],
@@ -199,9 +193,47 @@ describe('Test Instructor Report Page', () => {
       ['', '', '', '', ''],
     ];
     checkCorrectSchedule(classesInOrder);
+
+    //now checking that no split reports generate properly
+
+    // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
+    cy.get('#reportDropdown > a').click();
+
+    // Click on the "Instructor Report" option
+    cy.get('.nav-item.dropdown .dropdown-menu a[href="/instructorReport"]').click();
+
+    // Select the instructor from the dropdown based on value
+    cy.get('#selectInstructorInstructorReport').select('1');
+
+    // Select the term from the dropdown based on value
+    cy.get('#selectTermInstructorReport').select('5');
+
+    // Submit the form
+    cy.get('#submitBtn').click();
+
+    //Test that the timeframe is indeterminate
+    cy.get('#curTime1').contains('Schedule Range: Unknown')
+    //map for valid timeslot locations
+    classesInOrder = [
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''], // 12:00 slot appears empty
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+    ];
+    //Check that theyre correct
+    checkCorrectSchedule(classesInOrder);
+    //check that the buttons for splits dont exist
+    cy.get('#btnLeft').should('not.exist');
+    cy.get('#btnRight').should('not.exist');
+
   });
 });
 
+//checks that a schedule matches a given pattern
 function checkCorrectSchedule(classesInOrder) {
   for(let i = 1; i < 6; i++)
   {
