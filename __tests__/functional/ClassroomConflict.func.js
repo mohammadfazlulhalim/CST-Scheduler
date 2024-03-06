@@ -14,7 +14,6 @@ const setupTables = require('../../fixtures/ClearAndDefineTables');
 
 
 describe('Classroom Conflict Report Router', ()=>{
-
   const classroomObj = {
     roomNumber: '239A',
     location: 'Saskatoon Main Campus',
@@ -26,10 +25,8 @@ describe('Classroom Conflict Report Router', ()=>{
   };
 
 
-
   // use the imported function to clear and define tables from the established fixtures
   beforeAll( async () => {
-
     try {
       await sequelize.sync({force: true});
     } catch (error) {
@@ -51,15 +48,14 @@ describe('Classroom Conflict Report Router', ()=>{
 
     const createdCourseOffering = await CourseOffering.create(courseOfferingObj);
 
-    const  instructorObj={firstName: 'Micheal', lastName: 'Grzesina', officeNum: '123B.1', phoneNum: '(306)-456-6859', email: 'grzesina@saskpolytech.ca'};
+    const instructorObj={firstName: 'Micheal', lastName: 'Grzesina', officeNum: '123B.1', phoneNum: '(306)-456-6859', email: 'grzesina@saskpolytech.ca'};
 
-    const  createdInstructor = await  Instructor.create(instructorObj);
+    const createdInstructor = await Instructor.create(instructorObj);
     const termObj= {termNumber: 3, startDate: '2023-05-01', endDate: '2023-05-24'};
     const createdTerm = await Term.create(termObj);
 
-    const programObj= {      programAbbreviation: 'CST',      programName: 'Computer Systems Technology',    };
+    const programObj= {programAbbreviation: 'CST', programName: 'Computer Systems Technology'};
     const createdProgram = await Program.create(programObj);
-
 
 
     const timeslotObj1 =
@@ -68,7 +64,7 @@ describe('Classroom Conflict Report Router', ()=>{
       {startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'};
 
 
-    //below timeslots should have same information including the same classroom ID
+    // below timeslots should have same information including the same classroom ID
     const createdTimeslot1 = await TimeSlot.create(timeslotObj1);
     await createdTimeslot1.setClassroom(createdClassroom);
     await createdTimeslot1.setTerm(createdTerm);
@@ -82,7 +78,6 @@ describe('Classroom Conflict Report Router', ()=>{
     await createdTimeslot2.setInstructor(createdInstructor);
     await createdTimeslot2.setProgram(createdProgram);
     await createdTimeslot2.setCourseOffering(createdCourseOffering);
-
   } );
 
 
@@ -96,26 +91,25 @@ describe('Classroom Conflict Report Router', ()=>{
     // TODO additional assertion to check the structure of the response
   });
 
-  //Expecting two timeslots having the same information against provided classroom
+  // Expecting two timeslots having the same information against provided classroom
   it('testClassroomConflictsFound ', async ()=>{
     // TODO  TODO Provide necessary data to create a new report
 
 
-    const classroomInstance = await Classroom.findOne({where: {roomNumber:classroomObj.roomNumber}});
+    const classroomInstance = await Classroom.findOne({where: {roomNumber: classroomObj.roomNumber}});
 
     const resultConflictingTimeslots = await ClassroomConflictReportController.checkForConflict(classroomInstance);
 
     expect(resultConflictingTimeslots.length).toBe(2);
   });
 
-  //Expecting no timeslots having the same information against provided classroom
+  // Expecting no timeslots having the same information against provided classroom
   it('testClassroomConflictsNotFound ', async ()=>{
-    const classroomInstance2 = await  Classroom.findOne({where: {roomNumber:classroomObj2.roomNumber}});
+    const classroomInstance2 = await Classroom.findOne({where: {roomNumber: classroomObj2.roomNumber}});
 
     const resultConflictingTimeslots2 = await ClassroomConflictReportController.checkForConflict(classroomInstance2);
 
     expect(resultConflictingTimeslots2.length).toBe(0);
-
   });
 
   // Clean up after tests

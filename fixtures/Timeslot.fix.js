@@ -4,6 +4,7 @@ const Program = require('../private/javascript/Program');
 const Classroom = require('../private/javascript/Classroom');
 const Term = require('../private/javascript/Term');
 const courseOffering = require('../private/javascript/CourseOffering');
+const TimeSlot = require('../private/javascript/Timeslot');
 const validInstructor = require('./Instructor.fix').validInstructor;
 const validCourseOfferingsA = require('./CourseOffering.fix').validCourseOfferingsA;
 const validCourseOfferingsB = require('./CourseOffering.fix').validCourseOfferingsB;
@@ -31,6 +32,7 @@ const s48validTimeslots = [
  */
 async function fillTimeslotTable() {
   await createTimeslot();
+  await s50CreateConflictingTimeslot();
 }
 
 // eslint-disable-next-line require-jsdoc
@@ -130,11 +132,33 @@ validTimeslots = [
 
 const timeSlot1 = {
   startTime: '10:00', // The value is 24h for now
-    endTime: '11:00', // replaced duration for now
-    startDate: '2023-09-01',
-    endDate: '2023-12-15',
-    day: 0,
-    group: 'B',
+  endTime: '11:00', // replaced duration for now
+  startDate: '2023-09-01',
+  endDate: '2023-12-15',
+  day: 0,
+  group: 'B',
 };
 
-module.exports = { timeSlot1, validTimeslots, fillTimeslotTable};
+
+/**
+ * function to asynchronously create new timeslot that deliberately conflicts with another timeslot
+ * @returns {Promise<void>}
+ */
+async function s50CreateConflictingTimeslot() {
+// TODO s50 establish a new timeslot matching the attributes of another timeslot
+  const s50Timeslot =
+    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'B'};
+
+  const classroomInstance239A = await Classroom.findOne({where: {roomNumber: '239A'}})
+
+  const createdTimeslot1 = await Timeslot.create(s50Timeslot);
+  await createdTimeslot1.setClassroom(classroomInstance239A);
+  // await createdTimeslot1.setTerm();
+  // await createdTimeslot1.setInstructor();
+  // await createdTimeslot1.setProgram();
+  // await createdTimeslot1.setCourseOffering();
+
+}
+
+
+module.exports = {timeSlot1, validTimeslots, fillTimeslotTable};
