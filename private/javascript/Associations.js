@@ -13,14 +13,15 @@ addAssociations = () => {
   // Course offering associations:
   Term.hasMany(CourseOffering);
   Course.hasMany(CourseOffering, {foreignKey: {allowNull: false}});
-  Instructor.hasMany(CourseOffering);
+  // Instructor.belongsToMany(CourseOffering, {through: 'InstructorCourseOffering'});
   Program.hasMany(CourseOffering);
+  Instructor.hasMany(CourseOffering);
 
   CourseOffering.belongsTo(Term);
   CourseOffering.belongsTo(Course);
-  CourseOffering.belongsTo(Instructor, {as: 'Instructor', foreignKey: 'InstructorId'});
-  CourseOffering.belongsTo(Instructor, {as: 'alternativeInstructor', foreignKey: 'alternativeInstructorId'});
-
+  CourseOffering.belongsTo(Instructor);
+  // CourseOffering.belongsToMany(Instructor, {through: 'InstructorCourseOffering'});
+  // CourseOffering.belongsTo(Instructor, {as: 'alternativeInstructor', foreignKey: 'alternativeInstructorId'});
 
   CourseOffering.belongsTo(Program);
 
