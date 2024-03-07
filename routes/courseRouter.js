@@ -1,6 +1,9 @@
 const Course = require('../private/javascript/Course');
 const express = require('express');
-const {sequelize} = require("../dataSource");
+const {sequelize} = require('../dataSource');
+const Instructor = require('../private/javascript/Instructor');
+const Program = require('../private/javascript/Program');
+const Term = require('../private/javascript/Term');
 const router = express.Router();
 const URL=require('../constants').URL;
 
@@ -8,44 +11,51 @@ const URL=require('../constants').URL;
 /**
  * GET handler for http://localhost:3000/course
  */
-router.get('/', async (req, res,next)=>{
-  //Declaring the array
+router.get('/', async (req, res, next)=>{
+  // Declaring the array
   const courseLists= await readAllCourses();
+  const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
+  // console.log('Course Lists:', courseLists);
+  // console.log('List of Instructors:', listInstructor);
 
-  res.render ('course',{
+  res.render('course', {
     title: 'Course Listings',
-    courseList: courseLists, URL
+    listInstructor,
+    courseList: courseLists, URL,
   });
 });
-
 
 
 /**
  * POST handler for http://localhost:3000/course
  *
  */
-router.post('/',async (req,res,next)=>{
-  //synchronizing all models at once
+router.post('/', async (req, res, next)=>{
+  // synchronizing all models at once
   await sequelize.sync();
-  //Attempt to create the given course
+  const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
+  // Attempt to create the given course
   const result= await createCourse({
     id: req.body.id,
-    courseCode:req.body.courseCode,
-    courseName:req.body.courseName,
-    courseNumCredits:req.body.courseNumCredits,
-    courseNumHoursPerWeek:req.body.courseNumHoursPerWeek,
+    courseCode: req.body.courseCode,
+    courseName: req.body.courseName,
+    courseNumCredits: req.body.courseNumCredits,
+    courseNumHoursPerWeek: req.body.courseNumHoursPerWeek,
+    InstructorId: req.body.instructor,
   });
 
+  console.log(req.body.instructor);
+
   let violations;
-  if (result.error){
-    //if the course does not have a start/end date, that means it's invalid and errors were sent back
+  if (result.error) {
+    // if the course does not have a start/end date, that means it's invalid and errors were sent back
     res.status(422);
-    //send error messages to the hbs template
+    // send error messages to the hbs template
     violations=result.error;
-  }else{
-    //creation was successful
+  } else {
+    // creation was successful
     res.status(201);
-    //put the ID in the response so tests can access it
+    // put the ID in the response so tests can access it
     res.set('id', result.id);
   }
   const courseLists= await readAllCourses();
@@ -54,22 +64,18 @@ router.post('/',async (req,res,next)=>{
     title: 'Course List',
     courseList: courseLists,
     putErr: violations,
-    submittedCourse: violations ? req.body: undefined,URL
+    submittedCourse: violations ? req.body: undefined, URL,
+    listInstructor,
   });
 });
-
-
-
-
 
 
 /**
  * DELETE handler for http://localhost:3000/course
  */
 router.delete('/', async function(req, res, next) {
-
   const result = await deleteCourse({id: req.body.id});
-
+  const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
   let violations;
   if (result <= 0) {
     res.status(404);
@@ -77,10 +83,11 @@ router.delete('/', async function(req, res, next) {
   }
   const courseLists = await readAllCourses();
   res.render('course', {
+    listInstructor,
     title: 'Course List',
     courseList: courseLists,
     putErr: violations,
-    submittedCourse: violations ? req.body : undefined,URL
+    submittedCourse: violations ? req.body : undefined, URL,
   });
 });
 
@@ -94,7 +101,9 @@ router.put('/', async function(req, res, next) {
     courseName: req.body.courseName,
     courseNumCredits: req.body.courseNumCredits,
     courseNumHoursPerWeek: req.body.courseNumHoursPerWeek,
+    InstructorId: req.body.instructor,
   });
+  const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
 
   let violations;
   if (result.error) {
@@ -115,7 +124,8 @@ router.put('/', async function(req, res, next) {
     title: 'Course List',
     courseList: courseLists,
     putErr: violations,
-    putSubmittedCourse,URL
+    listInstructor,
+    putSubmittedCourse, URL,
 
   });
 });
@@ -133,13 +143,7 @@ const updateCourse = async (course) => {
   if (courseToUpdate) {
     // only try to update the course if it already exists
     try {
-      return await courseToUpdate.update({
-        id: course.id,
-        courseCode: course.courseCode,
-        courseName: course.courseName,
-        courseCredits: course.courseNumCredits,
-        courseNumHoursPerWeek: course.courseNumHoursPerWeek,
-      });
+      return await courseToUpdate.update(course);
     } catch (err) {
       // return formatted validation errors when invalid
       return mapErrors(err);
@@ -153,36 +157,31 @@ const updateCourse = async (course) => {
 
 /**
  * this method weill be used to call database for all course entries ordered by courseCode
- * @returns {Promise<undefined|Model<any, TModelAttributes>[]>}
+ * @return {Promise<undefined|Model<any, TModelAttributes>[]>}
  */
 const readAllCourses = async ()=>{
   try {
-    //calling the database, for all course entries, ordered by course code
-    return await Course.findAll({order:['courseCode']});
-  }catch(err){
+    // calling the database, for all course entries, ordered by course code
+    return await Course.findAll({include: [Instructor], order: ['courseCode']});
+  } catch (err) {
     // If course not found in database it will return undefined so that courseList will be empty
     return undefined;
   }
-}
+};
 
 
 /**
  * Attempts to create the given course in the database
  * @param course -An object literal with the desired course to create
- * @returns {Promise<{error: {}}>} -the created course if successful, a list of errors if not
+ * @return {Promise<{error: {}}>} -the created course if successful, a list of errors if not
  */
 const createCourse = async (course)=> {
-try {
-  return await Course.create({
-    courseCode:course.courseCode,
-    courseName:course.courseName,
-    courseNumCredits:course.courseNumCredits,
-    courseNumHoursPerWeek:course.courseNumHoursPerWeek,
-  });
-}catch(err){
-  //return formatted errors
-  return mapErrors(err);
-}
+  try {
+    return await Course.create(course);
+  } catch (err) {
+  // return formatted errors
+    return mapErrors(err);
+  }
 };
 
 /**
@@ -192,8 +191,7 @@ try {
  */
 
 const deleteCourse = async (course) => {
-
-  try{
+  try {
     return await Course.destroy({where: {id: course.id}});
   } catch (err) {
     // if an error occurred, state that 0 rows were deleted
@@ -203,7 +201,7 @@ const deleteCourse = async (course) => {
 /**
  * Given an error object, this function maps it to a more presentable format for the hbs template.
  * @param err
- * @returns {{error: {}}}
+ * @return {{error: {}}}
  */
 const mapErrors = (err) => {
   const violations = {error: {}};
@@ -220,5 +218,5 @@ const mapErrors = (err) => {
   return violations;
 };
 
-module.exports = {router, createCourse, deleteCourse, updateCourse };
+module.exports = {router, createCourse, deleteCourse, updateCourse};
 

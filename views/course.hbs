@@ -1,10 +1,13 @@
-<div class="container p-2">
-    <h1>{{title}}</h1>
+<div class="container-fluid">
+    <h1 class="display-6 text-center">{{title}}</h1>
+
     <!--    Check if courses was sent as undefined or not -->
     {{#if courseList}}
         <!--        table for storing course items if they do exist -->
+        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">Add New Course </button>
         <table class="table table-striped">
             <thead class="table-primary">
+
             <tr>
                 <th>Course Code</th>
                 <th>Course Name</th>
@@ -14,16 +17,24 @@
                 <th>Actions</th>
             </tr>
             </thead>
-           <tbody >
+            <tbody>
             {{#each courseList}}
                 <tr>
                     <td id="{{this.id}}courseCode">{{this.courseCode}}</td>
                     <td id="{{this.id}}courseName">{{this.courseName}}</td>
                     <td id="{{this.id}}courseNumCredits">{{this.courseNumCredits}}</td>
                     <td id="{{this.id}}courseNumHoursPerWeek">{{this.courseNumHoursPerWeek}}</td>
+                    <td id="{{this.id}}instructor"
+                        data-instructorid="{{this.Instructor.id}}">{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
                     <td>
-                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton" data-toggle="modal" data-target="#editModal">Edit</button>
-                        <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
+                                data-toggle="modal"
+                                data-target="#editModal">Edit
+                        </button>
+                        <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
+                                data-toggle="modal"
+                                data-target="#deleteModal">Delete
+                        </button>
                     </td>
                 </tr>
             {{/each}}
@@ -32,7 +43,8 @@
         </table>
 
         <!-- Delete Modal -->
-        <div class="modal fade" id="deleteModal" role="dialog" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal fade" id="deleteModal" role="dialog" tabindex="-1" aria-labelledby="deleteModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -46,7 +58,7 @@
                             <p>Are you sure you want to delete this course?</p>
                         </div>
 
-                        <input type="text" id="deleteID" name="id" hidden />
+                        <input type="text" id="deleteID" name="id" hidden/>
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -58,7 +70,8 @@
         </div>
 
         <!-- Edit Modal -->
-        <div class="modal fade" id="editModal" role="dialog" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal fade" id="editModal" role="dialog" tabindex="-1" aria-labelledby="editModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -80,16 +93,26 @@
                             <div class="invalid-feedback">{{putErr.courseName}}</div>
 
                             <label for="eCourseNumCredits">Number of Credits:</label>
-                            <input class="form-control {{#if putErr.courseNumCredits}}is-invalid{{/if}}" id="eCourseNumCredits"
+                            <input class="form-control {{#if putErr.courseNumCredits}}is-invalid{{/if}}"
+                                   id="eCourseNumCredits"
                                    name="courseNumCredits" value="{{putSubmittedCourse.courseNumCredits}}">
                             <div class="invalid-feedback">{{putErr.courseNumCredits}}</div>
 
                             <label for="eCourseNumHoursPerWeek">Number of Hours Per Week:</label>
-                            <input class="form-control {{#if putErr.courseNumHoursPerWeek}}is-invalid{{/if}}" id="eCourseNumHoursPerWeek"
+                            <input class="form-control {{#if putErr.courseNumHoursPerWeek}}is-invalid{{/if}}"
+                                   id="eCourseNumHoursPerWeek"
                                    name="courseNumHoursPerWeek" value="{{putSubmittedCourse.courseNumHoursPerWeek}}">
                             <div class="invalid-feedback">{{putErr.courseNumHoursPerWeek}}</div>
+                            <div>
+                                <label for="eInstructor">Instructor</label>
+                                <select id="eInstructor" class="form-select">Instructor
+                                    {{#each listInstructor}}
+                                        <option value="{{id}}">{{lastName}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
 
-                            <input type="text" id="editID" name="id" hidden />
+                            <input type="text" id="editID" name="id" hidden/>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -106,10 +129,11 @@
         <p>There are no courses stored</p>
     {{/if}}
 
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">Add New Course</button>
+
 
     <!-- Add Modal - must be displayed even if no courses exist -->
-    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -131,16 +155,27 @@
                         <div class="invalid-feedback">{{putErr.courseName}}</div>
 
                         <label for="cCourseNumCredits">Number of Credits:</label>
-                        <input class="form-control {{#if putErr.courseNumCredits}}is-invalid{{/if}}" id="cCourseNumCredits"
+                        <input class="form-control {{#if putErr.courseNumCredits}}is-invalid{{/if}}"
+                               id="cCourseNumCredits"
                                name="courseNumCredits" value="{{putSubmittedCourse.courseNumCredits}}">
                         <div class="invalid-feedback">{{putErr.courseNumCredits}}</div>
 
                         <label for="cCourseNumHoursPerWeek">Number of Hours Per Week:</label>
-                        <input class="form-control {{#if putErr.courseNumHoursPerWeek}}is-invalid{{/if}}" id="cCourseNumHoursPerWeek"
+                        <input class="form-control {{#if putErr.courseNumHoursPerWeek}}is-invalid{{/if}}"
+                               id="cCourseNumHoursPerWeek"
                                name="courseNumHoursPerWeek" value="{{putSubmittedCourse.courseNumHoursPerWeek}}">
                         <div class="invalid-feedback">{{putErr.courseNumHoursPerWeek}}</div>
+                        <div>
+                            <label for="cInstructor">Instructor</label>
+                            <select id="cInstructor" class="form-label">Instructor
+                                <option></option>
+                                {{#each listInstructor}}
+                                    <option value="{{id}}">{{lastName}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
 
-                        <input type="text" id="editID" name="id" hidden />
+                        <input type="text" id="editID" name="id" hidden/>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -151,11 +186,10 @@
         </div>
     </div>
 
-
 </div>
 <!-- Handlers for the form submits -->
 <script>
-    "use strict";
+    'use strict';
 
     reLinkButtons();
 
@@ -163,16 +197,16 @@
      * This function links the buttons on the page to their appropriate handlers
      */
     function reLinkButtons() {
-        $("#createCourse").click(handleCreateCourse);
-        $("#deleteCourse").click(handleDeleteCourse);
-        $("#editCourse").click(handleEditCourse);
-        $(".deleteButton").click(function () {
-            handleDeleteModal(this.id.replace("delete", ""));
+        $('#createCourse').click(handleCreateCourse);
+        $('#deleteCourse').click(handleDeleteCourse);
+        $('#editCourse').click(handleEditCourse);
+        $('.deleteButton').click(function() {
+            handleDeleteModal(this.id.replace('delete', ''));
         });
-        $(".editButton").click(function () {
-            handleEditModal(this.id.replace("edit", ""))
+        $('.editButton').click(function() {
+            handleEditModal(this.id.replace('edit', ''));
         });
-        $(".modal").on("hidden.bs.modal", function () {
+        $('.modal').on('hidden.bs.modal', function() {
             clearErrors();
         });
     }
@@ -185,22 +219,23 @@
     async function handleCreateCourse() {
         // send a POST request to the router
         const response = await fetch("{{URL}}/course", {
-            method: "POST",
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
-                courseCode: $("#cCourseCode").val(),
-                courseName: $("#cCourseName").val(),
-                courseNumCredits: $("#cCourseNumCredits").val(),
-                courseNumHoursPerWeek: $("#cCourseNumHoursPerWeek").val(),
+                courseCode: $('#cCourseCode').val(),
+                courseName: $('#cCourseName').val(),
+                courseNumCredits: $('#cCourseNumCredits').val(),
+                courseNumHoursPerWeek: $('#cCourseNumHoursPerWeek').val(),
+                instructor: $('#cInstructor').val(),
             }),
         });
 
         // get the HTML text response
         const data = await response.text();
-        const modal = "#addModal";
+        const modal = '#addModal';
 
         loadResponse(modal, data, !response.ok);
     }
@@ -213,19 +248,19 @@
     async function handleDeleteCourse() {
         // send a DELETE request to the router
         const response = await fetch('{{URL}}/course', {
-            method: "DELETE",
+            method: 'DELETE',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
-                id: $("#deleteID").val(),
+                id: $('#deleteID').val(),
             }),
         });
 
         // get the HTML text response
         const data = await response.text();
-        const modal = "#deleteModal";
+        const modal = '#deleteModal';
 
         loadResponse(modal, data, !response.ok);
     }
@@ -236,27 +271,28 @@
      * @returns {Promise<void>}
      */
     async function handleEditCourse() {
-        const id = $("#editID").val();
+        const id = $('#editID').val();
         // send a PUT request to the router
         const response = await fetch("{{url}}/course", {
-            method: "PUT",
+            method: 'PUT',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
 
-                courseCode: $("#eCourseCode").val(),
-                courseName: $("#eCourseName").val(),
-                courseNumCredits: $("#eCourseNumCredits").val(),
-                courseNumHoursPerWeek: $("#eCourseNumHoursPerWeek").val(),
+                courseCode: $('#eCourseCode').val(),
+                courseName: $('#eCourseName').val(),
+                courseNumCredits: $('#eCourseNumCredits').val(),
+                courseNumHoursPerWeek: $('#eCourseNumHoursPerWeek').val(),
+                instructor: $('#eInstructor').val(),
                 id,
             }),
         });
 
         // get the HTML text response
         const data = await response.text();
-        const modal = "#editModal";
+        const modal = '#editModal';
 
         loadResponse(modal, data, !response.ok);
 
@@ -269,7 +305,7 @@
      * @param idToDelete    - The ID of the course to delete
      */
     function handleDeleteModal(idToDelete) {
-        $("#deleteID").val(idToDelete);
+        $('#deleteID').val(idToDelete);
     }
 
     /**
@@ -278,11 +314,13 @@
      * @param idToEdit    - The ID of the course being edited
      */
     function handleEditModal(idToEdit) {
-        $("#editID").val(idToEdit);
-        $("#eCourseCode").val($(`#${idToEdit}courseCode`).text());
-        $("#eCourseName").val($(`#${idToEdit}courseName`).text());
-        $("#eCourseNumCredits").val($(`#${idToEdit}courseNumCredits`).text());
-        $("#eCourseNumHoursPerWeek").val($(`#${idToEdit}courseNumHoursPerWeek`).text());
+        $('#editID').val(idToEdit);
+        $('#eCourseCode').val($(`#${idToEdit}courseCode`).text());
+        $('#eCourseName').val($(`#${idToEdit}courseName`).text());
+        $('#eCourseNumCredits').val($(`#${idToEdit}courseNumCredits`).text());
+        $('#eCourseNumHoursPerWeek').val($(`#${idToEdit}courseNumHoursPerWeek`).text());
+        $('#eInstructor').val(document.getElementById(idToEdit + 'instructor').dataset.instructorid);
+
 
     }
 
@@ -301,26 +339,28 @@
         reLinkButtons();
         // refresh the modal
         const modal = $(modalID);
-        modal.modal("hide");
+        modal.modal('hide');
 
         // if the response was not ok, pop up the modal
         if (showModal) {
-            modal.modal("show");
+            modal.modal('show');
         }
     }
 
     function clearErrors() {
         // Clear error messages or styling for input fields
-        $(".is-invalid").removeClass("is-invalid");
-        $(".invalid-feedback").text("");
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').text('');
 
-        $("#cCourseNumber").val("");
-        $("#cStartDate").val("");
-        $("#cEndDate").val("");
+        $('#cCourseNumber').val('');
+        $('#cStartDate').val('');
+        $('#cEndDate').val('');
 
-        $("#cCourseCode").val("");
-        $("#cCourseName").val("");
-        $("#cCourseNumCredits").val("");
-        $("#cCourseNumHoursPerWeek").val("");
+        $('#cCourseCode').val('');
+        $('#cCourseName').val('');
+        $('#cCourseNumCredits').val('');
+        $('#cCourseNumHoursPerWeek').val('');
     }
+
+
 </script>
