@@ -3,6 +3,8 @@ const router = express.Router();
 const Instructor = require('../private/javascript/Instructor');
 const Term = require('../private/javascript/Term');
 const Timeslot = require('../private/javascript/Timeslot');
+const {sequelize} = require("../dataSource");
+const {QueryTypes} = require("sequelize");
 const globalConsts = require('../constants').globalConsts;
 
 // global constants here to work with time arrays
@@ -207,9 +209,26 @@ async function generateSchedule(instRepTimeslots) {
   return matrixTable;
 }
 
-async function getUniqueDates(Instructor, Term){
 
+//TODO learn what this does
+async function getUniqueDates(instructor, term) {
+  const sqlStatement = `SELECT DISTINCT date
+                        FROM (
+                          SELECT startDate AS date FROM timeslots where InstructorId = ${instructor.id}
+                          UNION
+                          SELECT endDate AS date FROM timeslots where InstructorId = ${instructor.id}
+                          ) AS combined_dates
+                        WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
+
+  try {
+    return await sequelize.query(sqlstatement, {
+      type: QueryTypes.SELECT,
+    });
+  } catch (e) {
+    console.log(e);
+  }
 }
+
 
 
 module.exports = router;
