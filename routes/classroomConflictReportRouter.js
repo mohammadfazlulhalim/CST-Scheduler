@@ -1,12 +1,12 @@
 const express= require('express');
 const router = express.Router();
-const {sequelize, Op} = require("../dataSource");
+const {sequelize, Op} = require('../dataSource');
 
 const Timeslot= require('../private/javascript/Timeslot');
 const Classroom= require('../private/javascript/Classroom');
 
-const timeslot = require("../private/javascript/Timeslot");
-const {QueryTypes} = require("sequelize");
+const timeslot = require('../private/javascript/Timeslot');
+const {QueryTypes} = require('sequelize');
 
 /**
  * Post Handler for classroom conflict report router
@@ -15,23 +15,22 @@ const {QueryTypes} = require("sequelize");
  * @param next
  */
 router.post('/', async (req, res, next)=>{
-    const headerArray=[{header:'Term'}, {header:'Course Code'}, {header:'Weekday'}, {header:'Start Time'}, {header:'End Time'}, {header:'Instructor'}];
+  const headerArray=[{header: 'Term'}, {header: 'Course Code'}, {header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}];
 
-    //Sequelize will automatically perform an SQL query to the database and create a table
-    await sequelize.sync();
-    const realClassroom = await Classroom.findOne({where: {id: req.body.classroom}});
-    const timeSlots= await checkForConflict(realClassroom)
+  // Sequelize will automatically perform an SQL query to the database and create a table
+  await sequelize.sync();
+  const realClassroom = await Classroom.findOne({where: {id: req.body.classroom}});
+  const timeSlots= await checkForConflict(realClassroom);
 
-    console.log(">>>>>classrooms");
-    console.log(realClassroom);
+  console.log('>>>>>classrooms');
+  console.log(realClassroom);
 
 
-
-    res.render('test',{
-        routerPost: true,
-        realClassroom,
-        headerArray
-    });
+  res.render('test', {
+    routerPost: true,
+    realClassroom,
+    headerArray,
+  });
 });
 
 /**
@@ -41,12 +40,14 @@ router.post('/', async (req, res, next)=>{
  * @param next
  */
 router.get('/', async (req, res, next)=>{
-    const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
+  const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
 
-    res.render('test',{
-        classrooms,
-        showModal: true,
-    });
+  const timeslotsInConflict = await checkForConflict(classrooms[0]);
+
+  res.render('classroomConflictsReport', {
+    classrooms,
+    showModal: true,
+  });
 });
 
 
@@ -56,18 +57,19 @@ router.get('/', async (req, res, next)=>{
  * @param classroom   is an instance of Classroom object
  */
 async function checkForConflict(classroom) {
+  const timeVals = await uniqueTime(classroom);
 
-
-
-
+  const timeslotsVals = await generateTimeslots(timeVals[0], timeVals[1], classroom);
+  console.log('created timeslotVals');
+  console.log(timeslotsVals);
 }
 
 /**
  * this function will retrieve the unique time period against provided classroom object
- * @returns {Promise<object[]>}
+ * @return {Promise<object[]>}
  */
-async function uniqueTime (){
-    const sqlstatement = `SELECT DISTINCT Time
+async function uniqueTime(classroom) {
+  const sqlstatement = `SELECT DISTINCT Time
                         FROM (
                             SELECT startTime  AS Time FROM timeslots where ClassroomId = ${classroom.id}
                             UNION
@@ -75,15 +77,47 @@ async function uniqueTime (){
                             ) AS combined_times
                         `;
 
-    try {
-        return await sequelize.query(sqlstatement, {
-            type: QueryTypes.SELECT,
-        });
-    } catch (e) {
-        console.log(e);
+  try {
+    const timeValsUnsorted = await sequelize.query(sqlstatement, {
+      type: QueryTypes.SELECT,
+    });
+
+    for (let i = 0; i < timeValsUnsorted.length; i++) {
+      // if the time is a single digit hour like 8:00am etc.
+      // i.e. it looks like H:mm
+      if (timeValsUnsorted[i].length < 5) {
+        timeValsUnsorted[i] = '0' + timeValsUnsorted[i]
+      }
     }
+    return timeValsUnsorted;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
+/**
+ *
+ *
+ * @param startDate
+ * @param endDate
+ * @param startTime
+ * @param endTime
+ * @param classroom
+ */
+async function generateTimeslots(startTime, endTime, classroom) {
+  return await timeslot.findAll({
+    where: {
+      [Op.and]: [
+        // Timeslot starts before the endDate of the range
+        {startTime: {[Op.lt]: endTime.Time}},
+        // Timeslot ends after the startDate of the range
+        {endTime: {[Op.gt]: startTime.Time}},
+      ],
+      ClassroomId: classroom.id,
+    },
+    order: [['startDate', 'ASC']],
+  });
+}
 
 
 module.exports = {router, checkForConflict};
