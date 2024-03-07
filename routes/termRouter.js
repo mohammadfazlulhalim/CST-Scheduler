@@ -115,25 +115,22 @@ router.post('/', async function(req, res, next) {
 
 
 router.post('/course-offerings',async function(req, res, next){
-  console.log("Entered the right router");
-
   const termLists = await readAllTerms();
+  let nError = 1;
   const coCreateArray = [];
   res.status(201);
   for(const tempCO of req.body.listCourseOfferings) {
-    console.log("Entry to save is: " + JSON.stringify(tempCO));
+    // console.log("Entry to save is: " + JSON.stringify(tempCO));
     const retCreate = await createCourseOffering(tempCO);
     if (retCreate.error) {
-      console.log("Error is: " + JSON.stringify(retCreate.error));
-      coCreateArray.push(retCreate);
+      tempCO.err = retCreate.error;
+      tempCO.count = nError++;
+      coCreateArray.push(tempCO);
       res.status(422);
     }
   }
 
-
-
-  // TODO: load errors with nice formatting, and call res.render properly
-
+  // TODO: Add instructor and program lists
 
   res.render('term', {
     termEntries: termLists,
@@ -263,16 +260,26 @@ const updateTerm = async (term) => {
  * Returns all term objects in the database.
  */
 const readAllTerms = async () => {
-  // TODO: modify this so it sorts by calendar year, and then term number
   try {
     // Calling the database, for all term entries, ordered by term number
-    return await Term.findAll({order: ['startDate']});
+    return (await Term.findAll({order: ['startDate']})).sort(compareTerm);
   } catch (err) {
     // If it is not found, declaring termEntries as undefined so that table will not be viewed on term.hbs
     // and instead a sentence declaring no term entries found is displayed
     return undefined;
   }
 };
+
+function compareTerm(term1, term2) {
+  if (term1.calendarYear === term2.calendarYear) {
+    return term1.termNumber - term2.termNumber;
+  } else if (term2.calendarYear > term1.calendarYear){
+    return 1;
+  } else {
+    return -1;
+  }
+
+}
 
 /**
  * Given an error object, this function maps it to a more presentable format for the hbs template.
