@@ -99,6 +99,8 @@ describe('Classroom Conflict Report Router', ()=>{
     const classroomInstance = await Classroom.findOne({where: {roomNumber: classroomObj.roomNumber}});
 
     const resultConflictingTimeslots = await ClassroomConflictReportController.checkForConflict(classroomInstance);
+    console.log(">>>>>searching");
+    console.log(resultConflictingTimeslots);
 
     expect(resultConflictingTimeslots.length).toBe(2);
   });
