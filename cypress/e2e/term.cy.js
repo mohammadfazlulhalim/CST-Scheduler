@@ -9,6 +9,7 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
 
   // Expected lists in order for programs and instructors
   const programList = ['CNT', 'CST', 'ECE'];
+  // TODO: Switch to first and last names
   const instructorList =
     ['Barrie', 'Basoalto', 'Benson', 'Caron', 'Grzesina', 'Holtslan', 'Kaban', 'Lahoda', 'New', 'Onishenko', 'Schmidt'];
 
@@ -24,50 +25,52 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#createTerm').click();
 
   // checking the Course Offering modal
-  cy.get('#createCO').should('be-visible');
+  cy.get('#coModal').should('be-visible');
 
   // Checking sort order for instructor list
+  // since it is generated the same for all table entries, going to just check once for efficiency
   for (let i = 0; i < instructorList.length; i++) {
-    const nChild = i + 2;
-    cy.get('#createCOInstructor > option:nth-child(' + nChild + ')').should('have.text', instructorList[i]);
-  }
+    const nChild = i + 1;
+    cy.get('#1coInstructor > option:nth-child(' + nChild + ')').should('have.text', instructorList[i]);
+  };
   // Checking sort order for program list
   for (let i = 0; i < programList.length; i++) {
-    const nChild = i + 2;
-    cy.get('#createCOInstructor > option:nth-child(' + nChild + ')').should('have.text', programList[i]);
+    const nChild = i + 1;
+    cy.get('#1coProgram > option:nth-child(' + nChild + ')').should('have.text', programList[i]);
   }
 
   // expected number of entries
   const numEntries =8;
   const expectedNames = ['Hardware', 'Seminar'];
+  const expectedCourseCode = ['',''];
   const expectedGroup = ['A', 'B', 'C', 'D'];
   const expectedInstructor = ['Ben Benson', 'Ron New'];
 
   // checking that it autofilled correctly
   for (let i =0; i< numEntries; i++) {
-    const nChild = i+1;
+    const nRowNum = i+1;
     const keyBinary = (i/2).floor();
     const keyGroup = (i/4).floor();
-    cy.get('ph-off' + nChild + 'ph-name').should('have.value', expectedNames[keyBinary]);
-    cy.get('ph-off' + nChild + 'ph-start').should('have.value', '2024-05-03');
-    cy.get('ph-off' + nChild + 'ph-end').should('have.value', '2024-06-02');
-    cy.get('ph-off' + nChild + 'ph-group').should('have.value', expectedGroup[keyGroup]);
-    cy.get('ph-off' + nChild + 'ph-course').should('have.value', expectedNames[keyBinary]);
-    cy.get('ph-off' + nChild + 'ph-instructor').should('have.value', expectedInstructor[keyBinary]);
-    cy.get('ph-off' + nChild + 'ph-program').should('have.value', 'CST');
+    cy.get('#'+ nRowNum+'coName').should('have.value', expectedNames[keyBinary]);
+    cy.get('#'+ nRowNum+'coStartDate').should('have.value', '2024-05-03');
+    cy.get('#'+ nRowNum+'coEndDate').should('have.value', '2024-06-02');
+    cy.get('#'+ nRowNum+'coGroup').should('have.text', expectedGroup[keyGroup]);
+    cy.get('#'+ nRowNum+'coCourse').should('have.text', expectedCourseCode[keyBinary]);
+    cy.get('#'+ nRowNum+'coInstructor').should('have.value', expectedInstructor[keyBinary]);
+    cy.get('#'+ nRowNum+'coProgram').should('have.value', 'CST');
   }
 
   // Date change
-  cy.get('ph-off' + 1 + 'ph-start').type('2024-05-05');
-  cy.get('ph-off' + 1 + 'ph-end').type('2024-05-29');
+  cy.get('#'+ 1 +'coStartDate').type('2024-05-05');
+  cy.get('#'+ 1 +'coEndDate').type('2024-05-29');
   // Name change
-  cy.get('ph-off' + 2 + 'ph-name').type('The Seminar');
+  cy.get('#' + 2 + 'coName').type('The Seminar');
   // Instructor change
-  cy.get('ph-off' + 3 + 'ph-instructor').select('Bryce Barrie');
+  cy.get('#' + 3 + 'coInstructor').select('Barrie');
   // Program change
-  cy.get('ph-off' + 4 + 'ph-program').select('CNT');
+  cy.get('#' + 4 + 'coProgram').select('CNT');
   // Skip
-  cy.get('ph-off' + 5 + 'ph-auto').check();
+  cy.get('#' + 5 + 'coSkip').check();
 
   // Check that new term is added:
   cy.get('#tableBody > tr:nth-child(1)').should('have.text', '\n 3 \n 2024-05-03 \n 2024-06-02');
@@ -87,7 +90,7 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
     'Seminar \n D \n SEM283 \n 2024-3 \n 2024-05-03 \n 2024-06-02 \n Ron New \n CST',
   ];
   // TODO: Get correct index of new entries
-  const newCOsIndex =[1,2,3,4,5,6,7]
+  const newCOsIndex =[1, 2, 3, 4, 5, 6, 7];
   for (let i =0; i < newCOs.length; i++) {
     cy.get('#tableBody > tr:nth-child(' + newCOsIndex[i] + ')').should('have.text', newCOs[i]);
   }
@@ -125,8 +128,8 @@ it('testThatTermSkipsAutogeneratesCourseOfferings', () => {
 
   cy.get('#createTerm').click();
 
-  // checking the Course Offering modal
-  cy.get('#createCO').should('be-hidden');
+  // checking the Course Offering modal is hidden
+  cy.get('#coModal').should('be-hidden');
 
   // Checking that it was created
   cy.get('#tableBody > tr:nth-child(1)').should('have.text', '\n 6 \n 2024-05-03 \n 2024-06-02');
