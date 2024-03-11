@@ -1,4 +1,4 @@
-<!-- if an instructor exists we can display thier name -->
+<!-- if an instructor exists we can display their name -->
 {{#if instructorName}}
     <div>
         <div class="row">
@@ -16,6 +16,7 @@
     <div id="scheduleCarousel" class="carousel slide" data-bs-interval="false">
         <div class="carousel-inner">
             {{#each reportArray}}
+            <div class="carousel-item {{#if @first}}active{{/if}}">
                 <table class="table table-bordered table-hover border-dark">
                     <thead>
 
@@ -51,6 +52,7 @@
                     {{/each}}
                     </tbody>
                 </table>
+            </div>
             {{/each}}
         </div>
         {{#if isSplit}}

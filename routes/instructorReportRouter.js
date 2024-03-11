@@ -67,7 +67,6 @@ router.post('/', async function(req, res, next) {
   const termID = req.body.selectTermInstructorReport; // from the modal selection
   let instRepTimeslots;
   let instructorName;
-  let matrixTable;
   let program = '';
   let termName;
   const dateGenerated= new Date();
@@ -77,6 +76,8 @@ router.post('/', async function(req, res, next) {
   let instructorList;
   let termList;
   let newTermList;
+  let reportArray = [];
+  let isSplit = false;
 
   // try to find the instructor selected
   try {
@@ -109,10 +110,23 @@ router.post('/', async function(req, res, next) {
     instRepTimeslots=undefined;
   }
 
+  const uniqueDates = await getUniqueDates(instructorID, termID); // get each unique start end date
 
-  // generates the schedule
-  // eslint-disable-next-line prefer-const
-  matrixTable = await generateSchedule(instRepTimeslots);
+  if (uniqueDates){ //if no unique dates, skip
+    for (let i=0; i<uniqueDates.length-1; i++) { //for each unique period of study
+
+      let start = uniqueDates[i];
+      let end = uniqueDates[i+1];
+
+      if(i < 0){//notifies page that schedule is split
+        isSplit = true;
+      }
+
+      reportArray[i].matrixTable = await generateSchedule(instRepTimeslots, start, end); //assign time slots that match timeframe
+      reportArray[i].startDate = start
+      reportArray[i].endDate = end
+    }
+  }
 
 
   // The same code from get to put back in options in the drop down in modal
@@ -140,10 +154,8 @@ router.post('/', async function(req, res, next) {
 
 
   res.render('instructorReport', {
-    instRepTimeslots,
     instructorName,
-    termName,
-    matrixTable,
+    reportArray,
     dateGen: dateGenerated.getDate()+'-'+monthArray[dateGenerated.getMonth()]+'-'+dateGenerated.getFullYear(),
     // dateGen: dateGenerated.toLocaleDateString('en-CA', {})
     instructorList,
@@ -151,6 +163,7 @@ router.post('/', async function(req, res, next) {
     timeDisplayHours,
     showModal: false,
     program,
+    isSplit,
   });
 });
 
@@ -158,10 +171,10 @@ router.post('/', async function(req, res, next) {
 /**
  * Helper function for the POST.
  * Help to gather timeslots for instructor
- * // TODO establish empty cells within the final array
+ * //
  * //
  */
-async function generateSchedule(instRepTimeslots) {
+async function generateSchedule(instRepTimeslots, start, end) {
   const matrixTable = [];
   let currentCourseOffering;
   let currentClassroom;
@@ -179,23 +192,29 @@ async function generateSchedule(instRepTimeslots) {
   // eslint-disable-next-line guard-for-in
   // for every entry in the timeslots
   for (const timeslot of instRepTimeslots) {
-    // make day one less (offset)
-    const tDay= timeslot.day-1;
-    const tHour = hours24.findIndex((st)=> st === timeslot.startTime);
+    if(timeslot.getStartDate() < end && timeslot.getEndDate() > start) // if the timeslot falls within the current date range
+    {
+      // make day one less (offset)
+      const tDay= timeslot.day-1;
+      const tHour = hours24.findIndex((st)=> st === timeslot.startTime);
 
-    // try to find the course, courseoffering and course for this timeslot object entry
-    try {
-      currentCourseOffering = await timeslot.getCourseOffering();
-      currentClassroom = await timeslot.getClassroom();
-      currentCourse = await currentCourseOffering.getCourse();
-    } catch (e) {
-      console.error(e);
+      // try to find the course, courseoffering and course for this timeslot object entry
+      try {
+        currentCourseOffering = await timeslot.getCourseOffering();
+        currentClassroom = await timeslot.getClassroom();
+        currentCourse = await currentCourseOffering.getCourse();
+      } catch (e) {
+        console.error(e);
+      }
+      // put the items in the array
+      matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
+        courseOffering: currentCourseOffering,
+        classRoom: currentClassroom,
+        course: currentCourse};
     }
-    // put the items in the array
-    matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
-      courseOffering: currentCourseOffering,
-      classRoom: currentClassroom,
-      course: currentCourse};
+
+
+
   }
 
   // place the hours
@@ -221,7 +240,7 @@ async function getUniqueDates(instructor, term) {
                         WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
 
   try {
-    return await sequelize.query(sqlstatement, {
+    return await sequelize.query(sqlStatement, {
       type: QueryTypes.SELECT,
     });
   } catch (e) {
