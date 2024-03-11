@@ -44,10 +44,19 @@ describe('Classroom Conflict Report Router', ()=>{
 
     const createdCourse = await Course.create(courseObj);
 
+    const courseObj2 =
+        {
+          courseCode: 'COHS190',
+          courseName: 'Hardware',
+          courseNumCredits: 3,
+          courseNumHoursPerWeek: 3,
+        };
+    const createdCourse2 = await Course.create(courseObj2);
     const courseOfferingObj={name: 'Mathematics of Computation', startDate: '2023-03-06', endDate: '2023-05-24', group: 'A', CourseId: createdCourse.id};
 
     const createdCourseOffering = await CourseOffering.create(courseOfferingObj);
-
+    const courseOfferingObj2={name: 'Hardware', startDate: '2023-03-06', endDate: '2023-05-24', group: 'A', CourseId: createdCourse2.id};
+    const createdCourseOffering2 = await CourseOffering.create(courseOfferingObj);
     const instructorObj={firstName: 'Micheal', lastName: 'Grzesina', officeNum: '123B.1', phoneNum: '(306)-456-6859', email: 'grzesina@saskpolytech.ca'};
 
     const createdInstructor = await Instructor.create(instructorObj);
@@ -59,10 +68,21 @@ describe('Classroom Conflict Report Router', ()=>{
 
 
     const timeslotObj1 =
-      {startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'};
+      {id:1, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'};
     const timeslotObj2 =
-      {startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'};
+      {id:2, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'};
 
+    const timeslotObj3 =
+        {id:3, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
+
+    const timeslotObj4 =
+        {id:4, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
+
+    const timeslotObj5 =
+        {id: 5, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
+
+    const timeslotObj6 =
+        {id:6, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 3, group: 'A'};
 
     // below timeslots should have same information including the same classroom ID
     const createdTimeslot1 = await TimeSlot.create(timeslotObj1);
@@ -77,7 +97,36 @@ describe('Classroom Conflict Report Router', ()=>{
     await createdTimeslot2.setTerm(createdTerm);
     await createdTimeslot2.setInstructor(createdInstructor);
     await createdTimeslot2.setProgram(createdProgram);
-    await createdTimeslot2.setCourseOffering(createdCourseOffering);
+    await createdTimeslot2.setCourseOffering(createdCourseOffering2);
+
+    const createdTimeslot3 = await TimeSlot.create(timeslotObj3);
+    await createdTimeslot3.setClassroom(createdClassroom);
+    await createdTimeslot3.setTerm(createdTerm);
+    await createdTimeslot3.setInstructor(createdInstructor);
+    await createdTimeslot3.setProgram(createdProgram);
+    await createdTimeslot3.setCourseOffering(createdCourseOffering);
+
+    const createdTimeslot4 = await TimeSlot.create(timeslotObj4);
+    await createdTimeslot4.setClassroom(createdClassroom);
+    await createdTimeslot4.setTerm(createdTerm);
+    await createdTimeslot4.setInstructor(createdInstructor);
+    await createdTimeslot4.setProgram(createdProgram);
+    await createdTimeslot4.setCourseOffering(createdCourseOffering);
+
+    const createdTimeslot5 = await TimeSlot.create(timeslotObj5);
+    await createdTimeslot5.setClassroom(createdClassroom);
+    await createdTimeslot5.setTerm(createdTerm);
+    await createdTimeslot5.setInstructor(createdInstructor);
+    await createdTimeslot5.setProgram(createdProgram);
+    await createdTimeslot5.setCourseOffering(createdCourseOffering2);
+
+    const createdTimeslot6 = await TimeSlot.create(timeslotObj6);
+    await createdTimeslot6.setClassroom(createdClassroom);
+    await createdTimeslot6.setTerm(createdTerm);
+    await createdTimeslot6.setInstructor(createdInstructor);
+    await createdTimeslot6.setProgram(createdProgram);
+    await createdTimeslot6.setCourseOffering(createdCourseOffering);
+
   } );
 
 
@@ -99,8 +148,11 @@ describe('Classroom Conflict Report Router', ()=>{
     const classroomInstance = await Classroom.findOne({where: {roomNumber: classroomObj.roomNumber}});
 
     const resultConflictingTimeslots = await ClassroomConflictReportController.checkForConflict(classroomInstance);
+
+
+    const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance)
     console.log(">>>>>searching");
-    console.log(resultConflictingTimeslots);
+    console.log(results);
 
     expect(resultConflictingTimeslots.length).toBe(2);
   });

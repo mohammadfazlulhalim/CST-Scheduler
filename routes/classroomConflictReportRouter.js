@@ -2,10 +2,9 @@ const express= require('express');
 const router = express.Router();
 const {sequelize, Op} = require('../dataSource');
 
-const Timeslot= require('../private/javascript/Timeslot');
 const Classroom= require('../private/javascript/Classroom');
 
-const timeslot = require('../private/javascript/Timeslot');
+const Timeslot = require('../private/javascript/Timeslot');
 const {QueryTypes} = require('sequelize');
 
 /**
@@ -60,8 +59,7 @@ async function checkForConflict(classroom) {
   const timeVals = await uniqueTime(classroom);
 
   const timeslotsVals = await generateTimeslots(timeVals[0], timeVals[1], classroom);
-  console.log('created timeslotVals');
-  console.log(timeslotsVals);
+
 }
 
 /**
@@ -105,7 +103,7 @@ async function uniqueTime(classroom) {
  * @param classroom
  */
 async function generateTimeslots(startTime, endTime, classroom) {
-  return await timeslot.findAll({
+  return await Timeslot.findAll({
     where: {
       [Op.and]: [
         // Timeslot starts before the endDate of the range
@@ -120,4 +118,26 @@ async function generateTimeslots(startTime, endTime, classroom) {
 }
 
 
-module.exports = {router, checkForConflict};
+async function generateTimeslotsTest(classroom){
+
+  const sqlStatement =`SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId, COUNT (*) AS frequency 
+                               FROM Timeslots
+                               INNER JOIN Classroom
+                               ON Timeslots.classroomId = ${classroom.id}
+                               GROUP BY Timeslots.day
+                               HAVING COUNT(*) > 1`;
+
+  try {
+    const classResult = await sequelize.query(sqlStatement, {
+      type: QueryTypes.SELECT,
+    });
+
+    return classResult;
+  } catch (e) {
+    console.log(e);
+  }
+
+}
+
+
+module.exports = {router, checkForConflict, generateTimeslotsTest};
