@@ -9,6 +9,7 @@ const Program = require('../private/javascript/Program');
 const Instructor = require('../private/javascript/Instructor');
 const {Op} = require('sequelize');
 const createCourseOffering = require('./courseOfferingRouter').createCourseOffering;
+const Course = require('../private/javascript/Course');
 
 router.get('/', async function(req, res, next) {
   // Declaring the array
@@ -72,7 +73,7 @@ router.post('/', async function(req, res, next) {
           termNumber: result.termNumber,
         },
       });
-      lastCO = await CourseOffering.findAll({
+      lastCO = await CourseOffering.findAll({include: [Course],
         where: {
           TermId: lastYearTerm[0].id,
         },
@@ -125,6 +126,7 @@ router.post('/course-offerings',async function(req, res, next){
       tempCO.count = nError++;
       coCreateArray.push(tempCO);
       res.status(422);
+      // console.log("Error is: " + JSON.stringify(retCreate.error));
     }
   }
 
@@ -302,7 +304,6 @@ const mapErrors = (err) => {
  * @returns {*}
  */
 function mapCourseOfferings(courseOfferings, newTerm) {
-
   for (let i = 0; i < courseOfferings.length; i++) {
     courseOfferings[i].count = (i + 1);
     courseOfferings[i].startDate = newTerm.startDate;

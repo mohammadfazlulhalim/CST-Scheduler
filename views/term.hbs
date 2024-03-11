@@ -138,7 +138,7 @@
                                         <th>End Date</th>
                                         <th>Group</th>
                                         <th>Course</th>
-                                        <th>Instructor</th>
+                                        <th>Instructor(s)</th>
                                         <th>Program</th>
                                         <th>Skip?</th>
                                     </tr>
@@ -169,11 +169,21 @@
                                                 <div class="invalid-feedback">{{this.err.endDate}}</div>
                                             </td>
                                             <td id="{{this.count}}coGroup">{{this.group}}</td>
-                                            <td id="{{this.count}}coCourse">{{this.CourseId}}</td>
+                                            <td id="{{this.count}}coCourse" data-course="{{this.Course.id}}">{{this.Course.courseCode}}</td>
                                             <td>
-                                                <select id="{{this.count}}coInstructor"
-                                                        data-instructorid="{{this.InstructorId}}"
-                                                        class="form-label">
+                                                <label for="{{this.count}}coPrimaryInstructor">Primary</label>
+                                                <select id="{{this.count}}coPrimaryInstructor"
+                                                        data-primaryinstructorid="{{this.primaryInstructor}}"
+                                                        class="form-select">
+                                                    {{#each ../instructors}}
+                                                        <option value="{{id}}">{{firstName}} {{lastName}}</option>
+                                                    {{/each}}
+                                                </select> <br />
+                                                <label for="{{this.count}}coSecondaryInstructor">Secondary</label>
+                                                <select id="{{this.count}}coSecondaryInstructor"
+                                                        data-secondaryinstructorid="{{this.secondaryInstructor}}"
+                                                        class="form-select">
+                                                    <option value=""></option>
                                                     {{#each ../instructors}}
                                                         <option value="{{id}}">{{firstName}} {{lastName}}</option>
                                                     {{/each}}
@@ -181,7 +191,7 @@
                                             </td>
                                             <td>
                                                 <select id="{{this.count}}coProgram" data-programid="{{this.ProgramId}}"
-                                                        class="form-label">
+                                                        class="form-select">
                                                     {{#each ../programs}}
                                                         <option value="{{id}}">{{programAbbreviation}}</option>
                                                     {{/each}}
@@ -300,11 +310,17 @@
                     startDate: $('#' + i + 'coStartDate').val() !== '' ? $('#' + i + 'coStartDate').val() : null,
                     endDate: $('#' + i + 'coEndDate').val() !== '' ? $('#' + i + 'coEndDate').val() : null,
                     group: $('#' + i + 'coGroup').text(),
-                    CourseId: $('#' + i + 'coCourse').text(),
-                    InstructorId: $('#' + i + 'coInstructor').val(),
+                    CourseId: document.getElementById(i + 'coCourse').dataset.course,
+                    primaryInstructor: $('#' + i + 'coPrimaryInstructor').val(),
+                    // secondaryInstructor: $('#' + i + 'coSecondaryInstructor').val(),
                     ProgramId: $('#' + i + 'coProgram').val(),
                     TermId: $('#' + i + 'coTerm').val(),
                 };
+                const secondaryInstructor = $('#' + i + 'coSecondaryInstructor').val();
+                if (secondaryInstructor != "") {
+                  tempObj.secondaryInstructor = secondaryInstructor;
+                }
+                // console.log('tempObj to save is: ' + JSON.stringify(tempObj));
                 coToCreateArray.push(tempObj);
             }
         }
@@ -373,16 +389,23 @@
     function selectInstructors() {
         const numRows = document.getElementById('coTable').rows.length;
         for (let i = 1; i < numRows; i++) {
-            const insWebId = i + 'coInstructor';
-            const insDBID = document.getElementById(insWebId).dataset.instructorid;
+            const insPWebId = i + 'coPrimaryInstructor';
+            const insSWebId = i + 'coSecondaryInstructor';
+            const insPDBID = document.getElementById(insPWebId).dataset.primaryinstructorid;
+            const insSDBID = document.getElementById(insSWebId).dataset.secondaryinstructorid;
             // loop through each element in the instructor
-            const numOptions = $('#' + insWebId)[0].length;
+            const numOptions = $('#' + insPWebId)[0].length;
             for (let j = 1; j <= numOptions; j++) {
                 // check if the value is equal to instructorID (can use nth child with j)
-                const optionSelector = '#' + insWebId + ' :nth-child(' + j + ')';
-                if (insDBID == $(optionSelector).val()) {
+                const optionPSelector = '#' + insPWebId + ' :nth-child(' + j + ')';
+                if (insPDBID == $(optionPSelector).val()) {
                     // found it - now need to add the selected attribute
-                    $(optionSelector).attr('selected', 'selected');
+                    $(optionPSelector).attr('selected', 'selected');
+                }
+                const optionSSelector = '#' + insSWebId + ' :nth-child(' + j + ')';
+                if (insSDBID == $(optionSSelector).val()) {
+                    // found it - now need to add the selected attribute
+                    $(optionSSelector).attr('selected', 'selected');
                 }
             }
         }
