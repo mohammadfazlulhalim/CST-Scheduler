@@ -56,7 +56,7 @@ describe('Classroom Conflict Report Router', ()=>{
 
     const createdCourseOffering = await CourseOffering.create(courseOfferingObj);
     const courseOfferingObj2={name: 'Hardware', startDate: '2023-03-06', endDate: '2023-05-24', group: 'A', CourseId: createdCourse2.id};
-    const createdCourseOffering2 = await CourseOffering.create(courseOfferingObj);
+    const createdCourseOffering2 = await CourseOffering.create(courseOfferingObj2);
     const instructorObj={firstName: 'Micheal', lastName: 'Grzesina', officeNum: '123B.1', phoneNum: '(306)-456-6859', email: 'grzesina@saskpolytech.ca'};
 
     const createdInstructor = await Instructor.create(instructorObj);
@@ -146,7 +146,7 @@ describe('Classroom Conflict Report Router', ()=>{
 
     const classroomInstance = await Classroom.findOne({where: {roomNumber: classroomObj.roomNumber}});
 
-    const resultConflictingTimeslots = await ClassroomConflictReportController.checkForConflict(classroomInstance);
+    //const resultConflictingTimeslots = await ClassroomConflictReportController.checkForConflict(classroomInstance);
 
 
     const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance);
@@ -160,7 +160,7 @@ describe('Classroom Conflict Report Router', ()=>{
   it('testClassroomConflictsNotFound ', async ()=>{
     const classroomInstance2 = await Classroom.findOne({where: {roomNumber: classroomObj2.roomNumber}});
 
-    const resultConflictingTimeslots2 = await ClassroomConflictReportController.checkForConflict(classroomInstance2);
+    //const resultConflictingTimeslots2 = await ClassroomConflictReportController.checkForConflict(classroomInstance2);
 
     expect(resultConflictingTimeslots2.length).toBe(0);
   });

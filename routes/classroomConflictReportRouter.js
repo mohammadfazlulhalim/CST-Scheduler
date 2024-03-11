@@ -41,7 +41,7 @@ router.post('/', async (req, res, next)=>{
 router.get('/', async (req, res, next)=>{
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
 
-  const timeslotsInConflict = await checkForConflict(classrooms[0]);
+  // const timeslotsInConflict = await checkForConflict(classrooms[0]);
 
   res.render('classroomConflictsReport', {
     classrooms,
@@ -55,11 +55,11 @@ router.get('/', async (req, res, next)=>{
  * are experiencing class conflicts
  * @param classroom   is an instance of Classroom object
  */
-async function checkForConflict(classroom) {
-
-  const timeslotsVals = await generateTimeslots(timeVals[0], timeVals[1], classroom);
-
-}
+// async function checkForConflict(classroom) {
+//
+//   const timeslotsVals = await generateTimeslots(timeVals[0], timeVals[1], classroom);
+//
+// }
 
 /**
  * this function will retrieve the unique time period against provided classroom object
@@ -155,13 +155,7 @@ async function generateTimeslotsTest(classroom) {
 
   const timeVals = await uniqueTime(classroom);
 
-  // for every unique range of time
-  let sqlStatement2 = `
-    SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId
-    FROM Timeslots
-    WHERE Timeslots.ClassroomId = ${classroom.id}
-    AND Timeslots.startTime
-`;
+
 
   const sqlStatement =`SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId, COUNT (*) AS frequency 
                                FROM Timeslots
@@ -170,21 +164,49 @@ async function generateTimeslotsTest(classroom) {
                                GROUP BY Timeslots.day
                                HAVING COUNT(*) > 1`;
 
-
-  let classResult;
+  let redundantObject;
 
   try {
-    classResult = await sequelize.query(sqlStatement2, {
-      type: QueryTypes.SELECT,
-    });
+    redundantObject = await  sequelize.query(sqlStatement, {type: QueryTypes.SELECT,});
 
-  } catch (e) {
-    console.log(e);
+  }catch(err){
+    console.log(err);
+  }
+  console.log(">>>>>>>WE ARE HERE redundantObject")
+console.log(redundantObject);
+
+
+  // for every unique range of time
+
+  let sqlStatement2;
+  let classResult=[];
+  for ( let i = 0; i< redundantObject.length; i++) {
+    sqlStatement2 = `
+    SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId
+    FROM Timeslots
+    WHERE Timeslots.ClassroomId = ${classroom.id} AND Timeslots.startTime = '${redundantObject[i].startTime}' 
+    AND Timeslots.endTime = '${redundantObject[i].endTime}' 
+    AND Timeslots.day = '${redundantObject[i].day}'
+    AND Timeslots.startTime
+`;
+    try {
+      classResult.push( await sequelize.query(sqlStatement2, {
+        type: QueryTypes.SELECT,
+       }));
+
+    } catch (e) {
+      console.log(e);
+    }
+
+
   }
 
   return classResult;
 
+
+
+
 }
 
 
-module.exports = {router, checkForConflict, generateTimeslotsTest};
+module.exports = {router,  generateTimeslotsTest};
