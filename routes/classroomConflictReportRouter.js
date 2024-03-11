@@ -56,7 +56,6 @@ router.get('/', async (req, res, next)=>{
  * @param classroom   is an instance of Classroom object
  */
 async function checkForConflict(classroom) {
-  const timeVals = await uniqueTime(classroom);
 
   const timeslotsVals = await generateTimeslots(timeVals[0], timeVals[1], classroom);
 
@@ -82,16 +81,45 @@ async function uniqueTime(classroom) {
 
     for (let i = 0; i < timeValsUnsorted.length; i++) {
       // if the time is a single digit hour like 8:00am etc.
-      // i.e. it looks like H:mm
-      if (timeValsUnsorted[i].length < 5) {
-        timeValsUnsorted[i] = '0' + timeValsUnsorted[i]
+
+      // if length of the time val is less than 5 (equal to 4), then it's written as H:mm
+      if (timeValsUnsorted[i].Time.length < 5) {
+        timeValsUnsorted[i].Time = `0${timeValsUnsorted[i].Time}`;
       }
     }
+
+    timeValsUnsorted.sort(compareTime);
     return timeValsUnsorted;
   } catch (e) {
     console.log(e);
   }
 }
+
+/**
+ * Helper / handler for comparing two temporary objects in the unique time values array
+ * for the purposes of sorting
+ *
+ * a and b objects looks like {Time:"10:00"} for example
+ *
+ *
+ * @param a
+ * @param b
+ * @returns {number}
+ */
+function compareTime(a, b) {
+  // Use toUpperCase() to ignore character casing
+  const bandA = a.Time.toUpperCase();
+  const bandB = b.Time.toUpperCase();
+
+  let comparison = 0;
+  if (bandA > bandB) {
+    comparison = 1;
+  } else if (bandA < bandB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
 
 /**
  *
@@ -118,7 +146,22 @@ async function generateTimeslots(startTime, endTime, classroom) {
 }
 
 
-async function generateTimeslotsTest(classroom){
+/**
+ * New function for collecting timeslots with conflicts
+ * @param classroom
+ * @returns {Promise<Object[]>}
+ */
+async function generateTimeslotsTest(classroom) {
+
+  const timeVals = await uniqueTime(classroom);
+
+  // for every unique range of time
+  let sqlStatement2 = `
+    SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId
+    FROM Timeslots
+    WHERE Timeslots.ClassroomId = ${classroom.id}
+    AND Timeslots.startTime
+`;
 
   const sqlStatement =`SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId, COUNT (*) AS frequency 
                                FROM Timeslots
@@ -127,15 +170,19 @@ async function generateTimeslotsTest(classroom){
                                GROUP BY Timeslots.day
                                HAVING COUNT(*) > 1`;
 
+
+  let classResult;
+
   try {
-    const classResult = await sequelize.query(sqlStatement, {
+    classResult = await sequelize.query(sqlStatement2, {
       type: QueryTypes.SELECT,
     });
 
-    return classResult;
   } catch (e) {
     console.log(e);
   }
+
+  return classResult;
 
 }
 

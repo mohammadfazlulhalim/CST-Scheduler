@@ -68,21 +68,21 @@ describe('Classroom Conflict Report Router', ()=>{
 
 
     const timeslotObj1 =
-      {id:1, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'};
+      {id: 1, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'};
     const timeslotObj2 =
-      {id:2, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'};
+      {id: 2, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'};
 
     const timeslotObj3 =
-        {id:3, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
+        {id: 3, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
 
     const timeslotObj4 =
-        {id:4, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
+        {id: 4, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
 
     const timeslotObj5 =
         {id: 5, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
 
     const timeslotObj6 =
-        {id:6, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 3, group: 'A'};
+        {id: 6, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 3, group: 'A'};
 
     // below timeslots should have same information including the same classroom ID
     const createdTimeslot1 = await TimeSlot.create(timeslotObj1);
@@ -126,7 +126,6 @@ describe('Classroom Conflict Report Router', ()=>{
     await createdTimeslot6.setInstructor(createdInstructor);
     await createdTimeslot6.setProgram(createdProgram);
     await createdTimeslot6.setCourseOffering(createdCourseOffering);
-
   } );
 
 
@@ -150,8 +149,8 @@ describe('Classroom Conflict Report Router', ()=>{
     const resultConflictingTimeslots = await ClassroomConflictReportController.checkForConflict(classroomInstance);
 
 
-    const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance)
-    console.log(">>>>>searching");
+    const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance);
+    console.log('>>>>>searching');
     console.log(results);
 
     expect(resultConflictingTimeslots.length).toBe(2);
