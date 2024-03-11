@@ -110,7 +110,7 @@ router.post('/', async function(req, res, next) {
     instRepTimeslots=undefined;
   }
 
-  const uniqueDates = await getUniqueDates(instructorID, termID); // get each unique start end date
+  const uniqueDates = await getUniqueDates(instructorName, termName); // get each unique start end date
 
   if (uniqueDates){ //if no unique dates, skip
     for (let i=0; i<uniqueDates.length-1; i++) { //for each unique period of study
@@ -189,10 +189,15 @@ async function generateSchedule(instRepTimeslots, start, end) {
     ];
   }
 
+  //TODO CURRENT PROBLem
   // eslint-disable-next-line guard-for-in
   // for every entry in the timeslots
   for (const timeslot of instRepTimeslots) {
-    if(timeslot.getStartDate() < end && timeslot.getEndDate() > start) // if the timeslot falls within the current date range
+    //convert to date objects
+    //const tStart = sequelize.literal(`DATE('${timeslot.startDate}')`);
+    //const tEnd = sequelize.literal(`DATE('${timeslot.endDate}')`);
+
+    if(timeslot.startDate > JSON.stringify(end) && timeslot.endDate < JSON.stringify(start)) // if the timeslot falls within the current date range
     {
       // make day one less (offset)
       const tDay= timeslot.day-1;
@@ -213,8 +218,6 @@ async function generateSchedule(instRepTimeslots, start, end) {
         course: currentCourse};
     }
 
-
-
   }
 
   // place the hours
@@ -228,8 +231,6 @@ async function generateSchedule(instRepTimeslots, start, end) {
   return matrixTable;
 }
 
-
-//TODO learn what this does
 async function getUniqueDates(instructor, term) {
   const sqlStatement = `SELECT DISTINCT date
                         FROM (

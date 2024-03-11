@@ -17,6 +17,7 @@
         <div class="carousel-inner">
             {{#each reportArray}}
             <div class="carousel-item {{#if @first}}active{{/if}}">
+                <p>Schedule Range: {{this.startDate}} to {{this.endDate}}</p>
                 <table class="table table-bordered table-hover border-dark">
                     <thead>
 
