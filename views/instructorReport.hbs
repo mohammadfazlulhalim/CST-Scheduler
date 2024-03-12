@@ -1,5 +1,5 @@
-<!-- if an instructor exists we can display their name -->
-{{#if instructorName}}
+<!-- if timeslots exists we can display schedule -->
+{{#if reportArray}}
     <div>
         <div class="row">
             <div class="col-9">
@@ -56,6 +56,7 @@
             </div>
             {{/each}}
         </div>
+        <!--if there are splits-->
         {{#if isSplit}}
             <!-- Carousel Controls -->
             <button class="carousel-control-prev custom-carousel-control" id="btnLeft" type="button" data-bs-target="#scheduleCarousel" data-bs-slide="prev">

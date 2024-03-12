@@ -112,8 +112,9 @@ router.post('/', async function(req, res, next) {
 
   const uniqueDates = await getUniqueDates(instructorName, termName); // get each unique start end date
 
-  if (uniqueDates){ //if no unique dates, skip
+  if (instRepTimeslots){ //if no unique dates, skip
     for (let i=0; i<uniqueDates.length-1; i++) { //for each unique period of study
+      let tempJson = {};
 
       let start = uniqueDates[i];
       let end = uniqueDates[i+1];
@@ -122,9 +123,12 @@ router.post('/', async function(req, res, next) {
         isSplit = true;
       }
 
-      reportArray[i].matrixTable = await generateSchedule(instRepTimeslots, start, end); //assign time slots that match timeframe
-      reportArray[i].startDate = start
-      reportArray[i].endDate = end
+
+      tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, end); //assign time slots that match timeframe
+      tempJson.startDate = start.date;
+      tempJson.endDate = (end.date - 1);
+
+      reportArray[i] = tempJson;
     }
   }
 
@@ -189,15 +193,12 @@ async function generateSchedule(instRepTimeslots, start, end) {
     ];
   }
 
-  //TODO CURRENT PROBLem
   // eslint-disable-next-line guard-for-in
   // for every entry in the timeslots
   for (const timeslot of instRepTimeslots) {
-    //convert to date objects
-    //const tStart = sequelize.literal(`DATE('${timeslot.startDate}')`);
-    //const tEnd = sequelize.literal(`DATE('${timeslot.endDate}')`);
 
-    if(timeslot.startDate > JSON.stringify(end) && timeslot.endDate < JSON.stringify(start)) // if the timeslot falls within the current date range
+    if(timeslot.startDate.localeCompare(end.date) < 1  &&
+        timeslot.endDate.localeCompare(start.date) > -1 ) // if the timeslot falls within the current date range
     {
       // make day one less (offset)
       const tDay= timeslot.day-1;
