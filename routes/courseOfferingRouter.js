@@ -5,7 +5,7 @@ const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
 const Instructor = require('../private/javascript/Instructor');
 const Course = require('../private/javascript/Course');
-const URL = require('../constants').URL
+const URL = require('../constants').URL;
 
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
@@ -24,7 +24,7 @@ router.get('/', async function(req, res, next) {
     listProgram,
     listInstructor,
     listCourse,
-    URL
+    URL,
   });
 });
 
@@ -42,7 +42,8 @@ router.post('/', async function(req, res, next) {
     group: req.body.group,
     CourseId: req.body.course,
     TermId: req.body.term,
-    InstructorId: req.body.instructor,
+    primaryInstructor: req.body.primaryInstructor,
+    alternativeInstructor: req.body.alternativeInstructor,
     ProgramId: req.body.program,
   };
 
@@ -70,7 +71,7 @@ router.post('/', async function(req, res, next) {
     listProgram,
     listInstructor,
     listCourse,
-    URL
+    URL,
   });
 });
 
@@ -90,7 +91,8 @@ router.put('/', async function(req, res, next) {
     group: req.body.group,
     CourseId: req.body.course,
     TermId: req.body.term,
-    InstructorId: req.body.instructor,
+    primaryInstructor: req.body.primaryInstructor,
+    alternativeInstructor: req.body.alternativeInstructor,
     ProgramId: req.body.program,
   };
 
@@ -118,7 +120,7 @@ router.put('/', async function(req, res, next) {
     listProgram,
     listInstructor,
     listCourse,
-    URL
+    URL,
   });
 });
 
@@ -145,7 +147,7 @@ router.delete('/', async function(req, res, next) {
     listProgram,
     listInstructor,
     listCourse,
-    URL
+    URL,
   });
 });
 
@@ -201,15 +203,23 @@ async function getCOList() {
 
   // retrieve all course offerings from the database
   try {
-    listCO = await CourseOffering.findAll({include: [Program, Course, Instructor, Term], order: [['name'],['group']]});
+    listCO = await CourseOffering.findAll({include: [Program, Course, Instructor, Term], order: [['name'], ['group']]});
     // loop through the list, and format every term to add in title
     for (let i=0; i<listCO.length; i++) {
       if (listCO[i].Term) {
         listCO[i].Term = createTermTitle(listCO[i].Term);
+
+        if (listCO[i].primaryInstructor) {
+          listCO[i].primaryInstructor = await Instructor.findOne({where: {id: listCO[i].primaryInstructor}});
+        }
+
+        // Find alternative instructor
+        if (listCO[i].alternativeInstructor) {
+          listCO[i].alternativeInstructor = await Instructor.findOne({where: {id: listCO[i].alternativeInstructor}});
+        }
       }
     }
-    // console.log(JSON.stringify(listCO))
-
+    console.log(listCO);
   } catch (err) {
     // if unable to retrieve from database; e.g., no records exist
     listCO = undefined;
@@ -240,7 +250,7 @@ const mapErrors = (err) => {
 };
 
 async function getTerms() {
-  const terms = await Term.findAll({order: [['startDate', 'DESC'],['termNumber', 'ASC']]});
+  const terms = await Term.findAll({order: [['startDate', 'DESC'], ['termNumber', 'ASC']]});
   for (let i=0; i<terms.length; i++) {
     terms[i] = createTermTitle(terms[i]);
   }
@@ -257,7 +267,6 @@ function createTermTitle(term) {
   const splitDate = term.startDate.split('-');
   term.title = splitDate[0] + '-' + term.termNumber;
   return term;
-
 }
 
 module.exports = {router, createCourseOffering, updateCourseOffering, deleteCourseOffering};

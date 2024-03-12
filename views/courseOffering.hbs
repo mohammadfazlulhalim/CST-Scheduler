@@ -11,7 +11,8 @@
                 <th>Term</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Instructor</th>
+                <th>Primary Instructor</th>
+                <th>Alternative Instructor</th>
                 <th>Program</th>
                 <th>Actions</th>
             </tr>
@@ -26,8 +27,10 @@
                     <td id="{{this.id}}term" data-termid="{{this.Term.id}}">{{this.Term.title}}</td>
                     <td id="{{this.id}}startDate">{{this.startDate}}</td>
                     <td id="{{this.id}}endDate">{{this.endDate}}</td>
-                    <td id="{{this.id}}instructor"
-                        data-instructorid="{{this.Instructor.id}}">{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
+                    <td id="{{this.id}}primaryInstructor"
+                        data-primaryInstructorid="{{this.primaryInstructor.id}}">{{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}</td>
+                    <td id="{{this.id}}alternativeInstructor"
+                        data-primaryInstructorid="{{this.alternativeInstructor.id}}">{{this.alternativeInstructor.firstName}} {{this.alternativeInstructor.lastName}}</td>
                     <td id="{{this.id}}program"
                         data-programid="{{this.Program.id}}">{{this.Program.programAbbreviation}}</td>
                     <td>
@@ -129,15 +132,21 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="eInstructor">Instructor</label>
-                                <select id="eInstructor" class="form-label" onchange="checkUpdateEnable()">Instructor
+                                <label for="eprimaryInstructor">Primary Instructor</label>
+                                <select id="eprimaryInstructor" class="form-label" onchange="checkUpdateEnable()">Primary Instructor
                                     {{#each listInstructor}}
                                         <option value="{{id}}">{{lastName}}</option>
                                     {{/each}}
                                 </select>
                             </div>
-
-
+                            <div>
+                                <label for="ealternativeInstructor">Alternative Instructor</label>
+                                <select id="ealternativeInstructor" class="form-label" onchange="checkUpdateEnable()">Alternative Instructor
+                                    {{#each listInstructor}}
+                                        <option value="{{id}}">{{lastName}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -220,8 +229,17 @@
                             </select>
                         </div>
                         <div>
-                            <label for="cInstructor">Instructor</label>
-                            <select id="cInstructor" class="form-label" onchange="checkCreateEnable()">Instructor
+                            <label for="cprimaryInstructor">Primary Instructor</label>
+                            <select id="cprimaryInstructor" class="form-label" onchange="checkCreateEnable()">Primary Instructor
+                                <option></option>
+                                {{#each listInstructor}}
+                                    <option value="{{id}}">{{lastName}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="calternativeInstructor">Alternative Instructor</label>
+                            <select id="calternativeInstructor" class="form-label" onchange="checkCreateEnable()">Alternative Instructor
                                 <option></option>
                                 {{#each listInstructor}}
                                     <option value="{{id}}">{{lastName}}</option>
@@ -294,10 +312,10 @@
         } catch (e) {
             bCourseSelected = false;
         }
-        let bInstructorSelected = document.getElementById('cInstructor').value !== '';
+        let bprimaryInstructorSelected = document.getElementById('cprimaryInstructor').value !== '';
         let bProgramSelected = document.getElementById('cProgram').value !== '';
 
-        if (bTermSelected && bProgramSelected && bCourseSelected && bInstructorSelected) {
+        if (bTermSelected && bProgramSelected && bCourseSelected && bprimaryInstructorSelected) {
             document.getElementById('createCO').removeAttribute('disabled');
         } else {
             document.getElementById('createCO').disabled = 'disabled';
@@ -319,10 +337,10 @@
     function checkUpdateEnable() {
 
         let bTermSelected = document.getElementById('eTerm').value !== '';
-        let bInstructorSelected = document.getElementById('eInstructor').value !== '';
+        let bprimaryInstructorSelected = document.getElementById('eprimaryInstructor').value !== '';
         let bProgramSelected = document.getElementById('eProgram').value !== '';
 
-        if (bTermSelected && bProgramSelected && bInstructorSelected) {
+        if (bTermSelected && bProgramSelected && bprimaryInstructorSelected) {
             document.getElementById('editCO').removeAttribute('disabled');
         } else {
             document.getElementById('editCO').disabled = 'disabled';
@@ -371,7 +389,8 @@
                 group: $('#cGroup').val(),
                 course: courseID,
                 program: $('#cProgram').val(),
-                instructor: $('#cInstructor').val(),
+                primaryInstructor: $('#cprimaryInstructor').val(),
+                alternativeInstructor: $('#calternativeInstructor').val(),
                 term: $('#cTerm').val(),
             }),
         });
@@ -430,7 +449,8 @@
                 endDate: $('#eEndDate').val(),
                 group: $('#eGroup').val(),
                 program: $('#eProgram').val(),
-                instructor: $('#eInstructor').val(),
+                primaryInstructor: $('#eprimaryInstructor').val(),
+                alternativeInstructor: $('#ealternativeInstructor').val(),
                 term: $('#eTerm').val(),
             }),
         });
@@ -463,7 +483,8 @@
         $('#eGroup').val($(`#${idToEdit}group`).text());
         $('#eTerm').val(document.getElementById(idToEdit + 'term').dataset.termid);
         $('#eCourse').val(document.getElementById(idToEdit + 'course').dataset.courseid);
-        $('#eInstructor').val(document.getElementById(idToEdit + 'instructor').dataset.instructorid);
+        $('#eprimaryInstructor').val(document.getElementById(idToEdit + 'primaryInstructor').dataset.primaryInstructorid);
+        $('#ealternativeInstructor').val(document.getElementById(idToEdit + 'primaryInstructor').dataset.primaryInstructorid);
         $('#eProgram').val(document.getElementById(idToEdit + 'program').dataset.programid);
 
         checkUpdateEnable();
@@ -475,7 +496,8 @@
     function handleCreateModal() {
         document.getElementById('cTerm').value = '';
         document.getElementById('cCourse').value = '';
-        document.getElementById('cInstructor').value = '';
+        document.getElementById('cprimaryInstructor').value = '';
+        document.getElementById('calternativeInstructor').value = '';
         document.getElementById('cProgram').value = '';
 
     }
