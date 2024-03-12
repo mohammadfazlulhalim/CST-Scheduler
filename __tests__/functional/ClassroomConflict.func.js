@@ -34,6 +34,8 @@ describe('Classroom Conflict Report Router', ()=>{
     roomNumber: '241',
     location: 'Saskatoon Main Campus',
   };
+  const termObj= {termNumber: 3, startDate: '2023-05-01', endDate: '2023-05-24'};
+  const termObj2={termNumber: 4, startDate: '2023-08-01', endDate: '2023-12-01'};
 
 
   // use the imported function to clear and define tables from the established fixtures
@@ -44,7 +46,7 @@ describe('Classroom Conflict Report Router', ()=>{
       console.error('Error creating Timeslots table: ', error);
     }
     const createdClassroom = await Classroom.create(classroomObj);
-
+    const createdClassroom2 = await Classroom.create(classroomObj2);
     const courseObj =
       {
         courseCode: 'MATH282',
@@ -71,9 +73,11 @@ describe('Classroom Conflict Report Router', ()=>{
     const instructorObj={firstName: 'Micheal', lastName: 'Grzesina', officeNum: '123B.1', phoneNum: '(306)-456-6859', email: 'grzesina@saskpolytech.ca'};
 
     const createdInstructor = await Instructor.create(instructorObj);
-    const termObj= {termNumber: 3, startDate: '2023-05-01', endDate: '2023-05-24'};
-    const createdTerm = await Term.create(termObj);
 
+
+
+    const createdTerm = await Term.create(termObj);
+    const createdTerm2 = await Term.create(termObj2);
     const programObj= {programAbbreviation: 'CST', programName: 'Computer Systems Technology'};
     const createdProgram = await Program.create(programObj);
 
@@ -90,12 +94,14 @@ describe('Classroom Conflict Report Router', ()=>{
         {id: 4, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
 
     const timeslotObj5 =
-        {startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
+        {id: 5, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
 
     const timeslotObj6 =
-        {startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 3, group: 'A'};
+        {id :6, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 3, group: 'A'};
     const timeslotObj7 =
-      {startDate: '2023-05-01', endDate: '2023-05-24', startTime: '08:00', endTime: '09:00', day: 3, group: 'B'};
+      {id: 7, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '08:00', endTime: '09:00', day: 3, group: 'B'};
+    const timeslotObj8 =
+        {id: 8, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '08:00', endTime: '09:00', day: 3, group: 'A'};
 
 
     // below timeslots should have same information including the same classroom ID
@@ -143,13 +149,19 @@ describe('Classroom Conflict Report Router', ()=>{
 
 
     const createdTimeslot7 = await TimeSlot.create(timeslotObj7);
-    await createdTimeslot7.setClassroom(createdClassroom);
+    await createdTimeslot7.setClassroom(createdClassroom2);
     await createdTimeslot7.setTerm(createdTerm);
     await createdTimeslot7.setInstructor(createdInstructor);
     await createdTimeslot7.setProgram(createdProgram);
     await createdTimeslot7.setCourseOffering(createdCourseOffering);
 
 
+    const createdTimeslot8 = await TimeSlot.create(timeslotObj8);
+    await createdTimeslot8.setClassroom(createdClassroom2);
+    await createdTimeslot8.setTerm(createdTerm2);
+    await createdTimeslot8.setInstructor(createdInstructor);
+    await createdTimeslot8.setProgram(createdProgram);
+    await createdTimeslot8.setCourseOffering(createdCourseOffering);
   } );
 
   /**
@@ -189,6 +201,8 @@ describe('Classroom Conflict Report Router', ()=>{
 
 
     const classroomInstance = await Classroom.findOne({where: {roomNumber: classroomObj.roomNumber}});
+    const termInstance1 = await Term.findOne({where: {termNumber: termObj.termNumber}});
+    const termInstance2 = await Term.findOne({where: {termNumber: termObj2.termNumber}});
 
     // const resultConflictingTimeslots = await ClassroomConflictReportController.checkForConflict(classroomInstance);
 
@@ -203,7 +217,7 @@ describe('Classroom Conflict Report Router', ()=>{
     ];
 
     // TODO implement parameter change router as well!
-    const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance, termInstance);
+    const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance, termInstance2);
     console.log('>>>>>searching');
     console.log(results);
 

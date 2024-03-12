@@ -148,10 +148,10 @@ async function generateTimeslots(startTime, endTime, classroom) {
 
 /**
  * New function for collecting timeslots with conflicts
- * @param classroom
+ * @param classroom, term
  * @returns {Promise<Object[]>}
  */
-async function generateTimeslotsTest(classroom) {
+async function generateTimeslotsTest(classroom, term) {
 
   const timeVals = await uniqueTime(classroom);
 
@@ -160,9 +160,9 @@ async function generateTimeslotsTest(classroom) {
   const sqlStatement =`SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId, COUNT (*) AS frequency 
                                FROM Timeslots
                                INNER JOIN Classroom
-                               ON Timeslots.classroomId = ${classroom.id}
-                               GROUP BY Timeslots.day
-                               HAVING COUNT(*) > 1`;
+                               ON Timeslots.classroomId = ${classroom.id} AND Timeslots.termId = ${term.id}                               
+                               GROUP BY Timeslots.day, Timeslots.startTime, Timeslots.endTime
+                                HAVING COUNT(*) > 1`;
 
   let redundantObject;
 
