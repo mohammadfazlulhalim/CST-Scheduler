@@ -35,7 +35,6 @@
                 </tr>
             {{/each}}
             </tbody>
-
         </table>
 
         <!-- Delete Modal -->
@@ -111,8 +110,6 @@
         <p>There are no terms stored</p>
     {{/if}}
 
-
-
     <!-- CourseOffering Modal -->
     <div class="modal fade" id="coModal" role="dialog" tabindex="-1"
          aria-labelledby="coModalLabel"
@@ -179,9 +176,9 @@
                                                         <option value="{{id}}">{{firstName}} {{lastName}}</option>
                                                     {{/each}}
                                                 </select> <br />
-                                                <label for="{{this.count}}coSecondaryInstructor">Secondary</label>
+                                                <label for="{{this.count}}coSecondaryInstructor">Alternative</label>
                                                 <select id="{{this.count}}coSecondaryInstructor"
-                                                        data-secondaryinstructorid="{{this.secondaryInstructor}}"
+                                                        data-secondaryinstructorid="{{this.alternativeInstructor}}"
                                                         class="form-select">
                                                     <option value=""></option>
                                                     {{#each ../instructors}}
@@ -318,7 +315,7 @@
                 };
                 const secondaryInstructor = $('#' + i + 'coSecondaryInstructor').val();
                 if (secondaryInstructor != "") {
-                  tempObj.secondaryInstructor = secondaryInstructor;
+                  tempObj.alternativeInstructor = secondaryInstructor;
                 }
                 // console.log('tempObj to save is: ' + JSON.stringify(tempObj));
                 coToCreateArray.push(tempObj);

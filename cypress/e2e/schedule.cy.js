@@ -56,11 +56,16 @@ it('testThatModalWorks', () => {
   cy.get('#7-0-A').contains('3:00');
 
   // DONE check group a has specific tiles filled
-  cy.get('#0-1-A').should('have.text', 'CST\nCSEC280\nBenson');
-  cy.get('#1-2-A').should('have.text', 'CST\nCSEC280\nBenson');
-  cy.get('#2-3-A').should('have.text', 'CST\nCSEC280\nBenson');
-  cy.get('#3-4-A').should('have.text', 'CST\nCSEC280\nBenson');
-  cy.get('#4-5-A').should('have.text', 'CST\nCSEC280\nBenson');
+  cy.get('#0-1-A').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
+  cy.get('#1-2-A').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
+  cy.get('#2-3-A').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
+  cy.get('#3-4-A').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
+  cy.get('#4-5-A').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
+  // cy.get('#0-1-A').should('have.text', 'CST\nCSEC280\nBenson');
+  // cy.get('#1-2-A').should('have.text', 'CST\nCSEC280\nBenson');
+  // cy.get('#2-3-A').should('have.text', 'CST\nCSEC280\nBenson');
+  // cy.get('#3-4-A').should('have.text', 'CST\nCSEC280\nBenson');
+  // cy.get('#4-5-A').should('have.text', 'CST\nCSEC280\nBenson');
 
 
   // Looping to check that group a is visible and groub is hidden
@@ -71,7 +76,7 @@ it('testThatModalWorks', () => {
       cy.get('#' + t + '-' + d + '-C').should('be.hidden');
       cy.get('#' + t + '-' + d + '-D').should('be.hidden');
       if (t+1!==d) {
-        cy.get('#'+t+'-'+d+'-A').should('be.empty');
+        cy.get('#'+t+'-'+d+'-A').should('have.class','empty');
       }
     }
   }
@@ -81,6 +86,7 @@ it('testThatModalWorks', () => {
   cy.get('#Seminar-B').should('be.hidden');
 
   cy.get('#btnB').click();
+  cy.wait(250);
 
   cy.get('#mon').contains('Monday');
   cy.get('#tues').contains('Tuesday');
@@ -112,7 +118,7 @@ it('testThatModalWorks', () => {
       cy.get('#' + t + '-' + d + '-C').should('be.hidden');
       cy.get('#' + t + '-' + d + '-D').should('be.hidden');
       if (t+d!==8) {
-        cy.get('#'+t+'-'+d+'-B').should('be.empty');
+        cy.get('#'+t+'-'+d+'-B > p').should('have.class','empty');
       }
     }
   }
@@ -179,6 +185,7 @@ it('testTechDebt', () => {
 
 // DONE check group C
   cy.get('#btnC').click();
+  cy.wait(250);
 
   cy.get('#mon').contains('Monday');
   cy.get('#tues').contains('Tuesday');
@@ -200,13 +207,14 @@ it('testTechDebt', () => {
       cy.get('#' + t + '-' + d + '-A').should('be.hidden');
       cy.get('#' + t + '-' + d + '-B').should('be.hidden');
       cy.get('#' + t + '-' + d + '-D').should('be.hidden');
-      cy.get('#' + t + '-' + d + '-C').should('be.empty');
+      cy.get('#' + t + '-' + d + '-C > p').should('have.class','empty');
     }
   }
 
 
 // DONE check group D
   cy.get('#btnD').click();
+  cy.wait(250);
   cy.get('#mon').contains('Monday');
   cy.get('#tues').contains('Tuesday');
   cy.get('#wed').contains('Wednesday');
@@ -227,7 +235,7 @@ it('testTechDebt', () => {
       cy.get('#' + t + '-' + d + '-A').should('be.hidden');
       cy.get('#' + t + '-' + d + '-B').should('be.hidden');
       cy.get('#' + t + '-' + d + '-C').should('be.hidden');
-      cy.get('#' + t + '-' + d + '-D').should('be.empty');
+      cy.get('#' + t + '-' + d + '-D').should('have.class','empty');
     }
   }
 

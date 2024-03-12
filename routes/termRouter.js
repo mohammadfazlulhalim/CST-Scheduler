@@ -130,7 +130,6 @@ router.post('/course-offerings',async function(req, res, next){
     }
   }
 
-  // TODO: Verify add instructor and program lists
   const instructors = await Instructor.findAll({order: [['lastName', 'ASC']]});
   const programs = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
 
@@ -281,7 +280,6 @@ function compareTerm(term1, term2) {
   } else {
     return -1;
   }
-
 }
 
 /**
@@ -310,8 +308,6 @@ function mapCourseOfferings(courseOfferings, newTerm) {
     courseOfferings[i].endDate = newTerm.endDate;
     courseOfferings[i].TermId = newTerm.id;
   }
-
-  //TODO: Get course code to display (could do eager loading in initial DB call)
 
   return courseOfferings;
 }

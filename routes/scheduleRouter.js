@@ -6,6 +6,7 @@ const Timeslot = require('../private/javascript/Timeslot');
 const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
 const defineDB = require('../fixtures/createTables.fix');
+const Instructor = require('../private/javascript/Instructor');
 
 router.get('/', async (req, res, next) => {
 
@@ -26,6 +27,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
 
+  console.log("line 30");
   const groupArray = [];
 
   // constants
@@ -43,6 +45,7 @@ router.post('/', async (req, res, next) => {
       timeslotMatrix: [[], [], [], [], [], [], [], []], // outer array is times, each inner array is days
       COArray: new Array(req.body.group), groupLetter: GROUP_LETTERS[i],
     });
+    console.log("line 48");
 
     // Creating the 2D array with empty values
     for (t in TIMES) {
@@ -58,6 +61,7 @@ router.post('/', async (req, res, next) => {
         };
       }
     }
+    console.log("line 64");
 
     try {
       // fetch all timeslots that match filters
@@ -72,14 +76,15 @@ router.post('/', async (req, res, next) => {
           group: GROUP_LETTERS[i], ProgramId: req.body.program, TermId: req.body.term,
         },
       });
+      console.log("line 79");
 
       // getting each course offering for this group
       for (let k = 0; k < groupArray[i].COArray.length; k++) {
         const COObj = groupArray[i].COArray[k];
-        const insObj = await COObj.getInstructor();
-        COObj.insFirst = insObj.firstName;
-        COObj.insLast = insObj.lastName;
-        COObj.dName = COObj.name + '-' + COObj.group;
+          const insObj = await Instructor.findByPk(COObj.primaryInstructor);
+          COObj.insFirst = insObj.firstName;
+          COObj.insLast = insObj.lastName;
+          COObj.dName = COObj.name + '-' + COObj.group;
       }
     } catch (error) {
 
@@ -92,6 +97,9 @@ router.post('/', async (req, res, next) => {
       coObj = await tSlot.getCourseOffering();
       prObj = await tSlot.getProgram();
       insObj = await tSlot.getInstructor();
+      if (insObj == null) {
+        console.log("null tSlot instructor")
+      }
       cObj = await coObj.getCourse();
 
       tSlot.program = prObj.programAbbreviation;
@@ -103,6 +111,7 @@ router.post('/', async (req, res, next) => {
       groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
       groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;// outer array is days, each inner array is times
     }
+    console.log("line 112");
     groupLetters[i] = GROUP_LETTERS[i];
   }
 
