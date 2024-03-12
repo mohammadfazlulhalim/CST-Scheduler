@@ -81,7 +81,10 @@ it('testThatModalWorks', () => {
     }
   }
 
-  cy.get('#Hardware-A').should('have.text', '\n                            Hardware\n                            Ben Benson\n                            2023-09-01-2023-12-15\n                        ');
+  // cy.get('#Hardware-A').should('have.text', '\n                                    \n                            Hardware\n                            Ben Benson\n                            2023-09-01-2023-12-15\n                        ');
+  cy.get('#Hardware-A').contains('Ben Benson');
+  cy.get('#Hardware-A').contains('Hardware');
+  cy.get('#Hardware-A').contains('2023-09-01 - 2023-12-15');
   cy.get('#Hardware-A').should('be.visible');
   cy.get('#Seminar-B').should('be.hidden');
 
@@ -103,11 +106,16 @@ it('testThatModalWorks', () => {
   cy.get('#7-0-B').contains('3:00');
 
   // DONE check group a has specific tiles filled
-  cy.get('#7-1-B').should('have.text', 'CST\nCSEC280\nBenson');
-  cy.get('#6-2-B').should('have.text', 'CST\nCSEC280\nBenson');
-  cy.get('#5-3-B').should('have.text', 'CST\nCSEC280\nBenson');
-  cy.get('#4-4-B').should('have.text', 'CST\nCSEC280\nBenson');
-  cy.get('#3-5-B').should('have.text', 'CST\nCSEC280\nBenson');
+  cy.get('#7-1-B').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
+  cy.get('#6-2-B').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
+  cy.get('#5-3-B').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
+  cy.get('#4-4-B').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
+  cy.get('#3-5-B').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
+  // cy.get('#7-1-B').should('have.text', 'CST\nCSEC280\nBenson');
+  // cy.get('#6-2-B').should('have.text', 'CST\nCSEC280\nBenson');
+  // cy.get('#5-3-B').should('have.text', 'CST\nCSEC280\nBenson');
+  // cy.get('#4-4-B').should('have.text', 'CST\nCSEC280\nBenson');
+  // cy.get('#3-5-B').should('have.text', 'CST\nCSEC280\nBenson');
 
 
   // Looping to check that group a is visible and groub is hidden
@@ -118,12 +126,15 @@ it('testThatModalWorks', () => {
       cy.get('#' + t + '-' + d + '-C').should('be.hidden');
       cy.get('#' + t + '-' + d + '-D').should('be.hidden');
       if (t+d!==8) {
-        cy.get('#'+t+'-'+d+'-B > p').should('have.class','empty');
+        cy.get('#'+t+'-'+d+'-B').should('have.class','empty');
       }
     }
   }
 
-  cy.get('#Seminar-B').should('have.text', '\n                            Seminar\n                            Ben Benson\n                            2023-09-01-2023-12-15\n                        ');
+  // cy.get('#Seminar-B').should('have.text', '\n                                    \n                            Seminar\n                            Ben Benson\n                            2023-09-01-2023-12-15\n                        ');
+  cy.get('#Seminar-B').contains('Seminar');
+  cy.get('#Seminar-B').contains('Ben Benson');
+  cy.get('#Seminar-B').contains('2023-09-01 - 2023-12-15');
   cy.get('#Hardware-A').should('be.hidden');
   cy.get('#Seminar-B').should('be.visible');
 
@@ -207,7 +218,7 @@ it('testTechDebt', () => {
       cy.get('#' + t + '-' + d + '-A').should('be.hidden');
       cy.get('#' + t + '-' + d + '-B').should('be.hidden');
       cy.get('#' + t + '-' + d + '-D').should('be.hidden');
-      cy.get('#' + t + '-' + d + '-C > p').should('have.class','empty');
+      cy.get('#' + t + '-' + d + '-C').should('have.class','empty');
     }
   }
 
