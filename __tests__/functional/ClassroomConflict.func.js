@@ -11,7 +11,18 @@ const {sequelize} = require('../../dataSource');
 const ClassroomConflictReportController= require('../../routes/classroomConflictReportRouter');
 // the ClearAndDefineTables file exports the function for clearing and defining tables
 const setupTables = require('../../fixtures/ClearAndDefineTables');
+const {instructor1} = require('../../fixtures/Instructor.fix');
+const {program1} = require('../../fixtures/Program.fix');
 
+/*
+* VALIDATION ERROR THROWN:- Functional testing - while running Timeslot.create( {
+      {startDate: '2023-05-01', endDate: '2023-05-24', startTime: '8:00', endTime: '9:00', day: 3, group: 'B'};
+}
+
+switching startTime and endTime to 08:00, 09:00 respectively resolves this...
+THOUGH, if we run loaddb - it doesn't complain about the same validation that stops our test.
+*
+* */
 
 describe('Classroom Conflict Report Router', ()=>{
   const classroomObj = {
@@ -79,10 +90,13 @@ describe('Classroom Conflict Report Router', ()=>{
         {id: 4, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
 
     const timeslotObj5 =
-        {id: 5, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
+        {startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 4, group: 'A'};
 
     const timeslotObj6 =
-        {id: 6, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 3, group: 'A'};
+        {startDate: '2023-05-01', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 3, group: 'A'};
+    const timeslotObj7 =
+      {startDate: '2023-05-01', endDate: '2023-05-24', startTime: '08:00', endTime: '09:00', day: 3, group: 'B'};
+
 
     // below timeslots should have same information including the same classroom ID
     const createdTimeslot1 = await TimeSlot.create(timeslotObj1);
@@ -126,7 +140,37 @@ describe('Classroom Conflict Report Router', ()=>{
     await createdTimeslot6.setInstructor(createdInstructor);
     await createdTimeslot6.setProgram(createdProgram);
     await createdTimeslot6.setCourseOffering(createdCourseOffering);
+
+
+    const createdTimeslot7 = await TimeSlot.create(timeslotObj7);
+    await createdTimeslot7.setClassroom(createdClassroom);
+    await createdTimeslot7.setTerm(createdTerm);
+    await createdTimeslot7.setInstructor(createdInstructor);
+    await createdTimeslot7.setProgram(createdProgram);
+    await createdTimeslot7.setCourseOffering(createdCourseOffering);
+
+
   } );
+
+  /**
+   * Helper for creating new Timeslot
+   *
+   * @param objTS
+   * @param classroom1Arg
+   * @param term1Arg
+   * @param instructor1Arg
+   * @param program1Arg
+   * @param courseoffering1Arg
+   * @return {Promise<void>}
+   */
+  async function createNewTimeslotWithAssociations(objTS, classroom1Arg, term1Arg, instructor1Arg, program1Arg, courseoffering1Arg) {
+    const createdTimeslot = await TimeSlot.create(objTS);
+    await createdTimeslot.setClassroom(classroom1Arg);
+    await createdTimeslot.setTerm(term1Arg);
+    await createdTimeslot.setInstructor(instructor1Arg);
+    await createdTimeslot.setProgram(program1Arg);
+    await createdTimeslot.setCourseOffering(courseoffering1Arg);
+  }
 
 
   // Test endpoint for fetching classroom conflict reports
@@ -146,10 +190,20 @@ describe('Classroom Conflict Report Router', ()=>{
 
     const classroomInstance = await Classroom.findOne({where: {roomNumber: classroomObj.roomNumber}});
 
-    //const resultConflictingTimeslots = await ClassroomConflictReportController.checkForConflict(classroomInstance);
+    // const resultConflictingTimeslots = await ClassroomConflictReportController.checkForConflict(classroomInstance);
 
+    const expectedAnswerTimeslots = [
+      {
+        id: 3,
+        startTime: '13:00',
+        endTime: '14:00',
+        day: 4,
+        CourseOfferingId: 1,
+      },
+    ];
 
-    const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance);
+    // TODO implement parameter change router as well!
+    const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance, termInstance);
     console.log('>>>>>searching');
     console.log(results);
 
@@ -160,7 +214,7 @@ describe('Classroom Conflict Report Router', ()=>{
   it('testClassroomConflictsNotFound ', async ()=>{
     const classroomInstance2 = await Classroom.findOne({where: {roomNumber: classroomObj2.roomNumber}});
 
-    //const resultConflictingTimeslots2 = await ClassroomConflictReportController.checkForConflict(classroomInstance2);
+    // const resultConflictingTimeslots2 = await ClassroomConflictReportController.checkForConflict(classroomInstance2);
 
     expect(resultConflictingTimeslots2.length).toBe(0);
   });
