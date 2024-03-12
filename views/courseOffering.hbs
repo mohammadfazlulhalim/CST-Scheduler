@@ -133,7 +133,8 @@
                             </div>
                             <div>
                                 <label for="eprimaryInstructor">Primary Instructor</label>
-                                <select id="eprimaryInstructor" class="form-label" onchange="checkUpdateEnable()">Primary Instructor
+                                <select id="eprimaryInstructor" class="form-label" onchange="checkUpdateEnable()">Primary
+                                    Instructor
                                     {{#each listInstructor}}
                                         <option value="{{id}}">{{lastName}}</option>
                                     {{/each}}
@@ -141,7 +142,8 @@
                             </div>
                             <div>
                                 <label for="ealternativeInstructor">Alternative Instructor</label>
-                                <select id="ealternativeInstructor" class="form-label" onchange="checkUpdateEnable()">Alternative Instructor
+                                <select id="ealternativeInstructor" class="form-label" onchange="checkUpdateEnable()">Alternative
+                                    Instructor
                                     {{#each listInstructor}}
                                         <option value="{{id}}">{{lastName}}</option>
                                     {{/each}}
@@ -160,8 +162,7 @@
         <p>There are no course offerings stored</p>
     {{/if}}
     <!-- Add Modal - must be displayed even if no terms exist -->
-    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -176,26 +177,31 @@
                                class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eID"
                                name="ID" value="{{submittedCO.id}}">
                         <div class="invalid-feedback">{{putErr.id}}</div>
-                        <div>
-                            <label for="cCourse">Course</label>
-<!--                            TODO: Improve event handler-->
-                            <input id="cCourse" type="text" list="courses" oninput="selectedCourseCreate()"/>
-                            <datalist id="courses" class="form-label">Course
-                                {{#each listCourse}}
-                                    <option id="optionCreateCourse{{courseCode}}"
-                                            value="{{courseCode}}" data-courseid="{{id}}"
-                                            data-coursename="{{courseName}}"></option>
-                                {{/each}}
-                            </datalist>
-                            <div class="invalid-feedback" id="cCourseInvalid"></div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="cCourse">Course</label>
+                                <input id="cCourse" type="text" list="courses" class="form-control"
+                                       oninput="selectedCourseCreate()"/>
+                                <datalist id="courses">
+                                    {{#each listCourse}}
+                                        <option id="optionCreateCourse{{courseCode}}"
+                                                value="{{courseCode}}" data-courseid="{{id}}"
+                                                data-coursename="{{courseName}}" class="dropdown-item"></option>
+                                    {{/each}}
+                                </datalist>
+                                <div class="invalid-feedback" id="cCourseInvalid"></div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="cName">Name:</label>
+                                <input type="text" class="form-control {{#if err.name}}is-invalid{{/if}}" id="cName"
+                                       name="name" value="{{submittedCO.name}}">
+                                <div class="invalid-feedback">{{err.name}}</div>
+                            </div>
                         </div>
-                        <label for="cName">Name:</label>
-                        <input type="text" class="form-control {{#if err.name}}is-invalid{{/if}}" id="cName"
-                               name="name" value="{{submittedCO.name}}">
-                        <div class="invalid-feedback">{{err.name}}</div>
                         <div>
                             <label for="cTerm">Term</label>
-                            <select id="cTerm" class="form-label" onchange="selectedTermCreate()">Course
+                            <select id="cTerm" class="form-select" onchange="selectedTermCreate()">Course
                                 <option></option>
                                 {{#each listTerm}}
                                     <option value="{{id}}" id="optionCreateTerm{{id}}" data-termstart="{{startDate}}"
@@ -205,23 +211,18 @@
                         </div>
 
                         <label for="cStartDate">Start Date:</label>
-                        <input type="text" class="form-control {{#if err.startDate}}is-invalid{{/if}}" id="cStartDate"
+                        <input type="date" class="form-control {{#if err.startDate}}is-invalid{{/if}}" id="cStartDate"
                                name="startDate" value="{{submittedCO.startDate}}">
                         <div class="invalid-feedback">{{err.startDate}}</div>
 
                         <label for="cEndDate">End Date:</label>
-                        <input type="text" class="form-control {{#if err.endDate}}is-invalid{{/if}}" id="cEndDate"
+                        <input type="date" class="form-control {{#if err.endDate}}is-invalid{{/if}}" id="cEndDate"
                                name="endDate" value="{{submittedCO.endDate}}">
                         <div class="invalid-feedback">{{err.endDate}}</div>
 
-                        <label for="cGroup">Group:</label>
-                        <input type="text" class="form-control {{#if err.group}}is-invalid{{/if}}" id="cGroup"
-                               name="group" value="{{submittedCO.group}}">
-                        <div class="invalid-feedback">{{err.group}}</div>
-
                         <div>
                             <label for="cProgram">Program</label>
-                            <select id="cProgram" class="form-label" onchange="checkCreateEnable()">Program
+                            <select id="cProgram" class="form-select" onchange="checkCreateEnable()">Program
                                 <option></option>
                                 {{#each listProgram}}
                                     <option value="{{id}}">{{programAbbreviation}}</option>
@@ -230,7 +231,8 @@
                         </div>
                         <div>
                             <label for="cprimaryInstructor">Primary Instructor</label>
-                            <select id="cprimaryInstructor" class="form-label" onchange="checkCreateEnable()">Primary Instructor
+                            <select id="cprimaryInstructor" class="form-select" onchange="checkCreateEnable()">Primary
+                                Instructor
                                 <option></option>
                                 {{#each listInstructor}}
                                     <option value="{{id}}">{{lastName}}</option>
@@ -239,7 +241,8 @@
                         </div>
                         <div>
                             <label for="calternativeInstructor">Alternative Instructor</label>
-                            <select id="calternativeInstructor" class="form-label" onchange="checkCreateEnable()">Alternative Instructor
+                            <select id="calternativeInstructor" class="form-select" onchange="checkCreateEnable()">Alternative
+                                Instructor
                                 <option></option>
                                 {{#each listInstructor}}
                                     <option value="{{id}}">{{lastName}}</option>
@@ -247,12 +250,25 @@
                             </select>
                         </div>
 
+                        <label for="cGroup">Group:</label>
+                        <input type="text" class="form-control {{#if err.group}}is-invalid{{/if}}" id="cGroup"
+                               name="group" value="{{submittedCO.group}}">
+                        <div class="invalid-feedback">{{err.group}}</div>
 
+
+                        <div class="form-group">
+                            <label for="numberOfGroups">Number of corresponding groups to create:</label>
+                            <input type="number" id="numberOfGroups" name="numberOfGroups" min="0" max="3" value="0">
+                        </div>
+
+                        <div id="correspondingGroups"></div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" id="createCO" class="btn btn-outline-success" disabled>Create</button>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" id="createCO" class="btn btn-outline-success" disabled>Create</button>
-                    </div>
+
                 </form>
             </div>
         </div>
@@ -265,10 +281,36 @@
         <button class="btn btn-success">Return</button>
     </a>
 </div>
-<!-- My own handlers for the form submits -->
+
 <script>
     'use strict';
     reLinkButtons();
+
+    document.getElementById('numberOfGroups').addEventListener('input', function() {
+        var numberOfGroups = parseInt(this.value);
+        var correspondingGroupsDiv = document.getElementById('correspondingGroups');
+        correspondingGroupsDiv.innerHTML = ''; // Clear existing inputs
+
+        for (var i = 1; i <= numberOfGroups; i++) {
+            var groupLabel = document.createElement('label');
+            groupLabel.setAttribute('for', 'correspondingGroup' + i);
+            groupLabel.innerText = 'Corresponding Group ' + i + ':';
+
+            var groupInput = document.createElement('input');
+            groupInput.setAttribute('type', 'text');
+            groupInput.setAttribute('class', 'form-control');
+            groupInput.setAttribute('id', 'Corresponding' + i); // Set ID with "Corresponding" prefix and current index
+            groupInput.setAttribute('name', 'correspondingGroup' + i);
+
+            var invalidFeedback = document.createElement('div');
+            invalidFeedback.setAttribute('class', 'invalid-feedback');
+            invalidFeedback.innerText = '{{err.group}}'; // Replace {{err.group}} with your actual error message variable
+
+            correspondingGroupsDiv.appendChild(groupLabel);
+            correspondingGroupsDiv.appendChild(groupInput);
+            correspondingGroupsDiv.appendChild(invalidFeedback);
+        }
+    });
 
     /**
      * This function autofills the name field with the course name when the course is selected
@@ -278,12 +320,12 @@
         let courseCode = document.getElementById('cCourse').value;
         try {
             document.getElementById('cName').value = document.getElementById('optionCreateCourse' + courseCode).dataset.coursename;
-            document.getElementById('cCourseInvalid').innerText="";
+            document.getElementById('cCourseInvalid').innerText = '';
             document.getElementById('cCourse').classList.remove('is-invalid');
         } catch (e) {
             document.getElementById('cCourse').classList.add('is-invalid');
-            document.getElementById('cCourseInvalid').innerText="Please select a Course Code from the list";
-            document.getElementById('cName').value = "";
+            document.getElementById('cCourseInvalid').innerText = 'Please select a Course Code from the list';
+            document.getElementById('cName').value = '';
         }
         checkCreateEnable();
     }
@@ -484,7 +526,7 @@
         $('#eTerm').val(document.getElementById(idToEdit + 'term').dataset.termid);
         $('#eCourse').val(document.getElementById(idToEdit + 'course').dataset.courseid);
         $('#eprimaryInstructor').val(document.getElementById(idToEdit + 'primaryInstructor').dataset.primaryInstructorid);
-        $('#ealternativeInstructor').val(document.getElementById(idToEdit + 'primaryInstructor').dataset.primaryInstructorid);
+        $('#ealternativeInstructor').val(document.getElementById(idToEdit + 'primaryInstructor').dataset.alternativeInstructorid);
         $('#eProgram').val(document.getElementById(idToEdit + 'program').dataset.programid);
 
         checkUpdateEnable();
