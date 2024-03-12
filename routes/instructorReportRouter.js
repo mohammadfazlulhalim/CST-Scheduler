@@ -113,7 +113,7 @@ router.post('/', async function(req, res, next) {
   const uniqueDates = await getUniqueDates(instructorName, termName); // get each unique start end date
 
   if (instRepTimeslots){ //if no unique dates, skip
-    for (let i=0; i<uniqueDates.length-1; i++) { //for each unique period of study
+    for (let i=0; i < uniqueDates.length-1; i++) { //for each unique period of study
       let tempJson = {};
 
       let start = uniqueDates[i];
@@ -123,10 +123,13 @@ router.post('/', async function(req, res, next) {
         isSplit = true;
       }
 
-
       tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, end); //assign time slots that match timeframe
+      if(i < uniqueDates.length - 2){ //set end dates back one day except for end
+        end--;
+      }
+
       tempJson.startDate = start.date;
-      tempJson.endDate = (end.date - 1);
+      tempJson.endDate = end.date;
 
       reportArray[i] = tempJson;
     }
@@ -202,7 +205,7 @@ async function generateSchedule(instRepTimeslots, start, end) {
     {
       // make day one less (offset)
       const tDay= timeslot.day-1;
-      const tHour = hours24.findIndex((st)=> st === timeslot.startTime);
+      const tHour = hours24.indexOf(timeslot.startTime);
 
       // try to find the course, courseoffering and course for this timeslot object entry
       try {

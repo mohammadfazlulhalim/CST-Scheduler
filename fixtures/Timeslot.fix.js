@@ -10,9 +10,9 @@ const validCourseOfferingsB = require('./CourseOffering.fix').validCourseOfferin
 
 // TODO refine the s48 timeslots
 const s48validTimeslots = [
-  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '8:00', endTime: '9:00', day: 1, group: 'A'},
+  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '08:00', endTime: '09:00', day: 1, group: 'A'},
   {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '14:00', endTime: '15:00', day: 1, group: 'A'},
-  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '9:00', endTime: '10:00', day: 2, group: 'A'},
+  {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '09:00', endTime: '10:00', day: 2, group: 'A'},
   {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
   // TODO watch for conflicts
   {startDate: '2023-01-02', endDate: '2023-04-28', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
@@ -97,7 +97,7 @@ async function createTimeslot() {
 }
 
 function GenerateTimeSlotData() {
-  const TimeArray = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+  const TimeArray = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
   const TimeSlotDataArray = [];
 
   for (let i = 1; i < 6; i++) {
@@ -116,15 +116,15 @@ function GenerateTimeSlotData() {
 }
 
 validTimeslots = [
-  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '8:00', endTime: '9:00', day: 1, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '08:00', endTime: '09:00', day: 1, group: 'A'},
   {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '14:00', endTime: '15:00', day: 1, group: 'A'},
-  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '9:00', endTime: '10:00', day: 2, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '09:00', endTime: '10:00', day: 2, group: 'A'},
   {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
   {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
   {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '11:00', endTime: '12:00', day: 3, group: 'A'},
   {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '10:00', endTime: '11:00', day: 4, group: 'A'},
   {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
-  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '9:00', endTime: '10:00', day: 5, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '09:00', endTime: '10:00', day: 5, group: 'A'},
   {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
 ];
 
