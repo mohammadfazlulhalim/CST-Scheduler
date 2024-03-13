@@ -7,6 +7,11 @@ const Classroom= require('../private/javascript/Classroom');
 const Timeslot = require('../private/javascript/Timeslot');
 const {QueryTypes} = require('sequelize');
 
+// this is a quick array for designating weekdays as numbers
+// 0 is Sunday --> 6 is Saturday
+const daysNumberedZeroIndex = [0, 1, 2, 3, 4, 5, 6];
+
+
 /**
  * Post Handler for classroom conflict report router
  * @param req
@@ -42,6 +47,9 @@ router.get('/', async (req, res, next)=>{
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
 
   // const timeslotsInConflict = await checkForConflict(classrooms[0]);
+
+  // assign the final output of conflicting timeslots as an array of objects to timeslotsReturned
+  const timeslotsReturned = await generateTimeslotsTest();
 
   res.render('classroomConflictsReport', {
     classrooms,
@@ -104,7 +112,7 @@ async function uniqueTime(classroom) {
  *
  * @param a
  * @param b
- * @returns {number}
+ * @return {number}
  */
 function compareTime(a, b) {
   // Use toUpperCase() to ignore character casing
@@ -122,7 +130,8 @@ function compareTime(a, b) {
 
 
 /**
- *
+ * gathers timeslots between the start and endtime provided
+ * filters by classroom
  *
  * @param startDate
  * @param endDate
@@ -149,14 +158,14 @@ async function generateTimeslots(startTime, endTime, classroom) {
 /**
  * New function for collecting timeslots with conflicts
  * @param classroom, term
- * @returns {Promise<Object[]>}
+ * @return {Promise<Object[]>}
  */
 async function generateTimeslotsTest(classroom, term) {
+  // const timeVals = await uniqueTime(classroom);
 
-  const timeVals = await uniqueTime(classroom);
-
-
-
+  // Using this SQL statement,
+  // - try to find the timeslot objects that have same start time, end time, day
+  // - filter results by term id and classroom id
   const sqlStatement =`SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId, COUNT (*) AS frequency 
                                FROM Timeslots
                                INNER JOIN Classroom
@@ -164,22 +173,20 @@ async function generateTimeslotsTest(classroom, term) {
                                GROUP BY Timeslots.day, Timeslots.startTime, Timeslots.endTime
                                 HAVING COUNT(*) > 1`;
 
+  // stores result of the sql statement above
   let redundantObject;
 
   try {
-    redundantObject = await  sequelize.query(sqlStatement, {type: QueryTypes.SELECT,});
-
-  }catch(err){
+    redundantObject = await sequelize.query(sqlStatement, {type: QueryTypes.SELECT});
+  } catch (err) {
     console.log(err);
   }
-  console.log(">>>>>>>WE ARE HERE redundantObject")
-console.log(redundantObject);
+  console.log('>>>>>>>WE ARE HERE redundantObject');
+  console.log(redundantObject);
 
-
-  // for every unique range of time
 
   let sqlStatement2;
-  let classResult=[];
+  const classResult=[];
   for ( let i = 0; i< redundantObject.length; i++) {
     sqlStatement2 = `
     SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId
@@ -192,21 +199,19 @@ console.log(redundantObject);
     try {
       classResult.push( await sequelize.query(sqlStatement2, {
         type: QueryTypes.SELECT,
-       }));
-
+      }));
     } catch (e) {
       console.log(e);
     }
-
-
   }
 
+  // gather timeslots from helper function
+  // const sqlizeTimeslotsArr = await generateTimeslots('08:00', '10:00', classroom);
+
+
   return classResult;
-
-
-
-
+  // return sqlizeTimeslotsArr;
 }
 
 
-module.exports = {router,  generateTimeslotsTest};
+module.exports = {router, generateTimeslotsTest};
