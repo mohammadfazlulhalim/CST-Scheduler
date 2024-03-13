@@ -143,8 +143,8 @@
                                     <tbody>
                                     {{#each courseOfferings}}
                                         <tr>
+                                            <input hidden id="{{this.count}}coTerm" value="{{this.TermId}}"/>
                                             <td>
-                                                <input hidden id="{{this.count}}coTerm" value="{{this.TermId}}"/>
                                                 <input type="text"
                                                        class="form-control {{#if this.err.name}}is-invalid{{/if}}"
                                                        id="{{this.count}}coName"
