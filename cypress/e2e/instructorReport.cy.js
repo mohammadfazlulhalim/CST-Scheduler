@@ -116,16 +116,6 @@ describe('Test Instructor Report Page', () => {
         //Opens the landing page
         cy.visit('localhost:3000');
 
-        // Adding course offering for split
-        cy.get('#cCourse').type('COOS293');
-        cy.get('#cTerm').select('2023-08-01 - 1');
-        cy.get('#cStartDate').should('have.value', '2023-03-01');
-        cy.get('#cEndDate').should('have.value', '2023-04-01');
-        cy.get('#cGroup').type('D');
-        cy.get('#cInstructor').select('Barrie');
-        cy.get('#cProgram').select('CST');
-        cy.get('#createCO').click();
-
         //create timeslot
         cy.contains('Schedule Builder').click();
         cy.get('#programSelect').select('CST');

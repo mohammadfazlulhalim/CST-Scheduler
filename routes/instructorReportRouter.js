@@ -119,17 +119,24 @@ router.post('/', async function(req, res, next) {
       let start = uniqueDates[i];
       let end = uniqueDates[i+1];
 
-      if(i < 0){//notifies page that schedule is split
+      if(i > 0){//notifies page that schedule is split
         isSplit = true;
       }
 
-      tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, end); //assign time slots that match timeframe
       if(i < uniqueDates.length - 2){ //set end dates back one day except for end
-        end--;
-      }
+        let endDate = new Date(end.date);//change to date to set back a day
+        endDate.setDate(endDate.getDate() - 1);
+        endDate = endDate.toISOString().substring(0, 10)
 
-      tempJson.startDate = start.date;
-      tempJson.endDate = end.date;
+
+        tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, endDate); //assign time slots that match timeframe
+        tempJson.startDate = start.date;
+        tempJson.endDate = endDate;
+      } else { //use regular end time
+        tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, end.date);
+        tempJson.startDate = start.date;
+        tempJson.endDate = end.date;
+      }
 
       reportArray[i] = tempJson;
     }
@@ -196,11 +203,12 @@ async function generateSchedule(instRepTimeslots, start, end) {
     ];
   }
 
-  // eslint-disable-next-line guard-for-in
+  // eslint-disable-n
+  // ext-line guard-for-in
   // for every entry in the timeslots
   for (const timeslot of instRepTimeslots) {
 
-    if(timeslot.startDate.localeCompare(end.date) < 1  &&
+    if(timeslot.startDate.localeCompare(end) < 1  &&
         timeslot.endDate.localeCompare(start.date) > -1 ) // if the timeslot falls within the current date range
     {
       // make day one less (offset)
@@ -236,7 +244,36 @@ async function generateSchedule(instRepTimeslots, start, end) {
 }
 
 async function getUniqueDates(instructor, term) {
-  const sqlStatement = `SELECT DISTINCT date
+
+  const sqlStart = `SELECT DISTINCT date FROM (
+                          SELECT startDate AS date FROM timeslots where InstructorId = ${instructor.id}
+                          ) AS combined_dates WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
+
+  const sqlEnd = `SELECT DISTINCT date FROM (
+                          SELECT endDate AS date FROM timeslots where InstructorId = ${instructor.id}
+                          ) AS combined_dates WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
+
+  let arStart, arEnd;
+
+  try {
+    arStart = await sequelize.query(sqlStart, {
+      type: QueryTypes.SELECT,
+    });
+    arEnd = arStart = await sequelize.query(sqlEnd, {
+      type: QueryTypes.SELECT,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+
+  for(let date in arEnd){
+    if(date !== term.endDate){
+
+    }
+  };
+
+
+  /*const sqlStatement = `SELECT DISTINCT date
                         FROM (
                           SELECT startDate AS date FROM timeslots where InstructorId = ${instructor.id}
                           UNION
@@ -250,7 +287,7 @@ async function getUniqueDates(instructor, term) {
     });
   } catch (e) {
     console.log(e);
-  }
+  }*/
 }
 
 
