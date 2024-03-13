@@ -128,7 +128,6 @@ router.post('/', async function(req, res, next) {
         endDate.setDate(endDate.getDate() - 1);
         endDate = endDate.toISOString().substring(0, 10)
 
-
         tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, endDate); //assign time slots that match timeframe
         tempJson.startDate = start.date;
         tempJson.endDate = endDate;
@@ -244,50 +243,61 @@ async function generateSchedule(instRepTimeslots, start, end) {
 }
 
 async function getUniqueDates(instructor, term) {
+  //made major change, need to determine if dates are start/end dates
+  const sqlStart = `SELECT DISTINCT startDate AS date FROM timeslots 
+                         where InstructorId = ${instructor.id} and TermId = ${term.id}
+                        and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'` ;
 
-  const sqlStart = `SELECT DISTINCT date FROM (
-                          SELECT startDate AS date FROM timeslots where InstructorId = ${instructor.id}
-                          ) AS combined_dates WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
-
-  const sqlEnd = `SELECT DISTINCT date FROM (
-                          SELECT endDate AS date FROM timeslots where InstructorId = ${instructor.id}
-                          ) AS combined_dates WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
+  const sqlEnd = `SELECT DISTINCT endDate AS date FROM timeslots 
+                        where InstructorId = ${instructor.id} and TermId = ${term.id}
+                        and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'`;
 
   let arStart, arEnd;
 
   try {
     arStart = await sequelize.query(sqlStart, {
       type: QueryTypes.SELECT,
+      mapToModel: true,
     });
-    arEnd = arStart = await sequelize.query(sqlEnd, {
+    arEnd = await sequelize.query(sqlEnd, {
       type: QueryTypes.SELECT,
+      mapToModel: true,
     });
   } catch (e) {
     console.log(e);
   }
 
-  for(let date in arEnd){
-    if(date !== term.endDate){
-
+  arEnd.forEach((date) => {
+    if(date.date !== term.endDate){
+      let tempDate = new Date(date.date); //change to date to set back a day
+      tempDate.setDate(tempDate.getDate() + 1);
+      date.date = tempDate.toISOString().substring(0, 10);
     }
-  };
+  })
+
+  arStart = arStart.concat(arEnd);
+  arStart = [...new Set(arStart)];
+  arStart = arStart.sort();
+
+  return arStart;
+
+  /*  const sqlStatement = `SELECT DISTINCT date
+                          FROM (
+                            SELECT startDate AS date FROM timeslots where InstructorId = ${instructor.id}
+                            UNION
+                            SELECT endDate AS date FROM timeslots where InstructorId = ${instructor.id}
+                            ) AS combined_dates
+                          WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
+
+    try {
+      return await sequelize.query(sqlStatement, {
+        type: QueryTypes.SELECT,
+      });
+    } catch (e) {
+      console.log(e);
+    }*/
 
 
-  /*const sqlStatement = `SELECT DISTINCT date
-                        FROM (
-                          SELECT startDate AS date FROM timeslots where InstructorId = ${instructor.id}
-                          UNION
-                          SELECT endDate AS date FROM timeslots where InstructorId = ${instructor.id}
-                          ) AS combined_dates
-                        WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
-
-  try {
-    return await sequelize.query(sqlStatement, {
-      type: QueryTypes.SELECT,
-    });
-  } catch (e) {
-    console.log(e);
-  }*/
 }
 
 
