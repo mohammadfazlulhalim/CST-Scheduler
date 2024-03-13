@@ -157,8 +157,8 @@ async function s50CreateConflictingTimeslot() {
   const createdTimeslot1 = await Timeslot.bulkCreate(s50Timeslot);
 
   for (let i = 0; i < createdTimeslot1.length; i++) {
-    await createdTimeslot1.setClassroom(classroomInstance239A);
-    await createdTimeslot1.setTerm(termInstance);
+    await createdTimeslot1[i].setClassroom(classroomInstance239A);
+    await createdTimeslot1[i].setTerm(termInstance);
   }
 
   // await createdTimeslot1.setTerm();

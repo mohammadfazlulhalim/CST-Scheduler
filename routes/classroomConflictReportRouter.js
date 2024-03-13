@@ -3,7 +3,7 @@ const router = express.Router();
 const {sequelize, Op} = require('../dataSource');
 
 const Classroom= require('../private/javascript/Classroom');
-
+const Term=require('../private/javascript/Term');
 const Timeslot = require('../private/javascript/Timeslot');
 const {QueryTypes} = require('sequelize');
 
@@ -46,13 +46,16 @@ router.post('/', async (req, res, next)=>{
 router.get('/', async (req, res, next)=>{
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
 
+  const terms= await Term.findAll({order: [ ['termNumber', 'ASC'], ['startDate', 'ASC']]});
   // const timeslotsInConflict = await checkForConflict(classrooms[0]);
 
   // assign the final output of conflicting timeslots as an array of objects to timeslotsReturned
-  const timeslotsReturned = await generateTimeslotsTest();
+  const timeslotsReturned = await generateTimeslotsTest(classrooms[0], terms[0]);
 
-  res.render('classroomConflictsReport', {
+  res.render('classroomConflictReport', {
     classrooms,
+    timeslotsReturned,
+    terms,
     showModal: true,
   });
 });
@@ -163,6 +166,8 @@ async function generateTimeslots(startTime, endTime, classroom) {
 async function generateTimeslotsTest(classroom, term) {
   // const timeVals = await uniqueTime(classroom);
 
+  console.log("Class room info");
+  console.log(classroom);
   // Using this SQL statement,
   // - try to find the timeslot objects that have same start time, end time, day
   // - filter results by term id and classroom id
@@ -170,7 +175,7 @@ async function generateTimeslotsTest(classroom, term) {
                                FROM Timeslots
                                INNER JOIN Classroom
                                ON Timeslots.classroomId = ${classroom.id} AND Timeslots.termId = ${term.id}                               
-                               GROUP BY Timeslots.day, Timeslots.startTime, Timeslots.endTime
+                               GROUP BY Timeslots.day
                                 HAVING COUNT(*) > 1`;
 
   // stores result of the sql statement above

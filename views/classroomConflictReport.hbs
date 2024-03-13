@@ -1,25 +1,85 @@
-{{!--TODO REMOVE ALL OF THIS! --}}
 
-{{!--
-<div id="{{selectedclassroom}}">
-    <h2>{{classroom}}</h2>
-
-    <table id=`{{classroom}}Table`>
-        <thead>
-
-        </thead>
-        <tbody>
-        {{ each thing in timeslots}}
-        <tr>{{this.instructor}}</tr>
-        <tr>{{this.instructor}}
-        <tr>        {{this.instructor}}</tr>
-
-        {{/each}}
-        </tbody>
-
-    </table>
+<div id="classroomReportInfoModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Find Classroom conflicts </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="#" class="mb-3">
+                    <div class="mb-3">
+                        <label for="termSelect" class="form-label">Term:</label>
+                        <select id="termSelect" name="term" class="form-select">
+                            <option value="" selected disabled>Select Term</option>
+                            {{#each terms}}
+                                <option value="{{this.id}}">{{this.termNumber}} {{this.startDate}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="classroomSelect" class="form-label">Classroom:</label>
+                        <select id="classroomSelect" name="classroom" class="form-select">
+                            <option value="" selected disabled>Select Classroom</option>
+                            {{#each classrooms}}
+                                <option value="{{id}}">{{roomNumber}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="mb-3 form-check" >
+                        <input type="checkbox" name="allClassrooms" class="form-check-input" id="allClassroomSelect">
+                        <label class="form-check-label" for="allClassroomSelect">All Classrooms</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btnGenerateSchedule" disabled>Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
---}}
 
 
+<script>
+
+    'use strict';
+
+    window.onload = function() {
+        const modal = new bootstrap.Modal(document.getElementById('classroomReportInfoModal'));
+
+        {{#if showModal}}
+            modal.show();
+        {{/if}}
+
+        var termSelect = document.getElementById('termSelect');
+        var classroomSelect = document.getElementById('classroomSelect');
+        var submitBtn = document.getElementById('btnGenerateSchedule');
+
+        // Add event listeners to the selects
+        termSelect.addEventListener('change', handleSelectChange);
+        classroomSelect.addEventListener('change', handleSelectChange);
+
+        function handleSelectChange() {
+            // Enable or disable the submit button based on whether both selects have values
+            submitBtn.disabled = termSelect.value === '' || classroomSelect.value === '';
+        }
+    };
+</script>
+
+<style>
+    .custom-carousel-control {
+        color: black;
+    }
+
+    .carousel-control-prev.custom-carousel-control {
+        left: -150px;
+    }
+
+    .carousel-control-next.custom-carousel-control {
+        right: -150px;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        background-color: black;
+    }
+</style>
