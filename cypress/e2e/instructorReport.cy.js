@@ -72,9 +72,9 @@ describe('Test Instructor Report Page', () => {
         // Check for oen of bens scheduled classes in the cell
         cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', 'CST 1');
 
-        cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', 'COOS293B');
+        cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', 'MATH282B');
 
-        cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', '239A');
+        cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', '239B');
 
         // Check the content of the thead
         cy.get('.table-bordered thead tr th').each((header, index) => {
