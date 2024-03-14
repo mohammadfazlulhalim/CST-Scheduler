@@ -124,6 +124,7 @@ router.post('/course-offerings',async function(req, res, next){
     if (retCreate.error) {
       tempCO.err = retCreate.error;
       tempCO.count = nError++;
+      tempCO.Course = await Course.findByPk(tempCO.CourseId);
       coCreateArray.push(tempCO);
       res.status(422);
       // console.log("Error is: " + JSON.stringify(retCreate.error));
@@ -308,7 +309,6 @@ function mapCourseOfferings(courseOfferings, newTerm) {
     courseOfferings[i].endDate = newTerm.endDate;
     courseOfferings[i].TermId = newTerm.id;
   }
-
   return courseOfferings;
 }
 
