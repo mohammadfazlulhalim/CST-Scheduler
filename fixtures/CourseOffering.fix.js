@@ -28,6 +28,9 @@ async function fillCourseOfferingTable() {
   COHA.setProgram(1);
   COSA.setProgram(1);
   COHA.setInstructor(11);
+  // TODO: Set the alternativeInstructor to be used in term testing
+  COHA.alternativeInstructor = await Instructor.findByPk(2);
+  COHA = await COHA.update(COHA);
   COSA.setInstructor(3);
   COHA.setCourse(15);
   COSA.setCourse(4);

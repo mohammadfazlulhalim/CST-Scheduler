@@ -42,7 +42,7 @@ router.post('/', async function(req, res, next) {
     group: req.body.group,
     CourseId: req.body.course,
     TermId: req.body.term,
-    InstructorId: req.body.instructor,
+    primaryInstructor: req.body.instructor,
     ProgramId: req.body.program,
   };
 
@@ -90,7 +90,7 @@ router.put('/', async function(req, res, next) {
     group: req.body.group,
     CourseId: req.body.course,
     TermId: req.body.term,
-    InstructorId: req.body.instructor,
+    primaryInstructor: req.body.instructor,
     ProgramId: req.body.program,
   };
 
@@ -201,15 +201,22 @@ async function getCOList() {
 
   // retrieve all course offerings from the database
   try {
-    listCO = await CourseOffering.findAll({include: [Program, Course, Instructor, Term], order: [['name'],['group']]});
+    listCO = await CourseOffering.findAll({include: [Program, Course, Instructor, Term], order: [['name'], ['group']]});
     // loop through the list, and format every term to add in title
     for (let i=0; i<listCO.length; i++) {
       if (listCO[i].Term) {
         listCO[i].Term = createTermTitle(listCO[i].Term);
+
+        if (listCO[i].primaryInstructor) {
+          listCO[i].primaryInstructor = await Instructor.findOne({where: {id: listCO[i].primaryInstructor}});
+        }
+
+        // Find alternative instructor
+        if (listCO[i].alternativeInstructor) {
+          listCO[i].alternativeInstructor = await Instructor.findOne({where: {id: listCO[i].alternativeInstructor}});
+        }
       }
     }
-    // console.log(JSON.stringify(listCO))
-
   } catch (err) {
     // if unable to retrieve from database; e.g., no records exist
     listCO = undefined;
@@ -217,6 +224,7 @@ async function getCOList() {
 
   return listCO;
 }
+
 
 
 /**

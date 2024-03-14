@@ -63,16 +63,22 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#createCO').click();
   cy.get('#addModal').should('be.hidden');
 
-
   // created, now check that it exists
   const newRow = '#tableBody > tr:nth-child(21) > ';
   const newRow2 = '#tableBody > tr:nth-child(21)';
-  cy.get(newRow2).should('have.text',
-    '\n                    Mathematics of Computation\n                    A\n                    MATH282\n                    2023-4\n                    2023-08-01\n                    2023-12-01\n                    Micheal Grzesina\n                    CST\n                    \n                        Edit\n                        \n                        Delete\n                        \n                    \n                ');
+
+  let expectedResult = ['Mathematics of Computation', 'A', 'MATH282','2023-4','2023-08-01','2023-12-01','Micheal Grzesina',' ', 'CST']
+
+  for (let i = 0; i < 8; i++) {
+    const nChild = i+1
+
+    // TODO: reformat CO table so that this is not needed
+    cy.get(newRow+ ' td:nth-child(' + nChild + ')').should('have.text', expectedResult[i]);
+  }
 
   // Now test the update
   // click the edit button to open modal
-  cy.get(newRow + 'td:nth-child(9) > button:nth-child(1)').click();
+  cy.get(newRow + 'td:nth-child(10) > button:nth-child(1)').click();
   cy.get('#editModal').should('be.visible');
 
   // Checking the order of the dropdowns
@@ -115,9 +121,14 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#editCO').click();
   cy.get('#editModal').should('be.hidden');
 
-  cy.get(newRow2).should('have.text',
-    '\n                    Mathematics of Computation\n                    A\n                    MATH282\n                    2023-5\n                    2023-01-01\n                    2023-04-01\n                    Bryce Barrie\n                    CNT\n                    \n                        Edit\n                        \n                        Delete\n                        \n                    \n                ');
-  cy.get(newRow + 'td:nth-child(9) > button:nth-child(2)').click();
+
+  expectedResult = ['Mathematics of Computation', 'A', 'MATH282','2023-5','2023-00-01','2023-04-01','Bryce Barrie',' ', 'CNT']
+  for (let i = 0; i < termList.length; i++) {
+    let nChild = i + 2;
+    cy.get('#cTerm > option:nth-child(' + nChild + ')').should('have.text', termList[i]);
+  }
+
+  cy.get(newRow + 'td:nth-child(10) > button:nth-child(2)').click();
   cy.get('#deleteCO').click();
 
   // prefilling out add modal to get ready for further testing
@@ -148,9 +159,4 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#cName').should('have.value', 'Advanced Operating Systems');
   cy.get('#cCourseInvalid').should('have.text', '');
   cy.get('#createCO').should('be.enabled');
-
-
-
-
-
 });
