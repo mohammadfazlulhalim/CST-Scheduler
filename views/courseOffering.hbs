@@ -27,15 +27,18 @@
                     <td id="{{this.id}}term" data-termid="{{this.Term.id}}">{{this.Term.title}}</td>
                     <td id="{{this.id}}startDate">{{this.startDate}}</td>
                     <td id="{{this.id}}endDate">{{this.endDate}}</td>
-                    <td id="{{this.id}}primaryInstructor"
-                        data-primaryInstructorid="{{this.primaryInstructor.id}}">{{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}</td>
-                    <td id="{{this.id}}alternativeInstructor"
-                        data-primaryInstructorid="{{this.alternativeInstructor.id}}">{{this.alternativeInstructor.firstName}} {{this.alternativeInstructor.lastName}}</td>
-                    <td id="{{this.id}}program"
-                        data-programid="{{this.Program.id}}">{{this.Program.programAbbreviation}}</td>
+                    <td id="{{this.id}}primaryInstructor" data-primaryinstructorid="{{this.primaryInstructor.id}}">
+                        {{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}
+                    </td>
+                    <td id="{{this.id}}alternativeInstructor" data-alternativeinstructorid="{{this.alternativeInstructor.id}}">
+                        {{this.alternativeInstructor.firstName}} {{this.alternativeInstructor.lastName}}
+                    </td>
+                    <td id="{{this.id}}program" data-programid="{{this.Program.id}}">
+                        {{this.Program.programAbbreviation}}
+                    </td>
                     <td>
                         <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
-                                data-toggle="modal" data-target="#editModal">Edit
+                                data-toggle="modal" data-target="#editModal" onclick="handleEditModal('{{this.id}}')">Edit
                         </button>
                         <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
                                 data-toggle="modal" data-target="#deleteModal">Delete
@@ -174,102 +177,102 @@
                 </div>
                 <form action="/courseOffering" method="POST">
                     <div class="modal-body">
-                        <input hidden type="number"
-                               class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eID"
-                               name="ID" value="{{submittedCO.id}}">
-                        <div class="invalid-feedback">{{putErr.id}}</div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="cCourse">Course</label>
-                                <input id="cCourse" type="text" list="courses" class="form-control"
-                                       oninput="selectedCourseCreate()"/>
-                                <datalist id="courses">
-                                    {{#each listCourse}}
-                                        <option id="optionCreateCourse{{courseCode}}"
-                                                value="{{courseCode}}" data-courseid="{{id}}"
-                                                data-coursename="{{courseName}}" class="dropdown-item"></option>
-                                    {{/each}}
-                                </datalist>
-                                <div class="invalid-feedback" id="cCourseInvalid"></div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="cName">Name:</label>
-                                <input type="text" class="form-control {{#if err.name}}is-invalid{{/if}}" id="cName"
-                                       name="name" value="{{submittedCO.name}}">
-                                <div class="invalid-feedback">{{err.name}}</div>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="cTerm">Term</label>
-                            <select id="cTerm" class="form-select" onchange="selectedTermCreate()">Course
-                                <option></option>
-                                {{#each listTerm}}
-                                    <option value="{{id}}" id="optionCreateTerm{{id}}" data-termstart="{{startDate}}"
-                                            data-termend="{{endDate}}">{{startDate}} - {{termNumber}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-
-                        <label for="cStartDate">Start Date:</label>
-                        <input type="date" class="form-control {{#if err.startDate}}is-invalid{{/if}}" id="cStartDate"
-                               name="startDate" value="{{submittedCO.startDate}}">
-                        <div class="invalid-feedback">{{err.startDate}}</div>
-
-                        <label for="cEndDate">End Date:</label>
-                        <input type="date" class="form-control {{#if err.endDate}}is-invalid{{/if}}" id="cEndDate"
-                               name="endDate" value="{{submittedCO.endDate}}">
-                        <div class="invalid-feedback">{{err.endDate}}</div>
-
-                        <div>
-                            <label for="cProgram">Program</label>
-                            <select id="cProgram" class="form-select" onchange="checkCreateEnable()">Program
-                                <option></option>
-                                {{#each listProgram}}
-                                    <option value="{{id}}">{{programAbbreviation}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                        <div>
-                            <label for="cprimaryInstructor">Primary Instructor</label>
-                            <select id="cprimaryInstructor" class="form-select" onchange="checkCreateEnable()">Primary
-                                Instructor
-                                <option></option>
-                                {{#each listInstructor}}
-                                    <option value="{{id}}">{{lastName}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                        <div>
-                            <label for="calternativeInstructor">Alternative Instructor</label>
-                            <select id="calternativeInstructor" class="form-select" onchange="checkCreateEnable()">Alternative
-                                Instructor
-                                <option></option>
-                                {{#each listInstructor}}
-                                    <option value="{{id}}">{{lastName}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-
-                        <label for="cGroup">Group:</label>
-                        <input type="text" class="form-control {{#if err.group}}is-invalid{{/if}}" id="cGroup1"
-                               name="group" value="{{submittedCO.group}}">
-                        <div class="invalid-feedback">{{err.group}}</div>
-
-
                         <div class="form-group">
-                            <label for="numberOfGroups">Number of corresponding groups to create:</label>
-                            <input type="number" id="numberOfGroups" name="numberOfGroups" min="0" max="3" value="0">
+                            <label for="cCourse">Course:</label>
+                            <input id="cCourse" type="text" list="courses" class="form-control"
+                                   oninput="selectedCourseCreate()">
+                            <datalist id="courses">
+                                {{#each listCourse}}
+                                    <option id="optionCreateCourse{{courseCode}}" value="{{courseCode}}"
+                                            data-courseid="{{id}}" data-coursename="{{courseName}}"
+                                            class="dropdown-item"></option>
+                                {{/each}}
+                            </datalist>
+                            <div class="invalid-feedback" id="cCourseInvalid"></div>
                         </div>
-
-                        <div id="correspondingGroups"></div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cName">Name:</label>
+                                <input type="text" class="form-control" id="cName" name="name"
+                                       value="{{submittedCO.name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="cTerm">Term:</label>
+                                <select id="cTerm" class="form-select" onchange="selectedTermCreate()">
+                                    <option></option>
+                                    {{#each listTerm}}
+                                        <option value="{{id}}" id="optionCreateTerm{{id}}"
+                                                data-termstart="{{startDate}}" data-termend="{{endDate}}">{{startDate}}
+                                            - {{termNumber}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cStartDate">Start Date:</label>
+                                <input type="date" class="form-control" id="cStartDate" name="startDate"
+                                       value="{{submittedCO.startDate}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="cEndDate">End Date:</label>
+                                <input type="date" class="form-control" id="cEndDate" name="endDate"
+                                       value="{{submittedCO.endDate}}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cProgram">Program:</label>
+                                <select id="cProgram" class="form-select" onchange="checkCreateEnable()">
+                                    <option></option>
+                                    {{#each listProgram}}
+                                        <option value="{{id}}">{{programAbbreviation}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cprimaryInstructor">Primary Instructor:</label>
+                                <select id="cprimaryInstructor" class="form-select" onchange="checkCreateEnable()">
+                                    <option></option>
+                                    {{#each listInstructor}}
+                                        <option value="{{id}}">{{lastName}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="calternativeInstructor">Alternative Instructor:</label>
+                            <select id="calternativeInstructor" class="form-select" onchange="checkCreateEnable()">
+                                <option></option>
+                                {{#each listInstructor}}
+                                    <option value="{{id}}">{{lastName}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Groups To Create:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="decrementValue()">
+                                        -
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control text-center" id="numberOfGroups" value="1"
+                                       min="1" max="4" aria-label="Number of Groups" aria-describedby="basic-addon1"
+                                       readonly>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="incrementValue()">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button type="button" id="createCO" class="btn btn-outline-success" disabled>Create</button>
+                            <button type="button" id="createCO" class="btn btn-success" disabled>Create</button>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>
@@ -287,31 +290,20 @@
     'use strict';
     reLinkButtons();
 
-    document.getElementById('numberOfGroups').addEventListener('input', function() {
-        var numberOfGroups = parseInt(this.value);
-        var correspondingGroupsDiv = document.getElementById('correspondingGroups');
-        correspondingGroupsDiv.innerHTML = ''; // Clear existing inputs
-
-        for (var i = 2; i <= numberOfGroups + 1; i++) {
-            var groupLabel = document.createElement('label');
-            groupLabel.setAttribute('for', 'correspondingGroup' + i);
-            groupLabel.innerText = 'Corresponding Group ' + i + ':';
-
-            var groupInput = document.createElement('input');
-            groupInput.setAttribute('type', 'text');
-            groupInput.setAttribute('class', 'form-control');
-            groupInput.setAttribute('id', 'cGroup' + i); // Set ID with "correspondingGroup" prefix and current index
-            groupInput.setAttribute('name', 'correspondingGroup' + i);
-
-            var invalidFeedback = document.createElement('div');
-            invalidFeedback.setAttribute('class', 'invalid-feedback');
-            invalidFeedback.innerText = ''; // Empty error message for now
-
-            correspondingGroupsDiv.appendChild(groupLabel);
-            correspondingGroupsDiv.appendChild(groupInput);
-            correspondingGroupsDiv.appendChild(invalidFeedback);
+    function incrementValue() {
+        let currentValue = parseInt(document.getElementById('numberOfGroups').value);
+        if (currentValue < 4) {
+            document.getElementById('numberOfGroups').value = currentValue + 1;
         }
-    });
+    }
+
+    function decrementValue() {
+        let currentValue = parseInt(document.getElementById('numberOfGroups').value);
+        if (currentValue > 1) {
+            document.getElementById('numberOfGroups').value = currentValue - 1;
+        }
+    }
+
 
     /**
      * This function autofills the name field with the course name when the course is selected
@@ -431,7 +423,7 @@
      * @returns {Promise<void>}
      */
     async function handleCreateCO() {
-        let numberOfGroups = parseInt(document.getElementById('numberOfGroups').value) + 1;
+        let numberOfGroups = parseInt(document.getElementById('numberOfGroups').value);
         let courseCode = document.getElementById('cCourse').value;
         let courseID = document.getElementById('optionCreateCourse' + courseCode).dataset.courseid;
         let name = $('#cName').val();
@@ -442,49 +434,63 @@
         let alternativeInstructor = $('#calternativeInstructor').val();
         let term = $('#cTerm').val();
 
+        // Construct request body for course offering creation
+        let requestBody = {
+            name: name,
+            startDate: startDate,
+            endDate: endDate,
+            course: courseID,
+            program: program,
+            primaryInstructor: primaryInstructor,
+            term: term,
+        };
+
+        if (alternativeInstructor !== '') {
+            requestBody.alternativeInstructor = alternativeInstructor;
+        }
+
         // Array to store all the promises
         let promises = [];
 
+        // Create all course offerings
         for (let i = 1; i <= numberOfGroups; i++) {
-            let groupLetter = $('#cGroup' + i).val();
+            let groupLetter = String.fromCharCode(64 + i); // Convert 1 to "A", 2 to "B", etc.
+            requestBody.group = groupLetter;
 
-            let requestBody = {
-                name: name,
-                startDate: startDate,
-                endDate: endDate,
-                group: groupLetter,
-                course: courseID,
-                program: program,
-                primaryInstructor: primaryInstructor,
-                term: term,
-            };
-
-            if (alternativeInstructor !== '') {
-                requestBody.alternativeInstructor = alternativeInstructor;
-            }
-
-            // Push the fetch promise to the array
-            promises.push(
-                    fetch('{{URL}}/courseOffering', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(requestBody),
-                    })
-            );
+            promises.push(fetch('{{URL}}/courseOffering', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
+            }));
         }
+
         // Wait for all promises to resolve
         const responses = await Promise.all(promises);
 
+        // Check for errors in responses
+        let errorOccurred = false;
+        for (let i = 0; i < responses.length; i++) {
+            const response = responses[i];
+            if (!response.ok) {
+                errorOccurred = true;
+                const data = await response.text();
+                const modal = '#addModal';
+                loadResponse(modal, data, true); // Display error in modal
+                break; // Stop further processing if an error occurs
+            }
+        }
 
-
-        // Loop through responses
-        responses.forEach(async (response) => {
-            const data = await response.text();
-            const modal = '#addModal';
-            loadResponse(modal, data, !response.ok);
-        });
+        // If no errors occurred, proceed with loading responses
+        if (!errorOccurred) {
+            for (let i = 0; i < responses.length; i++) {
+                const response = responses[i];
+                const data = await response.text();
+                const modal = '#addModal';
+                loadResponse(modal, data, false);
+            }
+        }
     }
 
 
@@ -563,10 +569,6 @@
      * @param idToEdit    - The ID of the term being edited
      */
     function handleEditModal(idToEdit) {
-
-        console.log(document.getElementById(idToEdit + 'primaryInstructor').dataset.primaryInstructorid);
-        console.log('Here');
-
         $('#eID').val(idToEdit);
         $('#eName').val($(`#${idToEdit}name`).text());
         $('#eStartDate').val($(`#${idToEdit}startDate`).text());
@@ -574,8 +576,8 @@
         $('#eGroup').val($(`#${idToEdit}group`).text());
         $('#eTerm').val(document.getElementById(idToEdit + 'term').dataset.termid);
         $('#eCourse').val(document.getElementById(idToEdit + 'course').dataset.courseid);
-        $('#eprimaryInstructor').val(document.getElementById(idToEdit + 'primaryInstructor').dataset.primaryInstructorid);
-        $('#ealternativeInstructor').val(document.getElementById(idToEdit + 'alternativeInstructor').dataset.alternativeInstructorid);
+        $('#eprimaryInstructor').val(document.getElementById(idToEdit + 'primaryInstructor').dataset.primaryinstructorid);
+        $('#ealternativeInstructor').val(document.getElementById(idToEdit + 'alternativeInstructor').dataset.alternativeinstructorid);
         $('#eProgram').val(document.getElementById(idToEdit + 'program').dataset.programid);
 
         checkUpdateEnable();
