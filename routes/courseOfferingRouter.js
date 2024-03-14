@@ -29,6 +29,7 @@ router.get('/', async function(req, res, next) {
 });
 
 router.post('/', async function(req, res, next) {
+  console.log(JSON.stringify(req.body));
   await CourseOffering.sync();
   const listTerm = await getTerms();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
@@ -76,7 +77,6 @@ router.post('/', async function(req, res, next) {
 });
 
 router.put('/', async function(req, res, next) {
-  // console.log('PUT: ' + JSON.stringify(req.body));
   const listTerm = await getTerms();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
@@ -97,6 +97,7 @@ router.put('/', async function(req, res, next) {
   };
 
   const retUpdate = await updateCourseOffering(newCO);
+
   let violations;
   if (retUpdate.error) {
     res.status(422);
@@ -219,7 +220,6 @@ async function getCOList() {
         }
       }
     }
-    console.log(listCO);
   } catch (err) {
     // if unable to retrieve from database; e.g., no records exist
     listCO = undefined;

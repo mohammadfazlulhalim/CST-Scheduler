@@ -99,7 +99,7 @@
                             <div class="invalid-feedback">{{putErr.name}}</div>
                             <div>
                                 <label for="eTerm">Term</label>
-                                <select id="eTerm" class="form-label" onchange="selectedTermUpdate()">Course
+                                <select id="eTerm" class="form-select" onchange="selectedTermUpdate()">Course
                                     {{#each listTerm}}
                                         <option value="{{id}}" id="optionEditTerm{{id}}" data-termstart="{{startDate}}"
                                                 data-termend="{{endDate}}">{{startDate}} - {{termNumber}}</option>
@@ -125,7 +125,7 @@
                             <div class="invalid-feedback">{{putErr.group}}</div>
                             <div>
                                 <label for="eProgram">Program</label>
-                                <select id="eProgram" class="form-label" onchange="checkUpdateEnable()">Program
+                                <select id="eProgram" class="form-select" onchange="checkUpdateEnable()">Program
                                     {{#each listProgram}}
                                         <option value="{{id}}">{{programAbbreviation}}</option>
                                     {{/each}}
@@ -133,7 +133,7 @@
                             </div>
                             <div>
                                 <label for="eprimaryInstructor">Primary Instructor</label>
-                                <select id="eprimaryInstructor" class="form-label" onchange="checkUpdateEnable()">Primary
+                                <select id="eprimaryInstructor" class="form-select" onchange="checkUpdateEnable()">Primary
                                     Instructor
                                     {{#each listInstructor}}
                                         <option value="{{id}}">{{lastName}}</option>
@@ -142,7 +142,7 @@
                             </div>
                             <div>
                                 <label for="ealternativeInstructor">Alternative Instructor</label>
-                                <select id="ealternativeInstructor" class="form-label" onchange="checkUpdateEnable()">Alternative
+                                <select id="ealternativeInstructor" class="form-select" onchange="checkUpdateEnable()">Alternative
                                     Instructor
                                     {{#each listInstructor}}
                                         <option value="{{id}}">{{lastName}}</option>
@@ -162,7 +162,8 @@
         <p>There are no course offerings stored</p>
     {{/if}}
     <!-- Add Modal - must be displayed even if no terms exist -->
-    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -251,7 +252,7 @@
                         </div>
 
                         <label for="cGroup">Group:</label>
-                        <input type="text" class="form-control {{#if err.group}}is-invalid{{/if}}" id="cGroup"
+                        <input type="text" class="form-control {{#if err.group}}is-invalid{{/if}}" id="cGroup1"
                                name="group" value="{{submittedCO.group}}">
                         <div class="invalid-feedback">{{err.group}}</div>
 
@@ -291,7 +292,7 @@
         var correspondingGroupsDiv = document.getElementById('correspondingGroups');
         correspondingGroupsDiv.innerHTML = ''; // Clear existing inputs
 
-        for (var i = 1; i <= numberOfGroups; i++) {
+        for (var i = 2; i <= numberOfGroups + 1; i++) {
             var groupLabel = document.createElement('label');
             groupLabel.setAttribute('for', 'correspondingGroup' + i);
             groupLabel.innerText = 'Corresponding Group ' + i + ':';
@@ -299,12 +300,12 @@
             var groupInput = document.createElement('input');
             groupInput.setAttribute('type', 'text');
             groupInput.setAttribute('class', 'form-control');
-            groupInput.setAttribute('id', 'Corresponding' + i); // Set ID with "Corresponding" prefix and current index
+            groupInput.setAttribute('id', 'cGroup' + i); // Set ID with "correspondingGroup" prefix and current index
             groupInput.setAttribute('name', 'correspondingGroup' + i);
 
             var invalidFeedback = document.createElement('div');
             invalidFeedback.setAttribute('class', 'invalid-feedback');
-            invalidFeedback.innerText = '{{err.group}}'; // Replace {{err.group}} with your actual error message variable
+            invalidFeedback.innerText = ''; // Empty error message for now
 
             correspondingGroupsDiv.appendChild(groupLabel);
             correspondingGroupsDiv.appendChild(groupInput);
@@ -356,12 +357,20 @@
         }
         let bprimaryInstructorSelected = document.getElementById('cprimaryInstructor').value !== '';
         let bProgramSelected = document.getElementById('cProgram').value !== '';
+        let alternativeInstructorSelect = document.getElementById('calternativeInstructor');
 
         if (bTermSelected && bProgramSelected && bCourseSelected && bprimaryInstructorSelected) {
             document.getElementById('createCO').removeAttribute('disabled');
         } else {
             document.getElementById('createCO').disabled = 'disabled';
         }
+
+        if (bprimaryInstructorSelected) {
+            alternativeInstructorSelect.removeAttribute('disabled');
+        } else {
+            alternativeInstructorSelect.disabled = true;
+        }
+
     }
 
     function selectedTermUpdate() {
@@ -377,15 +386,22 @@
      * and if so enables the submit button
      */
     function checkUpdateEnable() {
-
         let bTermSelected = document.getElementById('eTerm').value !== '';
-        let bprimaryInstructorSelected = document.getElementById('eprimaryInstructor').value !== '';
+        let bPrimaryInstructorSelected = document.getElementById('eprimaryInstructor').value !== '';
         let bProgramSelected = document.getElementById('eProgram').value !== '';
-
-        if (bTermSelected && bProgramSelected && bprimaryInstructorSelected) {
-            document.getElementById('editCO').removeAttribute('disabled');
+        let editCOButton = document.getElementById('editCO');
+        let alternativeInstructorSelect = document.getElementById('ealternativeInstructor');
+        if (bPrimaryInstructorSelected) {
+            alternativeInstructorSelect.removeAttribute('disabled');
         } else {
-            document.getElementById('editCO').disabled = 'disabled';
+            alternativeInstructorSelect.disabled = true;
+        }
+        if (bTermSelected && bProgramSelected && bPrimaryInstructorSelected) {
+            editCOButton.removeAttribute('disabled');
+
+        } else {
+            editCOButton.disabled = true;
+
         }
     }
 
@@ -415,34 +431,62 @@
      * @returns {Promise<void>}
      */
     async function handleCreateCO() {
+        let numberOfGroups = parseInt(document.getElementById('numberOfGroups').value) + 1;
         let courseCode = document.getElementById('cCourse').value;
         let courseID = document.getElementById('optionCreateCourse' + courseCode).dataset.courseid;
+        let name = $('#cName').val();
+        let startDate = $('#cStartDate').val();
+        let endDate = $('#cEndDate').val();
+        let program = $('#cProgram').val();
+        let primaryInstructor = $('#cprimaryInstructor').val();
+        let alternativeInstructor = $('#calternativeInstructor').val();
+        let term = $('#cTerm').val();
 
-        const response = await fetch('{{URL}}/courseOffering', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                // use the val() method to get the value of a form input
-                name: $('#cName').val(),
-                startDate: $('#cStartDate').val(),
-                endDate: $('#cEndDate').val(),
-                group: $('#cGroup').val(),
+        // Array to store all the promises
+        let promises = [];
+
+        for (let i = 1; i <= numberOfGroups; i++) {
+            let groupLetter = $('#cGroup' + i).val();
+
+            let requestBody = {
+                name: name,
+                startDate: startDate,
+                endDate: endDate,
+                group: groupLetter,
                 course: courseID,
-                program: $('#cProgram').val(),
-                primaryInstructor: $('#cprimaryInstructor').val(),
-                alternativeInstructor: $('#calternativeInstructor').val(),
-                term: $('#cTerm').val(),
-            }),
+                program: program,
+                primaryInstructor: primaryInstructor,
+                term: term,
+            };
+
+            if (alternativeInstructor !== '') {
+                requestBody.alternativeInstructor = alternativeInstructor;
+            }
+
+            // Push the fetch promise to the array
+            promises.push(
+                    fetch('{{URL}}/courseOffering', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestBody),
+                    })
+            );
+        }
+        // Wait for all promises to resolve
+        const responses = await Promise.all(promises);
+
+
+
+        // Loop through responses
+        responses.forEach(async (response) => {
+            const data = await response.text();
+            const modal = '#addModal';
+            loadResponse(modal, data, !response.ok);
         });
-
-        // get the HTML text response
-        const data = await response.text();
-        const modal = '#addModal';
-
-        loadResponse(modal, data, !response.ok);
     }
+
 
     /**
      * This function handles what happens when a user clicks the "Delete" button
@@ -491,6 +535,7 @@
                 endDate: $('#eEndDate').val(),
                 group: $('#eGroup').val(),
                 program: $('#eProgram').val(),
+                //primaryInstructor: $('#eprimaryInstructor').val(),
                 primaryInstructor: $('#eprimaryInstructor').val(),
                 alternativeInstructor: $('#ealternativeInstructor').val(),
                 term: $('#eTerm').val(),
@@ -518,6 +563,10 @@
      * @param idToEdit    - The ID of the term being edited
      */
     function handleEditModal(idToEdit) {
+
+        console.log(document.getElementById(idToEdit + 'primaryInstructor').dataset.primaryInstructorid);
+        console.log('Here');
+
         $('#eID').val(idToEdit);
         $('#eName').val($(`#${idToEdit}name`).text());
         $('#eStartDate').val($(`#${idToEdit}startDate`).text());
@@ -526,7 +575,7 @@
         $('#eTerm').val(document.getElementById(idToEdit + 'term').dataset.termid);
         $('#eCourse').val(document.getElementById(idToEdit + 'course').dataset.courseid);
         $('#eprimaryInstructor').val(document.getElementById(idToEdit + 'primaryInstructor').dataset.primaryInstructorid);
-        $('#ealternativeInstructor').val(document.getElementById(idToEdit + 'primaryInstructor').dataset.alternativeInstructorid);
+        $('#ealternativeInstructor').val(document.getElementById(idToEdit + 'alternativeInstructor').dataset.alternativeInstructorid);
         $('#eProgram').val(document.getElementById(idToEdit + 'program').dataset.programid);
 
         checkUpdateEnable();
