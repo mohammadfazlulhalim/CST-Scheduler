@@ -166,17 +166,27 @@ async function generateTimeslots(startTime, endTime, classroom) {
 async function generateTimeslotsTest(classroom, term) {
   // const timeVals = await uniqueTime(classroom);
 
-  console.log('Class room info');
-  console.log(classroom);
   // Using this SQL statement,
   // - try to find the timeslot objects that have same start time, end time, day
   // - filter results by term id and classroom id
+
+
+
+
+
+
+
   const sqlStatement =`SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId, COUNT (*) AS frequency 
                                FROM Timeslots
                                INNER JOIN Classroom
-                               ON Timeslots.classroomId = ${classroom.id} AND Timeslots.termId = ${term.id}                               
+                               ON Timeslots.classroomId = ${classroom.id}
+                                AND Timeslots.termId = ${term.id}                               
                                GROUP BY Timeslots.day
                                 HAVING COUNT(*) > 1`;
+
+
+
+
 
   // stores result of the sql statement above
   let redundantObject;
@@ -186,6 +196,9 @@ async function generateTimeslotsTest(classroom, term) {
   } catch (err) {
     console.log(err);
   }
+
+
+
   console.log('>>>>>>>WE ARE HERE redundantObject');
   console.log(redundantObject);
 
@@ -210,18 +223,22 @@ async function generateTimeslotsTest(classroom, term) {
     }
   }
 
+
+
   // gather timeslots using Operators provided by Op class - will add onto it later
   const sqlizeTimeslotsArr = await Timeslot.findAll({
     where: {
       [Op.and]: [
         // Timeslot starts before the endDate of the range
-        {startTime: {[Op.lt]: '10:30'}},
-        {day: 2},
+        {startTime: {[Op.gt]: '10:30'}},
+         {endTime: { [Op.lt]:'14:30'}},
+        {day: '2'},
         // Timeslot ends after the startDate of the range
         // {endTime: {[Op.gt]: startTime.Time}},
       ],
       ClassroomId: classroom.id,
     },
+
     order: [['startTime', 'ASC']],
   });
 
