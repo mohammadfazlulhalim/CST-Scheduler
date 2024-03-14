@@ -277,7 +277,11 @@ async function getUniqueDates(instructor, term) {
 
   arStart = arStart.concat(arEnd);
   arStart = [...new Set(arStart)];
-  arStart = arStart.sort();
+  arStart = arStart.sort((a,b) => {
+    if(a.date === b.date){ return 0; }
+    if(a.date >=  b.date) { return 1; }
+    else{ return -1; }
+  });
 
   return arStart;
 
