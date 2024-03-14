@@ -46,7 +46,7 @@ router.post('/', async (req, res, next)=>{
 router.get('/', async (req, res, next)=>{
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
 
-  const terms= await Term.findAll({order: [ ['termNumber', 'ASC'], ['startDate', 'ASC']]});
+  const terms= await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'ASC']]});
   // const timeslotsInConflict = await checkForConflict(classrooms[0]);
 
   // assign the final output of conflicting timeslots as an array of objects to timeslotsReturned
@@ -166,7 +166,7 @@ async function generateTimeslots(startTime, endTime, classroom) {
 async function generateTimeslotsTest(classroom, term) {
   // const timeVals = await uniqueTime(classroom);
 
-  console.log("Class room info");
+  console.log('Class room info');
   console.log(classroom);
   // Using this SQL statement,
   // - try to find the timeslot objects that have same start time, end time, day
@@ -210,12 +210,24 @@ async function generateTimeslotsTest(classroom, term) {
     }
   }
 
-  // gather timeslots from helper function
-  // const sqlizeTimeslotsArr = await generateTimeslots('08:00', '10:00', classroom);
+  // gather timeslots using Operators provided by Op class - will add onto it later
+  const sqlizeTimeslotsArr = await Timeslot.findAll({
+    where: {
+      [Op.and]: [
+        // Timeslot starts before the endDate of the range
+        {startTime: {[Op.lt]: '10:30'}},
+        {day: 2},
+        // Timeslot ends after the startDate of the range
+        // {endTime: {[Op.gt]: startTime.Time}},
+      ],
+      ClassroomId: classroom.id,
+    },
+    order: [['startTime', 'ASC']],
+  });
 
 
-  return classResult;
-  // return sqlizeTimeslotsArr;
+  // return classResult;
+  return sqlizeTimeslotsArr;
 }
 
 

@@ -21,8 +21,8 @@ const globalConsts = {
     '2:00',
     '3:00',
   ], timeColumn8amTo3pmDisplayArray24Hr: [
-    '8:00',
-    '9:00',
+    '08:00',
+    '09:00',
     '10:00',
     '11:00',
     '12:00',

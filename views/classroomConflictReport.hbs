@@ -14,7 +14,7 @@
                         <select id="termSelect" name="term" class="form-select">
                             <option value="" selected disabled>Select Term</option>
                             {{#each terms}}
-                                <option value="{{this.id}}">{{this.termNumber}} {{this.startDate}}</option>
+                                <option value="{{this.id}}">{{this.startDate}} - {{this.termNumber}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -38,7 +38,18 @@
     </div>
 </div>
 
-
+{{!-- basic table that runs through the list of timeslots sent from route --}}
+<div class="p-4">
+    <table class="table table-striped">
+        {{#each timeslotsReturned}}
+            <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.startTime}}</td>
+                <td>{{this.endTime}}</td>
+            </tr>
+        {{/each}}
+    </table>
+</div>
 
 <script>
 
@@ -65,21 +76,3 @@
         }
     };
 </script>
-
-<style>
-    .custom-carousel-control {
-        color: black;
-    }
-
-    .carousel-control-prev.custom-carousel-control {
-        left: -150px;
-    }
-
-    .carousel-control-next.custom-carousel-control {
-        right: -150px;
-    }
-
-    .carousel-control-prev-icon, .carousel-control-next-icon {
-        background-color: black;
-    }
-</style>
