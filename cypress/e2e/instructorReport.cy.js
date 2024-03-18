@@ -1,3 +1,5 @@
+Cypress.config('viewportWidth', 1600);
+
 describe('Test Instructor Report Page', () => {
     it('testNavigationToTheReportInstructorPage', () => {
         const expectedTimes12 = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
@@ -123,8 +125,8 @@ describe('Test Instructor Report Page', () => {
         cy.get('#groupSelect').select('4');
         cy.get('#modalSubmit').click();
         cy.get('#btnD').click();
-        cy.get('Career Path Search-D').click();
-        cy.get('0-3-D').click();
+        cy.get('#Systems\\ Administration\\ 2-D').click();
+        cy.get('#0-3-D').click();
 
 
         // Click on the "Reports" dropdown toggle
@@ -144,10 +146,10 @@ describe('Test Instructor Report Page', () => {
         cy.get('#submitBtn').click();
 
         //Test that the timeframe is correct
-        cy.get('#curTime1').contains('Schedule Range: 2023-01-01 to 2023-02-28')
+        cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-09-30')
         //map for valid timeslot locations
         let classesInOrder = [
-            ['COOS293B', '', '', '', ''],
+            ['MATH282B', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
@@ -162,10 +164,10 @@ describe('Test Instructor Report Page', () => {
         //go to the next split
         cy.get('#btnRight').click();
         //Test that the timeframe is correct
-        cy.get('#curTime2').contains('Schedule Range: 2023-03-01 to 2023-04-01')
+        cy.get('#2023-10-01').contains('Schedule Range: 2023-10-01 to 2023-12-01')
         //map for valid timeslot locations
         classesInOrder = [
-            ['COOS293B', '', 'COOS293D', '', ''],
+            ['MATH282B', '', 'COOS293D', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
@@ -180,7 +182,7 @@ describe('Test Instructor Report Page', () => {
         //check that there's only 2 splits
         cy.get('#btnRight').click();
         classesInOrder = [
-            ['COOS293B', '', '', '', ''],
+            ['MATH282B', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
@@ -194,7 +196,7 @@ describe('Test Instructor Report Page', () => {
         //check that the left button works
         cy.get('#btnLeft').click();
         classesInOrder = [
-            ['COOS293B', '', 'COOS293D', '', ''],
+            ['MATH282B', '', 'COOS293D', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
@@ -212,7 +214,7 @@ describe('Test Instructor Report Page', () => {
      */
     it('testWeirdSplit', () => {
         cy.visit('localhost:3000');
-        cy.get('Administration').click();
+    cy.get(`:nth-child(3) > .nav-link`) //admininstration
         cy.get('Course Offerings').click();
 
         // Adding course offering for split
@@ -232,8 +234,8 @@ describe('Test Instructor Report Page', () => {
         cy.get('#groupSelect').select('4');
         cy.get('#modalSubmit').click();
         cy.get('#btnC').click();
-        cy.get('Advanced Operating Systems-C').click();
-        cy.get('2-2-C').click();
+        cy.get('#Advanced\\ Operating\\ Systems-C').click();
+        cy.get('#2-2-C').click();
 
         // Click on the "Reports" dropdown toggle
         // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
@@ -252,7 +254,7 @@ describe('Test Instructor Report Page', () => {
         cy.get('#submitBtn').click();
 
         //Test that the timeframe is correct
-        cy.get('#curTime1').contains('Schedule Range: 2023-01-01 to 2023-01-31')
+        cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-08-31')
         //map for valid timeslot locations
         let classesInOrder = [
             ['COOS293B', '', '', '', ''],
@@ -270,12 +272,12 @@ describe('Test Instructor Report Page', () => {
         //go to the next split
         cy.get('#btnRight').click();
         //Test that the timeframe is correct
-        cy.get('#curTime2').contains('Schedule Range: 2023-02-01 to 2023-02-28')
+        cy.get('#2023-09-01').contains('Schedule Range: 2023-09-01 to 2023-09-30')
         //map for valid timeslot locations
         classesInOrder = [
             ['COOS293B', '', '', '', ''],
             ['', '', '', '', ''],
-            ['', 'MATH282', '', '', ''],
+            ['', 'MATH282B', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''], // 12:00 slot appears empty
             ['', '', '', 'COOS291B', ''],
@@ -288,7 +290,7 @@ describe('Test Instructor Report Page', () => {
         //go to the next split
         cy.get('#btnRight').click();
         //Test that the timeframe is correct
-        cy.get('#curTime3').contains('Schedule Range: 2023-03-01 to 2023-03-15')
+        cy.get('#2023-10-01').contains('Schedule Range: 2023-10-01 to 2023-10-31')
         //map for valid timeslot locations
         classesInOrder = [
             ['COOS293B', '', 'COOS293D', '', ''],
@@ -306,7 +308,7 @@ describe('Test Instructor Report Page', () => {
         //go to the next split
         cy.get('#btnRight').click();
         //Test that the timeframe is correct
-        cy.get('#curTime4').contains('Schedule Range: 2023-03-16 to 2023-04-01')
+        cy.get('#2023-11-01').contains('Schedule Range: 2023-11-01 to 2023-12-01')
         //map for valid timeslot locations
         classesInOrder = [
             ['COOS293B', '', 'COOS293D', '', ''],
@@ -364,7 +366,7 @@ describe('Test Instructor Report Page', () => {
         cy.get('.nav-item.dropdown .dropdown-menu a[href="/instructorReport"]').click();
 
         // Select the instructor from the dropdown based on value
-        cy.get('#selectInstructorInstructorReport').select('1');
+        cy.get('#selectInstructorInstructorReport').select('5');
 
         // Select the term from the dropdown based on value
         cy.get('#selectTermInstructorReport').select('5');
@@ -372,16 +374,16 @@ describe('Test Instructor Report Page', () => {
         // Submit the form
         cy.get('#submitBtn').click();
 
-        //Test that the timeframe is indeterminate
-        cy.get('#curTime1').contains('Schedule Range: Unknown')
+        //Test that the timeframe is same as timeslot
+        cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-12-01')
         //map for valid timeslot locations
-        classesInOrder = [
+        let classesInOrder = [
             ['', '', '', '', ''],
             ['', '', '', '', ''],
-            ['', '', '', '', ''],
-            ['', '', '', '', ''],
+            ['', '', '', '', 'CDBM280B'],
+            ['', '', 'COOS293B', '', ''],
             ['', '', '', '', ''], // 12:00 slot appears empty
-            ['', '', '', '', ''],
+            ['COHS280B', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
         ];
@@ -400,15 +402,17 @@ describe('Test Instructor Report Page', () => {
  * @param classesInOrder
  */
 function checkCorrectSchedule(classesInOrder) {
-    for (let i = 1; i < 6; i++) {
-        for (let j = 1; j < 8; j++) {
-            const classText = classesInOrder[i - 1][j - 1];
-            const classSelector = `table tbody tr:nth-of-type(${i}) td:nth-of-type(${j}) div p:first-of-type`;
+    for (let i = 1; i < 6; i++) { // for nth child row
+        for (let j = 1; j < 9; j++) { // for nth child column
+            const classText = classesInOrder[j - 1][i - 1]; // text in corresponding cell in text array
+            const classSelector = `.active > .table-responsive > .table > tbody > :nth-child(${j}) > :nth-child(${i + 1})`; // cy statement
+
+            console.log(classText);
 
             if (classText) {
-                cy.get(classSelector).contains(classText);
+                cy.get(classSelector).should('contain', classText); // if not empty, check text
             } else {
-                cy.get(classSelector).should('be.empty');
+                cy.get(classSelector).should('be.empty'); // else, make sure empty
             }
         }
     }

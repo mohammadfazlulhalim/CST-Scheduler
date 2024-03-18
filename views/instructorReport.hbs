@@ -17,7 +17,8 @@
         <div class="carousel-inner">
             {{#each reportArray}}
             <div class="carousel-item {{#if @first}}active{{/if}}">
-                <p>Schedule Range: {{this.startDate}} to {{this.endDate}}</p>
+                <p id="{{this.startDate}}">Schedule Range: {{this.startDate}} to {{this.endDate}}</p>
+                <div class="table-responsive">
                 <table class="table table-bordered table-hover border-dark">
                     <thead>
 
@@ -53,6 +54,7 @@
                     {{/each}}
                     </tbody>
                 </table>
+                </div>
             </div>
             {{/each}}
         </div>
@@ -206,4 +208,22 @@
 
 
 </script>
+
+<style>
+    .custom-carousel-control {
+        color: black;
+    }
+
+    .carousel-control-prev.custom-carousel-control {
+        left: -150px;
+    }
+
+    .carousel-control-next.custom-carousel-control {
+        right: -150px;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        background-color: black;
+    }
+</style>
 
