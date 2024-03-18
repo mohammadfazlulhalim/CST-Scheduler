@@ -11,9 +11,9 @@ const URL = require('../constants').URL;
 router.get('/', async function(req, res, next) {
   const listCO = await getCOList();
   const listTerm = await getTerms();
+  const listCourse = await getCourses();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
-  const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
 
 
   // render the courseOffering template file with appropriate title and the retrieved list of course offerings
@@ -80,7 +80,7 @@ router.put('/', async function(req, res, next) {
   const listTerm = await getTerms();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
-  const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
+  const listCourse = await getCourses();
 
 
   const newCO = {
@@ -129,7 +129,7 @@ router.delete('/', async function(req, res, next) {
   const listTerm = await getTerms();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
-  const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
+  const listCourse = await getCourses();
   const retDelete = await deleteCourseOffering(req.body);
   let violations;
   if (retDelete <= 0) {
@@ -256,6 +256,17 @@ async function getTerms() {
   }
 
   return terms;
+}
+
+async function getCourses() {
+  const courses = await Course.findAll({order: [['courseCode', 'ASC']]});
+
+  for (let i = 0; i < courses.length; i++) {
+    // Await the getInstructor() method call
+    courses[i].instructor = await courses[i].getInstructor();
+  }
+
+  return courses;
 }
 
 /**

@@ -136,6 +136,7 @@
                             </div>
                             <div>
                                 <label for="eprimaryInstructor">Primary Instructor</label>
+
                                 <select id="eprimaryInstructor" class="form-select" onchange="checkUpdateEnable()">Primary
                                     Instructor
                                     {{#each listInstructor}}
@@ -151,6 +152,7 @@
                                         <option value="{{id}}">{{lastName}}</option>
                                     {{/each}}
                                 </select>
+                                <div id="invalid-instructor" class="invalid-feedback"></div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -185,6 +187,7 @@
                                 {{#each listCourse}}
                                     <option id="optionCreateCourse{{courseCode}}" value="{{courseCode}}"
                                             data-courseid="{{id}}" data-coursename="{{courseName}}"
+                                            data-instructor="{{this.instructor.id}}"
                                             class="dropdown-item"></option>
                                 {{/each}}
                             </datalist>
@@ -235,7 +238,7 @@
                                 <select id="cprimaryInstructor" class="form-select" onchange="checkCreateEnable()">
                                     <option></option>
                                     {{#each listInstructor}}
-                                        <option value="{{id}}">{{lastName}}</option>
+                                        <option value="{{id}}" id="optionCreateInstructor{{id}}" >{{lastName}}</option>
                                     {{/each}}
                                 </select>
                             </div>
@@ -296,14 +299,12 @@
             document.getElementById('numberOfGroups').value = currentValue + 1;
         }
     }
-
     function decrementValue() {
         let currentValue = parseInt(document.getElementById('numberOfGroups').value);
         if (currentValue > 1) {
             document.getElementById('numberOfGroups').value = currentValue - 1;
         }
     }
-
 
     /**
      * This function autofills the name field with the course name when the course is selected
@@ -315,6 +316,7 @@
             document.getElementById('cName').value = document.getElementById('optionCreateCourse' + courseCode).dataset.coursename;
             document.getElementById('cCourseInvalid').innerText = '';
             document.getElementById('cCourse').classList.remove('is-invalid');
+            document.getElementById('cprimaryInstructor').value = (parseInt(document.getElementById('optionCreateCourse' + courseCode).dataset.instructor));
         } catch (e) {
             document.getElementById('cCourse').classList.add('is-invalid');
             document.getElementById('cCourseInvalid').innerText = 'Please select a Course Code from the list';
@@ -333,6 +335,8 @@
 
         checkCreateEnable();
     }
+
+
 
     /**
      * This function checks that each dropdown has an associated property selected
@@ -383,19 +387,63 @@
         let bProgramSelected = document.getElementById('eProgram').value !== '';
         let editCOButton = document.getElementById('editCO');
         let alternativeInstructorSelect = document.getElementById('ealternativeInstructor');
+
         if (bPrimaryInstructorSelected) {
             alternativeInstructorSelect.removeAttribute('disabled');
         } else {
             alternativeInstructorSelect.disabled = true;
         }
+
         if (bTermSelected && bProgramSelected && bPrimaryInstructorSelected) {
+            // Enable the editCOButton
             editCOButton.removeAttribute('disabled');
 
+            // Check if instructors match
+            checkEditInstructorMatch();
         } else {
+            // Disable the editCOButton
             editCOButton.disabled = true;
-
         }
     }
+
+
+    function checkCreateInstructorMatch() {
+        var primaryInstructor = document.getElementById('cprimaryInstructor').value;
+        var alternativeInstructor = document.getElementById('calternativeInstructor').value;
+
+        if (primaryInstructor === alternativeInstructor) {
+            document.getElementById('createCO').disabled = 'disabled';
+            // Values match, execute provided code
+            document.getElementById('cprimaryInstructor').classList.add('is-invalid');
+            document.getElementById('cinvalid-instructor').innerText = 'Must have two different instructors';
+            document.getElementById('cprimaryInstructor').value = null;
+
+            document.getElementById('calternativeInstructor').classList.add('is-invalid');
+            document.getElementById('calternativeInstructor').value = null;
+
+        }
+        else {
+            document.getElementById('createCO').removeAttribute('disabled');
+        }
+    }
+
+    function checkEditInstructorMatch() {
+        let editCOButton = document.getElementById('editCO');
+        var primaryInstructor = document.getElementById('eprimaryInstructor').value;
+        var alternativeInstructor = document.getElementById('ealternativeInstructor').value;
+
+        if (primaryInstructor === alternativeInstructor) {
+            // Values match, execute provided code
+            document.getElementById('eprimaryInstructor').classList.add('is-invalid');
+            document.getElementById('einvalid-instructor').innerText = 'Must have two different instructors';
+            document.getElementById('eprimaryInstructor').value = null;
+
+            document.getElementById('eprimaryInstructor').classList.add('is-invalid');
+            document.getElementById('einvalid-instructor').innerText = 'Must have two different instructors';
+            document.getElementById('eprimaryInstructor').value = null;
+        }
+    }
+
 
     /**
      * This function links the buttons on the page to their appropriate handlers
@@ -589,8 +637,8 @@
     function handleCreateModal() {
         document.getElementById('cTerm').value = '';
         document.getElementById('cCourse').value = '';
-        document.getElementById('cprimaryInstructor').value = '';
-        document.getElementById('calternativeInstructor').value = '';
+        document.getElementById('cprimaryInstructor').value = null;
+        document.getElementById('calternativeInstructor').value = null;
         document.getElementById('cProgram').value = '';
 
     }
@@ -615,6 +663,8 @@
         // if the response was not ok, pop up the modal
         if (showModal) {
             modal.modal('show');
+            checkEditInstructorMatch();
+            checkCreateInstructorMatch();
         }
     }
 
