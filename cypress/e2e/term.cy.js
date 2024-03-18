@@ -4,7 +4,7 @@ const instructorList =
 const expectedNames = ['Hardware', 'Seminar'];
 const expectedCourseCode = ['COHS190', 'SEM283'];
 const expectedGroup = ['A', 'B', 'C', 'D'];
-// const expectedInstructor = ['Ben Benson', 'Ron New'];
+const expectedInstructor = ['Ben Benson', 'Ron New'];
 
 /*
  * Test for checking if the autogenerate works
@@ -94,10 +94,11 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
     cy.get('#' + nRowNum + 'coEndDate').should('have.value', '2024-06-02');
     cy.get('#' + nRowNum + 'coGroup').should('have.text', expectedGroup[keyGroup]);
     cy.get('#' + nRowNum + 'coCourse').should('have.text', expectedCourseCode[keyBinary]);
-    // TODO get better testing for dropdown fields and add secondary instructor
-    // cy.get('#'+ nRowNum+'coPrimaryInstructor').find('option:selected').should('have.text', expectedInstructor[i]);
-    // cy.get('#'+ nRowNum+'coProgram').should('have.text', 'CST');
+    cy.get('#'+ nRowNum+'coPrimaryInstructor').find('option:selected').should('have.text', expectedInstructor[keyBinary]);
+    cy.get('#'+ nRowNum+'coProgram').find('option:selected').should('have.text', 'CST');
   }
+
+  cy.get('#3coSecondaryInstructor').find('option:selected').should('have.text', 'Ernesto Basoalto');
 
   // Date change
   cy.get('#' + 1 + 'coStartDate').type('2024-05-05');
@@ -106,7 +107,8 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#' + 8 + 'coName').clear({force: true}).type('The Seminar', {force: true});
   // Instructor change
   cy.get('#' + 3 + 'coPrimaryInstructor').select('Bryce Barrie', {force: true});
-  // TODO: Add secondary instructor change
+  cy.get('#' + 3 + 'coPrimaryInstructor').select('Coralee Kaban', {force: true});
+  cy.get('#' + 6 + 'coPrimaryInstructor').select('Coralee Kaban', {force: true});
 
   // Program change
   cy.get('#' + 4 + 'coProgram').select('CNT', {force: true});
@@ -124,21 +126,19 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   // // check that the entries are added to Course Offerings
   cy.contains('Administration').click();
   cy.contains('Course Offerings').click();
-  // // TODO finalize CO layout with Jonah so that testing does not get broken
   const newCOs = [
     ['Hardware', 'A', 'COHS190', '2024-3', '2024-05-05', '2024-05-29', 'Ben Benson', ' ', 'CST'],
-    ['Hardware', 'B', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', 'Bryce Barrie', ' ', 'CST'],
+    ['Hardware', 'B', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', 'Bryce Barrie', 'Coralee Kaban', 'CST'],
     ['Hardware', 'D', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', 'Ben Benson', ' ', 'CST'],
     ['Seminar', 'A', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', ' ', 'CST'],
     ['Seminar', 'B', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', ' ', 'CNT'],
-    ['Seminar', 'C', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', ' ', 'CST'],
+    ['Seminar', 'C', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', 'Coralee Kaban', 'CST'],
     ['The Seminar', 'D', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', ' ', 'CST'],
   ];
   const newCOsIndex = [14, 16, 19, 25, 28, 30, 34];
   for (let i = 0; i < newCOs.length; i++) {
     for (let j = 0; j < 8; j++) {
       const nChildCO = j + 1;
-      // TODO: reformat CO table so that this is not needed
         cy.get('#tableBody > tr:nth-child(' + newCOsIndex[i] + ') >td:nth-child(' + nChildCO + ')').should('have.text', newCOs[i][j]);
     }
   }
@@ -314,9 +314,8 @@ it('testThatTermAutogeneratesCourseOfferingsHasValidation', () => {
     }
     cy.get('#' + nRowNum + 'coGroup').should('have.text', expectedGroup[keyGroup]);
     cy.get('#' + nRowNum + 'coCourse').should('have.text', expectedCourseCode[keyBinary]);
-    // TODO get better testing for dropdown fields and add secondary instructor
-    // cy.get('#'+ nRowNum+'coPrimaryInstructor').find('option:selected').should('have.text', expectedInstructor[i]);
-    // cy.get('#'+ nRowNum+'coProgram').should('have.text', 'CST');
+    cy.get('#'+ nRowNum+'coPrimaryInstructor').find('option:selected').should('have.text', expectedInstructor[keyBinary]);
+    cy.get('#'+ nRowNum+'coProgram').find('option:selected').should('have.text', 'CST');
   }
 
 

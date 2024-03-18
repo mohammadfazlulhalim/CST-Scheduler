@@ -49,7 +49,8 @@ router.post('/', async function(req, res, next) {
 
 
   // checking if autogenerating - if so, using separate res.render
-  if (req.body.auto) {
+  // will not enter if there is an error for efficiency
+  if (req.body.auto && !result.error) {
 
     // calling these now as they are needed later
     const instructors = await Instructor.findAll({order: [['lastName', 'ASC']]});
@@ -67,24 +68,27 @@ router.post('/', async function(req, res, next) {
       lastYear = calcYearSplit[0];
     }
     try {
+      // Finding last years term id
       const lastYearTerm = await Term.findAll({
         where: {
           startDate: {[Op.startsWith]: lastYear},
           termNumber: result.termNumber,
         },
       });
-      lastCO = await CourseOffering.findAll({include: [Course],
+      // Finding all last years Coures Offerings
+      lastCO = await CourseOffering.findAll({
+        include: [Course],
         where: {
           TermId: lastYearTerm[0].id,
         },
       });
+      // maps course offerings so that they have sequential numbering
       lastCO = mapCourseOfferings(lastCO, result);
     } catch (e) {
       console.log(e);
-    }
-    ;
+    };
 
-
+    // seperate res.render call with all the attributes for course offering modal
     res.render('term', {
       termEntries: termLists,
       err: violations,
@@ -98,6 +102,7 @@ router.post('/', async function(req, res, next) {
       URL,
     });
 
+    // else statement for the if req.body.autogenerate && !result.error
   } else {
     // Not autogenerating, use old res.render
     res.render('term', {
@@ -112,14 +117,12 @@ router.post('/', async function(req, res, next) {
   }
 });
 
-
-router.post('/course-offerings',async function(req, res, next){
+router.post('/course-offerings', async function(req, res, next) {
   const termLists = await readAllTerms();
   let nError = 1;
   const coCreateArray = [];
   res.status(201);
-  for(const tempCO of req.body.listCourseOfferings) {
-    // console.log("Entry to save is: " + JSON.stringify(tempCO));
+  for (const tempCO of req.body.listCourseOfferings) {
     const retCreate = await createCourseOffering(tempCO);
     if (retCreate.error) {
       tempCO.err = retCreate.error;
@@ -127,7 +130,6 @@ router.post('/course-offerings',async function(req, res, next){
       tempCO.Course = await Course.findByPk(tempCO.CourseId);
       coCreateArray.push(tempCO);
       res.status(422);
-      // console.log("Error is: " + JSON.stringify(retCreate.error));
     }
   }
 
@@ -273,10 +275,17 @@ const readAllTerms = async () => {
   }
 };
 
+/**
+ * This function is used to create a sort order for term in reverse chronology using school year, and ascending term number when
+ * the school year is equal
+ * @param term1
+ * @param term2
+ * @returns {number}
+ */
 function compareTerm(term1, term2) {
   if (term1.calendarYear === term2.calendarYear) {
     return term1.termNumber - term2.termNumber;
-  } else if (term2.calendarYear > term1.calendarYear){
+  } else if (term2.calendarYear > term1.calendarYear) {
     return 1;
   } else {
     return -1;
