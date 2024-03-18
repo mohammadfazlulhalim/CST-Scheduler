@@ -214,18 +214,6 @@ describe('Test Instructor Report Page', () => {
      */
     it('testWeirdSplit', () => {
         cy.visit('localhost:3000');
-    cy.get(`:nth-child(3) > .nav-link`) //admininstration
-        cy.get('Course Offerings').click();
-
-        // Adding course offering for split
-        cy.get('#cCourse').type('MATH282C');
-        cy.get('#cTerm').select('2023-08-01 - 1');
-        cy.get('#cStartDate').should('have.value', '2023-02-01');
-        cy.get('#cEndDate').should('have.value', '2023-03-15');
-        cy.get('#cGroup').type('C');
-        cy.get('#cInstructor').select('Barrie');
-        cy.get('#cProgram').select('CST');
-        cy.get('#createCO').click();
 
         //create timeslot
         cy.contains('Schedule Builder').click();
@@ -234,7 +222,7 @@ describe('Test Instructor Report Page', () => {
         cy.get('#groupSelect').select('4');
         cy.get('#modalSubmit').click();
         cy.get('#btnC').click();
-        cy.get('#Advanced\\ Operating\\ Systems-C').click();
+        cy.get('#Mathematics\\ of\\ Computation-C').click();
         cy.get('#2-2-C').click();
 
         // Click on the "Reports" dropdown toggle
@@ -257,7 +245,7 @@ describe('Test Instructor Report Page', () => {
         cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-08-31')
         //map for valid timeslot locations
         let classesInOrder = [
-            ['COOS293B', '', '', '', ''],
+            ['MATH282B', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
@@ -275,9 +263,9 @@ describe('Test Instructor Report Page', () => {
         cy.get('#2023-09-01').contains('Schedule Range: 2023-09-01 to 2023-09-30')
         //map for valid timeslot locations
         classesInOrder = [
-            ['COOS293B', '', '', '', ''],
+            ['MATH282B', '', '', '', ''],
             ['', '', '', '', ''],
-            ['', 'MATH282B', '', '', ''],
+            ['', 'MATH282C', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''], // 12:00 slot appears empty
             ['', '', '', 'COOS291B', ''],
@@ -293,9 +281,9 @@ describe('Test Instructor Report Page', () => {
         cy.get('#2023-10-01').contains('Schedule Range: 2023-10-01 to 2023-10-31')
         //map for valid timeslot locations
         classesInOrder = [
-            ['COOS293B', '', 'COOS293D', '', ''],
+            ['MATH282B', '', 'COOS293D', '', ''],
             ['', '', '', '', ''],
-            ['', 'MATH282', '', '', ''],
+            ['', 'MATH282C', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''], // 12:00 slot appears empty
             ['', '', '', 'COOS291B', ''],
@@ -311,7 +299,7 @@ describe('Test Instructor Report Page', () => {
         cy.get('#2023-11-01').contains('Schedule Range: 2023-11-01 to 2023-12-01')
         //map for valid timeslot locations
         classesInOrder = [
-            ['COOS293B', '', 'COOS293D', '', ''],
+            ['MATH282B', '', 'COOS293D', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
@@ -323,10 +311,10 @@ describe('Test Instructor Report Page', () => {
         //Check that theyre correct
         checkCorrectSchedule(classesInOrder);
 
-        //check that there's only 2 splits
+        //check that there's only 4 splits
         cy.get('#btnRight').click();
         classesInOrder = [
-            ['COOS293B', '', '', '', ''],
+            ['MATH282B', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
@@ -340,7 +328,7 @@ describe('Test Instructor Report Page', () => {
         //check that the left button works
         cy.get('#btnLeft').click();
         classesInOrder = [
-            ['COOS293B', '', 'COOS293D', '', ''],
+            ['MATH282B', '', 'COOS293D', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
             ['', '', '', '', ''],
@@ -369,7 +357,7 @@ describe('Test Instructor Report Page', () => {
         cy.get('#selectInstructorInstructorReport').select('5');
 
         // Select the term from the dropdown based on value
-        cy.get('#selectTermInstructorReport').select('5');
+        cy.get('#selectTermInstructorReport').select('1');
 
         // Submit the form
         cy.get('#submitBtn').click();
