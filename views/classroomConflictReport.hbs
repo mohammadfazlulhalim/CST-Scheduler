@@ -44,7 +44,7 @@
             <h2><i>Classroom:</i> {{realClassroom.roomNumber}}</h2>
         </div>
         <div class="col-3">
-            <h2><i>program:</i> {{realTerm.startDate}}</h2>
+            <h2><i>Term:</i>{{realTerm.termNumber}} {{realTerm.startDate}}</h2>
         </div>
     </div>
 </div>
@@ -83,6 +83,7 @@
 
         var termSelect = document.getElementById('termSelect');
         var classroomSelect = document.getElementById('classroomSelect');
+        let checkboxClassrooms = document.getElementById('allClassroomSelect');
         var submitBtn = document.getElementById('btnGenerateSchedule');
 
         // Add event listeners to the selects
@@ -91,7 +92,7 @@
 
         function handleSelectChange() {
             // Enable or disable the submit button based on whether both selects have values
-            submitBtn.disabled = termSelect.value === '' || classroomSelect.value === '';
+            submitBtn.disabled = termSelect.value === '' || (classroomSelect.value === '' || checkboxClassrooms.checked === true);
         }
     };
 </script>

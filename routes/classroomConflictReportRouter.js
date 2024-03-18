@@ -13,6 +13,7 @@ const {QueryTypes} = require('sequelize');
 const {addAssociations} = require('../private/javascript/Associations');
 const createAllTables = require('../fixtures/createTables.fix');
 const term = require('../private/javascript/Term');
+const {stack} = require('sequelize/lib/utils');
 
 // this is a quick array for designating weekdays as numbers
 // 0 is Sunday --> 6 is Saturday
@@ -204,30 +205,29 @@ async function generateTimeslotsTest(classroom, term) {
   // console.log(redundantObject);
 
 
-//   let sqlStatement2;
-//   const classResult=[];
-//   for ( let i = 0; i< redundantObject.length; i++) {
-//     sqlStatement2 = `
-//     SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId
-//     FROM Timeslots
-//     WHERE Timeslots.ClassroomId = ${classroom.id} AND Timeslots.startTime = '${redundantObject[i].startTime}'
-//     AND Timeslots.endTime = '${redundantObject[i].endTime}'
-//     AND Timeslots.day = '${redundantObject[i].day}'
-//     AND Timeslots.startTime
-// `;
-//     try {
-//       classResult.push( await sequelize.query(sqlStatement2, {
-//         type: QueryTypes.SELECT,
-//       }));
-//     } catch (e) {
-//       console.log(e);
-//     }
-//   }
+  //   let sqlStatement2;
+  //   const classResult=[];
+  //   for ( let i = 0; i< redundantObject.length; i++) {
+  //     sqlStatement2 = `
+  //     SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId
+  //     FROM Timeslots
+  //     WHERE Timeslots.ClassroomId = ${classroom.id} AND Timeslots.startTime = '${redundantObject[i].startTime}'
+  //     AND Timeslots.endTime = '${redundantObject[i].endTime}'
+  //     AND Timeslots.day = '${redundantObject[i].day}'
+  //     AND Timeslots.startTime
+  // `;
+  //     try {
+  //       classResult.push( await sequelize.query(sqlStatement2, {
+  //         type: QueryTypes.SELECT,
+  //       }));
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   }
 
   const discoveredTimeslot = await Timeslot.findAll({
     attributes: ['startTime', 'endTime', 'day'],
   });
-
 
 
   // wrong - this just returns a number
@@ -241,24 +241,23 @@ async function generateTimeslotsTest(classroom, term) {
 
 
   const findrepeateddata=await Timeslot.findAll({
-    attributes: ['startTime', 'endTime', 'day'],
-    //attributes: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
-    group: ['startTime', 'endTime', 'day'],
-    //group: ['startTime', 'endTime', 'day','ClassroomId', 'TermId'],
-    having: sequelize.literal('COUNT(*) > 1') // Ensure there are more than one occurrence
+    // attributes: ['startTime', 'endTime', 'day'],
+    attributes: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
+    // group: ['startTime', 'endTime', 'day'],
+    group: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
+    having: sequelize.literal('COUNT(*) > 1'), // Ensure there are more than one occurrence
   });
 
-// .then(commonTimeslots => {
-//     console.log(commonTimeslots);
-//   }).catch(err => {
-//     console.error('Error finding common timeslots:', err);
-//   });
+  // .then(commonTimeslots => {
+  //     console.log(commonTimeslots);
+  //   }).catch(err => {
+  //     console.error('Error finding common timeslots:', err);
+  //   });
 
-  console.log(">>>>>>>>findrepeateddata");
+  console.log('>>>>>>>>findrepeateddata');
   console.log(findrepeateddata);
 
 
- 
   // gather timeslots using Operators provided by Op class - will add onto it later
   const sqlizeTimeslotsArr = await Timeslot.findAll({
     where: {
@@ -289,9 +288,56 @@ async function generateTimeslotsTest(classroom, term) {
   * */
 
 
+/*
+
+  
+  // try a stack approach
+  let discoveredTimeslot;
+  let conflictingTimeslot;
+
+  try {
+    // create a big array of timeslots - filtered by that term and classroom
+    let stackTimeslots = await Timeslot.findAll({
+      where: {
+        ClassroomId: classroom.id,
+        TermId: term.id,
+      },
+      include: [{
+        model: CourseOffering,
+        include: Course,
+      }, {
+        model: Instructor,
+      }, {
+        model: Term,
+      }],
+      order: [['startTime', 'ASC']],
+    });
+
+    // loop through big timeslots array
+    for (let i = 0; i < stackTimeslots.length; i++) {
+      let currentTS = stackTimeslots[i];
+
+
+      stackTimeslots.find()
+
+
+      discoveredTimeslot.add(currentTS);
+    }
+  } catch (e) {
+  }
+  
+*/
+
+
+
   // return classResult;
   return sqlizeTimeslotsArr;
 }
+
+function f() {
+  
+}
+
 
 
 module.exports = {router, generateTimeslotsTest};
