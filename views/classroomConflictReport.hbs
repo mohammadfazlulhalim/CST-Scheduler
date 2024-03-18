@@ -53,20 +53,18 @@
     <table class="table table-striped">
 
             <tr> {{#each headerArray}}
-                <th>{{this.header1}} </th>
-                <th>{{this.header2}}</th>
-                <th>{{this.header3}}</th>
-                <th>{{this.header4}}</th>
-                <th>{{this.header5}}</th>
-                <th>{{this.header6}}</th>
+                <th>{{this.header}} </th>
             {{/each}}
             </tr>
 
         {{#each timeslotsReturned}}
             <tr>
-                <td>{{this.id}}</td>
+                <td>{{this.Term.termNumber}} {{this.Term.startDate}}</td>
+                <td>{{this.CourseOffering.Course.courseCode}}</td>
+                <td>{{this.day}}</td>
                 <td>{{this.startTime}}</td>
                 <td>{{this.endTime}}</td>
+                <td>{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
             </tr>
         {{/each}}
     </table>

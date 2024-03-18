@@ -2,13 +2,17 @@ const express= require('express');
 const router = express.Router();
 const {sequelize, Op} = require('../dataSource');
 
+const Instructor= require('../private/javascript/Instructor');
 const Classroom= require('../private/javascript/Classroom');
+const CourseOffering= require('../private/javascript/CourseOffering');
+const Course= require('../private/javascript/Course');
+
 const Term=require('../private/javascript/Term');
 const Timeslot = require('../private/javascript/Timeslot');
 const {QueryTypes} = require('sequelize');
-const {addAssociations} = require("../private/javascript/Associations");
-const createAllTables = require("../fixtures/createTables.fix");
-const term = require("../private/javascript/Term");
+const {addAssociations} = require('../private/javascript/Associations');
+const createAllTables = require('../fixtures/createTables.fix');
+const term = require('../private/javascript/Term');
 
 // this is a quick array for designating weekdays as numbers
 // 0 is Sunday --> 6 is Saturday
@@ -25,7 +29,7 @@ router.post('/', async (req, res, next)=>{
   await addAssociations();
   await createAllTables(false);
 
-  const headerArray=[{header1: 'Term'}, {header2: 'Course Code'}, {header3: 'Weekday'}, {header4: 'Start Time'}, {header5: 'End Time'}, {header6: 'Instructor'}];
+  const headerArray=[{header: 'Term'}, {header: 'Course Code'}, {header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}];
 
   // Sequelize will automatically perform an SQL query to the database and create a table
   await sequelize.sync();
@@ -178,11 +182,6 @@ async function generateTimeslotsTest(classroom, term) {
   // - filter results by term id and classroom id
 
 
-
-
-
-
-
   const sqlStatement =`SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId, COUNT (*) AS frequency 
                                FROM Timeslots
                                INNER JOIN Classroom
@@ -190,9 +189,6 @@ async function generateTimeslotsTest(classroom, term) {
                                 AND Timeslots.termId = ${term.id}                               
                                GROUP BY Timeslots.day
                                 HAVING COUNT(*) > 1`;
-
-
-
 
 
   // stores result of the sql statement above
@@ -203,7 +199,6 @@ async function generateTimeslotsTest(classroom, term) {
   } catch (err) {
     console.log(err);
   }
-
 
 
   console.log('>>>>>>>WE ARE HERE redundantObject');
@@ -230,6 +225,18 @@ async function generateTimeslotsTest(classroom, term) {
     }
   }
 
+  const discoveredTimeslot = await Timeslot.findAll({
+    attributes: ['startTime', 'endTime', 'day'],
+  });
+
+  // wrong - this just returns a number
+  const timeslotsWithCount = await Timeslot.findAll({
+    attributes: [
+      'startTime', 'endTime', 'day', // We had to list all attributes...
+      [sequelize.fn('COUNT', sequelize.col('startTime')), 'n_hats'], // To add the aggregation...
+    ],
+
+  });
 
 
   // gather timeslots using Operators provided by Op class - will add onto it later
@@ -238,16 +245,28 @@ async function generateTimeslotsTest(classroom, term) {
       [Op.and]: [
         // Timeslot starts before the endDate of the range
         {startTime: {[Op.gt]: '10:30'}},
-         {endTime: { [Op.lt]:'14:30'}},
+        {endTime: {[Op.lt]: '14:30'}},
         {day: '2'},
         // Timeslot ends after the startDate of the range
         // {endTime: {[Op.gt]: startTime.Time}},
       ],
       ClassroomId: classroom.id,
     },
-
+    include: [{
+      model: CourseOffering,
+      include: Course,
+    }, {
+      model: Instructor,
+    }, {
+      model: Term,
+    }],
     order: [['startTime', 'ASC']],
   });
+
+  /*
+  *
+  *
+  * */
 
 
   // return classResult;
