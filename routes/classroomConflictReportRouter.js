@@ -35,7 +35,7 @@ router.post('/', async (req, res, next)=>{
   await sequelize.sync();
   const realClassroom = await Classroom.findOne({where: {id: req.body.classroom}});
   const realTerm = await term.findOne({where: {id: req.body.term}});
-
+  // assign the final output of conflicting timeslots as an array of objects to timeslotsReturned
   const timeslotsReturned = await generateTimeslotsTest(realClassroom, realTerm);
 
 
@@ -60,12 +60,11 @@ router.get('/', async (req, res, next)=>{
   const terms= await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'ASC']]});
   // const timeslotsInConflict = await checkForConflict(classrooms[0]);
 
-  // assign the final output of conflicting timeslots as an array of objects to timeslotsReturned
-  const timeslotsReturned = await generateTimeslotsTest(classrooms[0], terms[0]);
+
+  // const timeslotsReturned = await generateTimeslotsTest(classrooms[0], terms[0]);
 
   res.render('classroomConflictReport', {
     classrooms,
-    timeslotsReturned,
     terms,
     showModal: true,
   });
@@ -182,63 +181,84 @@ async function generateTimeslotsTest(classroom, term) {
   // - filter results by term id and classroom id
 
 
-  const sqlStatement =`SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId, COUNT (*) AS frequency 
-                               FROM Timeslots
-                               INNER JOIN Classroom
-                               ON Timeslots.classroomId = ${classroom.id}
-                                AND Timeslots.termId = ${term.id}                               
-                               GROUP BY Timeslots.day
-                                HAVING COUNT(*) > 1`;
+  // const sqlStatement =`SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId, COUNT (*) AS frequency
+  //                              FROM Timeslots
+  //                              INNER JOIN Classroom
+  //                              ON Timeslots.classroomId = ${classroom.id}
+  //                               AND Timeslots.termId = ${term.id}
+  //                              GROUP BY Timeslots.day
+  //                               HAVING COUNT(*) > 1`;
+  //
+  //
+  // // stores result of the sql statement above
+  // let redundantObject;
+  //
+  // try {
+  //   redundantObject = await sequelize.query(sqlStatement, {type: QueryTypes.SELECT});
+  // } catch (err) {
+  //   console.log(err);
+  // }
+  //
+  //
+  // console.log('>>>>>>>WE ARE HERE redundantObject');
+  // console.log(redundantObject);
 
 
-  // stores result of the sql statement above
-  let redundantObject;
-
-  try {
-    redundantObject = await sequelize.query(sqlStatement, {type: QueryTypes.SELECT});
-  } catch (err) {
-    console.log(err);
-  }
-
-
-  console.log('>>>>>>>WE ARE HERE redundantObject');
-  console.log(redundantObject);
-
-
-  let sqlStatement2;
-  const classResult=[];
-  for ( let i = 0; i< redundantObject.length; i++) {
-    sqlStatement2 = `
-    SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId
-    FROM Timeslots
-    WHERE Timeslots.ClassroomId = ${classroom.id} AND Timeslots.startTime = '${redundantObject[i].startTime}' 
-    AND Timeslots.endTime = '${redundantObject[i].endTime}' 
-    AND Timeslots.day = '${redundantObject[i].day}'
-    AND Timeslots.startTime
-`;
-    try {
-      classResult.push( await sequelize.query(sqlStatement2, {
-        type: QueryTypes.SELECT,
-      }));
-    } catch (e) {
-      console.log(e);
-    }
-  }
+//   let sqlStatement2;
+//   const classResult=[];
+//   for ( let i = 0; i< redundantObject.length; i++) {
+//     sqlStatement2 = `
+//     SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId
+//     FROM Timeslots
+//     WHERE Timeslots.ClassroomId = ${classroom.id} AND Timeslots.startTime = '${redundantObject[i].startTime}'
+//     AND Timeslots.endTime = '${redundantObject[i].endTime}'
+//     AND Timeslots.day = '${redundantObject[i].day}'
+//     AND Timeslots.startTime
+// `;
+//     try {
+//       classResult.push( await sequelize.query(sqlStatement2, {
+//         type: QueryTypes.SELECT,
+//       }));
+//     } catch (e) {
+//       console.log(e);
+//     }
+//   }
 
   const discoveredTimeslot = await Timeslot.findAll({
     attributes: ['startTime', 'endTime', 'day'],
   });
 
+
+
   // wrong - this just returns a number
   const timeslotsWithCount = await Timeslot.findAll({
     attributes: [
       'startTime', 'endTime', 'day', // We had to list all attributes...
-      [sequelize.fn('COUNT', sequelize.col('startTime')), 'n_hats'], // To add the aggregation...
+      [sequelize.fn('COUNT', sequelize.col('startTime')), 'count'], // To add the aggregation...
     ],
 
   });
 
 
+  const findrepeateddata=await Timeslot.findAll({
+    attributes: ['startTime', 'endTime', 'day'],
+    //attributes: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
+    group: ['startTime', 'endTime', 'day'],
+    //group: ['startTime', 'endTime', 'day','ClassroomId', 'TermId'],
+    having: sequelize.literal('COUNT(*) > 1') // Ensure there are more than one occurrence
+  });
+
+// .then(commonTimeslots => {
+//     console.log(commonTimeslots);
+//   }).catch(err => {
+//     console.error('Error finding common timeslots:', err);
+//   });
+
+  console.log(">>>>>>>>findrepeateddata");
+  console.log(findrepeateddata);
+
+
+ 
   // gather timeslots using Operators provided by Op class - will add onto it later
   const sqlizeTimeslotsArr = await Timeslot.findAll({
     where: {
