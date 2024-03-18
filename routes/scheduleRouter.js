@@ -132,7 +132,7 @@ router.put('/', async (req, res, next) => {
     startDate: CO.startDate,
     endDate: CO.endDate,
     CourseOfferingId: CO.id,
-    InstructorId: CO.InstructorId,
+    InstructorId: CO.primaryInstructor,
     ClassroomId: 1,
     TermId: CO.TermId,
     ProgramId: CO.ProgramId,

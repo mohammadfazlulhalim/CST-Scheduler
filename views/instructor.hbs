@@ -110,7 +110,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeEdit()">Cancel</button>
                             <button type="button" id="editInstructor" class="btn btn-outline-success">Save</button>
                         </div>
                     </form>
@@ -161,7 +161,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeAdd()">Cancel</button>
                         <button type="button" id="createInstructor" class="btn btn-outline-success">Create</button>
                     </div>
                 </form>
@@ -346,6 +346,14 @@
         $('#cPhoneNum').val('');
         $('#cEmail').val('');
 
+    }
+
+    function closeEdit() {
+        $('#editModal').modal('hide');
+    }
+
+    function closeAdd() {
+        $('#addModal').modal('hide');
     }
 
 </script>
