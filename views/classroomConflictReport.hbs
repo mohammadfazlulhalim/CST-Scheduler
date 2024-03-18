@@ -38,9 +38,30 @@
     </div>
 </div>
 
-{{!-- basic table that runs through the list of timeslots sent from route --}}
+<div>
+    <div class="row">
+        <div class="col-9">
+            <h2><i>Classroom:</i> {{realClassroom.roomNumber}}</h2>
+        </div>
+        <div class="col-3">
+            <h2><i>program:</i> {{realTerm.startDate}}</h2>
+        </div>
+    </div>
+</div>
+
 <div class="p-4">
     <table class="table table-striped">
+
+            <tr> {{#each headerArray}}
+                <th>{{this.header1}} </th>
+                <th>{{this.header2}}</th>
+                <th>{{this.header3}}</th>
+                <th>{{this.header4}}</th>
+                <th>{{this.header5}}</th>
+                <th>{{this.header6}}</th>
+            {{/each}}
+            </tr>
+
         {{#each timeslotsReturned}}
             <tr>
                 <td>{{this.id}}</td>

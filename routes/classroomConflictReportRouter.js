@@ -6,6 +6,9 @@ const Classroom= require('../private/javascript/Classroom');
 const Term=require('../private/javascript/Term');
 const Timeslot = require('../private/javascript/Timeslot');
 const {QueryTypes} = require('sequelize');
+const {addAssociations} = require("../private/javascript/Associations");
+const createAllTables = require("../fixtures/createTables.fix");
+const term = require("../private/javascript/Term");
 
 // this is a quick array for designating weekdays as numbers
 // 0 is Sunday --> 6 is Saturday
@@ -19,21 +22,25 @@ const daysNumberedZeroIndex = [0, 1, 2, 3, 4, 5, 6];
  * @param next
  */
 router.post('/', async (req, res, next)=>{
-  const headerArray=[{header: 'Term'}, {header: 'Course Code'}, {header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}];
+  await addAssociations();
+  await createAllTables(false);
+
+  const headerArray=[{header1: 'Term'}, {header2: 'Course Code'}, {header3: 'Weekday'}, {header4: 'Start Time'}, {header5: 'End Time'}, {header6: 'Instructor'}];
 
   // Sequelize will automatically perform an SQL query to the database and create a table
   await sequelize.sync();
   const realClassroom = await Classroom.findOne({where: {id: req.body.classroom}});
-  const timeSlots= await checkForConflict(realClassroom);
+  const realTerm = await term.findOne({where: {id: req.body.term}});
 
-  console.log('>>>>>classrooms');
-  console.log(realClassroom);
+  const timeslotsReturned = await generateTimeslotsTest(realClassroom, realTerm);
 
 
-  res.render('test', {
+  res.render('classroomConflictReport', {
     routerPost: true,
     realClassroom,
+    realTerm,
     headerArray,
+    timeslotsReturned,
   });
 });
 
