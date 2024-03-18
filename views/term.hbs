@@ -1,6 +1,6 @@
 <div class="container p-2">
     <h1 class="mb-2">{{title}}</h1>
-<!--    Moved buttons to the top for add-->
+    <!--    Moved buttons to the top for add-->
     <button type="button" class="btn btn-outline-success mb-2" data-toggle="modal" data-target="#addModal">Add New Term
     </button>
 
@@ -118,7 +118,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="coModalLabel">Course Offerings to Create:</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeCOModal()">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            onclick="closeCOModal()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -149,24 +150,28 @@
                                                        class="form-control {{#if this.err.name}}is-invalid{{/if}}"
                                                        id="{{this.count}}coName"
                                                        name="name" value="{{this.name}}"/>
-                                                <div id="{{this.count}}coNameErr" class="invalid-feedback">{{this.err.name}}</div>
+                                                <div id="{{this.count}}coNameErr"
+                                                     class="invalid-feedback">{{this.err.name}}</div>
                                             </td>
                                             <td>
                                                 <input type="date" class="form-control {{#if
                                                         this.err.startDate}}is-invalid{{/if}}"
                                                        id="{{this.count}}coStartDate"
                                                        value="{{this.startDate}}"/>
-                                                <div id="{{this.count}}coStartDateErr" class="invalid-feedback">{{this.err.startDate}}</div>
+                                                <div id="{{this.count}}coStartDateErr"
+                                                     class="invalid-feedback">{{this.err.startDate}}</div>
                                             </td>
                                             <td>
                                                 <input type="date" class="form-control {{#if
                                                         this.err.endDate}}is-invalid{{/if}}"
                                                        id="{{this.count}}coEndDate"
                                                        value="{{this.endDate}}"/>
-                                                <div id="{{this.count}}coEndDateErr" class="invalid-feedback">{{this.err.endDate}}</div>
+                                                <div id="{{this.count}}coEndDateErr"
+                                                     class="invalid-feedback">{{this.err.endDate}}</div>
                                             </td>
                                             <td id="{{this.count}}coGroup">{{this.group}}</td>
-                                            <td id="{{this.count}}coCourse" data-course="{{this.Course.id}}">{{this.Course.courseCode}}</td>
+                                            <td id="{{this.count}}coCourse"
+                                                data-course="{{this.Course.id}}">{{this.Course.courseCode}}</td>
                                             <td>
                                                 <label for="{{this.count}}coPrimaryInstructor">Primary</label>
                                                 <select id="{{this.count}}coPrimaryInstructor"
@@ -175,7 +180,7 @@
                                                     {{#each ../instructors}}
                                                         <option value="{{id}}">{{firstName}} {{lastName}}</option>
                                                     {{/each}}
-                                                </select> <br />
+                                                </select> <br/>
                                                 <label for="{{this.count}}coSecondaryInstructor">Alternative</label>
                                                 <select id="{{this.count}}coSecondaryInstructor"
                                                         data-secondaryinstructorid="{{this.alternativeInstructor}}"
@@ -207,7 +212,8 @@
                             {{/if}}
                         </div>
                         <div class="modal-footer">
-                            <button id="createCOClose" type="button" class="btn btn-secondary" onclick="closeCOModal()">Cancel
+                            <button id="createCOClose" type="button" class="btn btn-secondary" onclick="closeCOModal()">
+                                Cancel
                             </button>
                             <button type="button" id="createCO" class="btn btn-outline-success">Submit Course
                                 Offerings
@@ -314,8 +320,8 @@
                     TermId: $('#' + i + 'coTerm').val(),
                 };
                 const secondaryInstructor = $('#' + i + 'coSecondaryInstructor').val();
-                if (secondaryInstructor != "") {
-                  tempObj.alternativeInstructor = secondaryInstructor;
+                if (secondaryInstructor != '') {
+                    tempObj.alternativeInstructor = secondaryInstructor;
                 }
                 // console.log('tempObj to save is: ' + JSON.stringify(tempObj));
                 coToCreateArray.push(tempObj);
@@ -384,50 +390,53 @@
     }
 
     function selectInstructors() {
-      if (document.getElementById('coTable')) {
-          const numRows = document.getElementById('coTable').rows.length;
-          for (let i = 1; i < numRows; i++) {
-              const insPWebId = i + 'coPrimaryInstructor';
-              const insSWebId = i + 'coSecondaryInstructor';
-              const insPDBID = document.getElementById(insPWebId).dataset.primaryinstructorid;
-              const insSDBID = document.getElementById(insSWebId).dataset.secondaryinstructorid;
-              // loop through each element in the instructor
-              const numOptions = $('#' + insPWebId)[0].length;
-              for (let j = 1; j <= numOptions; j++) {
-                  // check if the value is equal to instructorID (can use nth child with j)
-                  const optionPSelector = '#' + insPWebId + ' :nth-child(' + j + ')';
-                  if (insPDBID == $(optionPSelector).val()) {
-                      // found it - now need to add the selected attribute
-                      $(optionPSelector).attr('selected', 'selected');
-                  }
-                  const optionSSelector = '#' + insSWebId + ' :nth-child(' + j + ')';
-                  if (insSDBID == $(optionSSelector).val()) {
-                      // found it - now need to add the selected attribute
-                      $(optionSSelector).attr('selected', 'selected');
-                  }
-              }
-          }
-      }
+        if (document.getElementById('coTable')) {
+            const numRows = document.getElementById('coTable').rows.length;
+            for (let i = 1; i < numRows; i++) {
+                const insPWebId = i + 'coPrimaryInstructor';
+                const insSWebId = i + 'coSecondaryInstructor';
+                const insPDBID = document.getElementById(insPWebId).dataset.primaryinstructorid;
+                const insSDBID = document.getElementById(insSWebId).dataset.secondaryinstructorid;
+                // loop through each element in the instructor
+                const numOptions = $('#' + insPWebId)[0].length;
+                for (let j = 1; j <= numOptions; j++) {
+                    // check if the value is equal to instructorID (can use nth child with j)
+                    const optionPSelector = '#' + insPWebId + ' :nth-child(' + j + ')';
+                    if (insPDBID == $(optionPSelector).val()) {
+                        // found it - now need to add the selected attribute
+                        $(optionPSelector).attr('selected', 'selected');
+                    }
+                }
+                const numOptions2 = $('#' + insSWebId)[0].length;
+                for (let j = 1; j <= numOptions2; j++) {
+                    const optionSSelector = '#' + insSWebId + ' :nth-child(' + j + ')';
+                    if (insSDBID == $(optionSSelector).val()) {
+                        // found it - now need to add the selected attribute
+                        $(optionSSelector).attr('selected', 'selected');
+                    }
+                }
+            }
+        }
     }
 
     function selectPrograms() {
-      if (document.getElementById('coTable')) {
-          const numRows = document.getElementById('coTable').rows.length;
-          for (let i = 1; i < numRows; i++) {
-              const progWebId = i + 'coProgram';
-              const progDBID = document.getElementById(progWebId).dataset.programid;
-              // loop through each element in the instructor
-              const numOptions = $('#' + progWebId)[0].length;
-              for (let j = 1; j <= numOptions; j++) {
-                  // check if the value is equal to instructorID (can use nth child with j)
-                  const optionSelector = '#' + progWebId + ' :nth-child(' + j + ')';
-                  if (progDBID == $(optionSelector).val()) {
-                      // found it - now need to add the selected attribute
-                      $(optionSelector).attr('selected', 'selected');
-                  }
-              }
-          }
-      }
+        if (document.getElementById('coTable')) {
+            const numRows = document.getElementById('coTable').rows.length;
+            for (let i = 1; i < numRows; i++) {
+                const progWebId = i + 'coProgram';
+                const progDBID = document.getElementById(progWebId).dataset.programid;
+                // loop through each element in the instructor
+                const numOptions = $('#' + progWebId)[0].length;
+                for (let j = 1; j <= numOptions; j++) {
+                    // check if the value is equal to instructorID (can use nth child with j)
+                    const optionSelector = '#' + progWebId + ' :nth-child(' + j + ')';
+                    if (progDBID == $(optionSelector).val()) {
+                        // found it - now need to add the selected attribute
+                        $(optionSelector).attr('selected', 'selected');
+                    }
+                }
+            }
+        }
     }
 
     /**

@@ -107,8 +107,8 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#' + 8 + 'coName').clear({force: true}).type('The Seminar', {force: true});
   // Instructor change
   cy.get('#' + 3 + 'coPrimaryInstructor').select('Bryce Barrie', {force: true});
-  cy.get('#' + 3 + 'coPrimaryInstructor').select('Coralee Kaban', {force: true});
-  cy.get('#' + 6 + 'coPrimaryInstructor').select('Coralee Kaban', {force: true});
+  cy.get('#' + 3 + 'coSecondaryInstructor').select("", {force: true});
+  cy.get('#' + 6 + 'coSecondaryInstructor').select('Coralee Kaban', {force: true});
 
   // Program change
   cy.get('#' + 4 + 'coProgram').select('CNT', {force: true});
@@ -128,7 +128,7 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.contains('Course Offerings').click();
   const newCOs = [
     ['Hardware', 'A', 'COHS190', '2024-3', '2024-05-05', '2024-05-29', 'Ben Benson', ' ', 'CST'],
-    ['Hardware', 'B', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', 'Bryce Barrie', 'Coralee Kaban', 'CST'],
+    ['Hardware', 'B', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', 'Bryce Barrie', ' ', 'CST'],
     ['Hardware', 'D', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', 'Ben Benson', ' ', 'CST'],
     ['Seminar', 'A', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', ' ', 'CST'],
     ['Seminar', 'B', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', ' ', 'CNT'],
@@ -229,6 +229,7 @@ it('testThatTermWithNoAutogenerateOptionsDisplaysMessage ', () => {
 
 
 it('testThatTermAutogeneratesCourseOfferingsHasValidation', () => {
+  cy.viewport(1920, 1080);
   cy.visit('localhost:3000');
   cy.contains('Administration').click();
   cy.contains('Term').click();
@@ -252,13 +253,6 @@ it('testThatTermAutogeneratesCourseOfferingsHasValidation', () => {
 
 
   // Since it is the same term info as previous, we are going to assume the modal prefilled correctly
-
-  cy.get('#' + 1 + 'coStartDate').type('2024-05-05');
-  cy.get('#' + 1 + 'coEndDate').type('2024-05-29');
-  // Name change
-  cy.get('#' + 8 + 'coName').clear({force: true}).type('The Seminar', {force: true});
-  // Instructor change
-  cy.get('#' + 3 + 'coPrimaryInstructor').select('Bryce Barrie', {force: true});
 
   // Date change - invalid empty
   cy.get('#' + 1 + 'coStartDate').clear({force: true});
