@@ -6,11 +6,13 @@ const Program = require('../private/javascript/Program');
 const Instructor = require('../private/javascript/Instructor');
 const Course = require('../private/javascript/Course');
 const URL = require('../constants').URL;
+const getSortedTerm = require('./termRouter').readAllTerms;
 
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
   const listCO = await getCOList();
-  const listTerm = await getTerms();
+  // const listTerm = await getTerms();
+  const listTerm = await getSortedTerm();
   const listCourse = await getCourses();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
@@ -31,7 +33,7 @@ router.get('/', async function(req, res, next) {
 router.post('/', async function(req, res, next) {
   console.log(JSON.stringify(req.body));
   await CourseOffering.sync();
-  const listTerm = await getTerms();
+  const listTerm = await getSortedTerm();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
   const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
@@ -77,7 +79,7 @@ router.post('/', async function(req, res, next) {
 });
 
 router.put('/', async function(req, res, next) {
-  const listTerm = await getTerms();
+  const listTerm = await getSortedTerm();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
   const listCourse = await getCourses();
@@ -126,7 +128,7 @@ router.put('/', async function(req, res, next) {
 });
 
 router.delete('/', async function(req, res, next) {
-  const listTerm = await getTerms();
+  const listTerm = await getSortedTerm();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
   const listCourse = await getCourses();

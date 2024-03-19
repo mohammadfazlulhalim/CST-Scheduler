@@ -1,58 +1,66 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="offset-md-4 col-md-4 text-center">
-            <h1 class="display-5">{{title}}</h1>
+        <div class="col-md-2">
+            <label for="filterTerm" class="form-label">Filter by Term:</label>
+            <select class="form-select" id="filterTerm">
+                <option value="">All Terms</option>
+                {{#each listTerm}}
+                    <option value="{{id}}" data-termstart="{{startDate}}" data-termend="{{endDate}}">
+                        {{this.calendarYear}} - Term {{this.termNumber}}
+                    </option>
+                {{/each}}
+            </select>
         </div>
-        <div class="col-md-4 text-end">
-            <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal"
+        <div class="col-md-8 text-center">
+            <h1 class="display-4">{{title}}</h1>
+        </div>
+        <div class="col-md-2 text-end align-text-bottom">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal"
                     id="openCreateModal">Add New Course Offering
             </button>
         </div>
     </div>
     {{#if listCO}}
-        <div class="table-wrapper table-responsive">
+        <div class="table-wrapper table-responsive mt-3">
             <table id="dataTable" class="table table-striped fixed-size-table">
                 <thead class="table-primary fixed-size-table-header">
                 <tr>
-                    <th>Name</th>
-                    <th>Group</th>
-                    <th>Course</th>
-                    <th>Term</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Primary Instructor</th>
-                    <th>Alternative Instructor</th>
-                    <th>Program</th>
-                    <th>Actions</th>
+                    <th >Name</th>
+                    <th class="text-center" >Group</th>
+                    <th class="text-center">Course</th>
+                    <th class="text-center">Term</th>
+                    <th class="text-center">Start Date</th>
+                    <th class="text-center">End Date</th>
+                    <th class="text-center"> Primary Instructor</th>
+                    <th class="text-center">Alternative Instructor</th>
+                    <th class="text-center">Program</th>
+                    <th class="text-center">Actions</th>
                 </tr>
                 </thead>
                 <tbody id="tableBody">
                 {{#each listCO}}
-                    <tr>
+                    <tr class="term-row" data-termid="{{Term.id}}">
                         <td id="{{this.id}}name">{{this.name}} </td>
-                        <td id="{{this.id}}group">{{this.group}}</td>
-                        <td id="{{this.id}}course" data-courseid="{{this.Course.id}}">{{this.Course.courseCode}}</td>
-                        <td id="{{this.id}}term" data-termid="{{this.Term.id}}">{{this.Term.title}}</td>
-                        <td id="{{this.id}}startDate">{{this.startDate}}</td>
-                        <td id="{{this.id}}endDate">{{this.endDate}}</td>
-                        <td id="{{this.id}}primaryInstructor" data-primaryinstructorid="{{this.primaryInstructor.id}}">
+                        <td class="text-center" id="{{this.id}}group">{{this.group}}</td>
+                        <td class="text-center" id="{{this.id}}course" data-courseid="{{this.Course.id}}">{{this.Course.courseCode}}</td>
+                        <td class="text-center" id="{{this.id}}term" data-termid="{{this.Term.id}}">{{this.Term.title}}</td>
+                        <td class="text-center" id="{{this.id}}startDate">{{this.startDate}}</td>
+                        <td class="text-center" id="{{this.id}}endDate">{{this.endDate}}</td>
+                        <td class="text-center" id="{{this.id}}primaryInstructor" data-primaryinstructorid="{{this.primaryInstructor.id}}">
                             {{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}
                         </td>
-                        <td id="{{this.id}}alternativeInstructor"
-                            data-alternativeinstructorid="{{this.alternativeInstructor.id}}">
+                        <td class="text-center" id="{{this.id}}alternativeInstructor" data-alternativeinstructorid="{{this.alternativeInstructor.id}}">
                             {{this.alternativeInstructor.firstName}} {{this.alternativeInstructor.lastName}}
                         </td>
-                        <td id="{{this.id}}program" data-programid="{{this.Program.id}}">
+                        <td class="text-center" id="{{this.id}}program" data-programid="{{this.Program.id}}">
                             {{this.Program.programAbbreviation}}
                         </td>
-                        <td>
+                        <td class="text-center">
                             <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
-                                    data-toggle="modal"
-                                    data-target="#editModal" onclick="handleEditModal('{{this.id}}')">Edit
+                                    data-toggle="modal" data-target="#editModal" onclick="handleEditModal('{{this.id}}')">Edit
                             </button>
                             <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
-                                    data-toggle="modal"
-                                    data-target="#deleteModal">Delete
+                                    data-toggle="modal" data-target="#deleteModal">Delete
                             </button>
                         </td>
                     </tr>
@@ -116,7 +124,7 @@
                                 <select id="eTerm" class="form-select" onchange="selectedTermUpdate()">Course
                                     {{#each listTerm}}
                                         <option value="{{id}}" id="optionEditTerm{{id}}" data-termstart="{{startDate}}"
-                                                data-termend="{{endDate}}">{{startDate}} - {{termNumber}}</option>
+                                                data-termend="{{endDate}}">{{this.calendarYear}} - Term {{this.termNumber}}</option>
                                     {{/each}}
                                 </select>
                             </div>
@@ -219,7 +227,7 @@
                                     {{#each listTerm}}
                                         <option value="{{id}}" id="optionCreateTerm{{id}}"
                                                 data-termstart="{{startDate}}" data-termend="{{endDate}}">
-                                            {{startDate}} - {{termNumber}}
+                                            {{this.calendarYear}} - Term {{this.termNumber}}
                                         </option>
                                     {{/each}}
                                 </select>
@@ -305,6 +313,19 @@
 <script>
     'use strict';
     reLinkButtons();
+
+    document.getElementById('filterTerm').addEventListener('change', function () {
+        var termId = this.value;
+        var termRows = document.querySelectorAll('.term-row');
+        termRows.forEach(function (row) {
+            var rowTermId = row.getAttribute('data-termid');
+            if (termId === '' || rowTermId === termId) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
 
     function sortTable(columnIndex) {
         var table, rows, switching, i, x, y, shouldSwitch;
@@ -778,7 +799,7 @@
     }
 
     .table-wrapper {
-        max-height: calc(100vh - 250px); /* Adjust the subtracted value as needed */
+        max-height: calc(100vh - 275px); /* Adjust the subtracted value as needed */
         overflow-y: auto;
         border: 1px solid #ccc; /* Add border to the div */
     }

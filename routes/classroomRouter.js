@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Classroom = require('../private/javascript/Classroom');
 const {sequelize} = require('../dataSource');
-const URL = require('../constants').URL
+const URL = require('../constants').URL;
+const title = require('../constants').pageTitles.classroom;
 
 const getClassrooms = async () => {
   try {
@@ -20,9 +21,7 @@ const getClassrooms = async () => {
  */
 router.get('/', async (req, res, next) => {
   const classroomList = await getClassrooms();
-  // console.log('Returned classrooms');
-  // console.log(JSON.stringify(classroomList));
-  res.render('classroom', {classroomList, title: 'Classrooms', URL});
+  res.render('classroom', {classroomList, title, URL});
 });
 
 /**
@@ -51,7 +50,7 @@ router.post('/', async (req, res, next) => {
   const classrooms = await getClassrooms();
 
   res.render('classroom', {
-    title: 'Classrooms',
+    title,
     classroomList: classrooms,
     err: violations,
     submittedClassroom: violations ? req.body : undefined,
@@ -86,7 +85,7 @@ router.put('/', async (req, res, next) => {
   const classrooms = await getClassrooms();
 
   res.render('classroom', {
-    title: 'Classrooms',
+    title,
     classroomList: classrooms,
     err: violations,
     putClassroom: violations ? req.body : undefined,
@@ -119,7 +118,7 @@ router.delete('/', async (req, res, next) => {
   }
 
   res.render('classroom', {
-    title: 'Classrooms',
+    title,
     classroomList: classrooms,
     err: violations,
     delClassroom: violations ? req.body : undefined,

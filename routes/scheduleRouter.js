@@ -6,6 +6,7 @@ const Timeslot = require('../private/javascript/Timeslot');
 const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
 const defineDB = require('../fixtures/createTables.fix');
+const Instructor = require('../private/javascript/Instructor');
 
 router.get('/', async (req, res, next) => {
 
@@ -25,7 +26,6 @@ router.get('/', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-
   const groupArray = [];
 
   // constants
@@ -76,10 +76,10 @@ router.post('/', async (req, res, next) => {
       // getting each course offering for this group
       for (let k = 0; k < groupArray[i].COArray.length; k++) {
         const COObj = groupArray[i].COArray[k];
-        const insObj = await COObj.getInstructor();
-        COObj.insFirst = insObj.firstName;
-        COObj.insLast = insObj.lastName;
-        COObj.dName = COObj.name + '-' + COObj.group;
+          const insObj = await Instructor.findByPk(COObj.primaryInstructor);
+          COObj.insFirst = insObj.firstName;
+          COObj.insLast = insObj.lastName;
+          COObj.dName = COObj.name + '-' + COObj.group;
       }
     } catch (error) {
 
@@ -123,7 +123,7 @@ router.put('/', async (req, res, next) => {
     startDate: CO.startDate,
     endDate: CO.endDate,
     CourseOfferingId: CO.id,
-    InstructorId: CO.InstructorId,
+    InstructorId: CO.primaryInstructor,
     ClassroomId: 1,
     TermId: CO.TermId,
     ProgramId: CO.ProgramId,
