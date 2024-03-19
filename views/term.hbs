@@ -1,8 +1,13 @@
 <div class="container p-2">
-    <h1 class="mb-2">{{title}}</h1>
-    <!--    Moved buttons to the top for add-->
-    <button type="button" class="btn btn-outline-success mb-2" data-toggle="modal" data-target="#addModal">Add New Term
-    </button>
+    <div class="row mb-2">
+        <h1 class="col-md-4">{{title}}</h1>
+        <!--Empty spacer, to help with formatting-->
+        <div class="col-md-6"></div>
+        <!--Add button is at the top, for longer table lists-->
+        <button type="button" class="btn btn-success col-md-2" data-toggle="modal" data-target="#addModal">
+            Add New Term
+        </button>
+    </div>
 
     <!--If term entries are defined, we add in a table-->
     {{#if termEntries}}
@@ -268,7 +273,7 @@
     </div>
 
     <a href="{{URL}}">
-        <button class="btn btn-success">Return</button>
+        <button class="btn btn-outline-success">Return</button>
     </a>
 </div>
 <!-- My own handlers for the form submits -->
@@ -323,7 +328,6 @@
                 if (secondaryInstructor != '') {
                     tempObj.alternativeInstructor = secondaryInstructor;
                 }
-                // console.log('tempObj to save is: ' + JSON.stringify(tempObj));
                 coToCreateArray.push(tempObj);
             }
         }

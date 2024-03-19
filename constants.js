@@ -33,6 +33,15 @@ const globalConsts = {
   weekdaysFullySpelled: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
 }
 
+// Use this for page titles, and import it.
+// Having it in one spot makes it easy to spot consistency errors, or change quickly
+const pageTitles = {
+  classroom: 'Manage Classrooms',
+  instructor: 'Manage Instructors',
+  program: 'Manage Programs',
+  term: 'Manage Terms',
+}
+
 const URL = 'http://localhost:3000'
 
-module.exports = {instructorConstraints, termConstraints, globalConsts, URL};
+module.exports = {instructorConstraints, termConstraints, globalConsts, URL, pageTitles};

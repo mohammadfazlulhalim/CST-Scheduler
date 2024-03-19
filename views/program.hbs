@@ -1,7 +1,15 @@
 <div class="container p-2">
-    <h2>Programs</h2>
+    <div class="row mb-2">
+        <h1 class="col-md-4">{{title}}</h1>
+        <!--Empty spacer, to help with formatting-->
+        <div class="col-md-6"></div>
+        <!--Add button is at the top, for longer table lists-->
+        <button type="button" class="btn btn-success col-md-2" data-toggle="modal" data-target="#createModal">
+            Add New Program
+        </button>
+    </div>
     <table class="table table-striped">
-        <thead>
+        <thead class="table-primary">
         <tr>
             <th>Program Name</th>
             <th>Program Abbreviation</th>
@@ -68,12 +76,8 @@
         {{/if}}
         </tbody>
     </table>
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#createModal">
-        Add New Program
-    </button>
-
     <a href="{{URL}}">
-        <button class="btn btn-success">Return</button>
+        <button class="btn btn-outline-success">Return</button>
     </a>
     <!--Update modal - Brandon-->
     <div class="modal fade" id="updateModal" role="dialog" tabindex="-1" aria-labelledby="updateModalLabel"

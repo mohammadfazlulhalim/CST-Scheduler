@@ -10,12 +10,13 @@ const Instructor = require('../private/javascript/Instructor');
 const {Op} = require('sequelize');
 const createCourseOffering = require('./courseOfferingRouter').createCourseOffering;
 const Course = require('../private/javascript/Course');
+const title = require('../constants').pageTitles.term;
 
 router.get('/', async function(req, res, next) {
   // Declaring the array
   const termLists = await readAllTerms();
   res.render('term', {
-    title: 'Manage Terms',
+    title,
     termEntries: termLists,
     URL,
   });
@@ -95,7 +96,7 @@ router.post('/', async function(req, res, next) {
       submittedTerm: violations ? req.body : undefined,
       maxTerms: termConstraints.termNumberUpperLimit,
       minTerms: termConstraints.termNumberLowerLimit,
-      title: 'Manage Terms',
+      title,
       courseOfferings: lastCO,
       instructors,
       programs,
@@ -111,7 +112,7 @@ router.post('/', async function(req, res, next) {
       submittedTerm: violations ? req.body : undefined,
       maxTerms: termConstraints.termNumberUpperLimit,
       minTerms: termConstraints.termNumberLowerLimit,
-      title: 'Manage Terms',
+      title,
       URL,
     });
   }
@@ -140,7 +141,7 @@ router.post('/course-offerings', async function(req, res, next) {
     termEntries: termLists,
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
-    title: 'Manage Terms',
+    title,
     courseOfferings: coCreateArray,
     URL,
     instructors,
@@ -163,7 +164,7 @@ router.delete('/', async function(req, res, next) {
     err: violations,
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
-    title: 'Manage Terms',
+    title,
     URL,
   });
 });
@@ -197,7 +198,7 @@ router.put('/', async function(req, res, next) {
     putSubmittedTerm: violations ? req.body : undefined,
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
-    title: 'Manage Terms',
+    title,
     URL,
   });
 });

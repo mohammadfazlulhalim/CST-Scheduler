@@ -75,7 +75,6 @@ router.post('/', async function(req, res, next) {
 });
 
 router.put('/', async function(req, res, next) {
-  // console.log('PUT: ' + JSON.stringify(req.body));
   const listTerm = await getTerms();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
@@ -155,10 +154,8 @@ router.delete('/', async function(req, res, next) {
  */
 async function createCourseOffering(createCO) {
   try {
-    // console.log('Syntax of the new create is: ' + JSON.stringify(createCO));
     return await CourseOffering.create(createCO);
   } catch (e) {
-    // console.log('Error is: ' + e);
     return mapErrors(e);
   }
 }
