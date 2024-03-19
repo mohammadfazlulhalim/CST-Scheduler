@@ -175,56 +175,6 @@ async function generateTimeslots(startTime, endTime, classroom) {
  * @return {Promise<Object[]>}
  */
 async function generateTimeslotsTest(classroom, term) {
-  // const timeVals = await uniqueTime(classroom);
-
-  // Using this SQL statement,
-  // - try to find the timeslot objects that have same start time, end time, day
-  // - filter results by term id and classroom id
-
-
-  // const sqlStatement =`SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId, COUNT (*) AS frequency
-  //                              FROM Timeslots
-  //                              INNER JOIN Classroom
-  //                              ON Timeslots.classroomId = ${classroom.id}
-  //                               AND Timeslots.termId = ${term.id}
-  //                              GROUP BY Timeslots.day
-  //                               HAVING COUNT(*) > 1`;
-  //
-  //
-  // // stores result of the sql statement above
-  // let redundantObject;
-  //
-  // try {
-  //   redundantObject = await sequelize.query(sqlStatement, {type: QueryTypes.SELECT});
-  // } catch (err) {
-  //   console.log(err);
-  // }
-  //
-  //
-  // console.log('>>>>>>>WE ARE HERE redundantObject');
-  // console.log(redundantObject);
-
-
-  //   let sqlStatement2;
-  //   const classResult=[];
-  //   for ( let i = 0; i< redundantObject.length; i++) {
-  //     sqlStatement2 = `
-  //     SELECT Timeslots.id,Timeslots.startTime, Timeslots.endTime, Timeslots.day, Timeslots.CourseOfferingId
-  //     FROM Timeslots
-  //     WHERE Timeslots.ClassroomId = ${classroom.id} AND Timeslots.startTime = '${redundantObject[i].startTime}'
-  //     AND Timeslots.endTime = '${redundantObject[i].endTime}'
-  //     AND Timeslots.day = '${redundantObject[i].day}'
-  //     AND Timeslots.startTime
-  // `;
-  //     try {
-  //       classResult.push( await sequelize.query(sqlStatement2, {
-  //         type: QueryTypes.SELECT,
-  //       }));
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   }
-
   const discoveredTimeslot = await Timeslot.findAll({
     attributes: ['startTime', 'endTime', 'day'],
   });
@@ -241,8 +191,8 @@ async function generateTimeslotsTest(classroom, term) {
 
 
   const findRepeatedDataWithSpecificTerm =await Timeslot.findAll({
-    where:{
-      TermId: term.id
+    where: {
+      TermId: term.id,
     },
     // attributes: ['startTime', 'endTime', 'day'],
     attributes: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
@@ -258,10 +208,10 @@ async function generateTimeslotsTest(classroom, term) {
   console.log(classroom.id);
 
   const findTimeslotsWithSpecificClassroomAndTerm = await Timeslot.findAll({
-     where:{
-        ClassroomId: classroom.id,
+    where: {
+      ClassroomId: classroom.id,
     //   TermId: term.id
-     },
+    },
     attributes: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
     // group: ['startTime', 'endTime', 'day'],
     group: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
@@ -280,6 +230,63 @@ async function generateTimeslotsTest(classroom, term) {
 
 
   // gather timeslots using Operators provided by Op class - will add onto it later
+
+  for (let i = 0; i < daysNumberedZeroIndex.length; i++) {
+    const initialTimeslotsForTermClassroomWeekday = await Timeslot.findAll({
+      where: {
+        TermId: term.id,
+        ClassroomId: classroom.id,
+        day: daysNumberedZeroIndex[i],
+      },
+      order: [['startTime', 'ASC'], ['day', 'ASC']],
+    });
+
+    if (initialTimeslotsForTermClassroomWeekday) {
+      // - try out one of the O(n^2) algorithms later to detect conflicts on all timeslots.
+      // first timeslot in list
+      const currentTimeslot = initialTimeslotsForTermClassroomWeekday[0];
+
+      /* currentTimeslot will encounter conflict if another timeslot:
+            (
+              other.startTime >= current.startTime && other.startTime <= current.endTime
+              ||OR
+              (other.endTime >= current.startTime && other.endTime <= current.endTime)
+             ) AND&&
+             (
+               other.startDate >= current.startDate && other.startDate <= current.endDate
+              ||OR
+              (other.endDate >= current.startDate && other.endDate <= current.endDate)
+             )
+      */
+
+      const conflictingTimeslots0 = await Timeslot.findAll({
+        where: {
+          [Op.and]: [
+            {TermId: term.id},
+            {ClassroomId: classroom.id},
+            {day: daysNumberedZeroIndex[i]},
+            // {[Op.and]: {
+            //   [Op.]: currentTimeslot.startTime,
+            //     [Op.]
+            // }},
+
+            // startTime
+            {[Op.or]: {
+              [Op.and]: {
+                startTime: {
+                  [Op.gte]: currentTimeslot.startTime,
+                  [Op.lte]: currentTimeslot.endTime,
+              }
+            },
+
+          },
+        },
+        order: [['startTime', 'ASC'], ['day', 'ASC']],
+      });
+    }
+  }
+
+
   const sqlizeTimeslotsArr = await Timeslot.findAll({
     where: {
       [Op.and]: [
@@ -304,62 +311,13 @@ async function generateTimeslotsTest(classroom, term) {
   });
 
 
-  /*
-  *
-  *
-  * */
-
-
-/*
-
-  
-  // try a stack approach
-  let discoveredTimeslot;
-  let conflictingTimeslot;
-
-  try {
-    // create a big array of timeslots - filtered by that term and classroom
-    let stackTimeslots = await Timeslot.findAll({
-      where: {
-        ClassroomId: classroom.id,
-        TermId: term.id,
-      },
-      include: [{
-        model: CourseOffering,
-        include: Course,
-      }, {
-        model: Instructor,
-      }, {
-        model: Term,
-      }],
-      order: [['startTime', 'ASC']],
-    });
-
-    // loop through big timeslots array
-    for (let i = 0; i < stackTimeslots.length; i++) {
-      let currentTS = stackTimeslots[i];
-
-
-      stackTimeslots.find()
-
-
-      discoveredTimeslot.add(currentTS);
-    }
-  } catch (e) {
-  }
-  
-*/
-
-
-
   // return classResult;
   return sqlizeTimeslotsArr;
 }
 
 function f() {
-  
-}
 
+}
 
 
 module.exports = {router, generateTimeslotsTest};
