@@ -34,15 +34,14 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   // Checking sort order for instructor list
   // since it is generated the same for all table entries, going to just check once for efficiency
   for (let i = 0; i < instructorList.length; i++) {
-    const nChild = i + 1;
-    const nChildSec = i + 2;
+    const nChild = i + 2;
     cy.get('#1coPrimaryInstructor > option:nth-child(' + nChild + ')').should('have.text', instructorList[i]);
-    cy.get('#1coSecondaryInstructor > option:nth-child(' + nChildSec + ')').should('have.text', instructorList[i]);
+    cy.get('#1coSecondaryInstructor > option:nth-child(' + nChild + ')').should('have.text', instructorList[i]);
   };
 
   // Checking sort order for program list
   for (let i = 0; i < programList.length; i++) {
-    const nChild = i + 1;
+    const nChild = i + 2;
     cy.get('#1coProgram > option:nth-child(' + nChild + ')').should('have.text', programList[i]);
   }
 
