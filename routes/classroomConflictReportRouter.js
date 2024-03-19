@@ -225,26 +225,31 @@ async function generateTimeslotsTest(classroom, term) {
   //     console.error('Error finding common timeslots:', err);
   //   });
 
-  console.log('>>>>>>>>findTimeslotsWithSpecificClassroomAndTerm');
-  console.log(findTimeslotsWithSpecificClassroomAndTerm);
+
 
 
   // gather timeslots using Operators provided by Op class - will add onto it later
 
+  let conflictingTimeslots0;
   for (let i = 0; i < daysNumberedZeroIndex.length; i++) {
     const initialTimeslotsForTermClassroomWeekday = await Timeslot.findAll({
       where: {
-        TermId: term.id,
-        ClassroomId: classroom.id,
-        day: daysNumberedZeroIndex[i],
+        [Op.and]: [
+          {TermId: term.id},
+          {ClassroomId: classroom.id},
+          {day: daysNumberedZeroIndex[1]},
+        ]
       },
-      order: [['startTime', 'ASC'], ['day', 'ASC']],
+        order: [['startTime', 'ASC'], ['day', 'ASC']],
+
+
     });
 
-    if (initialTimeslotsForTermClassroomWeekday) {
+
+    if (initialTimeslotsForTermClassroomWeekday.length>0) {
       // - try out one of the O(n^2) algorithms later to detect conflicts on all timeslots.
       // first timeslot in list
-      const currentTimeslot = initialTimeslotsForTermClassroomWeekday[0];
+      const currentTimeslot = initialTimeslotsForTermClassroomWeekday[1];
 
       /* currentTimeslot will encounter conflict if another timeslot:
             (
@@ -259,32 +264,75 @@ async function generateTimeslotsTest(classroom, term) {
              )
       */
 
-      const conflictingTimeslots0 = await Timeslot.findAll({
-        where: {
-          [Op.and]: [
-            {TermId: term.id},
-            {ClassroomId: classroom.id},
-            {day: daysNumberedZeroIndex[i]},
-            // {[Op.and]: {
-            //   [Op.]: currentTimeslot.startTime,
-            //     [Op.]
-            // }},
+      try {
+        conflictingTimeslots0 = await Timeslot.findAll({
+          where: {
+            [Op.and]: [
+              {TermId: term.id},
+              {ClassroomId: classroom.id},
+              {day: daysNumberedZeroIndex[1]},
+              // {[Op.and]: {
+              //   [Op.]: currentTimeslot.startTime,
+              //     [Op.]
+              // }},
 
-            // startTime
-            {[Op.or]: {
-              [Op.and]: {
-                startTime: {
-                  [Op.gte]: currentTimeslot.startTime,
-                  [Op.lte]: currentTimeslot.endTime,
+              // startTime
+              {
+                [Op.or]: {
+                  [Op.and]: {
+                    startTime: {
+                      [Op.gte]: currentTimeslot.startTime,
+                      [Op.lte]: currentTimeslot.endTime,
+                    }
+                  },
+                  [Op.and]: {
+                    endTime: {
+                      [Op.gte]: currentTimeslot.startTime,
+                      [Op.lte]: currentTimeslot.endTime,
+                    }
+                  },
+
+                },
+              },
+              //start date
+              {
+                [Op.or]: {
+                  [Op.and]: {
+                    startDate: {
+                      [Op.gte]: currentTimeslot.startDate,
+                      [Op.lte]: currentTimeslot.endDate,
+                    }
+                  },
+                  [Op.and]: {
+                    endDate: {
+                      [Op.gte]: currentTimeslot.startDate,
+                      [Op.lte]: currentTimeslot.endDate,
+                    }
+                  },
+
+                },
               }
-            },
+            ]},
 
-          },
-        },
-        order: [['startTime', 'ASC'], ['day', 'ASC']],
-      });
+
+            order: [['startTime', 'ASC'], ['day', 'ASC']],
+
+        });
+
+
+        console.log(">>>>>>>conflictingTimeslots0")
+        console.log(conflictingTimeslots0);
+
+
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
+  //end of forloop
+
+  console.log('>>>>>>>>conflictingTimeslots0');
+  console.log(conflictingTimeslots0);
 
 
   const sqlizeTimeslotsArr = await Timeslot.findAll({
