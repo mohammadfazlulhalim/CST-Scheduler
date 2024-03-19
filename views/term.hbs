@@ -182,6 +182,8 @@
                                                 <select id="{{this.count}}coPrimaryInstructor"
                                                         data-primaryinstructorid="{{this.primaryInstructor}}"
                                                         class="form-select">
+                                                    <!--Should only be selected when the instructor was deleted-->
+                                                    <option value="">Instructor was deleted</option>
                                                     {{#each ../instructors}}
                                                         <option value="{{id}}">{{firstName}} {{lastName}}</option>
                                                     {{/each}}
@@ -199,6 +201,8 @@
                                             <td>
                                                 <select id="{{this.count}}coProgram" data-programid="{{this.ProgramId}}"
                                                         class="form-select">
+                                                    <!--Should only be selected when the program was deleted-->
+                                                    <option value="">Program was deleted</option>
                                                     {{#each ../programs}}
                                                         <option value="{{id}}">{{programAbbreviation}}</option>
                                                     {{/each}}
