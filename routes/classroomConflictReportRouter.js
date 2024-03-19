@@ -240,7 +240,10 @@ async function generateTimeslotsTest(classroom, term) {
   });
 
 
-  const findrepeateddata=await Timeslot.findAll({
+  const findRepeatedDataWithSpecificTerm =await Timeslot.findAll({
+    where:{
+      TermId: term.id
+    },
     // attributes: ['startTime', 'endTime', 'day'],
     attributes: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
     // group: ['startTime', 'endTime', 'day'],
@@ -248,14 +251,32 @@ async function generateTimeslotsTest(classroom, term) {
     having: sequelize.literal('COUNT(*) > 1'), // Ensure there are more than one occurrence
   });
 
+  console.log('>>>>>>>>term');
+  console.log(term.id);
+
+  console.log('>>>>>>>>classroom');
+  console.log(classroom.id);
+
+  const findTimeslotsWithSpecificClassroomAndTerm = await Timeslot.findAll({
+     where:{
+        ClassroomId: classroom.id,
+    //   TermId: term.id
+     },
+    attributes: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
+    // group: ['startTime', 'endTime', 'day'],
+    group: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
+    having: sequelize.literal('COUNT(*) > 1'),
+  });
+
+
   // .then(commonTimeslots => {
   //     console.log(commonTimeslots);
   //   }).catch(err => {
   //     console.error('Error finding common timeslots:', err);
   //   });
 
-  console.log('>>>>>>>>findrepeateddata');
-  console.log(findrepeateddata);
+  console.log('>>>>>>>>findTimeslotsWithSpecificClassroomAndTerm');
+  console.log(findTimeslotsWithSpecificClassroomAndTerm);
 
 
   // gather timeslots using Operators provided by Op class - will add onto it later
@@ -263,9 +284,9 @@ async function generateTimeslotsTest(classroom, term) {
     where: {
       [Op.and]: [
         // Timeslot starts before the endDate of the range
-        {startTime: {[Op.gt]: '10:30'}},
-        {endTime: {[Op.lt]: '14:30'}},
-        {day: '2'},
+        {startTime: {[Op.gte]: findTimeslotsWithSpecificClassroomAndTerm[0].startTime}},
+        {endTime: {[Op.lte]: findTimeslotsWithSpecificClassroomAndTerm[0].endTime}},
+        {day: findTimeslotsWithSpecificClassroomAndTerm[0].day},
         // Timeslot ends after the startDate of the range
         // {endTime: {[Op.gt]: startTime.Time}},
       ],
@@ -281,6 +302,7 @@ async function generateTimeslotsTest(classroom, term) {
     }],
     order: [['startTime', 'ASC']],
   });
+
 
   /*
   *

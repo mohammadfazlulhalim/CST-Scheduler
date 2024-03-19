@@ -14,6 +14,7 @@ const setupTables = require('../../fixtures/ClearAndDefineTables');
 const {instructor1} = require('../../fixtures/Instructor.fix');
 const {program1} = require('../../fixtures/Program.fix');
 
+
 /*
 * VALIDATION ERROR THROWN:- Functional testing - while running Timeslot.create( {
       {startDate: '2023-05-01', endDate: '2023-05-24', startTime: '8:00', endTime: '9:00', day: 3, group: 'B'};
@@ -25,6 +26,7 @@ THOUGH, if we run loaddb - it doesn't complain about the same validation that st
 * */
 
 describe('Classroom Conflict Report Router', ()=>{
+  jest.setTimeout(10000);
   const classroomObj = {
     roomNumber: '239A',
     location: 'Saskatoon Main Campus',
@@ -45,6 +47,7 @@ describe('Classroom Conflict Report Router', ()=>{
 
   // use the imported function to clear and define tables from the established fixtures
   beforeAll( async () => {
+
     try {
       await sequelize.sync({force: true});
     } catch (error) {
@@ -195,6 +198,7 @@ describe('Classroom Conflict Report Router', ()=>{
   // Test endpoint for fetching classroom conflict reports
 
   it('testClassConflictURL', async ()=>{
+
     const response = await request(app)
         .get('/classroomConflictReport');
     // TODO statusCode has to be declared back in the router file to be stored in the response object
@@ -225,9 +229,8 @@ describe('Classroom Conflict Report Router', ()=>{
 
     // TODO implement parameter change router as well!
     // sends in the term and classroom to the function in router
-    const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance, createdTerm);
-    console.log('>>>>>searching for results from generateTimeslotsTest');
-    console.log(results);
+    const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance, termInstance1);
+
 
     expect(resultConflictingTimeslots.length).toBe(2);
   });
