@@ -11,8 +11,6 @@ const globalConsts = require('../constants').globalConsts;
 const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
 const hours12 = globalConsts.timeColumn8amTo3pmDisplayArray;
 
-// TODO Promise issues to resolve!
-
 /**
  * Processing GET request for rendering the instructor report page.
  *
@@ -57,9 +55,8 @@ router.get('/', async function(req, res, next) {
 
 
 /**
- * After the completion of the instructor report form,
- * this processes the POST request to render the instructor report
- * for the requested instructor(s)
+ * sends completed report back to view with supplied insturctor and term, also sends data for new report with
+ * the same modal
  */
 router.post('/', async function(req, res, next) {
   // redefine the database
@@ -86,7 +83,6 @@ router.post('/', async function(req, res, next) {
     instructorName=undefined;
   }
   // try to find the term selected
-  // TODO get the program form the program make association with course offering or course
   try {
     termName = await Term.findOne({where: {id: termID}});
     // based on the term define the program year
@@ -110,9 +106,10 @@ router.post('/', async function(req, res, next) {
     instRepTimeslots=undefined;
   }
 
-  const uniqueDates = await getUniqueDates(instructorName, termName); // get each unique start end date
+  // get each unique start end date, or nothing if invalid term or instructor
+  const uniqueDates = await getUniqueDates(instructorName, termName);
 
-  if (instRepTimeslots){ //if no unique dates, skip
+  if (instRepTimeslots){ //if no unique dates, skip and display no schedule
     for (let i=0; i < uniqueDates.length-1; i++) { //for each unique period of study
       let tempJson = {};
 
@@ -131,7 +128,7 @@ router.post('/', async function(req, res, next) {
         tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, endDate); //assign time slots that match timeframe
         tempJson.startDate = start.date;
         tempJson.endDate = endDate;
-      } else { //use regular end time
+      } else { //use regular end time for last time
         tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, end.date);
         tempJson.startDate = start.date;
         tempJson.endDate = end.date;
@@ -140,7 +137,6 @@ router.post('/', async function(req, res, next) {
       reportArray[i] = tempJson;
     }
   }
-
 
   // The same code from get to put back in options in the drop down in modal
   // find all instructors
@@ -170,22 +166,23 @@ router.post('/', async function(req, res, next) {
     instructorName,
     reportArray,
     dateGen: dateGenerated.getDate()+'-'+monthArray[dateGenerated.getMonth()]+'-'+dateGenerated.getFullYear(),
-    // dateGen: dateGenerated.toLocaleDateString('en-CA', {})
     instructorList,
     termList: newTermList,
     timeDisplayHours,
     showModal: false,
     program,
     isSplit,
+    termName,
   });
 });
 
 
 /**
- * Helper function for the POST.
- * Help to gather timeslots for instructor
- * //
- * //
+ * generates a schedule with all timeslots given within a specified time range
+ * @param instRepTimeslots
+ * @param start
+ * @param end
+ * @returns {Promise<*[]>}
  */
 async function generateSchedule(instRepTimeslots, start, end) {
   const matrixTable = [];
@@ -197,7 +194,7 @@ async function generateSchedule(instRepTimeslots, start, end) {
   for (let i = 0; i < hours24.length; i++) {
     matrixTable[i] = [
       // columns:
-      // time  m   t  w   r  f
+      // time  m   t  w   th  f
       {timeRow: ''}, {}, {}, {}, {}, {},
     ];
   }
@@ -231,7 +228,7 @@ async function generateSchedule(instRepTimeslots, start, end) {
 
   }
 
-  // place the hours
+  // place the 12hours in the leftmost column
   for (let i = 0; i < matrixTable.length; i++) {
     for (let j = 0; j < matrixTable[i].length; j++) {
       matrixTable[i][0].timeRow = hours12[i];
@@ -242,8 +239,15 @@ async function generateSchedule(instRepTimeslots, start, end) {
   return matrixTable;
 }
 
+
+/**
+ * returns a list of each unique date in the given term, or nothing if params are invalid
+ * @param instructor
+ * @param term
+ * @returns {Promise<Object[]>}
+ */
 async function getUniqueDates(instructor, term) {
-  //made major change, need to determine if dates are start/end dates
+  //get all startdates and enddates from timeslots
   const sqlStart = `SELECT DISTINCT startDate AS date FROM timeslots 
                          where InstructorId = ${instructor.id} and TermId = ${term.id}
                         and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'` ;
@@ -254,6 +258,7 @@ async function getUniqueDates(instructor, term) {
 
   let arStart, arEnd;
 
+  //query wtih strings
   try {
     arStart = await sequelize.query(sqlStart, {
       type: QueryTypes.SELECT,
@@ -267,6 +272,7 @@ async function getUniqueDates(instructor, term) {
     console.log(e);
   }
 
+  //need to set date back one day, then stringify
   arEnd.forEach((date) => {
     if(date.date !== term.endDate){
       let tempDate = new Date(date.date); //change to date to set back a day
@@ -275,6 +281,7 @@ async function getUniqueDates(instructor, term) {
     }
   })
 
+  //combine two lists, then sort
   arStart = arStart.concat(arEnd);
   arStart = [...new Set(arStart)];
   arStart = arStart.sort((a,b) => {
@@ -284,23 +291,6 @@ async function getUniqueDates(instructor, term) {
   });
 
   return arStart;
-
-  /*  const sqlStatement = `SELECT DISTINCT date
-                          FROM (
-                            SELECT startDate AS date FROM timeslots where InstructorId = ${instructor.id}
-                            UNION
-                            SELECT endDate AS date FROM timeslots where InstructorId = ${instructor.id}
-                            ) AS combined_dates
-                          WHERE date >= '${term.startDate}' AND date <= '${term.endDate}';`;
-
-    try {
-      return await sequelize.query(sqlStatement, {
-        type: QueryTypes.SELECT,
-      });
-    } catch (e) {
-      console.log(e);
-    }*/
-
 
 }
 

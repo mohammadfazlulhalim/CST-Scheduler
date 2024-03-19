@@ -4,8 +4,9 @@
         <div class="row">
             <div class="col-9">
                 <h2><i>Instructor Report For:</i> {{#if instructorName}}
-                    <span id="nameDisplayer">{{instructorName.lastName}}, {{instructorName.firstName}}</span>
-                {{/if}}</h2>
+                    <span id="nameDisplayer">{{instructorName.lastName}}, {{instructorName.firstName}}</span></h2>
+                <p>Overall Range: {{termName.startDate}} to {{termName.endDate}}</p>
+                {{/if}}
             </div>
             <div class="col-3">
                 <small>Report Generated: <span id="dateGenDisplayer">{{dateGen}}</span></small>
