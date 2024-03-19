@@ -23,7 +23,7 @@
                         <select id="classroomSelect" name="classroom" class="form-select">
                             <option value="" selected disabled>Select Classroom</option>
                             {{#each classrooms}}
-                                <option value="{{id}}">{{roomNumber}}</option>
+                                <option value="{{this.id}}">{{this.roomNumber}}</option>
                             {{/each}}
                         </select>
                     </div>

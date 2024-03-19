@@ -171,76 +171,24 @@ async function generateTimeslots(startTime, endTime, classroom) {
 
 /**
  * New function for collecting timeslots with conflicts
- * @param classroom, term
  * @return {Promise<Object[]>}
+ * @param classroom
+ * @param term
  */
 async function generateTimeslotsTest(classroom, term) {
-  const discoveredTimeslot = await Timeslot.findAll({
-    attributes: ['startTime', 'endTime', 'day'],
-  });
-
-
-  // wrong - this just returns a number
-  const timeslotsWithCount = await Timeslot.findAll({
-    attributes: [
-      'startTime', 'endTime', 'day', // We had to list all attributes...
-      [sequelize.fn('COUNT', sequelize.col('startTime')), 'count'], // To add the aggregation...
-    ],
-
-  });
-
-
-  const findRepeatedDataWithSpecificTerm =await Timeslot.findAll({
-    where: {
-      TermId: term.id,
-    },
-    // attributes: ['startTime', 'endTime', 'day'],
-    attributes: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
-    // group: ['startTime', 'endTime', 'day'],
-    group: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
-    having: sequelize.literal('COUNT(*) > 1'), // Ensure there are more than one occurrence
-  });
-
-  console.log('>>>>>>>>term');
-  console.log(term.id);
-
-  console.log('>>>>>>>>classroom');
-  console.log(classroom.id);
-
-  const findTimeslotsWithSpecificClassroomAndTerm = await Timeslot.findAll({
-    where: {
-      ClassroomId: classroom.id,
-    //   TermId: term.id
-    },
-    attributes: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
-    // group: ['startTime', 'endTime', 'day'],
-    group: ['startTime', 'endTime', 'day', 'ClassroomId', 'TermId'],
-    having: sequelize.literal('COUNT(*) > 1'),
-  });
-
-
-  // .then(commonTimeslots => {
-  //     console.log(commonTimeslots);
-  //   }).catch(err => {
-  //     console.error('Error finding common timeslots:', err);
-  //   });
-
-
-
-
   // gather timeslots using Operators provided by Op class - will add onto it later
 
-  let conflictingTimeslots0;
+  let conflictingTimeslots0 = [];
   for (let i = 0; i < daysNumberedZeroIndex.length; i++) {
     const initialTimeslotsForTermClassroomWeekday = await Timeslot.findAll({
       where: {
         [Op.and]: [
           {TermId: term.id},
           {ClassroomId: classroom.id},
-          {day: daysNumberedZeroIndex[1]},
-        ]
+          {day: daysNumberedZeroIndex[i]},
+        ],
       },
-        order: [['startTime', 'ASC'], ['day', 'ASC']],
+      order: [['startTime', 'ASC'], ['day', 'ASC']],
 
 
     });
@@ -249,7 +197,7 @@ async function generateTimeslotsTest(classroom, term) {
     if (initialTimeslotsForTermClassroomWeekday.length>0) {
       // - try out one of the O(n^2) algorithms later to detect conflicts on all timeslots.
       // first timeslot in list
-      const currentTimeslot = initialTimeslotsForTermClassroomWeekday[1];
+      const currentTimeslot = initialTimeslotsForTermClassroomWeekday[0];
 
       /* currentTimeslot will encounter conflict if another timeslot:
             (
@@ -264,8 +212,9 @@ async function generateTimeslotsTest(classroom, term) {
              )
       */
 
+
       try {
-        conflictingTimeslots0 = await Timeslot.findAll({
+        const conflictingTimeslotsNow = await Timeslot.findAll({
           where: {
             [Op.and]: [
               {TermId: term.id},
@@ -279,92 +228,75 @@ async function generateTimeslotsTest(classroom, term) {
               // startTime
               {
                 [Op.or]: {
-                  [Op.and]: {
-                    startTime: {
+                  startTime: {
+                    [Op.and]: {
                       [Op.gte]: currentTimeslot.startTime,
                       [Op.lte]: currentTimeslot.endTime,
-                    }
+                    },
                   },
                   [Op.and]: {
                     endTime: {
                       [Op.gte]: currentTimeslot.startTime,
                       [Op.lte]: currentTimeslot.endTime,
-                    }
+                    },
                   },
 
                 },
               },
-              //start date
+              // start date
               {
                 [Op.or]: {
                   [Op.and]: {
                     startDate: {
                       [Op.gte]: currentTimeslot.startDate,
                       [Op.lte]: currentTimeslot.endDate,
-                    }
+                    },
                   },
                   [Op.and]: {
                     endDate: {
                       [Op.gte]: currentTimeslot.startDate,
                       [Op.lte]: currentTimeslot.endDate,
-                    }
+                    },
                   },
 
                 },
-              }
+              },
             ]},
+          include: [
+            {
+              model: CourseOffering,
+              include: Course,
+            },
+            {
+              model: Instructor,
+            },
+            {
+              model: Term,
+            },
+            {
+              model: Classroom,
+            },
+          ],
 
-
-            order: [['startTime', 'ASC'], ['day', 'ASC']],
+          order: [['startTime', 'ASC'], ['day', 'ASC']],
 
         });
 
-
-        console.log(">>>>>>>conflictingTimeslots0")
-        console.log(conflictingTimeslots0);
-
-
+        if (conflictingTimeslotsNow.length > 0) {
+          conflictingTimeslots0.push(conflictingTimeslotsNow);
+          console.log('>>>>>>>conflictingTimeslots0');
+          console.log(conflictingTimeslots0);
+        }
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     }
   }
-  //end of forloop
-
-  console.log('>>>>>>>>conflictingTimeslots0');
-  console.log(conflictingTimeslots0);
-
-
-  const sqlizeTimeslotsArr = await Timeslot.findAll({
-    where: {
-      [Op.and]: [
-        // Timeslot starts before the endDate of the range
-        {startTime: {[Op.gte]: findTimeslotsWithSpecificClassroomAndTerm[0].startTime}},
-        {endTime: {[Op.lte]: findTimeslotsWithSpecificClassroomAndTerm[0].endTime}},
-        {day: findTimeslotsWithSpecificClassroomAndTerm[0].day},
-        // Timeslot ends after the startDate of the range
-        // {endTime: {[Op.gt]: startTime.Time}},
-      ],
-      ClassroomId: classroom.id,
-    },
-    include: [{
-      model: CourseOffering,
-      include: Course,
-    }, {
-      model: Instructor,
-    }, {
-      model: Term,
-    }],
-    order: [['startTime', 'ASC']],
-  });
+  // end of forloop
 
 
   // return classResult;
-  return sqlizeTimeslotsArr;
-}
-
-function f() {
-
+  return conflictingTimeslots0;
 }
 
 
