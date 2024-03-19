@@ -1,54 +1,65 @@
 <div class="container-fluid">
-    <h1>{{title}}</h1>
+    <div class="row">
+        <div class="offset-md-4 col-md-4 text-center">
+            <h1 class="display-5">{{title}}</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal"
+                    id="openCreateModal">Add New Course Offering
+            </button>
+        </div>
+    </div>
     {{#if listCO}}
-
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Group</th>
-                <th>Course</th>
-                <th>Term</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Primary Instructor</th>
-                <th>Alternative Instructor</th>
-                <th>Program</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <!--Here is where I loop through my array object and add in a <tr> for each loop, and a <td> for each object-->
-            <tbody id="tableBody">
-            {{#each listCO}}
+        <div class="table-wrapper table-responsive">
+            <table id="dataTable" class="table table-striped fixed-size-table">
+                <thead class="table-primary fixed-size-table-header">
                 <tr>
-                    <td id="{{this.id}}name">{{this.name}}</td>
-                    <td id="{{this.id}}group">{{this.group}}</td>
-                    <td id="{{this.id}}course" data-courseid="{{this.Course.id}}">{{this.Course.courseCode}}</td>
-                    <td id="{{this.id}}term" data-termid="{{this.Term.id}}">{{this.Term.title}}</td>
-                    <td id="{{this.id}}startDate">{{this.startDate}}</td>
-                    <td id="{{this.id}}endDate">{{this.endDate}}</td>
-                    <td id="{{this.id}}primaryInstructor" data-primaryinstructorid="{{this.primaryInstructor.id}}">
-                        {{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}
-                    </td>
-                    <td id="{{this.id}}alternativeInstructor" data-alternativeinstructorid="{{this.alternativeInstructor.id}}">
-                        {{this.alternativeInstructor.firstName}} {{this.alternativeInstructor.lastName}}
-                    </td>
-                    <td id="{{this.id}}program" data-programid="{{this.Program.id}}">
-                        {{this.Program.programAbbreviation}}
-                    </td>
-                    <td>
-                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
-                                data-toggle="modal" data-target="#editModal" onclick="handleEditModal('{{this.id}}')">Edit
-                        </button>
-                        <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
-                                data-toggle="modal" data-target="#deleteModal">Delete
-                        </button>
-                    </td>
+                    <th>Name</th>
+                    <th>Group</th>
+                    <th>Course</th>
+                    <th>Term</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Primary Instructor</th>
+                    <th>Alternative Instructor</th>
+                    <th>Program</th>
+                    <th>Actions</th>
                 </tr>
-            {{/each}}
-            </tbody>
-
-        </table>
+                </thead>
+                <tbody id="tableBody">
+                {{#each listCO}}
+                    <tr>
+                        <td id="{{this.id}}name">{{this.name}} </td>
+                        <td id="{{this.id}}group">{{this.group}}</td>
+                        <td id="{{this.id}}course" data-courseid="{{this.Course.id}}">{{this.Course.courseCode}}</td>
+                        <td id="{{this.id}}term" data-termid="{{this.Term.id}}">{{this.Term.title}}</td>
+                        <td id="{{this.id}}startDate">{{this.startDate}}</td>
+                        <td id="{{this.id}}endDate">{{this.endDate}}</td>
+                        <td id="{{this.id}}primaryInstructor" data-primaryinstructorid="{{this.primaryInstructor.id}}">
+                            {{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}
+                        </td>
+                        <td id="{{this.id}}alternativeInstructor"
+                            data-alternativeinstructorid="{{this.alternativeInstructor.id}}">
+                            {{this.alternativeInstructor.firstName}} {{this.alternativeInstructor.lastName}}
+                        </td>
+                        <td id="{{this.id}}program" data-programid="{{this.Program.id}}">
+                            {{this.Program.programAbbreviation}}
+                        </td>
+                        <td>
+                            <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
+                                    data-toggle="modal"
+                                    data-target="#editModal" onclick="handleEditModal('{{this.id}}')">Edit
+                            </button>
+                            <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
+                                    data-toggle="modal"
+                                    data-target="#deleteModal">Delete
+                            </button>
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
 
         <!-- Delete Modal -->
         <div class="modal fade" id="deleteModal" role="dialog" tabindex="-1" aria-labelledby="deleteModalLabel"
@@ -238,7 +249,7 @@
                                 <select id="cprimaryInstructor" class="form-select" onchange="checkCreateEnable()">
                                     <option></option>
                                     {{#each listInstructor}}
-                                        <option value="{{id}}" id="optionCreateInstructor{{id}}" >{{lastName}}</option>
+                                        <option value="{{id}}" id="optionCreateInstructor{{id}}">{{lastName}}</option>
                                     {{/each}}
                                 </select>
                             </div>
@@ -252,6 +263,7 @@
                                 {{/each}}
                             </select>
                         </div>
+                        <div id="cinvalid-instructor" class="invalid-feedback"></div>
                         <div class="form-group">
                             <label>Number of Groups To Create:</label>
                             <div class="input-group">
@@ -280,18 +292,52 @@
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal"
-            id="openCreateModal">Add New Course
-        Offering
-    </button>
-    <a href="{{URL}}">
-        <button class="btn btn-success">Return</button>
-    </a>
+    <div class="text-end p-2">
+        <a href="{{URL}}">
+            <button class="btn btn-dark">Return</button>
+        </a>
+    </div>
 </div>
 
 <script>
     'use strict';
     reLinkButtons();
+
+    function sortTable(columnIndex) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById('dataTable');
+        switching = true;
+        /* Make a loop that will continue until no switching has been done: */
+        while (switching) {
+            // Start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /* Loop through all table rows (except the first, which contains table headers): */
+            for (i = 1; i < (rows.length - 1); i++) {
+                // Start by saying there should be no switching:
+                shouldSwitch = false;
+                /* Get the two elements you want to compare, one from current row and one from the next: */
+                x = rows[i].getElementsByTagName('TD')[columnIndex];
+                y = rows[i + 1].getElementsByTagName('TD')[columnIndex];
+                /* Check if the two rows should switch place, based on the direction, asc or desc: */
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    // If so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+            if (shouldSwitch) {
+                /* If a switch has been marked, make the switch and mark that a switch has been done: */
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
+
+    // Attach click event listeners to table headers for sorting
+    document.querySelectorAll('#dataTable th').forEach((header, index) => {
+        header.addEventListener('click', () => sortTable(index));
+    });
 
     function incrementValue() {
         let currentValue = parseInt(document.getElementById('numberOfGroups').value);
@@ -299,6 +345,7 @@
             document.getElementById('numberOfGroups').value = currentValue + 1;
         }
     }
+
     function decrementValue() {
         let currentValue = parseInt(document.getElementById('numberOfGroups').value);
         if (currentValue > 1) {
@@ -337,36 +384,41 @@
     }
 
 
-
     /**
      * This function checks that each dropdown has an associated property selected
      * and if it does enables the submit button
      */
     function checkCreateEnable() {
-        let bTermSelected = document.getElementById('cTerm').value !== '';
-        let courseCode = document.getElementById('cCourse').value;
-        let bCourseSelected = false;
+        let termSelected = document.getElementById('cTerm').value.trim() !== '';
+        let courseCode = document.getElementById('cCourse').value.trim();
+        let courseSelected = false;
+
+        // Check if the course is selected
         try {
-            bCourseSelected = document.getElementById('optionCreateCourse' + courseCode).dataset.courseid;
+            courseSelected = !!document.getElementById('optionCreateCourse' + courseCode).dataset.courseid;
         } catch (e) {
-            bCourseSelected = false;
+            courseSelected = false;
         }
-        let bprimaryInstructorSelected = document.getElementById('cprimaryInstructor').value !== '';
-        let bProgramSelected = document.getElementById('cProgram').value !== '';
+
+        let primaryInstructorSelected = document.getElementById('cprimaryInstructor').value.trim() !== '';
+        let programSelected = document.getElementById('cProgram').value.trim() !== '';
         let alternativeInstructorSelect = document.getElementById('calternativeInstructor');
 
-        if (bTermSelected && bProgramSelected && bCourseSelected && bprimaryInstructorSelected) {
+        if (termSelected && programSelected && courseSelected && primaryInstructorSelected) {
+            // Enable the "Create" button
             document.getElementById('createCO').removeAttribute('disabled');
         } else {
-            document.getElementById('createCO').disabled = 'disabled';
+            // Disable the "Create" button
+            document.getElementById('createCO').disabled = true;
         }
 
-        if (bprimaryInstructorSelected) {
+        // Enable/disable alternative instructor select based on whether primary instructor is selected
+        if (primaryInstructorSelected) {
             alternativeInstructorSelect.removeAttribute('disabled');
+            checkCreateInstructorMatch();
         } else {
             alternativeInstructorSelect.disabled = true;
         }
-
     }
 
     function selectedTermUpdate() {
@@ -382,26 +434,21 @@
      * and if so enables the submit button
      */
     function checkUpdateEnable() {
-        let bTermSelected = document.getElementById('eTerm').value !== '';
-        let bPrimaryInstructorSelected = document.getElementById('eprimaryInstructor').value !== '';
-        let bProgramSelected = document.getElementById('eProgram').value !== '';
-        let editCOButton = document.getElementById('editCO');
-        let alternativeInstructorSelect = document.getElementById('ealternativeInstructor');
+        var termSelected = document.getElementById('eTerm').value !== '';
+        var primaryInstructorSelected = document.getElementById('eprimaryInstructor').value !== '';
+        var programSelected = document.getElementById('eProgram').value !== '';
+        var editCOButton = document.getElementById('editCO');
 
-        if (bPrimaryInstructorSelected) {
-            alternativeInstructorSelect.removeAttribute('disabled');
+        if (primaryInstructorSelected) {
+            document.getElementById('ealternativeInstructor').removeAttribute('disabled');
         } else {
-            alternativeInstructorSelect.disabled = true;
+            document.getElementById('ealternativeInstructor').disabled = true;
         }
 
-        if (bTermSelected && bProgramSelected && bPrimaryInstructorSelected) {
-            // Enable the editCOButton
+        if (termSelected && programSelected && primaryInstructorSelected) {
             editCOButton.removeAttribute('disabled');
-
-            // Check if instructors match
             checkEditInstructorMatch();
         } else {
-            // Disable the editCOButton
             editCOButton.disabled = true;
         }
     }
@@ -410,37 +457,38 @@
     function checkCreateInstructorMatch() {
         var primaryInstructor = document.getElementById('cprimaryInstructor').value;
         var alternativeInstructor = document.getElementById('calternativeInstructor').value;
+        var createCOButton = document.getElementById('createCO');
 
         if (primaryInstructor === alternativeInstructor) {
-            document.getElementById('createCO').disabled = 'disabled';
-            // Values match, execute provided code
+            createCOButton.disabled = true;
             document.getElementById('cprimaryInstructor').classList.add('is-invalid');
-            document.getElementById('cinvalid-instructor').innerText = 'Must have two different instructors';
-            document.getElementById('cprimaryInstructor').value = null;
-
             document.getElementById('calternativeInstructor').classList.add('is-invalid');
-            document.getElementById('calternativeInstructor').value = null;
-
-        }
-        else {
-            document.getElementById('createCO').removeAttribute('disabled');
+            document.getElementById('cinvalid-instructor').innerText = 'Must have two different instructors';
+        } else {
+            createCOButton.disabled = false;
+            document.getElementById('cprimaryInstructor').classList.remove('is-invalid');
+            document.getElementById('calternativeInstructor').classList.remove('is-invalid');
+            document.getElementById('cinvalid-instructor').innerText = '';
         }
     }
 
+
     function checkEditInstructorMatch() {
-        let editCOButton = document.getElementById('editCO');
         var primaryInstructor = document.getElementById('eprimaryInstructor').value;
         var alternativeInstructor = document.getElementById('ealternativeInstructor').value;
+        var editCOButton = document.getElementById('editCO');
+        var invalidInstructorDiv = document.getElementById('einvalid-instructor');
 
         if (primaryInstructor === alternativeInstructor) {
-            // Values match, execute provided code
+            editCOButton.disabled = true;
             document.getElementById('eprimaryInstructor').classList.add('is-invalid');
-            document.getElementById('einvalid-instructor').innerText = 'Must have two different instructors';
-            document.getElementById('eprimaryInstructor').value = null;
-
-            document.getElementById('eprimaryInstructor').classList.add('is-invalid');
-            document.getElementById('einvalid-instructor').innerText = 'Must have two different instructors';
-            document.getElementById('eprimaryInstructor').value = null;
+            document.getElementById('ealternativeInstructor').classList.add('is-invalid');
+            invalidInstructorDiv.innerText = 'Must have two different instructors';
+        } else {
+            editCOButton.disabled = false;
+            document.getElementById('eprimaryInstructor').classList.remove('is-invalid');
+            document.getElementById('ealternativeInstructor').classList.remove('is-invalid');
+            invalidInstructorDiv.innerText = '';
         }
     }
 
@@ -654,17 +702,18 @@
     function loadResponse(modalID, data, showModal) {
         // set the whole document's HTML to be the response
         document.documentElement.innerHTML = data;
+        console.log(data)
         // re-add the click handlers
         reLinkButtons();
-        // refresh the modal
-        const modal = $(modalID);
-        modal.modal('hide');
 
-        // if the response was not ok, pop up the modal
+        // show or hide the modal based on the showModal flag
+        const modal = $(modalID);
         if (showModal) {
             modal.modal('show');
             checkEditInstructorMatch();
             checkCreateInstructorMatch();
+        } else {
+            modal.modal('hide');
         }
     }
 
@@ -681,3 +730,24 @@
     }
 
 </script>
+<style>
+    .fixed-size-table td,
+    .fixed-size-table th {
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+    .fixed-size-table-header th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+    .fixed-size-table button {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+    }
+    .table-wrapper {
+        max-height: calc(100vh - 250px); /* Adjust the subtracted value as needed */
+        overflow-y: auto;
+        border: 1px solid #ccc; /* Add border to the div */
+    }
+</style>
