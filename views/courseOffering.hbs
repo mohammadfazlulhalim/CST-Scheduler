@@ -649,7 +649,7 @@
     async function handleEditCO() {
         const id = $('#editID').val();
 
-        // send a PUT request to the router
+        // Store the values of form fields
         let course = $('#eCourse').val();
         let idval = $('#eID').val();
         let name = $('#eName').val();
@@ -661,14 +661,13 @@
         let alternativeInstructor = $('#ealternativeInstructor').val();
         let term = $('#eTerm').val();
 
-
+        // Send a PUT request to the router
         const response = await fetch('{{URL}}/courseOffering', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                // use the val() method to get the value of a form input
                 course: course,
                 id: idval,
                 name: name,
@@ -682,23 +681,23 @@
             }),
         });
 
-        // get the HTML text response
+        // Get the HTML text response
         const data = await response.text();
         const modal = '#editModal';
 
-        await loadResponse(modal, data, !response.ok);
-
-        handleEditModal(id);
-        /* $('#eID').val(idval);
-        $('#eName').val(name);
-        $('#eStartDate').val(startDate);
-        $('#eEndDate').val(endDate);
-        $('#eGroup').val(group);
-        $('#eTerm').val(term);
-        $('#eCourse').val(course);
-        $('#eprimaryInstructor').val(primaryInstructor);
-        $('#ealternativeInstructor').val(alternativeInstructor);
-        $('#eProgram').val(program); */
+        // Load the response and pass showModal as true if there's an error
+        await editLoadResponse(modal, data, !response.ok, {
+            course: course,
+            idval: idval,
+            name: name,
+            startDate: startDate,
+            endDate: endDate,
+            group: group,
+            program: program,
+            primaryInstructor: primaryInstructor,
+            alternativeInstructor: alternativeInstructor,
+            term: term,
+        });
     }
 
     /**
@@ -725,7 +724,6 @@
         $('#eprimaryInstructor').val(document.getElementById(idToEdit + 'primaryInstructor').dataset.primaryinstructorid);
         $('#ealternativeInstructor').val(document.getElementById(idToEdit + 'alternativeInstructor').dataset.alternativeinstructorid);
         $('#eProgram').val(document.getElementById(idToEdit + 'program').dataset.programid);
-
         checkUpdateEnable();
     }
 
@@ -749,7 +747,7 @@
      * @param data      - The HTML response from the server
      * @param showModal - True to show the modal, false to hide the modal
      */
-    function loadResponse(modalID, data, showModal) {
+    function editLoadResponse(modalID, data, showModal, formData) {
         // set the whole document's HTML to be the response
         document.documentElement.innerHTML = data;
         console.log(data);
@@ -764,6 +762,36 @@
             checkCreateInstructorMatch();
         } else {
             modal.modal('hide');
+        }
+
+        // If there's an error, reset form fields to the stored values
+        if (showModal && formData) {
+            $('#eCourse').val(formData.course);
+            $('#eID').val(formData.idval);
+            $('#eName').val(formData.name);
+            $('#eStartDate').val(formData.startDate);
+            $('#eEndDate').val(formData.endDate);
+            $('#eGroup').val(formData.group);
+            $('#eProgram').val(formData.program);
+            $('#eprimaryInstructor').val(formData.primaryInstructor);
+            $('#ealternativeInstructor').val(formData.alternativeInstructor);
+            $('#eTerm').val(formData.term);
+            checkEditInstructorMatch();
+        }
+    }
+
+    function loadResponse(modalID, data, showModal) {
+        // set the whole document's HTML to be the response
+        document.documentElement.innerHTML = data;
+        // re-add the click handlers
+        reLinkButtons();
+        // refresh the modal
+        const modal = $(modalID);
+        modal.modal('hide');
+
+        // if the response was not ok, pop up the modal
+        if (showModal) {
+            modal.modal('show');
         }
     }
 

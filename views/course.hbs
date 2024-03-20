@@ -105,7 +105,8 @@
                             <div class="invalid-feedback">{{putErr.courseNumHoursPerWeek}}</div>
                             <div>
                                 <label for="eInstructor">Instructor</label>
-                                <select id="eInstructor" class="form-select">Instructor
+                                <select id="eInstructor" class="form-select" data-instructorEdit="">Instructor
+                                    <option value=""></option>
                                     {{#each listInstructor}}
                                         <option value="{{id}}">{{lastName}}</option>
                                     {{/each}}
@@ -191,6 +192,7 @@
 <script>
     'use strict';
 
+
     reLinkButtons();
 
     /**
@@ -217,28 +219,49 @@
      * @returns {Promise<void>}
      */
     async function handleCreateCourse() {
-        // send a POST request to the router
+        let selectedInstructor = $('#cInstructor').val();
+
+        // If no instructor is selected (blank option), set selectedInstructor to null
+        if (selectedInstructor === "") {
+            selectedInstructor = null; // or '' depending on how your backend expects the value
+            const response = await fetch("{{URL}}/course", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    courseCode: $('#cCourseCode').val(),
+                    courseName: $('#cCourseName').val(),
+                    courseNumCredits: $('#cCourseNumCredits').val(),
+                    courseNumHoursPerWeek: $('#cCourseNumHoursPerWeek').val(),
+                    instructor: selectedInstructor,
+                }),
+            });
+
+        }
+        // Send a POST request to the router
         const response = await fetch("{{URL}}/course", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                // use the val() method to get the value of a form input
                 courseCode: $('#cCourseCode').val(),
                 courseName: $('#cCourseName').val(),
                 courseNumCredits: $('#cCourseNumCredits').val(),
                 courseNumHoursPerWeek: $('#cCourseNumHoursPerWeek').val(),
-                instructor: $('#cInstructor').val(),
+                instructor: selectedInstructor,
             }),
         });
 
-        // get the HTML text response
+        // Get the HTML text response
         const data = await response.text();
         const modal = '#addModal';
 
+        // Load response, showing modal only if response is not OK
         loadResponse(modal, data, !response.ok);
     }
+
 
     /**
      * This function handles what happens when a user clicks the "Delete" button
@@ -272,6 +295,7 @@
      */
     async function handleEditCourse() {
         const id = $('#editID').val();
+        const selectedInstructor = $('#eInstructor').val();
         // send a PUT request to the router
         const response = await fetch("{{url}}/course", {
             method: 'PUT',
@@ -285,19 +309,24 @@
                 courseName: $('#eCourseName').val(),
                 courseNumCredits: $('#eCourseNumCredits').val(),
                 courseNumHoursPerWeek: $('#eCourseNumHoursPerWeek').val(),
-                instructor: $('#eInstructor').val(),
+                instructor: selectedInstructor,
                 id,
             }),
+
         });
+
+
 
         // get the HTML text response
         const data = await response.text();
         const modal = '#editModal';
 
-        loadResponse(modal, data, !response.ok);
+        loadResponse(modal, data, !response.ok, selectedInstructor);
 
         // re-load the ID
         handleEditModal(id);
+
+
     }
 
     /**
@@ -320,8 +349,6 @@
         $('#eCourseNumCredits').val($(`#${idToEdit}courseNumCredits`).text());
         $('#eCourseNumHoursPerWeek').val($(`#${idToEdit}courseNumHoursPerWeek`).text());
         $('#eInstructor').val(document.getElementById(idToEdit + 'instructor').dataset.instructorid);
-
-
     }
 
     /**
@@ -332,7 +359,7 @@
      * @param data      - The HTML response from the server
      * @param showModal - True to show the modal, false to hide the modal
      */
-    function loadResponse(modalID, data, showModal) {
+    function loadResponse(modalID, data, showModal, selectedInstructor) {
         // set the whole document's HTML to be the response
         document.documentElement.innerHTML = data;
         // re-add the click handlers
@@ -344,6 +371,9 @@
         // if the response was not ok, pop up the modal
         if (showModal) {
             modal.modal('show');
+            // Set the instructor dropdown value back to the stored ID
+            $('#eInstructor').val(selectedInstructor);
+            $('#cInstructor').val(selectedInstructor);
         }
     }
 
