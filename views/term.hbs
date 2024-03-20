@@ -1,35 +1,50 @@
 <div class="container p-2">
-    <h1>{{title}}</h1>
+    <div class="row mb-2">
+        <h1 class="col-md-4">{{title}}</h1>
+        <!--Empty spacer, to help with formatting-->
+        <div class="col-md-6"></div>
+        <!--Add button is at the top, for longer table lists-->
+        <button type="button" class="btn btn-success col-md-2" data-toggle="modal" data-target="#addModal">
+            Add New Term
+        </button>
+    </div>
+
     <!--If term entries are defined, we add in a table-->
     {{#if termEntries}}
         <table class="table table-striped">
-            <thead>
+            <thead class="table-primary">
             <tr>
                 <th>Term Number</th>
                 <th>Start Date</th>
                 <th>End Date</th>
+                <th>Year</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <!--Here is where I loop through my array object and add in a <tr> for each loop, and a <td> for each object-->
-            <tbody >
+            <tbody id="tableBody">
             {{#each termEntries}}
                 <tr>
                     <td id="{{this.id}}number">{{this.termNumber}}</td>
                     <td id="{{this.id}}start">{{this.startDate}}</td>
                     <td id="{{this.id}}end">{{this.endDate}}</td>
+                    <td id="{{this.id}}year">{{this.calendarYear}}</td>
                     <td>
-                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton" data-toggle="modal" data-target="#editModal">Edit</button>
-                        <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
+                                data-toggle="modal" data-target="#editModal">Edit
+                        </button>
+                        <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
+                                data-toggle="modal" data-target="#deleteModal">Delete
+                        </button>
                     </td>
                 </tr>
             {{/each}}
             </tbody>
-
         </table>
 
         <!-- Delete Modal -->
-        <div class="modal fade" id="deleteModal" role="dialog" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal fade" id="deleteModal" role="dialog" tabindex="-1" aria-labelledby="deleteModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -43,7 +58,7 @@
                             <p>Are you sure you want to delete this term?</p>
                         </div>
 
-                        <input type="text" id="deleteID" name="id" hidden />
+                        <input type="text" id="deleteID" name="id" hidden/>
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -55,7 +70,8 @@
         </div>
 
         <!-- Edit Modal -->
-        <div class="modal fade" id="editModal" role="dialog" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal fade" id="editModal" role="dialog" tabindex="-1" aria-labelledby="editModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -67,21 +83,24 @@
                     <form action="/term" method="POST">
                         <div class="modal-body">
                             <label for="eTermNumber">Term Number:</label>
-                            <input type="number" min="{{minTerms}}" max="{{maxTerms}}" class="form-control {{#if putErr.termNumber}}is-invalid{{/if}}" id="eTermNumber"
+                            <input type="number" min="{{minTerms}}" max="{{maxTerms}}"
+                                   class="form-control {{#if putErr.termNumber}}is-invalid{{/if}}" id="eTermNumber"
                                    name="termNumber" value="{{putSubmittedTerm.termNumber}}">
                             <div class="invalid-feedback">{{putErr.termNumber}}</div>
 
                             <label for="eStartDate">Start Date:</label>
-                            <input type="date" class="form-control {{#if putErr.startDate}}is-invalid{{/if}}" id="eStartDate"
+                            <input type="date" class="form-control {{#if putErr.startDate}}is-invalid{{/if}}"
+                                   id="eStartDate"
                                    name="startDate" value="{{putSubmittedTerm.startDate}}">
                             <div class="invalid-feedback">{{putErr.startDate}}</div>
 
                             <label for="eEndDate">End Date:</label>
-                            <input type="date" class="form-control {{#if putErr.endDate}}is-invalid{{/if}}" id="eEndDate"
+                            <input type="date" class="form-control {{#if putErr.endDate}}is-invalid{{/if}}"
+                                   id="eEndDate"
                                    name="endDate" value="{{putSubmittedTerm.endDate}}">
                             <div class="invalid-feedback">{{putErr.endDate}}</div>
 
-                            <input type="text" id="editID" name="id" hidden />
+                            <input type="text" id="editID" name="id" hidden/>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -91,17 +110,133 @@
                 </div>
             </div>
         </div>
-
-
         <!--    If term entries are not defined we display an error message telling us no terms are stored-->
     {{else}}
         <p>There are no terms stored</p>
     {{/if}}
 
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">Add New Term</button>
+    <!-- CourseOffering Modal -->
+    <div class="modal fade" id="coModal" role="dialog" tabindex="-1"
+         aria-labelledby="coModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 90%" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="coModalLabel">Course Offerings to Create:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            onclick="closeCOModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/term" method="POST">
+                        <div class="modal-body">
+                            {{#if courseOfferings}}
+                                <!--Creating the form as a table for formatting-->
+                                <table id="coTable" class="table table-striped">
+                                    <thead class="table-primary">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Group</th>
+                                        <th>Course</th>
+                                        <th>Instructor(s)</th>
+                                        <th>Program</th>
+                                        <th>Skip?</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {{#each courseOfferings}}
+                                        <tr>
+                                            <input hidden id="{{this.count}}coTerm" value="{{this.TermId}}"/>
+                                            <td>
+                                                <input type="text"
+                                                       class="form-control {{#if this.err.name}}is-invalid{{/if}}"
+                                                       id="{{this.count}}coName"
+                                                       name="name" value="{{this.name}}"/>
+                                                <div id="{{this.count}}coNameErr"
+                                                     class="invalid-feedback">{{this.err.name}}</div>
+                                            </td>
+                                            <td>
+                                                <input type="date" class="form-control {{#if
+                                                        this.err.startDate}}is-invalid{{/if}}"
+                                                       id="{{this.count}}coStartDate"
+                                                       value="{{this.startDate}}"/>
+                                                <div id="{{this.count}}coStartDateErr"
+                                                     class="invalid-feedback">{{this.err.startDate}}</div>
+                                            </td>
+                                            <td>
+                                                <input type="date" class="form-control {{#if
+                                                        this.err.endDate}}is-invalid{{/if}}"
+                                                       id="{{this.count}}coEndDate"
+                                                       value="{{this.endDate}}"/>
+                                                <div id="{{this.count}}coEndDateErr"
+                                                     class="invalid-feedback">{{this.err.endDate}}</div>
+                                            </td>
+                                            <td id="{{this.count}}coGroup">{{this.group}}</td>
+                                            <td id="{{this.count}}coCourse"
+                                                data-course="{{this.Course.id}}">{{this.Course.courseCode}}</td>
+                                            <td>
+                                                <label for="{{this.count}}coPrimaryInstructor">Primary</label>
+                                                <select id="{{this.count}}coPrimaryInstructor"
+                                                        data-primaryinstructorid="{{this.primaryInstructor}}"
+                                                        class="form-select">
+                                                    <!--Should only be selected when the instructor was deleted-->
+                                                    <option value="">Instructor was deleted</option>
+                                                    {{#each ../instructors}}
+                                                        <option value="{{id}}">{{firstName}} {{lastName}}</option>
+                                                    {{/each}}
+                                                </select> <br/>
+                                                <label for="{{this.count}}coSecondaryInstructor">Alternative</label>
+                                                <select id="{{this.count}}coSecondaryInstructor"
+                                                        data-secondaryinstructorid="{{this.alternativeInstructor}}"
+                                                        class="form-select">
+                                                    <option value=""></option>
+                                                    {{#each ../instructors}}
+                                                        <option value="{{id}}">{{firstName}} {{lastName}}</option>
+                                                    {{/each}}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select id="{{this.count}}coProgram" data-programid="{{this.ProgramId}}"
+                                                        class="form-select">
+                                                    <!--Should only be selected when the program was deleted-->
+                                                    <option value="">Program was deleted</option>
+                                                    {{#each ../programs}}
+                                                        <option value="{{id}}">{{programAbbreviation}}</option>
+                                                    {{/each}}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" class="form-check" id="{{this.count}}coSkip"
+                                                       value="skip">
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                    </tbody>
+                                </table>
+                            {{else}}
+                                <p id="createCOError">No course offerings found</p>
+                            {{/if}}
+                        </div>
+                        <div class="modal-footer">
+                            <button id="createCOClose" type="button" class="btn btn-secondary" onclick="closeCOModal()">
+                                Cancel
+                            </button>
+                            <button type="button" id="createCO" class="btn btn-outline-success">Submit Course
+                                Offerings
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Add Modal - must be displayed even if no terms exist -->
-    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -113,12 +248,14 @@
                 <form action="/term" method="POST">
                     <div class="modal-body">
                         <label for="cTermNumber">Term Number:</label>
-                        <input type="number" min="{{minTerms}}" max="{{maxTerms}}" class="form-control {{#if err.termNumber}}is-invalid{{/if}}" id="cTermNumber"
+                        <input type="number" min="{{minTerms}}" max="{{maxTerms}}"
+                               class="form-control {{#if err.termNumber}}is-invalid{{/if}}" id="cTermNumber"
                                name="termNumber" value="{{submittedTerm.termNumber}}">
                         <div class="invalid-feedback">{{err.termNumber}}</div>
 
                         <label for="cStartDate">Start Date:</label>
-                        <input type="date" class="form-control {{#if err.startDate}}is-invalid{{/if}}" id="cStartDate"
+                        <input type="date" class="form-control {{#if err.startDate}}is-invalid{{/if}}"
+                               id="cStartDate"
                                name="startDate" value="{{submittedTerm.startDate}}">
                         <div class="invalid-feedback">{{err.startDate}}</div>
 
@@ -126,6 +263,9 @@
                         <input type="date" class="form-control {{#if err.endDate}}is-invalid{{/if}}" id="cEndDate"
                                name="endDate" value="{{submittedTerm.endDate}}">
                         <div class="invalid-feedback">{{err.endDate}}</div>
+                        <label for="cAuto">Autogenerate Course Offerings?</label>
+                        <input type="checkbox" class="form-check" id="cAuto" value="auto"
+                               name="auto">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -136,30 +276,87 @@
         </div>
     </div>
 
-    <a href="{{URL}}"><button class="btn btn-success">Return</button></a>
+    <a href="{{URL}}">
+        <button class="btn btn-outline-success">Return</button>
+    </a>
 </div>
 <!-- My own handlers for the form submits -->
 <script>
-    "use strict";
+    'use strict';
 
     reLinkButtons();
+
+    // Button calls this function that simply just closes the modal
+    function closeCOModal() {
+        $('#coModal').modal('hide');
+    }
 
     /**
      * This function links the buttons on the page to their appropriate handlers
      */
     function reLinkButtons() {
-        $("#createTerm").click(handleCreateTerm);
-        $("#deleteTerm").click(handleDeleteTerm);
-        $("#editTerm").click(handleEditTerm);
-        $(".deleteButton").click(function () {
-            handleDeleteModal(this.id.replace("delete", ""));
+        $('#createTerm').click(handleCreateTerm);
+        $('#deleteTerm').click(handleDeleteTerm);
+        $('#editTerm').click(handleEditTerm);
+        $('.deleteButton').click(function() {
+            handleDeleteModal(this.id.replace('delete', ''));
         });
-        $(".editButton").click(function () {
-            handleEditModal(this.id.replace("edit", ""))
+        $('.editButton').click(function() {
+            handleEditModal(this.id.replace('edit', ''));
         });
-        $(".modal").on("hidden.bs.modal", function () {
+        $('.modal').on('hidden.bs.modal', function() {
             clearErrors();
         });
+        $('#createCO').click(handleCreateCO);
+    }
+
+    async function handleCreateCO() {
+
+        const coToCreateArray = [];
+
+        const numRows = document.getElementById('coTable').rows.length;
+        for (let i = 1; i < numRows; i++) {
+            if (!$('#' + i + 'coSkip').is(':checked')) {
+                const tempObj = {
+                    name: $('#' + i + 'coName').val(),
+                    startDate: $('#' + i + 'coStartDate').val() !== '' ? $('#' + i + 'coStartDate').val() : null,
+                    endDate: $('#' + i + 'coEndDate').val() !== '' ? $('#' + i + 'coEndDate').val() : null,
+                    group: $('#' + i + 'coGroup').text(),
+                    CourseId: document.getElementById(i + 'coCourse').dataset.course,
+                    primaryInstructor: $('#' + i + 'coPrimaryInstructor').val(),
+                    // secondaryInstructor: $('#' + i + 'coSecondaryInstructor').val(),
+                    ProgramId: $('#' + i + 'coProgram').val(),
+                    TermId: $('#' + i + 'coTerm').val(),
+                };
+                const secondaryInstructor = $('#' + i + 'coSecondaryInstructor').val();
+                if (secondaryInstructor != '') {
+                    tempObj.alternativeInstructor = secondaryInstructor;
+                }
+                coToCreateArray.push(tempObj);
+            }
+        }
+
+        const response = await fetch('{{URL}}/term/course-offerings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                listCourseOfferings: coToCreateArray,
+            }),
+        });
+
+        const data = await response.text();
+        const modal = '#coModal';
+
+        loadResponse(modal, data, !response.ok);
+
+        // If there was an error, going to need to reselect instructors and
+        // programs in the dropdowns in the course offering modal
+        if (!response.ok) {
+            selectInstructors();
+            selectPrograms();
+        }
     }
 
     /**
@@ -169,24 +366,85 @@
      */
     async function handleCreateTerm() {
         // send a POST request to the router
+        const autoGenerate = $('#cAuto').is(':checked');
+
         const response = await fetch('{{URL}}/term', {
-            method: "POST",
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
-                termNumber: $("#cTermNumber").val(),
-                startDate: $("#cStartDate").val(),
-                endDate: $("#cEndDate").val(),
+                termNumber: $('#cTermNumber').val(),
+                startDate: $('#cStartDate').val(),
+                endDate: $('#cEndDate').val(),
+                auto: autoGenerate,
             }),
         });
 
         // get the HTML text response
         const data = await response.text();
-        const modal = "#addModal";
+        const modal = '#addModal';
 
         loadResponse(modal, data, !response.ok);
+
+        // if autogenerating, show coModal, and call the functions to
+        // select the right instructor and program for each table row
+        if (autoGenerate) {
+            $('#coModal').modal('show');
+            selectInstructors();
+            selectPrograms();
+        }
+    }
+
+    function selectInstructors() {
+        if (document.getElementById('coTable')) {
+            const numRows = document.getElementById('coTable').rows.length;
+            for (let i = 1; i < numRows; i++) {
+                const insPWebId = i + 'coPrimaryInstructor';
+                const insSWebId = i + 'coSecondaryInstructor';
+                const insPDBID = document.getElementById(insPWebId).dataset.primaryinstructorid;
+                const insSDBID = document.getElementById(insSWebId).dataset.secondaryinstructorid;
+                // loop through each element in the instructor
+                const numOptions = $('#' + insPWebId)[0].length;
+                for (let j = 1; j <= numOptions; j++) {
+                    // check if the value is equal to instructorID (can use nth child with j)
+                    const optionPSelector = '#' + insPWebId + ' :nth-child(' + j + ')';
+                    if (insPDBID == $(optionPSelector).val()) {
+                        // found it - now need to add the selected attribute
+                        $(optionPSelector).attr('selected', 'selected');
+                    }
+                }
+                const numOptions2 = $('#' + insSWebId)[0].length;
+                for (let j = 1; j <= numOptions2; j++) {
+                    const optionSSelector = '#' + insSWebId + ' :nth-child(' + j + ')';
+                    if (insSDBID == $(optionSSelector).val()) {
+                        // found it - now need to add the selected attribute
+                        $(optionSSelector).attr('selected', 'selected');
+                    }
+                }
+            }
+        }
+    }
+
+    function selectPrograms() {
+        if (document.getElementById('coTable')) {
+            const numRows = document.getElementById('coTable').rows.length;
+            for (let i = 1; i < numRows; i++) {
+                const progWebId = i + 'coProgram';
+                const progDBID = document.getElementById(progWebId).dataset.programid;
+                // loop through each element in the instructor
+                const numOptions = $('#' + progWebId)[0].length;
+                for (let j = 1; j <= numOptions; j++) {
+                    // check if the value is equal to instructorID (can use nth child with j)
+                    const optionSelector = '#' + progWebId + ' :nth-child(' + j + ')';
+                    if (progDBID == $(optionSelector).val()) {
+                        // found it - now need to add the selected attribute
+                        $(optionSelector).attr('selected', 'selected');
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -197,21 +455,22 @@
     async function handleDeleteTerm() {
         // send a DELETE request to the router
         const response = await fetch('{{URL}}/term', {
-            method: "DELETE",
+            method: 'DELETE',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
-                id: $("#deleteID").val(),
+                id: $('#deleteID').val(),
             }),
         });
 
         // get the HTML text response
         const data = await response.text();
-        const modal = "#deleteModal";
+        const modal = '#deleteModal';
 
         loadResponse(modal, data, !response.ok);
+
     }
 
     /**
@@ -220,25 +479,25 @@
      * @returns {Promise<void>}
      */
     async function handleEditTerm() {
-        const id = $("#editID").val();
+        const id = $('#editID').val();
         // send a PUT request to the router
         const response = await fetch('{{URL}}/term', {
-            method: "PUT",
+            method: 'PUT',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 // use the val() method to get the value of a form input
-                termNumber: $("#eTermNumber").val(),
-                startDate: $("#eStartDate").val(),
-                endDate: $("#eEndDate").val(),
+                termNumber: $('#eTermNumber').val(),
+                startDate: $('#eStartDate').val(),
+                endDate: $('#eEndDate').val(),
                 id,
             }),
         });
 
         // get the HTML text response
         const data = await response.text();
-        const modal = "#editModal";
+        const modal = '#editModal';
 
         loadResponse(modal, data, !response.ok);
 
@@ -251,7 +510,7 @@
      * @param idToDelete    - The ID of the term to delete
      */
     function handleDeleteModal(idToDelete) {
-        $("#deleteID").val(idToDelete);
+        $('#deleteID').val(idToDelete);
     }
 
     /**
@@ -260,10 +519,10 @@
      * @param idToEdit    - The ID of the term being edited
      */
     function handleEditModal(idToEdit) {
-        $("#editID").val(idToEdit);
-        $("#eTermNumber").val($(`#${idToEdit}number`).text());
-        $("#eStartDate").val($(`#${idToEdit}start`).text());
-        $("#eEndDate").val($(`#${idToEdit}end`).text());
+        $('#editID').val(idToEdit);
+        $('#eTermNumber').val($(`#${idToEdit}number`).text());
+        $('#eStartDate').val($(`#${idToEdit}start`).text());
+        $('#eEndDate').val($(`#${idToEdit}end`).text());
     }
 
     /**
@@ -281,21 +540,21 @@
         reLinkButtons();
         // refresh the modal
         const modal = $(modalID);
-        modal.modal("hide");
+        modal.modal('hide');
 
         // if the response was not ok, pop up the modal
         if (showModal) {
-            modal.modal("show");
+            modal.modal('show');
         }
     }
 
     function clearErrors() {
         // Clear error messages or styling for input fields
-        $(".is-invalid").removeClass("is-invalid");
-        $(".invalid-feedback").text("");
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').text('');
 
-        $("#cTermNumber").val("");
-        $("#cStartDate").val("");
-        $("#cEndDate").val("");
+        $('#cTermNumber').val('');
+        $('#cStartDate').val('');
+        $('#cEndDate').val('');
     }
 </script>

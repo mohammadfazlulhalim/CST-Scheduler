@@ -11,7 +11,8 @@
                 <th>Term</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Instructor</th>
+                <th>Primary Instructor</th>
+                <th>Alternative Instructor</th>
                 <th>Program</th>
                 <th>Actions</th>
             </tr>
@@ -26,8 +27,10 @@
                     <td id="{{this.id}}term" data-termid="{{this.Term.id}}">{{this.Term.title}}</td>
                     <td id="{{this.id}}startDate">{{this.startDate}}</td>
                     <td id="{{this.id}}endDate">{{this.endDate}}</td>
-                    <td id="{{this.id}}instructor"
-                        data-instructorid="{{this.Instructor.id}}">{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
+                    <td id="{{this.id}}primaryInstructor"
+                        data-primaryInstructorid="{{this.primaryInstructor.id}}">{{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}</td>
+                    <td id="{{this.id}}alternativeInstructor"
+                        data-primaryInstructorid="{{this.alternativeInstructor.id}}">{{this.alternativeInstructor.firstName}} {{this.alternativeInstructor.lastName}}</td>
                     <td id="{{this.id}}program"
                         data-programid="{{this.Program.id}}">{{this.Program.programAbbreviation}}</td>
                     <td>
@@ -463,7 +466,7 @@
         $('#eGroup').val($(`#${idToEdit}group`).text());
         $('#eTerm').val(document.getElementById(idToEdit + 'term').dataset.termid);
         $('#eCourse').val(document.getElementById(idToEdit + 'course').dataset.courseid);
-        $('#eInstructor').val(document.getElementById(idToEdit + 'instructor').dataset.instructorid);
+        $('#eInstructor').val(document.getElementById(idToEdit + 'primaryInstructor').dataset.primaryinstructorid);
         $('#eProgram').val(document.getElementById(idToEdit + 'program').dataset.programid);
 
         checkUpdateEnable();

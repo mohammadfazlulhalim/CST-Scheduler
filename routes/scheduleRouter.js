@@ -6,6 +6,7 @@ const Timeslot = require('../private/javascript/Timeslot');
 const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
 const defineDB = require('../fixtures/createTables.fix');
+const Instructor = require('../private/javascript/Instructor');
 
 router.get('/', async (req, res, next) => {
 
@@ -25,7 +26,6 @@ router.get('/', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-
   const groupArray = [];
 
   // constants
@@ -76,10 +76,10 @@ router.post('/', async (req, res, next) => {
       // getting each course offering for this group
       for (let k = 0; k < groupArray[i].COArray.length; k++) {
         const COObj = groupArray[i].COArray[k];
-        const insObj = await COObj.getInstructor();
-        COObj.insFirst = insObj.firstName;
-        COObj.insLast = insObj.lastName;
-        COObj.dName = COObj.name + '-' + COObj.group;
+          const insObj = await Instructor.findByPk(COObj.primaryInstructor);
+          COObj.insFirst = insObj.firstName;
+          COObj.insLast = insObj.lastName;
+          COObj.dName = COObj.name + '-' + COObj.group;
       }
     } catch (error) {
 
@@ -100,9 +100,23 @@ router.post('/', async (req, res, next) => {
       tSlot.course = cObj.courseCode;
       tSlot.co = coObj.id;
 
-      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
-      groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;// outer array is days, each inner array is times
+      // Check if timeslotMatrix and the corresponding indices are defined
+      if (
+          groupArray[i].timeslotMatrix &&
+          TIMES.indexOf(tSlot.startTime) !== -1 &&
+          groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)] &&
+          groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day]
+      ) {
+        // Update properties only if the necessary objects and indices exist
+        groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
+        groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;
+      } else {
+        // Handle the case where the structure or indices are not as expected
+        console.error('Invalid structure or indices in timeslotMatrix:', groupArray[i].timeslotMatrix);
+      }
     }
+
+
     groupLetters[i] = GROUP_LETTERS[i];
   }
 
@@ -123,7 +137,7 @@ router.put('/', async (req, res, next) => {
     startDate: CO.startDate,
     endDate: CO.endDate,
     CourseOfferingId: CO.id,
-    InstructorId: CO.InstructorId,
+    InstructorId: CO.primaryInstructor,
     ClassroomId: 1,
     TermId: CO.TermId,
     ProgramId: CO.ProgramId,

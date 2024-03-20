@@ -1,7 +1,7 @@
 // Tests for Classroom Report three seperate
 describe('template spec', () => {
   const classroomList = ['Select Classroom', '239A', '239B', '239a', '240B', '241', '242C'];
-  const termList = ['Select Term', '2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2024 - 5', '2023 - 5', '2023 - 6'];
+  const termList = ['Select Term', '2023-2024 - Term 1', '2023-2024 - Term 4', '2023-2024 - Term 5', '2022-2023 - Term 2', '2022-2023 - Term 3', '2022-2023 - Term 5', '2022-2023 - Term 6'];
 
   it('testThatGeneratingAReportWithAFullyScheduledClassWorks', () => {
     cy.visit('http://localhost:3000'); // Visit the home page
@@ -26,7 +26,7 @@ describe('template spec', () => {
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     });
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check that the button is still disabled
-    cy.get('#termSelect').select('2023 - 5');// Select term 5
+    cy.get('#termSelect').select('2023-2024 - Term 1');// Select term 5
     cy.get('#btnGenerateSchedule').should('be.enabled'); // Check that the button is now enabled
     cy.get('#btnGenerateSchedule').click(); // Click generate schedule
 
@@ -100,7 +100,7 @@ describe('template spec', () => {
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     });
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check that the button is still disabled
-    cy.get('#termSelect').select('2023 - 5');// Select term 5
+    cy.get('#termSelect').select('2022-2023 - Term 5');// Select term 5
     cy.get('#btnGenerateSchedule').should('be.enabled'); // Check that the button is now enabled
     cy.get('#btnGenerateSchedule').click(); // Click generate schedule
 
@@ -172,7 +172,7 @@ describe('template spec', () => {
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     });
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check that the button is still disabled
-    cy.get('#termSelect').select('2023 - 4');// Select term 5
+    cy.get('#termSelect').select('2023-2024 - Term 4');// Select term 5
     cy.get('#btnGenerateSchedule').should('be.enabled'); // Check that the button is now enabled
     cy.get('#btnGenerateSchedule').click(); // Click generate schedule
     cy.get('#EmptyMessage').contains('Nothing to display at the moment');
@@ -202,7 +202,7 @@ describe('template spec', () => {
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     });
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check that the button is still disabled
-    cy.get('#termSelect').select('2023 - 2');// Select term 2
+    cy.get('#termSelect').select('2022-2023 - Term 2');// Select term 2
     cy.get('#btnGenerateSchedule').should('be.enabled'); // Check that the button is now enabled
     cy.get('#btnGenerateSchedule').click(); // Click generate schedule
 

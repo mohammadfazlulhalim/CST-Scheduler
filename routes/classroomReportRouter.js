@@ -11,15 +11,12 @@ const {globalConsts} = require('../constants');
 const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
 const hours12 = globalConsts.timeColumn8amTo3pmDisplayArray;
 const weekdaysAllFullySpelled = globalConsts.weekdaysFullySpelled;
+const getSortedTerm = require('./termRouter').readAllTerms
 
 router.get('/', async (req, res, next) => {
-  const termList = await term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'DESC']]});
+  const newTermList = await getSortedTerm();
   const classrooms = await classroom.findAll({order: [['roomNumber', 'ASC']]});
 
-  // Adding the year to the terms
-  const newTermList= termList.map((item)=>{
-    return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
-  });
 
   res.render('classroomReport', {
     routerPost: false,

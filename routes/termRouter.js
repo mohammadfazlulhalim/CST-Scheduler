@@ -1,16 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const TermRouter = require('../private/javascript/Term');
+const Term = require('../private/javascript/Term');
 const {sequelize} = require('../dataSource');
 const termConstraints = require('../constants').termConstraints;
-const URL = require('../constants').URL
+const URL = require('../constants').URL;
+const CourseOffering = require('../private/javascript/CourseOffering');
+const Program = require('../private/javascript/Program');
+const Instructor = require('../private/javascript/Instructor');
+const {Op} = require('sequelize');
+const createCourseOffering = require('./courseOfferingRouter').createCourseOffering;
+const Course = require('../private/javascript/Course');
+const title = require('../constants').pageTitles.term;
+
 router.get('/', async function(req, res, next) {
   // Declaring the array
   const termLists = await readAllTerms();
   res.render('term', {
-    title: 'Manage Terms',
+    title,
     termEntries: termLists,
-    URL
+    URL,
   });
 });
 
@@ -37,18 +45,109 @@ router.post('/', async function(req, res, next) {
     // put the ID in the response so tests can access it
     res.set('id', result.id);
   }
+
   const termLists = await readAllTerms();
-  res.render('term', {
-    termEntries: termLists,
-    err: violations,
-    submittedTerm: violations ? req.body : undefined,
-    maxTerms: termConstraints.termNumberUpperLimit,
-    minTerms: termConstraints.termNumberLowerLimit,
-    title: 'Manage Terms',
-    URL
-  });
+
+
+  // checking if autogenerating - if so, using separate res.render
+  // will not enter if there is an error for efficiency
+  if (req.body.auto && !result.error) {
+
+    // calling these now as they are needed later
+    const instructors = await Instructor.findAll({order: [['lastName', 'ASC']]});
+    const programs = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
+
+    // We need to autogenerate
+    const calcYearSplit = result.calendarYear.split('-');
+    let lastYear;
+    let lastCO = null;
+
+    // need to calculate out the previous year, and then from that we can filter using startdate and regex
+    if (result.termNumber == 1 || result.termNumber == 4) {
+      lastYear = (+calcYearSplit[0]) - 1;
+    } else {
+      lastYear = calcYearSplit[0];
+    }
+    try {
+      // Finding last years term id
+      const lastYearTerm = await Term.findAll({
+        where: {
+          startDate: {[Op.startsWith]: lastYear},
+          termNumber: result.termNumber,
+        },
+      });
+      // Finding all last years Coures Offerings
+      lastCO = await CourseOffering.findAll({
+        include: [Course],
+        where: {
+          TermId: lastYearTerm[0].id,
+        },
+      });
+      // maps course offerings so that they have sequential numbering
+      lastCO = mapCourseOfferings(lastCO, result);
+    } catch (e) {
+      console.log(e);
+    };
+
+    // seperate res.render call with all the attributes for course offering modal
+    res.render('term', {
+      termEntries: termLists,
+      err: violations,
+      submittedTerm: violations ? req.body : undefined,
+      maxTerms: termConstraints.termNumberUpperLimit,
+      minTerms: termConstraints.termNumberLowerLimit,
+      title,
+      courseOfferings: lastCO,
+      instructors,
+      programs,
+      URL,
+    });
+
+    // else statement for the if req.body.autogenerate && !result.error
+  } else {
+    // Not autogenerating, use old res.render
+    res.render('term', {
+      termEntries: termLists,
+      err: violations,
+      submittedTerm: violations ? req.body : undefined,
+      maxTerms: termConstraints.termNumberUpperLimit,
+      minTerms: termConstraints.termNumberLowerLimit,
+      title,
+      URL,
+    });
+  }
 });
 
+router.post('/course-offerings', async function(req, res, next) {
+  const termLists = await readAllTerms();
+  let nError = 1;
+  const coCreateArray = [];
+  res.status(201);
+  for (const tempCO of req.body.listCourseOfferings) {
+    const retCreate = await createCourseOffering(tempCO);
+    if (retCreate.error) {
+      tempCO.err = retCreate.error;
+      tempCO.count = nError++;
+      tempCO.Course = await Course.findByPk(tempCO.CourseId);
+      coCreateArray.push(tempCO);
+      res.status(422);
+    }
+  }
+
+  const instructors = await Instructor.findAll({order: [['lastName', 'ASC']]});
+  const programs = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
+
+  res.render('term', {
+    termEntries: termLists,
+    maxTerms: termConstraints.termNumberUpperLimit,
+    minTerms: termConstraints.termNumberLowerLimit,
+    title,
+    courseOfferings: coCreateArray,
+    URL,
+    instructors,
+    programs,
+  });
+});
 /**
  * DELETE handler for http://localhost:3000/term
  */
@@ -65,8 +164,8 @@ router.delete('/', async function(req, res, next) {
     err: violations,
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
-    title: 'Manage Terms',
-    URL
+    title,
+    URL,
   });
 });
 
@@ -99,8 +198,8 @@ router.put('/', async function(req, res, next) {
     putSubmittedTerm: violations ? req.body : undefined,
     maxTerms: termConstraints.termNumberUpperLimit,
     minTerms: termConstraints.termNumberLowerLimit,
-    title: 'Manage Terms',
-    URL
+    title,
+    URL,
   });
 });
 
@@ -111,7 +210,7 @@ router.put('/', async function(req, res, next) {
  */
 const createTerm = async (term) => {
   try {
-    return await TermRouter.create({
+    return await Term.create({
       termNumber: parseInt(term.termNumber),
       startDate: term.startDate,
       endDate: term.endDate,
@@ -130,7 +229,7 @@ const createTerm = async (term) => {
 const deleteTerm = async (term) => {
   try {
     // try to delete the term
-    return await TermRouter.destroy({where: {id: term.id}});
+    return await Term.destroy({where: {id: term.id}});
   } catch (err) {
     // if an error occurred, state that 0 rows were deleted
     return 0;
@@ -144,7 +243,7 @@ const deleteTerm = async (term) => {
  */
 const updateTerm = async (term) => {
   // find the term to update
-  const termToUpdate = await TermRouter.findByPk(term.id);
+  const termToUpdate = await Term.findByPk(term.id);
   if (termToUpdate) {
     // only try to update the term if it already exists
     try {
@@ -169,13 +268,30 @@ const updateTerm = async (term) => {
 const readAllTerms = async () => {
   try {
     // Calling the database, for all term entries, ordered by term number
-    return await TermRouter.findAll({order: ['startDate']});
+    return (await Term.findAll({order: ['startDate']})).sort(compareTerm);
   } catch (err) {
     // If it is not found, declaring termEntries as undefined so that table will not be viewed on term.hbs
     // and instead a sentence declaring no term entries found is displayed
     return undefined;
   }
 };
+
+/**
+ * This function is used to create a sort order for term in reverse chronology using school year, and ascending term number when
+ * the school year is equal
+ * @param term1
+ * @param term2
+ * @returns {number}
+ */
+function compareTerm(term1, term2) {
+  if (term1.calendarYear === term2.calendarYear) {
+    return term1.termNumber - term2.termNumber;
+  } else if (term2.calendarYear > term1.calendarYear) {
+    return 1;
+  } else {
+    return -1;
+  }
+}
 
 /**
  * Given an error object, this function maps it to a more presentable format for the hbs template.
@@ -190,4 +306,20 @@ const mapErrors = (err) => {
   return violations;
 };
 
-module.exports = {router, createTerm, deleteTerm, updateTerm};
+/**
+ * Takes in an array of course offerings, and changes the dates and term
+ * to match with the term, and then returns the array of course offerings
+ * @param courseOfferings
+ * @returns {*}
+ */
+function mapCourseOfferings(courseOfferings, newTerm) {
+  for (let i = 0; i < courseOfferings.length; i++) {
+    courseOfferings[i].count = (i + 1);
+    courseOfferings[i].startDate = newTerm.startDate;
+    courseOfferings[i].endDate = newTerm.endDate;
+    courseOfferings[i].TermId = newTerm.id;
+  }
+  return courseOfferings;
+}
+
+module.exports = {router, createTerm, deleteTerm, updateTerm, readAllTerms};

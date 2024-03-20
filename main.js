@@ -11,10 +11,9 @@ let mainWindow = null;
  This function starts the Electron application*/
 function main() {
   mainWindow = new BrowserWindow({
-    minWidth: 1280, // Minimum width of the window
-    minHeight: 720, // Minimum height of the window
     show: false, // Add this line to initially hide the window
   });
+  mainWindow.maximize();
 
   mainWindow.loadURL('http://localhost:3000/').catch((err) => {
     console.error('Failed to load URL:', err);

@@ -192,7 +192,6 @@
             //if not blank
             if (tSlot) {
                 //If the selected CO is not the same as the current CO
-                console.log("co log" + cellCO)
                 if (cellCO !== currCO) {
                     await fetch('/schedule', {
                         method: 'DELETE',
@@ -205,7 +204,6 @@
                     return;
                 }
             }
-            console.log("await Fetch");
             try {
                 const response = await fetch('/schedule', {
                     method: 'PUT',
@@ -224,7 +222,6 @@
 
                 const data = await response.json();
                 // Access retTSlot data here
-                console.log('Retrieved retTSlot:', data.retTSlot);
 
                 addTSToCell(idCell, data.retTSlot, data.xtraInfo);
             } catch (error) {
@@ -239,9 +236,7 @@
 
     function addTSToCell(idCell, tSlot, xtraInfo) {
         let oldTD = document.getElementById(idCell);
-        console.log(tSlot.program + ":program");
 
-        console.log(tSlot.CourseOfferingId);
         let newTD = "<td class=\"text-center\" oncontextmenu=\"onCellRightClick('" + idCell + "', '" + tSlot.id + "', '" + tSlot.CourseOfferingId + "')\" " +
                 "onclick=\"onCellClick('" + idCell + "', '" + tSlot.id + "', '" + tSlot.CourseOfferingId + "')\" " +
                 "id=\"" + idCell + "\">" +
@@ -250,11 +245,8 @@
                 "<p>" + xtraInfo.insLast + "<br/></p>" +
                 "</td>";
 
-        console.log(newTD)
-
         oldTD.outerHTML = newTD;
     }
-
 
     async function onCellRightClick(idCell, tSlot, cellCO) {
         await fetch('/schedule', {
@@ -275,6 +267,4 @@
                 "</td>";
         oldTD.outerHTML = newTD;
     }
-
-
 </script>

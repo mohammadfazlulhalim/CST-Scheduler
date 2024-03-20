@@ -108,7 +108,7 @@ function GenerateTimeSlotData() {
         continue;
       }
       TimeSlotDataArray.push({
-        startDate: '2023-01-01', endDate: '2023-04-01',
+        startDate: '2023-08-01', endDate: '2023-12-01',
         startTime: TimeArray[j], endTime: TimeArray[j+1], day: i, group: 'B',
       });
     }

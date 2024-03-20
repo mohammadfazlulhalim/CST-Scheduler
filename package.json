@@ -7,7 +7,8 @@
     "start": "electron .",
     "test": "node set-env.js",
     "loaddb": "node fixtures/loadAll.fix.js",
-    "cypress": "node electron-dev.js"
+    "cypress": "node electron-dev.js",
+    "loaddbdev": "node electron-db-reset.js"
   },
   "dependencies": {
     "@electron/remote": "^2.1.2",

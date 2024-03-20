@@ -42,7 +42,7 @@ router.post('/', async function(req, res, next) {
     group: req.body.group,
     CourseId: req.body.course,
     TermId: req.body.term,
-    InstructorId: req.body.instructor,
+    primaryInstructor: req.body.instructor,
     ProgramId: req.body.program,
   };
 
@@ -75,7 +75,6 @@ router.post('/', async function(req, res, next) {
 });
 
 router.put('/', async function(req, res, next) {
-  // console.log('PUT: ' + JSON.stringify(req.body));
   const listTerm = await getTerms();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
@@ -90,7 +89,7 @@ router.put('/', async function(req, res, next) {
     group: req.body.group,
     CourseId: req.body.course,
     TermId: req.body.term,
-    InstructorId: req.body.instructor,
+    primaryInstructor: req.body.instructor,
     ProgramId: req.body.program,
   };
 
@@ -155,10 +154,8 @@ router.delete('/', async function(req, res, next) {
  */
 async function createCourseOffering(createCO) {
   try {
-    // console.log('Syntax of the new create is: ' + JSON.stringify(createCO));
     return await CourseOffering.create(createCO);
   } catch (e) {
-    // console.log('Error is: ' + e);
     return mapErrors(e);
   }
 }
@@ -201,15 +198,22 @@ async function getCOList() {
 
   // retrieve all course offerings from the database
   try {
-    listCO = await CourseOffering.findAll({include: [Program, Course, Instructor, Term], order: [['name'],['group']]});
+    listCO = await CourseOffering.findAll({include: [Program, Course, Instructor, Term], order: [['name'], ['group']]});
     // loop through the list, and format every term to add in title
     for (let i=0; i<listCO.length; i++) {
       if (listCO[i].Term) {
         listCO[i].Term = createTermTitle(listCO[i].Term);
+
+        if (listCO[i].primaryInstructor) {
+          listCO[i].primaryInstructor = await Instructor.findOne({where: {id: listCO[i].primaryInstructor}});
+        }
+
+        // Find alternative instructor
+        if (listCO[i].alternativeInstructor) {
+          listCO[i].alternativeInstructor = await Instructor.findOne({where: {id: listCO[i].alternativeInstructor}});
+        }
       }
     }
-    // console.log(JSON.stringify(listCO))
-
   } catch (err) {
     // if unable to retrieve from database; e.g., no records exist
     listCO = undefined;
@@ -217,6 +221,7 @@ async function getCOList() {
 
   return listCO;
 }
+
 
 
 /**

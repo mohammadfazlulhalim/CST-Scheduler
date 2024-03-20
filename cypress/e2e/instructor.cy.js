@@ -2,7 +2,7 @@
 describe('Testing Instructor CRUD options', () => {
   // these are the selectors for HTML elements
   const addNewInsModalHeader='#addModalLabel';
-  const insListingsPageHeader='body > div > div > div > h1';
+  const insListingsPageHeader='body > div > div >div > div > h1';
   const tableFirstHeader ='body > div > div > div > table > thead > tr > th:nth-child(1)';
   const tableSecondHeader='body > div > div > div > table > thead > tr > th:nth-child(2)';
   const tableThirdHeader='body > div > div > div > table > thead > tr > th:nth-child(3)';
@@ -14,7 +14,7 @@ describe('Testing Instructor CRUD options', () => {
   const addInsModalThirdTextBoxLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(8)';
   const addInsModalFourthTextBoxLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(11)';
   const addInsModalFifthTextLabel ='#addModal > div > div > form > div.modal-body > label:nth-child(14)';
-  const createInsButton= 'body > div > div > div > button';
+  const createInsButton= 'body > div > div >div> div > button';
   const newInsFirstNameInputTextBox='#cFirstName';
   const newInsLastNameInputTextBox='#cLastName';
   const newInsOfficeNumInputBox='#cOfficeNum';
@@ -52,7 +52,7 @@ describe('Testing Instructor CRUD options', () => {
 
   /* checking the availability of instructor lists headers*/
   it('testInstructorListsAreShownUnderCertainHeaders  ', () => {
-    cy.get(insListingsPageHeader).should('have.text', 'Instructor Listings');
+    cy.get(insListingsPageHeader).should('have.text', 'Manage Instructors');
     cy.get(tableFirstHeader).should('have.text', 'First Name');
     cy.get(tableSecondHeader).should('have.text', 'Last Name');
     cy.get(tableThirdHeader).should('have.text', 'Office Number');

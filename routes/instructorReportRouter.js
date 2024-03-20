@@ -3,13 +3,13 @@ const router = express.Router();
 const Instructor = require('../private/javascript/Instructor');
 const Term = require('../private/javascript/Term');
 const Timeslot = require('../private/javascript/Timeslot');
+const {sequelize} = require("../dataSource");
+const {QueryTypes} = require("sequelize");
 const globalConsts = require('../constants').globalConsts;
 
 // global constants here to work with time arrays
 const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
 const hours12 = globalConsts.timeColumn8amTo3pmDisplayArray;
-
-// TODO Promise issues to resolve!
 
 /**
  * Processing GET request for rendering the instructor report page.
@@ -55,9 +55,8 @@ router.get('/', async function(req, res, next) {
 
 
 /**
- * After the completion of the instructor report form,
- * this processes the POST request to render the instructor report
- * for the requested instructor(s)
+ * sends completed report back to view with supplied insturctor and term, also sends data for new report with
+ * the same modal
  */
 router.post('/', async function(req, res, next) {
   // redefine the database
@@ -65,7 +64,6 @@ router.post('/', async function(req, res, next) {
   const termID = req.body.selectTermInstructorReport; // from the modal selection
   let instRepTimeslots;
   let instructorName;
-  let matrixTable;
   let program = '';
   let termName;
   const dateGenerated= new Date();
@@ -75,6 +73,8 @@ router.post('/', async function(req, res, next) {
   let instructorList;
   let termList;
   let newTermList;
+  let reportArray = [];
+  let isSplit = false;
 
   // try to find the instructor selected
   try {
@@ -83,7 +83,6 @@ router.post('/', async function(req, res, next) {
     instructorName=undefined;
   }
   // try to find the term selected
-  // TODO get the program form the program make association with course offering or course
   try {
     termName = await Term.findOne({where: {id: termID}});
     // based on the term define the program year
@@ -107,11 +106,37 @@ router.post('/', async function(req, res, next) {
     instRepTimeslots=undefined;
   }
 
+  // get each unique start end date, or nothing if invalid term or instructor
+  const uniqueDates = await getUniqueDates(instructorName, termName);
 
-  // generates the schedule
-  // eslint-disable-next-line prefer-const
-  matrixTable = await generateSchedule(instRepTimeslots);
+  if (instRepTimeslots){ //if no unique dates, skip and display no schedule
+    for (let i=0; i < uniqueDates.length-1; i++) { //for each unique period of study
+      let tempJson = {};
 
+      let start = uniqueDates[i];
+      let end = uniqueDates[i+1];
+
+      if(i > 0){//notifies page that schedule is split
+        isSplit = true;
+      }
+
+      if(i < uniqueDates.length - 2){ //set end dates back one day except for end
+        let endDate = new Date(end.date);//change to date to set back a day
+        endDate.setDate(endDate.getDate() - 1);
+        endDate = endDate.toISOString().substring(0, 10)
+
+        tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, endDate); //assign time slots that match timeframe
+        tempJson.startDate = start.date;
+        tempJson.endDate = endDate;
+      } else { //use regular end time for last time
+        tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, end.date);
+        tempJson.startDate = start.date;
+        tempJson.endDate = end.date;
+      }
+
+      reportArray[i] = tempJson;
+    }
+  }
 
   // The same code from get to put back in options in the drop down in modal
   // find all instructors
@@ -138,28 +163,28 @@ router.post('/', async function(req, res, next) {
 
 
   res.render('instructorReport', {
-    instRepTimeslots,
     instructorName,
-    termName,
-    matrixTable,
+    reportArray,
     dateGen: dateGenerated.getDate()+'-'+monthArray[dateGenerated.getMonth()]+'-'+dateGenerated.getFullYear(),
-    // dateGen: dateGenerated.toLocaleDateString('en-CA', {})
     instructorList,
     termList: newTermList,
     timeDisplayHours,
     showModal: false,
     program,
+    isSplit,
+    termName,
   });
 });
 
 
 /**
- * Helper function for the POST.
- * Help to gather timeslots for instructor
- * // TODO establish empty cells within the final array
- * //
+ * generates a schedule with all timeslots given within a specified time range
+ * @param instRepTimeslots
+ * @param start
+ * @param end
+ * @returns {Promise<*[]>}
  */
-async function generateSchedule(instRepTimeslots) {
+async function generateSchedule(instRepTimeslots, start, end) {
   const matrixTable = [];
   let currentCourseOffering;
   let currentClassroom;
@@ -169,34 +194,41 @@ async function generateSchedule(instRepTimeslots) {
   for (let i = 0; i < hours24.length; i++) {
     matrixTable[i] = [
       // columns:
-      // time  m   t  w   r  f
+      // time  m   t  w   th  f
       {timeRow: ''}, {}, {}, {}, {}, {},
     ];
   }
 
-  // eslint-disable-next-line guard-for-in
+  // eslint-disable-n
+  // ext-line guard-for-in
   // for every entry in the timeslots
   for (const timeslot of instRepTimeslots) {
-    // make day one less (offset)
-    const tDay= timeslot.day-1;
-    const tHour = hours24.findIndex((st)=> st === timeslot.startTime);
 
-    // try to find the course, courseoffering and course for this timeslot object entry
-    try {
-      currentCourseOffering = await timeslot.getCourseOffering();
-      currentClassroom = await timeslot.getClassroom();
-      currentCourse = await currentCourseOffering.getCourse();
-    } catch (e) {
-      console.error(e);
+    if(timeslot.startDate.localeCompare(end) < 1  &&
+        timeslot.endDate.localeCompare(start.date) > -1 ) // if the timeslot falls within the current date range
+    {
+      // make day one less (offset)
+      const tDay= timeslot.day-1;
+      const tHour = hours24.indexOf(timeslot.startTime);
+
+      // try to find the course, courseoffering and course for this timeslot object entry
+      try {
+        currentCourseOffering = await timeslot.getCourseOffering();
+        currentClassroom = await timeslot.getClassroom();
+        currentCourse = await currentCourseOffering.getCourse();
+      } catch (e) {
+        console.error(e);
+      }
+      // put the items in the array
+      matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
+        courseOffering: currentCourseOffering,
+        classRoom: currentClassroom,
+        course: currentCourse};
     }
-    // put the items in the array
-    matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
-      courseOffering: currentCourseOffering,
-      classRoom: currentClassroom,
-      course: currentCourse};
+
   }
 
-  // place the hours
+  // place the 12hours in the leftmost column
   for (let i = 0; i < matrixTable.length; i++) {
     for (let j = 0; j < matrixTable[i].length; j++) {
       matrixTable[i][0].timeRow = hours12[i];
@@ -206,6 +238,62 @@ async function generateSchedule(instRepTimeslots) {
 
   return matrixTable;
 }
+
+
+/**
+ * returns a list of each unique date in the given term, or nothing if params are invalid
+ * @param instructor
+ * @param term
+ * @returns {Promise<Object[]>}
+ */
+async function getUniqueDates(instructor, term) {
+  //get all startdates and enddates from timeslots
+  const sqlStart = `SELECT DISTINCT startDate AS date FROM timeslots 
+                         where InstructorId = ${instructor.id} and TermId = ${term.id}
+                        and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'` ;
+
+  const sqlEnd = `SELECT DISTINCT endDate AS date FROM timeslots 
+                        where InstructorId = ${instructor.id} and TermId = ${term.id}
+                        and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'`;
+
+  let arStart, arEnd;
+
+  //query wtih strings
+  try {
+    arStart = await sequelize.query(sqlStart, {
+      type: QueryTypes.SELECT,
+      mapToModel: true,
+    });
+    arEnd = await sequelize.query(sqlEnd, {
+      type: QueryTypes.SELECT,
+      mapToModel: true,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+
+  //need to set date back one day, then stringify
+  arEnd.forEach((date) => {
+    if(date.date !== term.endDate){
+      let tempDate = new Date(date.date); //change to date to set back a day
+      tempDate.setDate(tempDate.getDate() + 1);
+      date.date = tempDate.toISOString().substring(0, 10);
+    }
+  })
+
+  //combine two lists, then sort
+  arStart = arStart.concat(arEnd);
+  arStart = [...new Set(arStart)];
+  arStart = arStart.sort((a,b) => {
+    if(a.date === b.date){ return 0; }
+    if(a.date >=  b.date) { return 1; }
+    else{ return -1; }
+  });
+
+  return arStart;
+
+}
+
 
 
 module.exports = router;

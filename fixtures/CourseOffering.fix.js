@@ -32,6 +32,9 @@ async function fillCourseOfferingTable() {
   COHA.setCourse(15);
   COSA.setCourse(4);
 
+
+
+
   let COHB = courseOffering1;
   let COSB = courseOffering2;
   COHB.group = 'B';
@@ -46,6 +49,8 @@ async function fillCourseOfferingTable() {
   COSB.setInstructor(3);
   COHB.setCourse(15);
   COSB.setCourse(4);
+
+  await CourseOffering.update({alternativeInstructor: 5}, {where: {id: COHB.id}});
 
   let COHC = courseOffering1;
   let COSC = courseOffering2;
@@ -76,6 +81,29 @@ async function fillCourseOfferingTable() {
   COSD.setInstructor(3);
   COHD.setCourse(15);
   COSD.setCourse(4);
+
+
+  let insSplit1 = courseOffering1;
+  insSplit1.name = 'Systems Administration 2';
+  insSplit1.startDate = '2023-10-01';
+  insSplit1.endDate = '2023-12-01';
+  insSplit1.group = 'D';
+  insSplit1 = await CourseOffering.create(insSplit1);
+  insSplit1.setTerm(1);
+  insSplit1.setProgram(1);
+  insSplit1.setInstructor(1);
+  insSplit1.setCourse(8);
+
+  let insSplit2 = courseOffering1;
+  insSplit2.name = 'Mathematics of Computation';
+  insSplit2.startDate = '2023-09-01';
+  insSplit2.endDate = '2023-10-31';
+  insSplit2.group = 'C';
+  insSplit2 = await CourseOffering.create(insSplit2);
+  insSplit2.setTerm(1);
+  insSplit2.setProgram(1);
+  insSplit2.setInstructor(1);
+  insSplit2.setCourse(1);
 
   courseOffering1.group = 'A';
   courseOffering2.group = 'B';
