@@ -178,7 +178,7 @@ async function generateTimeslots(startTime, endTime, classroom) {
 async function generateTimeslotsTest(classroom, term) {
   // gather timeslots using Operators provided by Op class - will add onto it later
 
-  let conflictingTimeslots0 = [];
+  const conflictingTimeslots0 = [];
   for (let i = 0; i < daysNumberedZeroIndex.length; i++) {
     const initialTimeslotsForTermClassroomWeekday = await Timeslot.findAll({
       where: {
@@ -217,6 +217,10 @@ async function generateTimeslotsTest(classroom, term) {
         const conflictingTimeslotsNow = await Timeslot.findAll({
           where: {
             [Op.and]: [
+
+              // {id: {
+              //   [Op.not]: currentTimeslot.id,
+              // }},
               {TermId: term.id},
               {ClassroomId: classroom.id},
               {day: daysNumberedZeroIndex[1]},
@@ -225,8 +229,9 @@ async function generateTimeslotsTest(classroom, term) {
               //     [Op.]
               // }},
 
-              // startTime
+              // OR block
               {
+                // either the start time conflicts
                 [Op.or]: {
                   startTime: {
                     [Op.and]: {
@@ -234,6 +239,7 @@ async function generateTimeslotsTest(classroom, term) {
                       [Op.lte]: currentTimeslot.endTime,
                     },
                   },
+                  // or the end time conflicts
                   [Op.and]: {
                     endTime: {
                       [Op.gte]: currentTimeslot.startTime,
@@ -243,22 +249,21 @@ async function generateTimeslotsTest(classroom, term) {
 
                 },
               },
-              // start date
+              // OR block
               {
                 [Op.or]: {
-                  [Op.and]: {
-                    startDate: {
+                  startDate: {
+                    [Op.and]: {
                       [Op.gte]: currentTimeslot.startDate,
                       [Op.lte]: currentTimeslot.endDate,
                     },
                   },
-                  [Op.and]: {
-                    endDate: {
+                  endDate: {
+                    [Op.and]: {
                       [Op.gte]: currentTimeslot.startDate,
                       [Op.lte]: currentTimeslot.endDate,
                     },
                   },
-
                 },
               },
             ]},
@@ -282,7 +287,7 @@ async function generateTimeslotsTest(classroom, term) {
 
         });
 
-        if (conflictingTimeslotsNow.length > 0) {
+        if (conflictingTimeslotsNow.length > 1) {
           conflictingTimeslots0.push(conflictingTimeslotsNow);
           console.log('>>>>>>>conflictingTimeslots0');
           console.log(conflictingTimeslots0);

@@ -149,6 +149,7 @@ async function s50CreateConflictingTimeslot() {
   const s50Timeslot = [
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'B'},
     {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '08:00', endTime: '14:00', day: 5, group: 'B'},
+    {startDate: '2023-02-01', endDate: '2023-04-01', startTime: '08:30', endTime: '10:30', day: 1, group: 'B'},
 
   ];
 
