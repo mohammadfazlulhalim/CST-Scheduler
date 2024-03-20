@@ -37,7 +37,7 @@ router.post('/', async (req, res, next)=>{
   const realClassroom = await Classroom.findOne({where: {id: req.body.classroom}});
   const realTerm = await term.findOne({where: {id: req.body.term}});
   // assign the final output of conflicting timeslots as an array of objects to timeslotsReturned
-  const timeslotsReturned = await generateTimeslotsTest(realClassroom, realTerm);
+  const timeslotsReturned = await generateTimeslots(realClassroom, realTerm);
 
 
   res.render('classroomConflictReport', {
@@ -59,10 +59,6 @@ router.get('/', async (req, res, next)=>{
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
 
   const terms= await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'ASC']]});
-  // const timeslotsInConflict = await checkForConflict(classrooms[0]);
-
-
-  // const timeslotsReturned = await generateTimeslotsTest(classrooms[0], terms[0]);
 
   res.render('classroomConflictReport', {
     classrooms,
@@ -72,101 +68,7 @@ router.get('/', async (req, res, next)=>{
 });
 
 
-/**
- * This function helps to finding and collecting  timeslots which
- * are experiencing class conflicts
- * @param classroom   is an instance of Classroom object
- */
-// async function checkForConflict(classroom) {
-//
-//   const timeslotsVals = await generateTimeslots(timeVals[0], timeVals[1], classroom);
-//
-// }
 
-/**
- * this function will retrieve the unique time period against provided classroom object
- * @return {Promise<object[]>}
- */
-async function uniqueTime(classroom) {
-  const sqlstatement = `SELECT DISTINCT Time
-                        FROM (
-                            SELECT startTime  AS Time FROM timeslots where ClassroomId = ${classroom.id}
-                            UNION
-                            SELECT endTime AS Time FROM timeslots where ClassroomId = ${classroom.id}
-                            ) AS combined_times
-                        `;
-
-  try {
-    const timeValsUnsorted = await sequelize.query(sqlstatement, {
-      type: QueryTypes.SELECT,
-    });
-
-    for (let i = 0; i < timeValsUnsorted.length; i++) {
-      // if the time is a single digit hour like 8:00am etc.
-
-      // if length of the time val is less than 5 (equal to 4), then it's written as H:mm
-      if (timeValsUnsorted[i].Time.length < 5) {
-        timeValsUnsorted[i].Time = `0${timeValsUnsorted[i].Time}`;
-      }
-    }
-
-    timeValsUnsorted.sort(compareTime);
-    return timeValsUnsorted;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-/**
- * Helper / handler for comparing two temporary objects in the unique time values array
- * for the purposes of sorting
- *
- * a and b objects looks like {Time:"10:00"} for example
- *
- *
- * @param a
- * @param b
- * @return {number}
- */
-function compareTime(a, b) {
-  // Use toUpperCase() to ignore character casing
-  const bandA = a.Time.toUpperCase();
-  const bandB = b.Time.toUpperCase();
-
-  let comparison = 0;
-  if (bandA > bandB) {
-    comparison = 1;
-  } else if (bandA < bandB) {
-    comparison = -1;
-  }
-  return comparison;
-}
-
-
-/**
- * gathers timeslots between the start and endtime provided
- * filters by classroom
- *
- * @param startDate
- * @param endDate
- * @param startTime
- * @param endTime
- * @param classroom
- */
-async function generateTimeslots(startTime, endTime, classroom) {
-  return await Timeslot.findAll({
-    where: {
-      [Op.and]: [
-        // Timeslot starts before the endDate of the range
-        {startTime: {[Op.lt]: endTime.Time}},
-        // Timeslot ends after the startDate of the range
-        {endTime: {[Op.gt]: startTime.Time}},
-      ],
-      ClassroomId: classroom.id,
-    },
-    order: [['startDate', 'ASC']],
-  });
-}
 
 
 /**
@@ -175,7 +77,7 @@ async function generateTimeslots(startTime, endTime, classroom) {
  * @param classroom
  * @param term
  */
-async function generateTimeslotsTest(classroom, term) {
+async function generateTimeslots(classroom, term) {
   // gather timeslots using Operators provided by Op class - will add onto it later
 
   const conflictingTimeslots0 = [];
@@ -199,35 +101,16 @@ async function generateTimeslotsTest(classroom, term) {
       // first timeslot in list
       const currentTimeslot = initialTimeslotsForTermClassroomWeekday[0];
 
-      /* currentTimeslot will encounter conflict if another timeslot:
-            (
-              other.startTime >= current.startTime && other.startTime <= current.endTime
-              ||OR
-              (other.endTime >= current.startTime && other.endTime <= current.endTime)
-             ) AND&&
-             (
-               other.startDate >= current.startDate && other.startDate <= current.endDate
-              ||OR
-              (other.endDate >= current.startDate && other.endDate <= current.endDate)
-             )
-      */
-
 
       try {
         const conflictingTimeslotsNow = await Timeslot.findAll({
           where: {
             [Op.and]: [
 
-              // {id: {
-              //   [Op.not]: currentTimeslot.id,
-              // }},
               {TermId: term.id},
               {ClassroomId: classroom.id},
-              {day: daysNumberedZeroIndex[1]},
-              // {[Op.and]: {
-              //   [Op.]: currentTimeslot.startTime,
-              //     [Op.]
-              // }},
+              {day: daysNumberedZeroIndex[i]},
+
 
               // OR block
               {
@@ -289,20 +172,18 @@ async function generateTimeslotsTest(classroom, term) {
 
         if (conflictingTimeslotsNow.length > 1) {
           conflictingTimeslots0.push(conflictingTimeslotsNow);
-          console.log('>>>>>>>conflictingTimeslots0');
-          console.log(conflictingTimeslots0);
+
         }
+
       } catch (e) {
         console.error(e);
       }
     }
   }
-  // end of forloop
-
 
   // return classResult;
   return conflictingTimeslots0;
 }
 
 
-module.exports = {router, generateTimeslotsTest};
+module.exports = {router, generateTimeslotsTest: generateTimeslots};

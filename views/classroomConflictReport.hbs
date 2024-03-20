@@ -58,6 +58,7 @@
             </tr>
 
         {{#each timeslotsReturned}}
+            {{#each this}}
             <tr>
                 <td>{{this.Term.termNumber}} {{this.Term.startDate}}</td>
                 <td>{{this.CourseOffering.Course.courseCode}}</td>
@@ -67,6 +68,7 @@
                 <td>{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
             </tr>
         {{/each}}
+            {{/each}}
     </table>
 </div>
 
