@@ -53,6 +53,7 @@ describe('Test Editing the Schedule', () => {
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
           cy.get('#'+t+'-'+d+'-'+letter).click();
+          // cy.wait(100);
           cy.get('#'+t+'-'+d+'-'+letter).should('have.class', 'empty');
         }
       }

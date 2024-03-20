@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Program = require('../private/javascript/Program');
 const {sequelize} = require('../dataSource');
-const URL = require('../constants').URL
+const URL = require('../constants').URL;
+const title = require('../constants').pageTitles.program;
 
 // Reading the programs
 router.get('/', async function(req, res, next) {
@@ -18,7 +19,8 @@ router.get('/', async function(req, res, next) {
   // render the page
   res.render('program', {
     program: programList,
-    URL
+    URL,
+    title
   });
 });
 
@@ -53,6 +55,7 @@ router.post('/', async function(req, res, next) {
     err: violations,
     submittedProgram: violations ? req.body : undefined,
     URL,
+    title
   });
 });
 
@@ -95,7 +98,8 @@ router.put('/', async function(req, res, next) {
     program: programLists,
     putErr: violations,
     putSubmittedProgram: violations ? req.body : undefined,
-    URL
+    URL,
+    title
   });
 });
 
@@ -135,7 +139,8 @@ router.delete('/', async function(req, res, next) {
     program: programLists,
     err: violations,
     submittedProgram: violations ? req.body : undefined,
-    URL
+    URL,
+    title
   });
 });
 
@@ -155,8 +160,6 @@ const updateProgram = async (programToUpdate, newName, newAbbr) => {
     return programUpdated;
   } catch (err) {
     errors = mapErrors(err);
-
-    // console.error(errors);
     return errors;
   }
 };
@@ -169,7 +172,6 @@ const deleteProgram= async (programToDelete)=>{
     await programToDelete.destroy();
   } catch (err) {
     errors = mapErrors(err);
-    // console.error(errors);
   }
 };
 
@@ -214,7 +216,6 @@ const mapErrors = (err) => {
       violations.error[error.path] = error.message;
     }
   } else {
-    // console.error('Error object does not have iterable errors property:', err);
   }
 
   return violations;

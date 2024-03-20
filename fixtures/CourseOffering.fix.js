@@ -32,6 +32,9 @@ async function fillCourseOfferingTable() {
   COHA.setCourse(15);
   COSA.setCourse(4);
 
+
+
+
   let COHB = courseOffering1;
   let COSB = courseOffering2;
   COHB.group = 'B';
@@ -46,6 +49,8 @@ async function fillCourseOfferingTable() {
   COSB.setInstructor(3);
   COHB.setCourse(15);
   COSB.setCourse(4);
+
+  await CourseOffering.update({alternativeInstructor: 5}, {where: {id: COHB.id}});
 
   let COHC = courseOffering1;
   let COSC = courseOffering2;

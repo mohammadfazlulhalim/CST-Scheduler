@@ -168,9 +168,6 @@ router.post('/', async function(req, res, next) {
       where: {ProgramId: programID, TermId: termID, group: group},
       order: [['startTime', 'ASC'], ['day', 'ASC']],
     });
-
-    console.log('the time slot is');
-    console.log(instRepTimeslots);
   } catch (e) {
     instRepTimeslots=undefined;
   }
@@ -178,7 +175,6 @@ router.post('/', async function(req, res, next) {
   // generates the schedule
   // eslint-disable-next-line prefer-const
   let matrixTable = await generateSchedule(instRepTimeslots);
-  console.log(matrixTable);
 
   res.render('programReport', {
     programList,
@@ -220,8 +216,6 @@ async function generateSchedule(instRepTimeslots) {
   // eslint-disable-next-line guard-for-in
   // for every entry in the timeslots
   for (const timeslot of instRepTimeslots) {
-    console.log('timeslots');
-    console.log(timeslot);
     // make day one less (offset)
     const tDay= timeslot.day-1;
     const tHour = hours24.findIndex((st)=> st === timeslot.startTime);

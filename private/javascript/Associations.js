@@ -15,7 +15,8 @@ addAssociations = () => {
 
   CourseOffering.belongsTo(Term);
   CourseOffering.belongsTo(Course);
-  CourseOffering.belongsTo(Instructor);
+  CourseOffering.belongsTo(Instructor, {foreignKey: {name: 'primaryInstructor'}});
+  CourseOffering.belongsTo(Instructor, {foreignKey: {name: 'alternativeInstructor'}});
   CourseOffering.belongsTo(Program);
 
   // Timeslot associations:
