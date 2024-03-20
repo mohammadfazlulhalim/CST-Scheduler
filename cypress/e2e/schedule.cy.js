@@ -81,11 +81,11 @@ it('testThatModalWorks', () => {
     }
   }
 
-  // cy.get('#Hardware-A').should('have.text', '\n                                    \n                            Hardware\n                            Ben Benson\n                            2023-09-01-2023-12-15\n                        ');
-  cy.get('#Hardware-A').contains('Ben Benson');
-  cy.get('#Hardware-A').contains('Hardware');
-  cy.get('#Hardware-A').contains('2023-09-01 - 2023-12-15');
-  cy.get('#Hardware-A').should('be.visible');
+  // cy.get('#Mathematics\\ of\\ Computation-A').should('have.text', '\n                                    \n                            Hardware\n                            Ben Benson\n                            2023-09-01-2023-12-15\n                        ');
+  cy.get('#Mathematics\\ of\\ Computation-A').contains('Ben Benson');
+  cy.get('#Mathematics\\ of\\ Computation-A').contains('Mathematics of Computation');
+  cy.get('#Mathematics\\ of\\ Computation-A').contains('2023-09-01 - 2023-10-31');
+  cy.get('#Mathematics\\ of\\ Computation-A').should('be.visible');
   cy.get('#Seminar-B').should('be.hidden');
 
   cy.get('#btnB').click();
@@ -135,7 +135,7 @@ it('testThatModalWorks', () => {
   cy.get('#Seminar-B').contains('Seminar');
   cy.get('#Seminar-B').contains('Ben Benson');
   cy.get('#Seminar-B').contains('2023-09-01 - 2023-12-15');
-  cy.get('#Hardware-A').should('be.hidden');
+  cy.get('#Mathematics\\ of\\ Computation-A').should('be.hidden');
   cy.get('#Seminar-B').should('be.visible');
 
   // Group C and D are checked in the other test

@@ -134,7 +134,7 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
     ['Seminar', 'C', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', 'Coralee Kaban', 'CST'],
     ['The Seminar', 'D', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', ' ', 'CST'],
   ];
-  const newCOsIndex = [14, 16, 19, 25, 28, 30, 34];
+  const newCOsIndex = [13, 15, 18, 26, 29, 31, 36];
   for (let i = 0; i < newCOs.length; i++) {
     for (let j = 0; j < 8; j++) {
       const nChildCO = j + 1;
