@@ -1,11 +1,11 @@
-
+<!--find classroom conflict modal   -->
 <div id="classroomReportInfoModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Find Classroom conflicts </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form method="post" action="#" class="mb-3">
@@ -27,23 +27,26 @@
                             {{/each}}
                         </select>
                     </div>
-                    <div class="mb-3 form-check" >
-                        <input type="checkbox" name="allClassrooms" class="form-check-input" id="allClassroomSelect">
-                        <label class="form-check-label" for="allClassroomSelect">All Classrooms</label>
+                    <div class="modal-footer">
+                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button id="btnGenerateReport"
+                                type="submit" class="btn btn-outline-success" disabled>Generate Report
+                        </button>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="btnGenerateSchedule" disabled>Submit</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
+{{#if timeslotsReturned}}
 <div>
     <div class="row">
         <div class="col-9">
             <h2><i>Classroom:</i> {{realClassroom.roomNumber}}</h2>
         </div>
-        <div class="col-3">
+        <div class="col-9">
             <h2><i>Term:</i>{{realTerm.termNumber}} {{realTerm.startDate}}</h2>
         </div>
     </div>
@@ -70,6 +73,17 @@
             {{/each}}
     </table>
 </div>
+{{else}}
+    <h1 id="nothingToShow">Nothing to display at the moment</h1>
+{{/if}}
+
+<!-- New report and print buttons -->
+<div class="btnPairsCustom">
+    <button id="newReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#classroomReportInfoModal">
+        New Report</button>
+    <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
+</div>
+
 
 <script>
 
@@ -78,22 +92,68 @@
     window.onload = function() {
         const modal = new bootstrap.Modal(document.getElementById('classroomReportInfoModal'));
 
+
+        let termSelect = document.getElementById('termSelect');
+        let classroomSelect = document.getElementById('classroomSelect');
+
+        let submitBtn = document.getElementById('btnGenerateReport');
+        let closeBtn = document.getElementById('modalCloseBtn');
+        let xBtn =document.getElementById('xBtn');
+        let newReportBtn=document.getElementById('newReportBtn');
+
+
         {{#if showModal}}
+            // check if the "close" button was clicked
+            closeBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+            // check if the 'x' button was clicked
+            xBtn.addEventListener("click", function () {
+                modal.hide();
+            });
             modal.show();
+
         {{/if}}
 
-        var termSelect = document.getElementById('termSelect');
-        var classroomSelect = document.getElementById('classroomSelect');
-        let checkboxClassrooms = document.getElementById('allClassroomSelect');
-        var submitBtn = document.getElementById('btnGenerateSchedule');
-
+        // check if the "new report" button was clicked
+        newReportBtn.addEventListener("click", function () {
+            modal.show();
+        });
         // Add event listeners to the selects
         termSelect.addEventListener('change', handleSelectChange);
         classroomSelect.addEventListener('change', handleSelectChange);
 
         function handleSelectChange() {
             // Enable or disable the submit button based on whether both selects have values
-            submitBtn.disabled = termSelect.value === '' || (classroomSelect.value === '' || checkboxClassrooms.checked === true);
+            submitBtn.disabled = termSelect.value === '' || classroomSelect.value === '';
+        }
+        function printReport() {
+            const printWindow = window.open('', '_blank');
+
+            // Add styles or additional content if needed
+            printWindow.document.write('<html><head><title>Program Report</title>');
+            printWindow.document.write('<style>');
+            printWindow.document.write('@media print { @page { size: landscape; } }'); // Set page orientation to landscape
+            printWindow.document.write('.table-bordered { border-collapse: collapse; width: 100%; }');
+            printWindow.document.write('.table-bordered th, .table-bordered td { border: 1px solid black; padding: 8px; }');
+            printWindow.document.write('</style>');
+            printWindow.document.write('</head><body>');
+
+            // Print date and name
+            const dateGen = document.getElementById("dateGenDisplayer").innerText;
+            const programName = document.getElementById("nameDisplayer").innerText;
+
+            printWindow.document.write('<h2>Program Report For: ' + programName + '</h2>');
+            printWindow.document.write('<p>Report Generated: ' + dateGen + '</p>');
+
+            // Print the table
+            const tableHtml = document.querySelector('.table-bordered').outerHTML;
+            printWindow.document.write(tableHtml);
+
+            printWindow.document.write('</body></html>');
+
+            printWindow.document.close();
+            printWindow.print();
         }
     };
 </script>
