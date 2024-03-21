@@ -25,8 +25,8 @@
             <table id="dataTable" class="table table-striped fixed-size-table">
                 <thead class="table-primary fixed-size-table-header">
                 <tr>
-                    <th >Name</th>
-                    <th class="text-center" >Group</th>
+                    <th>Name</th>
+                    <th class="text-center">Group</th>
                     <th class="text-center">Course</th>
                     <th class="text-center">Term</th>
                     <th class="text-center">Start Date</th>
@@ -42,14 +42,18 @@
                     <tr class="term-row" data-termid="{{Term.id}}">
                         <td id="{{this.id}}name">{{this.name}} </td>
                         <td class="text-center" id="{{this.id}}group">{{this.group}}</td>
-                        <td class="text-center" id="{{this.id}}course" data-courseid="{{this.Course.id}}">{{this.Course.courseCode}}</td>
-                        <td class="text-center" id="{{this.id}}term" data-termid="{{this.Term.id}}">{{this.Term.title}}</td>
+                        <td class="text-center" id="{{this.id}}course"
+                            data-courseid="{{this.Course.id}}">{{this.Course.courseCode}}</td>
+                        <td class="text-center" id="{{this.id}}term"
+                            data-termid="{{this.Term.id}}">{{this.Term.title}}</td>
                         <td class="text-center" id="{{this.id}}startDate">{{this.startDate}}</td>
                         <td class="text-center" id="{{this.id}}endDate">{{this.endDate}}</td>
-                        <td class="text-center" id="{{this.id}}primaryInstructor" data-primaryinstructorid="{{this.primaryInstructor.id}}">
+                        <td class="text-center" id="{{this.id}}primaryInstructor"
+                            data-primaryinstructorid="{{this.primaryInstructor.id}}">
                             {{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}
                         </td>
-                        <td class="text-center" id="{{this.id}}alternativeInstructor" data-alternativeinstructorid="{{this.alternativeInstructor.id}}">
+                        <td class="text-center" id="{{this.id}}alternativeInstructor"
+                            data-alternativeinstructorid="{{this.alternativeInstructor.id}}">
                             {{this.alternativeInstructor.firstName}} {{this.alternativeInstructor.lastName}}
                         </td>
                         <td class="text-center" id="{{this.id}}program" data-programid="{{this.Program.id}}">
@@ -57,7 +61,8 @@
                         </td>
                         <td class="text-center">
                             <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
-                                    data-toggle="modal" data-target="#editModal" onclick="handleEditModal('{{this.id}}')">Edit
+                                    data-toggle="modal" data-target="#editModal"
+                                    onclick="handleEditModal('{{this.id}}')">Edit
                             </button>
                             <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
                                     data-toggle="modal" data-target="#deleteModal">Delete
@@ -124,7 +129,8 @@
                                 <select id="eTerm" class="form-select" onchange="selectedTermUpdate()">Course
                                     {{#each listTerm}}
                                         <option value="{{id}}" id="optionEditTerm{{id}}" data-termstart="{{startDate}}"
-                                                data-termend="{{endDate}}">{{this.calendarYear}} - Term {{this.termNumber}}</option>
+                                                data-termend="{{endDate}}">{{this.calendarYear}} -
+                                            Term {{this.termNumber}}</option>
                                     {{/each}}
                                 </select>
                             </div>
@@ -185,7 +191,8 @@
         <p>There are no course offerings stored</p>
     {{/if}}
     <!-- Add Modal - must be displayed even if no terms exist -->
-    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" role="dialog" tabindex="-1" aria-labelledby="addModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -202,11 +209,12 @@
                         <div class="form-group">
                             <label for="cCourse">Course</label>
                             <input id="cCourse" type="text" list="courses" oninput="selectedCourseCreate()"
-                                   class="form-control" />
+                                   class="form-control"/>
                             <datalist id="courses">
                                 {{#each listCourse}}
                                     <option id="optionCreateCourse{{courseCode}}" value="{{courseCode}}"
-                                            data-courseid="{{id}}" data-coursename="{{courseName}}"></option>
+                                            data-courseid="{{id}}" data-coursename="{{courseName}}"
+                                            data-instructorid="{{this.instructor.id}}"></option>
                                 {{/each}}
                             </datalist>
                             <div class="invalid-feedback" id="cCourseInvalid"></div>
@@ -256,8 +264,7 @@
                             </div>
                             <div class="form-group col">
                                 <label for="cprimaryInstructor">Primary Instructor:</label>
-                                <select id="cprimaryInstructor" class="form-select" onchange="checkCreateEnable()">
-                                    <option></option>
+                                <select id="cprimaryInstructor" class="form-select" onchange="checkCreateInstructorMatch()">
                                     {{#each listInstructor}}
                                         <option value="{{id}}" id="optionCreateInstructor{{id}}">{{lastName}}</option>
                                     {{/each}}
@@ -267,7 +274,7 @@
 
                         <div class="form-group">
                             <label for="calternativeInstructor">Alternative Instructor: (Optional)</label>
-                            <select id="calternativeInstructor" class="form-select" onchange="checkCreateEnable()">
+                            <select id="calternativeInstructor" class="form-select" onchange="checkCreateInstructorMatch()">
                                 <option></option>
                                 {{#each listInstructor}}
                                     <option value="{{id}}">{{lastName}}</option>
@@ -283,7 +290,8 @@
                                         -
                                     </button>
                                 </div>
-                                <input type="text" class="form-control text-center" id="numberOfGroups" value="1" min="1"
+                                <input type="text" class="form-control text-center" id="numberOfGroups" value="1"
+                                       min="1"
                                        max="4" aria-label="Number of Groups" aria-describedby="basic-addon1"
                                        readonly>
                                 <div class="input-group-append">
@@ -314,10 +322,10 @@
     'use strict';
     reLinkButtons();
 
-    document.getElementById('filterTerm').addEventListener('change', function () {
+    document.getElementById('filterTerm').addEventListener('change', function() {
         var termId = this.value;
         var termRows = document.querySelectorAll('.term-row');
-        termRows.forEach(function (row) {
+        termRows.forEach(function(row) {
             var rowTermId = row.getAttribute('data-termid');
             if (termId === '' || rowTermId === termId) {
                 row.style.display = '';
@@ -327,31 +335,24 @@
         });
     });
 
+    //This is just a sort functionality for the course offerings
     function sortTable(columnIndex) {
         var table, rows, switching, i, x, y, shouldSwitch;
         table = document.getElementById('dataTable');
         switching = true;
-        /* Make a loop that will continue until no switching has been done: */
         while (switching) {
-            // Start by saying: no switching is done:
             switching = false;
             rows = table.rows;
-            /* Loop through all table rows (except the first, which contains table headers): */
             for (i = 1; i < (rows.length - 1); i++) {
-                // Start by saying there should be no switching:
                 shouldSwitch = false;
-                /* Get the two elements you want to compare, one from current row and one from the next: */
                 x = rows[i].getElementsByTagName('TD')[columnIndex];
                 y = rows[i + 1].getElementsByTagName('TD')[columnIndex];
-                /* Check if the two rows should switch place, based on the direction, asc or desc: */
                 if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                    // If so, mark as a switch and break the loop:
                     shouldSwitch = true;
                     break;
                 }
             }
             if (shouldSwitch) {
-                /* If a switch has been marked, make the switch and mark that a switch has been done: */
                 rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
                 switching = true;
             }
@@ -387,7 +388,7 @@
             document.getElementById('cName').value = document.getElementById('optionCreateCourse' + courseCode).dataset.coursename;
             document.getElementById('cCourseInvalid').innerText = '';
             document.getElementById('cCourse').classList.remove('is-invalid');
-            document.getElementById('cprimaryInstructor').value = (parseInt(document.getElementById('optionCreateCourse' + courseCode).dataset.instructor));
+            document.getElementById('cprimaryInstructor').value = (parseInt(document.getElementById('optionCreateCourse' + courseCode).dataset.instructorid));
         } catch (e) {
             document.getElementById('cCourse').classList.add('is-invalid');
             document.getElementById('cCourseInvalid').innerText = 'Please select a Course Code from the list';
@@ -425,8 +426,10 @@
         }
 
         let primaryInstructorSelected = document.getElementById('cprimaryInstructor').value.trim() !== '';
+        let primaryInstructor = document.getElementById('cprimaryInstructor');
         let programSelected = document.getElementById('cProgram').value.trim() !== '';
         let alternativeInstructorSelect = document.getElementById('calternativeInstructor');
+
 
         if (termSelected && programSelected && courseSelected && primaryInstructorSelected) {
             // Enable the "Create" button
@@ -439,14 +442,14 @@
         // Enable/disable alternative instructor select based on whether primary instructor is selected
         if (primaryInstructorSelected) {
             alternativeInstructorSelect.removeAttribute('disabled');
-
-            checkCreateInstructorMatch();
         } else {
             alternativeInstructorSelect.value = null;
             alternativeInstructorSelect.disabled = true;
-
         }
+
+        document.getElementById('createCO').disabled = primaryInstructor === alternativeInstructorSelect && primaryInstructor !== "";
     }
+
 
     function selectedTermUpdate() {
         let termID = document.getElementById('eTerm').value;
@@ -487,17 +490,16 @@
         var alternativeInstructor = document.getElementById('calternativeInstructor').value;
         var createCOButton = document.getElementById('createCO');
 
-        if (primaryInstructor === alternativeInstructor) {
-            if (primaryInstructor.value != null) {
-                createCOButton.disabled = true;
-                document.getElementById('cprimaryInstructor').classList.add('is-invalid');
-                document.getElementById('calternativeInstructor').classList.add('is-invalid');
-            }
+        if (primaryInstructor === alternativeInstructor && primaryInstructor !== "") {
+            createCOButton.disabled = true;
+            document.getElementById('cprimaryInstructor').classList.add('is-invalid');
+            document.getElementById('calternativeInstructor').classList.add('is-invalid');
         } else {
             createCOButton.disabled = false;
             document.getElementById('cprimaryInstructor').classList.remove('is-invalid');
             document.getElementById('calternativeInstructor').classList.remove('is-invalid');
         }
+        checkCreateEnable();
     }
 
 
