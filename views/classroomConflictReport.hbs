@@ -1,7 +1,7 @@
 <h1 id="pageTitleClassroomConflicts">Classroom Conflicts</h1>
 
 <!--find classroom conflict modal   -->
-<div id="classroomReportInfoModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div id="classroomConflictModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -16,7 +16,7 @@
                         <select id="termSelect" name="term" class="form-select">
                             <option value="" selected disabled>Select Term</option>
                             {{#each terms}}
-                                <option value="{{this.id}}">{{this.startDate}} - {{this.termNumber}}</option>
+                                <option value="{{this.id}}">{{this.termNumber}} {{this.startDate}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -33,7 +33,7 @@
                         <button id="modalCloseBtn" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
                             Cancel
                         </button>
-                        <button id="btnGenerateReport"
+                        <button id="modalSubmit"
                                 type="submit" class="btn btn-outline-success" disabled>Generate Report
                         </button>
                     </div>
@@ -47,10 +47,10 @@
 {{#if timeslotsReturned}}
 <div>
         <div class="row">
-            <h2><i>Classroom:</i> {{realClassroom.roomNumber}}</h2>
+            <h2 id="selectedClassroom"><i>Classroom:</i> {{realClassroom.roomNumber}}</h2>
         </div>
         <div class="row">
-            <h2><i>Term:</i>{{realTerm.termNumber}} {{realTerm.startDate}}</h2>
+            <h2 id="selectedTerm"><i>Term:</i> {{realTerm.termNumber}} {{realTerm.startDate}}</h2>
         </div>
 </div>
 
@@ -79,7 +79,7 @@
     <h1 id="nothingToShow">Nothing to display at the moment</h1>
 {{/if}}
 {{!-- TODO determine if it's better to move button up --}}
-<button id="newReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#classroomReportInfoModal">
+<button id="newReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#classroomConflictModal">
     New Report</button>
 
 
@@ -88,13 +88,13 @@
     'use strict';
 
     window.onload = function() {
-        const modal = new bootstrap.Modal(document.getElementById('classroomReportInfoModal'));
+        const modal = new bootstrap.Modal(document.getElementById('classroomConflictModal'));
 
 
         let termSelect = document.getElementById('termSelect');
         let classroomSelect = document.getElementById('classroomSelect');
 
-        let submitBtn = document.getElementById('btnGenerateReport');
+        let submitBtn = document.getElementById('modalSubmit');
         let closeBtn = document.getElementById('modalCloseBtn');
         let xBtn =document.getElementById('xBtn');
         let newReportBtn=document.getElementById('newReportBtn');

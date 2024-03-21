@@ -23,7 +23,7 @@ describe( 'classroom conflict report page', ()=>{
   ];
 
   const termsVisible = [
-    '2023-08-01 - 1',
+    '1 2023-08-01',
   ];
 
   const classroomsVisible = [
@@ -40,7 +40,7 @@ describe( 'classroom conflict report page', ()=>{
     cy.url().should('include', '/classroomConflictReport');
   });
 
-  it('testShowPageHeading', () => {
+  it('testPageLoading', () => {
     // go directly to classroomConflictReport form
     cy.visit('localhost:3000/classroomConflictReport');
     // Check that Enter button is disabled
@@ -66,8 +66,9 @@ describe( 'classroom conflict report page', ()=>{
 
 
     // check room number element
-    cy.get('h2').contains('Room Number: 239A');
-
+    cy.get('#selectedClassroom').contains(`Classroom: ${classroomsVisible[0]}`);
+    // Check term
+    cy.get('#selectedTerm').contains(`Term: ${termsVisible[0]}`);
 
     /* testTableHeaderElementsForSpecificRoomNumber */
 
@@ -86,7 +87,7 @@ describe( 'classroom conflict report page', ()=>{
     for (let i = 0; i < headingsForEachClassroomReportTable.length; i++) {
       cy.get(`#239aTable thead:nth-child(${i})`).should('have.text', headingsForEachClassroomReportTable[i]);
     }
-
+    //body > div > div > div.p-4 > table > tbody > tr:nth-child(1) > th:nth-child(1)
 
     // });
     //
