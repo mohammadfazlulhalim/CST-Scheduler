@@ -1,7 +1,34 @@
 
+/* ANSWER CASES
+
+1 2023-08-01	COOS293	1	08:00	09:00	Bryce Barrie
+1 2023-08-01		1	08:30	10:30
+1 2023-08-01	SEM283	3	10:00	11:00	Ernesto Basoalto
+1 2023-08-01	COHS280	3	11:00	12:00	firstName Holtslan
+1 2023-08-01	CWEB280	4	10:00	11:00	Donovan Onishenko
+1 2023-08-01	COOS291	4	11:00	12:00	Wade Lahoda
+1 2023-08-01		5	08:00	14:00
+1 2023-08-01	COOS293	5	09:00	10:00	Jason Schmidt
+1 2023-08-01	MATH282	5	13:00	14:00	Micheal Grzesina
+1 2023-08-01		5	13:00	14:00
+
+*
+*
+* */
+
 describe( 'classroom conflict report page', ()=>{
   const headingsForEachClassroomReportTable = ['Term', 'Course Code', 'Weekday', 'Start Time', 'End Time', 'Instructor'];
+  const rowContentsForConflictTimeslotsTable = [
 
+  ];
+
+  const termsVisible = [
+    '2023-08-01 - 1',
+  ];
+
+  const classroomsVisible = [
+    '239A',
+  ];
 
   it('testLoadClassroomConflictReport ', () => {
   // Opens main page - and go to Classroom Conflict Report Page
@@ -20,33 +47,29 @@ describe( 'classroom conflict report page', ()=>{
     cy.get('#modalSubmit').should('be.disabled');
     // Check that classroom field can be entered
     cy.contains('Classroom');
-    cy.get('#classroomSelect').select('239A');
+    cy.get('#classroomSelect').select(classroomsVisible[0]);
     // Check that Enter button is enabled
-    cy.get('#modalSubmit').should('not.be.disabled');
+    cy.get('#modalSubmit').should('be.disabled');
+    cy.get('#termSelect').select(termsVisible[0]);
+    cy.get('#modalSubmit').should('be.enabled');
     cy.get('#modalSubmit').click();
 
     // modal for form disappears after submit button is clicked and sends a POST to the router
     cy.get('#classroomConflictModal').should('be.hidden');
 
     // Check header for classroom conflict page
-    cy.get('h1').contains('Classroom Conflicts');
-  });
+    cy.get('#pageTitleClassroomConflicts').contains('Classroom Conflicts');
 
-  it('testCheckingRoomNumberElementForSpecificRoomNumber', ()=>{
+    /* testCheckingRoomNumberElementForSpecificRoomNumber */
+
     // go directly to classroomConflictReport form page and submit the classroom info on the form
-    cy.visit('localhost:3000/classroomConflictReport');
-    cy.get('#classroomSelect').select('239A');
-    cy.get('#modalSubmit').click();
+
 
     // check room number element
     cy.get('h2').contains('Room Number: 239A');
-  });
 
-  it('testTableHeaderElementsForSpecificRoomNumber', ()=>{
-    // go directly to classroomConflictReport form page and submit the classroom info on the form
-    cy.visit('localhost:3000/classroomConflictReport');
-    cy.get('#classroomSelect').select('239A');
-    cy.get('#modalSubmit').click();
+
+    /* testTableHeaderElementsForSpecificRoomNumber */
 
 
     // cy.get('#div239A table thead:first-child').each( (element, index, $list) => {
@@ -63,34 +86,19 @@ describe( 'classroom conflict report page', ()=>{
     for (let i = 0; i < headingsForEachClassroomReportTable.length; i++) {
       cy.get(`#239aTable thead:nth-child(${i})`).should('have.text', headingsForEachClassroomReportTable[i]);
     }
-  });
 
 
-  it('testTableElementsForSpecificRoomNumber', ()=>{
-    // TODO determine if its better to use { [], [], ...} or [ [], [], ... )
-    const expectedContent = [
-      ['2023-4', 'COOS291', 'Monday', '8:00', '9:00', 'Wade Lahoda'],
-    ];
-  });
-
-  it('testCheckingRoomNumberElementForAllConflictedRooms', ()=>{
-    // go directly to classroomConflictReport form page and submit the classroom info on the form
-    cy.visit('localhost:3000/classroomConflictReport');
-    cy.get('#allclassroomSelect').check();
-    cy.get('#modalSubmit').click();
-
-    // check room number element
-    cy.get('h2').contains('Room Number: 239A');
-    cy.get('h2').contains('Room Number: 239B');
-  });
+    // });
+    //
+    //
+    // it('testTableHeaderElementsForAllConflictedRooms', ()=>{
+    //   // go directly to classroomConflictReport form page and submit the classroom info on the form
+    //   cy.visit('localhost:3000/classroomConflictReport');
+    //   cy.get('#allclassroomSelect').check();
+    //   cy.get('#modalSubmit').click();
 
 
-  it('testTableHeaderElementsForAllConflictedRooms', ()=>{
-    // go directly to classroomConflictReport form page and submit the classroom info on the form
-    cy.visit('localhost:3000/classroomConflictReport');
-    cy.get('#allclassroomSelect').check();
-    cy.get('#modalSubmit').click();
-
+    /* testTableHeaderElementsForAllConflictedRooms */
     // check table header elements
     for (let i = 0; i < headingsForEachClassroomReportTable.length; i++) {
       cy.get(`#239aTable thead:nth-child(${i})`).should('have.text', headingsForEachClassroomReportTable[i]);

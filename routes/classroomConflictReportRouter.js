@@ -30,6 +30,9 @@ router.post('/', async (req, res, next)=>{
   await addAssociations();
   await createAllTables(false);
 
+  const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
+  const terms= await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'ASC']]});
+
   const headerArray=[{header: 'Term'}, {header: 'Course Code'}, {header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}];
 
   // Sequelize will automatically perform an SQL query to the database and create a table
@@ -46,6 +49,8 @@ router.post('/', async (req, res, next)=>{
     realTerm,
     headerArray,
     timeslotsReturned,
+    classrooms,
+    terms,
   });
 });
 
@@ -66,9 +71,6 @@ router.get('/', async (req, res, next)=>{
     showModal: true,
   });
 });
-
-
-
 
 
 /**
@@ -94,6 +96,17 @@ async function generateTimeslots(classroom, term) {
 
 
     });
+
+    // // imagining
+    // let timeslotsForCurrentDay = [];
+    //
+    // // O n^2 algo attempt
+    // // processing each timeslot in the initial timeslot list for conflicts
+    // for (let j = 0; j < initialTimeslotsForTermClassroomWeekday.length; j++) {
+    //   let currTimeslot = initialTimeslotsForTermClassroomWeekday[j];
+    //
+    //
+    // }
 
 
     if (initialTimeslotsForTermClassroomWeekday.length>0) {
@@ -172,9 +185,7 @@ async function generateTimeslots(classroom, term) {
 
         if (conflictingTimeslotsNow.length > 1) {
           conflictingTimeslots0.push(conflictingTimeslotsNow);
-
         }
-
       } catch (e) {
         console.error(e);
       }

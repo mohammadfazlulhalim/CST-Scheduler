@@ -1,3 +1,5 @@
+<h1 id="pageTitleClassroomConflicts">Classroom Conflicts</h1>
+
 <!--find classroom conflict modal   -->
 <div id="classroomReportInfoModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -40,16 +42,16 @@
         </div>
     </div>
 </div>
+
+{{!-- Table for conflicting timeslots --}}
 {{#if timeslotsReturned}}
 <div>
-    <div class="row">
-        <div class="col-9">
+        <div class="row">
             <h2><i>Classroom:</i> {{realClassroom.roomNumber}}</h2>
         </div>
-        <div class="col-9">
+        <div class="row">
             <h2><i>Term:</i>{{realTerm.termNumber}} {{realTerm.startDate}}</h2>
         </div>
-    </div>
 </div>
 
 <div class="p-4">
@@ -76,13 +78,9 @@
 {{else}}
     <h1 id="nothingToShow">Nothing to display at the moment</h1>
 {{/if}}
-
-<!-- New report and print buttons -->
-<div class="btnPairsCustom">
-    <button id="newReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#classroomReportInfoModal">
-        New Report</button>
-    <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
-</div>
+{{!-- TODO determine if it's better to move button up --}}
+<button id="newReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#classroomReportInfoModal">
+    New Report</button>
 
 
 <script>
@@ -127,33 +125,6 @@
             // Enable or disable the submit button based on whether both selects have values
             submitBtn.disabled = termSelect.value === '' || classroomSelect.value === '';
         }
-        function printReport() {
-            const printWindow = window.open('', '_blank');
 
-            // Add styles or additional content if needed
-            printWindow.document.write('<html><head><title>Program Report</title>');
-            printWindow.document.write('<style>');
-            printWindow.document.write('@media print { @page { size: landscape; } }'); // Set page orientation to landscape
-            printWindow.document.write('.table-bordered { border-collapse: collapse; width: 100%; }');
-            printWindow.document.write('.table-bordered th, .table-bordered td { border: 1px solid black; padding: 8px; }');
-            printWindow.document.write('</style>');
-            printWindow.document.write('</head><body>');
-
-            // Print date and name
-            const dateGen = document.getElementById("dateGenDisplayer").innerText;
-            const programName = document.getElementById("nameDisplayer").innerText;
-
-            printWindow.document.write('<h2>Program Report For: ' + programName + '</h2>');
-            printWindow.document.write('<p>Report Generated: ' + dateGen + '</p>');
-
-            // Print the table
-            const tableHtml = document.querySelector('.table-bordered').outerHTML;
-            printWindow.document.write(tableHtml);
-
-            printWindow.document.write('</body></html>');
-
-            printWindow.document.close();
-            printWindow.print();
-        }
     };
 </script>
