@@ -106,7 +106,6 @@
                             <div>
                                 <label for="eInstructor">Instructor</label>
                                 <select id="eInstructor" class="form-select" data-instructorEdit="">Instructor
-                                    <option value=""></option>
                                     {{#each listInstructor}}
                                         <option value="{{id}}">{{lastName}}</option>
                                     {{/each}}
@@ -168,8 +167,7 @@
                         <div class="invalid-feedback">{{putErr.courseNumHoursPerWeek}}</div>
                         <div>
                             <label for="cInstructor">Instructor</label>
-                            <select id="cInstructor" class="form-label">Instructor
-                                <option></option>
+                            <select id="cInstructor" class="form-select">Default Instructor
                                 {{#each listInstructor}}
                                     <option value="{{id}}">{{lastName}}</option>
                                 {{/each}}
@@ -314,8 +312,6 @@
             }),
 
         });
-
-
 
         // get the HTML text response
         const data = await response.text();

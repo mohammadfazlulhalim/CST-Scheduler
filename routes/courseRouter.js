@@ -30,19 +30,34 @@ router.get('/', async (req, res, next)=>{
  * POST handler for http://localhost:3000/course
  *
  */
-router.post('/', async (req, res, next)=>{
+router.post('/', async (req, res, next) => {
   // synchronizing all models at once
   await sequelize.sync();
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
-  // Attempt to create the given course
-  const result= await createCourse({
-    id: req.body.id,
-    courseCode: req.body.courseCode,
-    courseName: req.body.courseName,
-    courseNumCredits: req.body.courseNumCredits,
-    courseNumHoursPerWeek: req.body.courseNumHoursPerWeek,
-    InstructorId: req.body.instructor,
-  });
+
+  let result;
+
+  // Check if req.body.instructor is empty
+  if (req.body.instructor) {
+    // Attempt to create the given course with an instructor
+    result = await createCourse({
+      id: req.body.id,
+      courseCode: req.body.courseCode,
+      courseName: req.body.courseName,
+      courseNumCredits: req.body.courseNumCredits,
+      courseNumHoursPerWeek: req.body.courseNumHoursPerWeek,
+      InstructorId: req.body.instructor,
+    });
+  } else {
+    // Attempt to create the given course without an instructor
+    result = await createCourse({
+      id: req.body.id,
+      courseCode: req.body.courseCode,
+      courseName: req.body.courseName,
+      courseNumCredits: req.body.courseNumCredits,
+      courseNumHoursPerWeek: req.body.courseNumHoursPerWeek,
+    });
+  }
 
   console.log(req.body.instructor);
 
@@ -51,7 +66,7 @@ router.post('/', async (req, res, next)=>{
     // if the course does not have a start/end date, that means it's invalid and errors were sent back
     res.status(422);
     // send error messages to the hbs template
-    violations=result.error;
+    violations = result.error;
   } else {
     // creation was successful
     res.status(201);
