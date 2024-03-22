@@ -218,9 +218,15 @@
      */
     async function handleCreateCourse() {
         let selectedInstructor = $('#cInstructor').val();
+        let courseCode = $('#cCourseCode').val();
+        let courseName = $('#cCourseName').val();
+        let courseNumCredits = $('#cCourseNumCredits').val();
+        let courseNumHoursPerWeek = $('#cCourseNumHoursPerWeek').val();
+
+
 
         // If no instructor is selected (blank option), set selectedInstructor to null
-        if (selectedInstructor === "") {
+        if (selectedInstructor === '') {
             selectedInstructor = null; // or '' depending on how your backend expects the value
             const response = await fetch("{{URL}}/course", {
                 method: 'POST',
@@ -228,10 +234,10 @@
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    courseCode: $('#cCourseCode').val(),
-                    courseName: $('#cCourseName').val(),
-                    courseNumCredits: $('#cCourseNumCredits').val(),
-                    courseNumHoursPerWeek: $('#cCourseNumHoursPerWeek').val(),
+                    courseCode: courseCode,
+                    courseName: courseName,
+                    courseNumCredits: courseNumCredits,
+                    courseNumHoursPerWeek: courseNumHoursPerWeek,
                     instructor: selectedInstructor,
                 }),
             });
@@ -244,10 +250,10 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                courseCode: $('#cCourseCode').val(),
-                courseName: $('#cCourseName').val(),
-                courseNumCredits: $('#cCourseNumCredits').val(),
-                courseNumHoursPerWeek: $('#cCourseNumHoursPerWeek').val(),
+                courseCode: courseCode,
+                courseName: courseName,
+                courseNumCredits: courseNumCredits,
+                courseNumHoursPerWeek: courseNumHoursPerWeek,
                 instructor: selectedInstructor,
             }),
         });
@@ -258,6 +264,18 @@
 
         // Load response, showing modal only if response is not OK
         loadResponse(modal, data, !response.ok);
+
+        handleCreateModal(selectedInstructor, courseCode, courseName, courseNumCredits, courseNumHoursPerWeek);
+
+
+    }
+
+    function handleCreateModal(selectedInstructor, courseCode, courseName, courseNumCredits, courseNumHoursPerWeek) {
+        $('#cInstructor').val(selectedInstructor);
+        $('#cCourseCode').val(courseCode);
+        $('#cCourseName').val(courseName);
+        $('#cCourseNumCredits').val(courseNumCredits);
+        $('#cCourseNumHoursPerWeek').val(courseNumHoursPerWeek);
     }
 
 

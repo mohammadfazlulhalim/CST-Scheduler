@@ -558,6 +558,8 @@
         let alternativeInstructor = $('#calternativeInstructor').val();
         let term = $('#cTerm').val();
 
+
+
         // Construct request body for course offering creation
         let requestBody = {
             name: name,
@@ -602,6 +604,7 @@
                 const data = await response.text();
                 const modal = '#addModal';
                 loadResponse(modal, data, true); // Display error in modal
+                handleCreateFail(courseCode, name, startDate, endDate, program, primaryInstructor, alternativeInstructor, term);
                 break; // Stop further processing if an error occurs
             }
         }
@@ -738,8 +741,19 @@
         document.getElementById('cprimaryInstructor').value = null;
         document.getElementById('calternativeInstructor').value = null;
         document.getElementById('cProgram').value = '';
-
     }
+
+    function handleCreateFail(courseCode, name, startDate, endDate, program, primaryInstructor, alternativeInstructor, term) {
+        document.getElementById('cCourse').value = courseCode;
+        document.getElementById('cName').value = name;
+        document.getElementById('cStartDate').value = startDate;
+        document.getElementById('cEndDate').value = endDate;
+        document.getElementById('cProgram').value = program;
+        document.getElementById('cprimaryInstructor').value = primaryInstructor;
+        document.getElementById('calternativeInstructor').value = alternativeInstructor;
+        document.getElementById('cTerm').value = term;
+    }
+
 
     /**
      * As the server gives responses in HTML, the client needs to be able to parse that data.
