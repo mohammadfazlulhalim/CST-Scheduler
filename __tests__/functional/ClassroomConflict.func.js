@@ -13,6 +13,7 @@ const ClassroomConflictReportController= require('../../routes/classroomConflict
 const setupTables = require('../../fixtures/ClearAndDefineTables');
 const {instructor1} = require('../../fixtures/Instructor.fix');
 const {program1} = require('../../fixtures/Program.fix');
+// const expect = require("expect");
 
 
 /*
@@ -201,47 +202,59 @@ describe('Classroom Conflict Report Router', ()=>{
 
     const response = await request(app)
         .get('/classroomConflictReport');
-    // TODO statusCode has to be declared back in the router file to be stored in the response object
-    expect(response.statusCode).toBe(200);
-    // TODO additional assertion to check the structure of the response
+    // statusCode has to be declared back in the router file to be stored in the response object
+     expect(response.statusCode).toBe(200);
+    expect(response.notFound).toBe(false);
+    expect(response.type).toBe('text/html');
   });
 
-  // Expecting two timeslots having the same information against provided classroom
-  it('testClassroomConflictsFound ', async ()=>{
-    // TODO  TODO Provide necessary data to create a new report
 
+
+  // Expecting timeslots having the same information against provided classroom and term
+  it('testClassroomConflictsFound ', async ()=>{
 
     const classroomInstance = await Classroom.findOne({where: {roomNumber: classroomObj.roomNumber}});
     const termInstance1 = await Term.findOne({where: {termNumber: termObj.termNumber}});
-    const termInstance2 = await Term.findOne({where: {termNumber: termObj2.termNumber}});
 
-    // const resultConflictingTimeslots = await ClassroomConflictReportController.checkForConflict(classroomInstance);
 
-    const expectedAnswerTimeslots = [
-      {
-        id: 3,
-        startTime: '13:00',
-        endTime: '14:00',
-        day: 4,
-        CourseOfferingId: 1,
-      },
-    ];
+
+
 
     // TODO implement parameter change router as well!
     // sends in the term and classroom to the function in router
     const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance, termInstance1);
+    //expected result should be a 2D array of length
+    expect(results.length).toBe(2);
 
+    //we will check all objects inside the 2D Array
+    for(let i=0; i<results.length; i++){
+      for (let j=0; j<results[i].length; j++){
+        expect (results[i][j]).toHaveProperty('startDate');
+        expect (results[i][j]).toHaveProperty('endDate');
+        expect (results[i][j]).toHaveProperty('startTime');
+        expect (results[i][j]).toHaveProperty('endTime');
+        expect (results[i][j]).toHaveProperty('day');
+        expect (results[i][j]).toHaveProperty('startTime');
+        //the common attribute in all object should be classroomId and termId
+        expect ((results[i][j]).ClassroomId).toBe (1);
+        expect ((results[i][j]).Classroom.roomNumber).toBe ('239A');
+        expect ((results[i][j]).Classroom.location).toBe ('Saskatoon Main Campus');
+        expect ((results[i][j]).TermId).toBe (1);
+        expect ((results[i][j]).Term.startDate).toBe ('2023-05-01');
+        expect ((results[i][j]).Term.endDate).toBe ('2023-05-24');
+      }
+    }
 
-    expect(resultConflictingTimeslots.length).toBe(2);
   });
 
   // Expecting no timeslots having the same information against provided classroom
   it('testClassroomConflictsNotFound ', async ()=>{
     const classroomInstance2 = await Classroom.findOne({where: {roomNumber: classroomObj2.roomNumber}});
+    const termInstance2 = await Term.findOne({where: {termNumber: termObj2.termNumber}});
 
-    // const resultConflictingTimeslots2 = await ClassroomConflictReportController.checkForConflict(classroomInstance2);
+    const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance2, termInstance2);
 
-    expect(resultConflictingTimeslots2.length).toBe(0);
+    expect(results.length).toBe(0);
   });
 
   // Clean up after tests

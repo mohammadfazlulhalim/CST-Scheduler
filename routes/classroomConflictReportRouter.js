@@ -6,7 +6,7 @@ const Instructor= require('../private/javascript/Instructor');
 const Classroom= require('../private/javascript/Classroom');
 const CourseOffering= require('../private/javascript/CourseOffering');
 const Course= require('../private/javascript/Course');
-
+const Program= require('../private/javascript/Program');
 const Term=require('../private/javascript/Term');
 const Timeslot = require('../private/javascript/Timeslot');
 const {QueryTypes} = require('sequelize');
@@ -33,7 +33,7 @@ router.post('/', async (req, res, next)=>{
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
   const terms= await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'ASC']]});
 
-  const headerArray=[{header: 'Term'}, {header: 'Course Code'}, {header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}];
+  const headerArray=[{header: 'Term'}, {header: 'Course Code'}, {header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}, {header:'Program'}];
 
   // Sequelize will automatically perform an SQL query to the database and create a table
   await sequelize.sync();
@@ -177,6 +177,9 @@ async function generateTimeslots(classroom, term) {
             {
               model: Classroom,
             },
+            {
+              model:Program
+            }
           ],
 
           order: [['startTime', 'ASC'], ['day', 'ASC']],
