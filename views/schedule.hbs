@@ -58,6 +58,7 @@
             <div id="group{{groupLetter}}" class="row container" hidden>
                 <div id="calender{{groupLetter}}" class=" col container-fluid">
                     <h2>Group {{groupLetter}} Calendar</h2>
+                     {{#each timeslotMatrix}}
                     <table class="table table-bordered table-hover border-dark">
                         <thead class="thead-dark">
                         <tr>
@@ -70,7 +71,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {{#each timeslotMatrix}}
+                        {{#each this}}
                             <!--loops each timeslot, outer loop is hours, inner loop is days  -->
                             <tr>
                                 {{#each this}}
@@ -93,6 +94,7 @@
                         {{/each}}
                         </tbody>
                     </table>
+                     {{/each}}
                 </div>
                 <div class="col container-fluid">
                     <h2>Group {{groupLetter}} Courses</h2>

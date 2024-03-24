@@ -3,6 +3,9 @@ const Instructor = require('../private/javascript/Instructor');
 const course = require('../private/javascript/Course');
 const constants = require('../constants');
 const courseOffering = require('../private/javascript/CourseOffering');
+const Term = require('../private/javascript/Term');
+const Course = require('../private/javascript/Course');
+const Program = require('../private/javascript/Program');
 const validCourses = require('../fixtures/Course.fix').validCourses;
 
 /**
@@ -12,6 +15,7 @@ async function fillCourseOfferingTable() {
   await CourseOffering.create(courseOffering1);
   const COA = await CourseOffering.bulkCreate(validCourseOfferingsB);
   const COB = await CourseOffering.bulkCreate(validCourseOfferingsA);
+  const COSPLIT = await CourseOffering.bulkCreate(validSplitCourseOfferings);
 
   for (let i=0; i<COA.length; i++) {
     COA[i].setCourse(await course.findByPk((i%validCourses.length)+1));
@@ -20,6 +24,26 @@ async function fillCourseOfferingTable() {
 
   let COHA = courseOffering1;
   let COSA = courseOffering2;
+  for (let i=0; i<COSPLIT.length; i++) {
+    COSPLIT[i].setTerm(2);
+    COSPLIT[i].setProgram(2);
+  }
+
+
+  COSPLIT[0].setInstructor(11);
+  COSPLIT[1].setInstructor(1);
+  COSPLIT[2].setInstructor(7);
+  COSPLIT[3].setInstructor(6);
+  COSPLIT[0].setCourse(15);
+  COSPLIT[1].setCourse(11);
+  COSPLIT[2].setCourse(4);
+  COSPLIT[3].setCourse(14);
+
+
+  /* CourseOffering.belongsTo(Term);
+  CourseOffering.belongsTo(Course);
+  CourseOffering.belongsTo(Instructor);
+  CourseOffering.belongsTo(Program); */
   COSA.group = 'A';
   COHA = await CourseOffering.create(COHA);
   COSA = await CourseOffering.create(COSA);
@@ -31,9 +55,6 @@ async function fillCourseOfferingTable() {
   COSA.setInstructor(3);
   COHA.setCourse(15);
   COSA.setCourse(4);
-
-
-
 
   let COHB = courseOffering1;
   let COSB = courseOffering2;
@@ -49,8 +70,6 @@ async function fillCourseOfferingTable() {
   COSB.setInstructor(3);
   COHB.setCourse(15);
   COSB.setCourse(4);
-
-  await CourseOffering.update({alternativeInstructor: 5}, {where: {id: COHB.id}});
 
   let COHC = courseOffering1;
   let COSC = courseOffering2;
@@ -82,29 +101,6 @@ async function fillCourseOfferingTable() {
   COHD.setCourse(15);
   COSD.setCourse(4);
 
-
-  let insSplit1 = courseOffering1;
-  insSplit1.name = 'Systems Administration 2';
-  insSplit1.startDate = '2023-10-01';
-  insSplit1.endDate = '2023-12-01';
-  insSplit1.group = 'D';
-  insSplit1 = await CourseOffering.create(insSplit1);
-  insSplit1.setTerm(1);
-  insSplit1.setProgram(1);
-  insSplit1.setInstructor(1);
-  insSplit1.setCourse(8);
-
-  let insSplit2 = courseOffering1;
-  insSplit2.name = 'Mathematics of Computation';
-  insSplit2.startDate = '2023-09-01';
-  insSplit2.endDate = '2023-10-31';
-  insSplit2.group = 'C';
-  insSplit2 = await CourseOffering.create(insSplit2);
-  insSplit2.setTerm(1);
-  insSplit2.setProgram(1);
-  insSplit2.setInstructor(1);
-  insSplit2.setCourse(1);
-
   courseOffering1.group = 'A';
   courseOffering2.group = 'B';
 }
@@ -130,25 +126,35 @@ const validCourseOfferingsA = [
   {name: 'Career Path Search', startDate: '2023-09-01', endDate: '2023-12-15', group: 'A', CourseId: 1},
 ];
 
+const validSplitCourseOfferings =[
+  {name: 'Hardware', startDate: '2023-01-01', endDate: '2023-04-01', group: 'A', CourseId: 1},
+  {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-01', group: 'A', CourseId: 1},
+  {name: 'Seminar', startDate: '2023-01-02', endDate: '2023-02-02', group: 'A', CourseId: 1},
+  {name: 'Technical Communications', startDate: '2023-03-15', endDate: '2023-05-14', group: 'A', CourseId: 1},
+]
+
+
+;
+
 const courseOffering1 = {
   name: 'Hardware',
-    startDate: '2023-09-01',
-    endDate: '2023-12-15',
-    group: 'A',
-    CourseId: 1,
-    termID: 1,
-    instructorID: 1,
-    programID: 1,
+  startDate: '2023-09-01',
+  endDate: '2023-12-15',
+  group: 'A',
+  CourseId: 1,
+  termID: 1,
+  instructorID: 1,
+  programID: 1,
 };
 const courseOffering2 = {
   name: 'Seminar',
-    startDate: '2023-09-01',
-    endDate: '2023-12-15',
-    group: 'B',
-    CourseId: 1,
-    termID: 1,
-    instructorID: 1,
-    programID: 1,
+  startDate: '2023-09-01',
+  endDate: '2023-12-15',
+  group: 'B',
+  CourseId: 1,
+  termID: 1,
+  instructorID: 1,
+  programID: 1,
 };
 
 

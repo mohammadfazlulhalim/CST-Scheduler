@@ -9,8 +9,7 @@ const defineDB = require('../fixtures/createTables.fix');
 const Instructor = require('../private/javascript/Instructor');
 
 router.get('/', async (req, res, next) => {
-
-  terms = await Term.findAll({order: [['startDate', 'DESC'],['termNumber', 'ASC']]});
+  terms = await Term.findAll({order: [['startDate', 'DESC'], ['termNumber', 'ASC']]});
   programs = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
 
 
@@ -37,52 +36,78 @@ router.post('/', async (req, res, next) => {
   let timeslotArray = new Array(req.body.group);
   const groupLetters = new Array(req.body.group);
 
+  const term = await Term.findByPk(req.body.term);
+  const program = await Program.findByPk(req.body.program);
+
+
   // looping through each group object requested
   for (let i = 0; i < req.body.group; i++) {
     groupArray.push({
-      timeslotMatrix: [[], [], [], [], [], [], [], []], // outer array is times, each inner array is days
+      timeslotMatrix: [[[], [], [], [], [], [], [], []]], // outer array is times, each inner array is days
       COArray: new Array(req.body.group), groupLetter: GROUP_LETTERS[i],
+      uniqueDates: [term.startDate, term.endDate],
     });
 
-    // Creating the 2D array with empty values
-    for (t in TIMES) {
-      for (d in DAYS) {
-        let timeOb = null;
-        if (d == 0) {
-          timeOb = DISPLAY_TIMES[t];
-        }
-        groupArray[i].timeslotMatrix[t][d] = {
-          hasObj: false, cellID: t + '-' + d + '-' + GROUP_LETTERS[i], // dynamic id
-          hTime: timeOb, // always empty except for time column
-          empty: 'empty',
-        };
+
+    timeslotArray = await Timeslot.findAll({
+      where: {
+        group: GROUP_LETTERS[i], ProgramId: req.body.program, TermId: req.body.term,
+      },
+    });
+    // fetch all course offerings that match filters
+    groupArray[i].COArray = await CourseOffering.findAll({
+      where: {
+        group: GROUP_LETTERS[i], ProgramId: req.body.program, TermId: req.body.term,
+      },
+    });
+
+    for (let j = 0; j < timeslotArray.length; j++) {
+      // Correctly check if the startDate is in uniqueDates
+      if (groupArray[i].uniqueDates.indexOf(timeslotArray[j].startDate) === -1) {
+        // Assuming you want to add the startDate to the uniqueDates array
+        groupArray[i].uniqueDates.push(timeslotArray[j].startDate);
+      }
+
+      if (groupArray[i].uniqueDates.indexOf(timeslotArray[j].endDate) === -1) {
+        // Assuming you want to add the startDate to the uniqueDates array
+        groupArray[i].uniqueDates.push(timeslotArray[j].endDate);
       }
     }
 
-    try {
-      // fetch all timeslots that match filters
-      timeslotArray = await Timeslot.findAll({
-        where: {
-          group: GROUP_LETTERS[i], ProgramId: req.body.program, TermId: req.body.term,
-        },
-      });
-      // fetch all course offerings that match filters
-      groupArray[i].COArray = await CourseOffering.findAll({
-        where: {
-          group: GROUP_LETTERS[i], ProgramId: req.body.program, TermId: req.body.term,
-        },
-      });
+    // console.log(groupArray[i]);
+    console.log(groupArray[i].uniqueDates = groupArray[i].uniqueDates.sort());
+    // eslint-disable-next-line guard-for-in
 
-      // getting each course offering for this group
-      for (let k = 0; k < groupArray[i].COArray.length; k++) {
-        const COObj = groupArray[i].COArray[k];
-          const insObj = await Instructor.findByPk(COObj.primaryInstructor);
-          COObj.insFirst = insObj.firstName;
-          COObj.insLast = insObj.lastName;
-          COObj.dName = COObj.name + '-' + COObj.group;
+    groupArray[i].timeslotMatrix = new Array(groupArray[i].uniqueDates.length - 1)
+        .fill(0)
+        .map(() => new Array(TIMES.length)
+            .fill(0)
+            .map(() => new Array(DAYS.length).fill(null)));
+
+    // Populate the timeslotMatrix for each interval
+    for (let m = 0; m < groupArray[i].uniqueDates.length - 1; m++) {
+      for (let tIndex = 0; tIndex < TIMES.length; tIndex++) {
+        for (let dIndex = 0; dIndex < DAYS.length; dIndex++) {
+          const timeOb = dIndex == 0 ? DISPLAY_TIMES[tIndex] : null;
+          const cellID = `${tIndex}-${dIndex}-${GROUP_LETTERS[i]}`;
+
+          // Fill the matrix dynamically based on the current interval 'm', time 'tIndex', and day 'dIndex'
+          groupArray[i].timeslotMatrix[m][tIndex][dIndex] = {
+            hasObj: false,
+            cellID: cellID,
+            hTime: timeOb,
+            empty: 'empty',
+          };
+        }
       }
-    } catch (error) {
-
+    }
+    // getting each course offering for this group
+    for (let k = 0; k < groupArray[i].COArray.length; k++) {
+      const COObj = groupArray[i].COArray[k];
+      const insObj = await Instructor.findByPk(COObj.primaryInstructor);
+      COObj.insFirst = insObj.firstName;
+      COObj.insLast = insObj.lastName;
+      COObj.dName = COObj.name + '-' + COObj.group;
     }
 
 
@@ -102,17 +127,17 @@ router.post('/', async (req, res, next) => {
 
       // Check if timeslotMatrix and the corresponding indices are defined
       if (
-          groupArray[i].timeslotMatrix &&
+        groupArray[i].timeslotMatrix[0] &&
           TIMES.indexOf(tSlot.startTime) !== -1 &&
-          groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)] &&
-          groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day]
+          groupArray[i].timeslotMatrix[0][TIMES.indexOf(tSlot.startTime)] &&
+          groupArray[i].timeslotMatrix[0][TIMES.indexOf(tSlot.startTime)][tSlot.day]
       ) {
         // Update properties only if the necessary objects and indices exist
-        groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
-        groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;
+        groupArray[i].timeslotMatrix[0][TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
+        groupArray[i].timeslotMatrix[0][TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;
       } else {
         // Handle the case where the structure or indices are not as expected
-        console.error('Invalid structure or indices in timeslotMatrix:', groupArray[i].timeslotMatrix);
+        console.error('Invalid structure or indices in timeslotMatrix:', groupArray[i].timeslotMatrix[0]);
       }
     }
 
