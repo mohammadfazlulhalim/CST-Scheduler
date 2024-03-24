@@ -132,13 +132,13 @@ async function generateTimeslots(classroom, term) {
                   startTime: {
                     [Op.and]: {
                       [Op.gte]: currentTimeslot.startTime,
-                      [Op.lte]: currentTimeslot.endTime,
+                      [Op.lt]: currentTimeslot.endTime,
                     },
                   },
                   // or the end time conflicts
                   [Op.and]: {
                     endTime: {
-                      [Op.gte]: currentTimeslot.startTime,
+                      [Op.gt]: currentTimeslot.startTime,
                       [Op.lte]: currentTimeslot.endTime,
                     },
                   },
@@ -151,12 +151,12 @@ async function generateTimeslots(classroom, term) {
                   startDate: {
                     [Op.and]: {
                       [Op.gte]: currentTimeslot.startDate,
-                      [Op.lte]: currentTimeslot.endDate,
+                      [Op.lt]: currentTimeslot.endDate,
                     },
                   },
                   endDate: {
                     [Op.and]: {
-                      [Op.gte]: currentTimeslot.startDate,
+                      [Op.gt]: currentTimeslot.startDate,
                       [Op.lte]: currentTimeslot.endDate,
                     },
                   },
