@@ -116,9 +116,9 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#' + 4 + 'coProgram').select('CNT', {force: true});
   // Skip
   cy.get('#' + 5 + 'coSkip').check();
-
+cy.wait(300);
   cy.get('#createCO').click();
-
+  cy.wait(500);
   // Check that new term is added:
   cy.get('#tableBody > tr:nth-child(2) > td:nth-child(1)').contains('3');
   cy.get('#tableBody > tr:nth-child(2) > td:nth-child(2)').contains('2024-05-03');
@@ -222,6 +222,7 @@ it('testThatTermWithNoAutogenerateOptionsDisplaysMessage ', () => {
   // checking the Course Offering modal
   cy.get('#coModal').should('be.visible');
   cy.get('#createCOError').should('have.text', 'No course offerings found');
+  cy.wait(100);
   cy.get('#createCOClose').click();
 
   // CHecking that the term is created

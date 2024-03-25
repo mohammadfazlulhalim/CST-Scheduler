@@ -87,6 +87,7 @@ describe('template spec', () => {
     // cy.intercept('POST', '/classroomReport/').as('classroomReportPOST');
     cy.get('#classroomReportInfoModal').should('be.visible'); // Check that the modal correctly popped up
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check the button is initially disabled
+    cy.wait(100);
     cy.get('#classroomSelect').children('option').then((options) => {
       const selectOptions = [...options].map((option) => option.textContent);
       const expectedOptions = classroomList;
@@ -100,8 +101,10 @@ describe('template spec', () => {
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     });
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check that the button is still disabled
+    cy.wait(100);
     cy.get('#termSelect').select('2022-2023 - Term 5');// Select term 5
     cy.get('#btnGenerateSchedule').should('be.enabled'); // Check that the button is now enabled
+    cy.wait(100);
     cy.get('#btnGenerateSchedule').click(); // Click generate schedule
 
     const classesInOrder = [
