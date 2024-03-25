@@ -22,8 +22,11 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
 
   // Fill out the add modal form
   cy.get('#cTermNumber').type('3');
+  cy.wait(100);
   cy.get('#cStartDate').type('2024-05-03');
+  cy.wait(100);
   cy.get('#cEndDate').type('2024-06-02');
+  cy.wait(100);
   cy.get('#cAuto').check();
   cy.wait(100);
   cy.get('#createTerm').click();
@@ -170,11 +173,13 @@ it('testThatTermSkipsAutogeneratesCourseOfferings', () => {
 
   // Fill out the add modal form
   cy.get('#cTermNumber').type('6');
+  cy.wait(100);
   cy.get('#cStartDate').type('2024-05-03');
+  cy.wait(100);
   cy.get('#cEndDate').type('2024-06-02');
-
+  cy.wait(100);
   cy.get('#createTerm').click();
-
+  cy.wait(100);
   // checking the Course Offering modal is hidden
   cy.get('#coModal').should('be.hidden');
 
@@ -205,9 +210,13 @@ it('testThatTermWithNoAutogenerateOptionsDisplaysMessage ', () => {
 
   // Fill out the add modal form
   cy.get('#cTermNumber').type('1');
+  cy.wait(100);
   cy.get('#cStartDate').type('2024-08-15');
+  cy.wait(100);
   cy.get('#cEndDate').type('2024-12-15');
+  cy.wait(100);
   cy.get('#cAuto').check();
+  cy.wait(100);
   cy.get('#createTerm').click();
 
   // checking the Course Offering modal
@@ -242,9 +251,13 @@ it('testThatTermAutogeneratesCourseOfferingsHasValidation', () => {
 
   // Fill out the add modal form
   cy.get('#cTermNumber').type('3');
+  cy.wait(100);
   cy.get('#cStartDate').type('2024-05-03');
+  cy.wait(100);
   cy.get('#cEndDate').type('2024-06-02');
+  cy.wait(100);
   cy.get('#cAuto').check();
+  cy.wait(100);
   cy.get('#createTerm').click();
 
   // checking the Course Offering modal

@@ -94,6 +94,8 @@ describe( 'classroom conflict report page', ()=>{
     cy.get('#pageTitleClassroomConflicts').contains('Classroom Conflicts');
 
     cy.get('#nothingToShow').should('have.text', 'Nothing to display at the moment');
+    cy.get('#newReportBtn').click();
+    cy.get('#classroomConflictModal').should('be.visible');
 
   });
 });
