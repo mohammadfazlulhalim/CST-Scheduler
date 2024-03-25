@@ -20,6 +20,7 @@ router.get('/', async (req, res, next) => {
   }
 
   res.render('schedule', {
+    isHidden: true,
     getrequest: true, terms, programs,
   });
 });
@@ -149,6 +150,7 @@ router.post('/', async (req, res, next) => {
 
 
   res.render('schedule', {
+    isHidden: false,
     groups: groupLetters, groupArray, DAYS, TIMES,
   });
 });

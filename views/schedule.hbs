@@ -56,7 +56,7 @@
             {{/each}}
         </div>
         {{#each groupArray}}
-            <div id="group{{groupLetter}}" class="row container" hidden>
+            <div id="group{{groupLetter}}" class="row container" {{isHidden}}>
                 <div id="calender{{groupLetter}}" class=" col container-fluid">
                     <h2>Group {{groupLetter}} Calendar</h2>
                      {{#each timeslotMatrix}}
@@ -191,11 +191,9 @@
             currCO = idCO;
             currDOM = domObj;
         }
-
     }
 
     async function onCellClick(idCell, tSlot, cellCO) {
-
         if (currCO) {
             //if not blank
             if (tSlot) {
@@ -303,7 +301,7 @@
         const newBodyContent = doc.getElementById('entirePageBody').innerHTML;
         console.log(newBodyContent);
         try {
-            // document.getElementById('entirePageBody').innerHTML = newBodyContent;
+            document.getElementById('entirePageBody').innerHTML = newBodyContent;
         } catch (error) {
             console.error('Error setting innerHTML:', error);
         }
