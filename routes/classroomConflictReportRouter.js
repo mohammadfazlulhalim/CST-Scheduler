@@ -10,8 +10,7 @@ const Program= require('../private/javascript/Program');
 const Term=require('../private/javascript/Term');
 const Timeslot = require('../private/javascript/Timeslot');
 const {QueryTypes} = require('sequelize');
-const {addAssociations} = require('../private/javascript/Associations');
-const createAllTables = require('../fixtures/createTables.fix');
+
 const term = require('../private/javascript/Term');
 const {stack} = require('sequelize/lib/utils');
 
@@ -27,13 +26,10 @@ const daysNumberedZeroIndex = [0, 1, 2, 3, 4, 5, 6];
  * @param next
  */
 router.post('/', async (req, res, next)=>{
-  await addAssociations();
-  await createAllTables(false);
-
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
   const terms= await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'ASC']]});
 
-  const headerArray=[{header: 'Term'}, {header: 'Course Code'}, {header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}, {header:'Program'}];
+  const headerArray=[{header: 'Term'}, {header: 'Course Code'}, {header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}, {header: 'Program'}];
 
   // Sequelize will automatically perform an SQL query to the database and create a table
   await sequelize.sync();
@@ -178,8 +174,8 @@ async function generateTimeslots(classroom, term) {
               model: Classroom,
             },
             {
-              model:Program
-            }
+              model: Program,
+            },
           ],
 
           order: [['startTime', 'ASC'], ['day', 'ASC']],

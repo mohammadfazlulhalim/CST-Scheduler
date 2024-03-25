@@ -37,7 +37,6 @@ describe('Classroom Conflict Report Router', ()=>{
 
   // use the imported function to clear and define tables from the established fixtures
   beforeAll( async () => {
-
     try {
       await sequelize.sync({force: true});
     } catch (error) {
@@ -104,16 +103,23 @@ describe('Classroom Conflict Report Router', ()=>{
         {id: 8, startDate: '2023-05-01', endDate: '2023-05-24', startTime: '08:00', endTime: '09:00', day: 3, group: 'A'};
 
 
-    //We setup TermId, courseOfferingId,InstructorId, ProgramId, classroomId  in the time slot object using createNewTimeslotWithAssociations helper function
-    const createdTimeslot1 =  await createNewTimeslotWithAssociations(timeslotObj1,createdClassroom, createdTerm,createdInstructor,createdProgram,createdCourseOffering );
-    const createdTimeslot2 = await  createNewTimeslotWithAssociations(timeslotObj2,createdClassroom, createdTerm,createdInstructor,createdProgram,createdCourseOffering2 );
-    const createdTimeslot3 = await  createNewTimeslotWithAssociations(timeslotObj3,createdClassroom, createdTerm,createdInstructor,createdProgram,createdCourseOffering );
-    const createdTimeslot4 =await  createNewTimeslotWithAssociations(timeslotObj4,createdClassroom, createdTerm,createdInstructor,createdProgram,createdCourseOffering );
-    const createdTimeslot5 = await  createNewTimeslotWithAssociations(timeslotObj5,createdClassroom, createdTerm,createdInstructor,createdProgram,createdCourseOffering2 );
-    const createdTimeslot6 = await  createNewTimeslotWithAssociations(timeslotObj6,createdClassroom, createdTerm,createdInstructor,createdProgram,createdCourseOffering2 );
-    const createdTimeslot7 =await  createNewTimeslotWithAssociations(timeslotObj7,createdClassroom2, createdTerm,createdInstructor,createdProgram,createdCourseOffering2 );
-    const createdTimeslot8 = await  createNewTimeslotWithAssociations(timeslotObj8,createdClassroom2, createdTerm,createdInstructor,createdProgram,createdCourseOffering2 );
-
+    // We setup TermId, courseOfferingId,InstructorId, ProgramId, classroomId  in the time slot object using createNewTimeslotWithAssociations helper function
+    const createdTimeslot1 = await createNewTimeslotWithAssociations
+    (timeslotObj1, createdClassroom, createdTerm, createdInstructor, createdProgram, createdCourseOffering );
+    const createdTimeslot2 = await createNewTimeslotWithAssociations
+    (timeslotObj2, createdClassroom, createdTerm, createdInstructor, createdProgram, createdCourseOffering2 );
+    const createdTimeslot3 = await createNewTimeslotWithAssociations
+    (timeslotObj3, createdClassroom, createdTerm, createdInstructor, createdProgram, createdCourseOffering );
+    const createdTimeslot4 =await createNewTimeslotWithAssociations
+    (timeslotObj4, createdClassroom, createdTerm, createdInstructor, createdProgram, createdCourseOffering );
+    const createdTimeslot5 = await createNewTimeslotWithAssociations
+    (timeslotObj5, createdClassroom, createdTerm, createdInstructor, createdProgram, createdCourseOffering2 );
+    const createdTimeslot6 = await createNewTimeslotWithAssociations
+    (timeslotObj6, createdClassroom, createdTerm, createdInstructor, createdProgram, createdCourseOffering2 );
+    const createdTimeslot7 =await createNewTimeslotWithAssociations
+    (timeslotObj7, createdClassroom2, createdTerm, createdInstructor, createdProgram, createdCourseOffering2 );
+    const createdTimeslot8 = await createNewTimeslotWithAssociations
+    (timeslotObj8, createdClassroom2, createdTerm, createdInstructor, createdProgram, createdCourseOffering2 );
   } );
 
   /**
@@ -140,47 +146,43 @@ describe('Classroom Conflict Report Router', ()=>{
   // Test endpoint for fetching classroom conflict reports
 
   it('testClassConflictURL', async ()=>{
-
     const response = await request(app)
         .get('/classroomConflictReport');
     // statusCode has to be declared back in the router file to be stored in the response object
-     expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(200);
     expect(response.notFound).toBe(false);
     expect(response.type).toBe('text/html');
   });
 
 
-
   // Expecting timeslots having the same information against provided classroom and term
   it('testClassroomConflictsFound ', async ()=>{
-
     const classroomInstance = await Classroom.findOne({where: {roomNumber: classroomObj.roomNumber}});
     const termInstance1 = await Term.findOne({where: {termNumber: termObj.termNumber}});
 
-     // sends in the term and classroom to the function in router
+    // sends in the term and classroom to the function in router
     const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance, termInstance1);
-    //expected result should be a 2D array of length
+    // expected result should be a 2D array of length
     expect(results.length).toBe(2);
 
-    //we will check all objects inside the 2D Array
-    for(let i=0; i<results.length; i++){
-      for (let j=0; j<results[i].length; j++){
-        expect (results[i][j]).toHaveProperty('startDate');
-        expect (results[i][j]).toHaveProperty('endDate');
-        expect (results[i][j]).toHaveProperty('startTime');
-        expect (results[i][j]).toHaveProperty('endTime');
-        expect (results[i][j]).toHaveProperty('day');
-        expect (results[i][j]).toHaveProperty('startTime');
-        //the common attribute in all object should be classroomId and termId
-        expect ((results[i][j]).ClassroomId).toBe (1);
-        expect ((results[i][j]).Classroom.roomNumber).toBe ('239A');
-        expect ((results[i][j]).Classroom.location).toBe ('Saskatoon Main Campus');
-        expect ((results[i][j]).TermId).toBe (1);
-        expect ((results[i][j]).Term.startDate).toBe ('2023-05-01');
-        expect ((results[i][j]).Term.endDate).toBe ('2023-05-24');
+    // we will check all objects inside the 2D Array
+    for (let i=0; i<results.length; i++) {
+      for (let j=0; j<results[i].length; j++) {
+        expect(results[i][j]).toHaveProperty('startDate');
+        expect(results[i][j]).toHaveProperty('endDate');
+        expect(results[i][j]).toHaveProperty('startTime');
+        expect(results[i][j]).toHaveProperty('endTime');
+        expect(results[i][j]).toHaveProperty('day');
+        expect(results[i][j]).toHaveProperty('startTime');
+        // the common attribute in all object should be classroomId and termId
+        expect((results[i][j]).ClassroomId).toBe(1);
+        expect((results[i][j]).Classroom.roomNumber).toBe('239A');
+        expect((results[i][j]).Classroom.location).toBe('Saskatoon Main Campus');
+        expect((results[i][j]).TermId).toBe(1);
+        expect((results[i][j]).Term.startDate).toBe('2023-05-01');
+        expect((results[i][j]).Term.endDate).toBe('2023-05-24');
       }
     }
-
   });
 
   // Expecting no timeslots having the same information against provided classroom
