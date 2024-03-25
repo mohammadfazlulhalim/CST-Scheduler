@@ -101,6 +101,8 @@ router.post('/', async (req, res, next) => {
         }
       }
     }
+
+
     // getting each course offering for this group
     for (let k = 0; k < groupArray[i].COArray.length; k++) {
       const COObj = groupArray[i].COArray[k];
@@ -118,29 +120,29 @@ router.post('/', async (req, res, next) => {
       prObj = await tSlot.getProgram();
       insObj = await tSlot.getInstructor();
       cObj = await coObj.getCourse();
-
       tSlot.program = prObj.programAbbreviation;
       tSlot.insLast = insObj.lastName;
-
       tSlot.course = cObj.courseCode;
       tSlot.co = coObj.id;
 
-      // Check if timeslotMatrix and the corresponding indices are defined
-      if (
-        groupArray[i].timeslotMatrix[0] &&
-          TIMES.indexOf(tSlot.startTime) !== -1 &&
-          groupArray[i].timeslotMatrix[0][TIMES.indexOf(tSlot.startTime)] &&
-          groupArray[i].timeslotMatrix[0][TIMES.indexOf(tSlot.startTime)][tSlot.day]
+      const dateIndex = groupArray[i].uniqueDates.findIndex((date) =>
+        date === tSlot.startDate, // Assuming tSlot.startDate is the correct date field to compare
+      );
+
+      if (dateIndex !== -1 && // Ensure dateIndex is found
+          TIMES.indexOf(tSlot.startTime) !== -1 && // Check if startTime is valid
+          groupArray[i].timeslotMatrix[dateIndex][TIMES.indexOf(tSlot.startTime)] && // Check if the timeslot exists
+          groupArray[i].timeslotMatrix[dateIndex][TIMES.indexOf(tSlot.startTime)][tSlot.day] // Check if the day slot exists
       ) {
         // Update properties only if the necessary objects and indices exist
-        groupArray[i].timeslotMatrix[0][TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
-        groupArray[i].timeslotMatrix[0][TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;
+        groupArray[i].timeslotMatrix[dateIndex][TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
+        groupArray[i].timeslotMatrix[dateIndex][TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;
       } else {
         // Handle the case where the structure or indices are not as expected
-        console.error('Invalid structure or indices in timeslotMatrix:', groupArray[i].timeslotMatrix[0]);
+        console.error(`Invalid structure or indices in timeslotMatrix for date index ${dateIndex}:`,
+            groupArray[i].timeslotMatrix[dateIndex]);
       }
     }
-
 
     groupLetters[i] = GROUP_LETTERS[i];
   }

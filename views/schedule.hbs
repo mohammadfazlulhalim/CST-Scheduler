@@ -1,5 +1,6 @@
 
-    <div id="scheduleModal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="scheduleModalLabel"
+<div id="entirePageBody">
+<div id="scheduleModal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="scheduleModalLabel"
          aria-hidden="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -116,6 +117,7 @@
         {{/each}}
         <a href="http://localhost:3000" class="btn btn-success mt-3">Return</a>
     </div>
+</div>
     <script>
     'use strict';
 
@@ -138,6 +140,9 @@
         let bGroupSelected = document.getElementById('groupSelect').value !== '';
 
         if (bTermSelected && bProgramSelected && bGroupSelected) {
+            localStorage.setItem('PostData', JSON.stringify({term: document.getElementById('termSelect').value,
+                    program: document.getElementById('programSelect').value,
+                      group: document.getElementById('groupSelect').value}));
             document.getElementById('modalSubmit').removeAttribute('disabled');
         } else {
             document.getElementById('modalSubmit').disabled = 'disabled';
@@ -190,6 +195,7 @@
     }
 
     async function onCellClick(idCell, tSlot, cellCO) {
+
         if (currCO) {
             //if not blank
             if (tSlot) {
@@ -233,6 +239,7 @@
 
 
         }
+        await fetchAndUpdateContent();
     }
 
 
@@ -268,5 +275,38 @@
                 "<p><br/></p>" +
                 "</td>";
         oldTD.outerHTML = newTD;
+
     }
-</script>
+
+    async function fetchAndUpdateContent() {
+        let postData = JSON.parse(localStorage.getItem('PostData'))
+        const response = await fetch('/schedule', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                term: postData.term,
+                group: postData.group,
+                program: postData.program,
+            })
+        });
+
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch updated schedule');
+        }
+
+        const htmlString = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        const newBodyContent = doc.getElementById('entirePageBody').innerHTML;
+        console.log(newBodyContent);
+        try {
+            // document.getElementById('entirePageBody').innerHTML = newBodyContent;
+        } catch (error) {
+            console.error('Error setting innerHTML:', error);
+        }
+    }
+
+    </script>

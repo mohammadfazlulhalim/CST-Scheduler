@@ -127,10 +127,10 @@ const validCourseOfferingsA = [
 ];
 
 const validSplitCourseOfferings =[
-  {name: 'Hardware', startDate: '2023-01-01', endDate: '2023-04-01', group: 'A', CourseId: 1},
-  {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-01', group: 'A', CourseId: 1},
+  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'A', CourseId: 1},
+  {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-28', group: 'A', CourseId: 1},
   {name: 'Seminar', startDate: '2023-01-02', endDate: '2023-02-02', group: 'A', CourseId: 1},
-  {name: 'Technical Communications', startDate: '2023-03-15', endDate: '2023-05-14', group: 'A', CourseId: 1},
+  {name: 'Technical Communications', startDate: '2023-04-15', endDate: '2023-05-14', group: 'A', CourseId: 1},
 ]
 
 
@@ -158,4 +158,5 @@ const courseOffering2 = {
 };
 
 
+// eslint-disable-next-line max-len
 module.exports = {courseOffering1, courseOffering2, validCourseOfferingsA, validCourseOfferingsB, fillCourseOfferingTable};
