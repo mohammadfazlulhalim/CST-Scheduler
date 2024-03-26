@@ -24,3 +24,5 @@ async function loadEverything() {
 }
 
 loadEverything();
+
+module.exports= {loadEverything};

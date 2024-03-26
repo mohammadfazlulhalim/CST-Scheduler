@@ -1,4 +1,5 @@
 const EXPECTEDROOMS = ['239A', '239B', '239a', '240B', '241', '242C'];
+const cornerIDs = ['0-1-A', '7-1-A', '0-5-A', '7-5-A']; // Monday 8am, 3pm, Friday 8am, 3pm
 
 /**
  * Test for alternate instructor and classroom
@@ -15,9 +16,8 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
   cy.get('#modalSubmit').click();
 
   // Check room dropdown is sorted numerically
-  cy.get('#classroomSelect')
-  for (let i=0; i < EXPECTEDROOMS.length;i++) {
-    let nChild = i+1;
+  for (let i = 0; i < EXPECTEDROOMS.length; i++) {
+    let nChild = i + 1;
     cy.get('#classroomSelect > option:mth-child(' + nChild + ')').should('have.text', EXPECTEDROOMS[i]);
   }
 
@@ -37,12 +37,11 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
   // Save both Hardware and Seminar, making sure that both have 241 selected
   cy.get('#Hardware-A').click();
   // Saving Hardware in the four corners
-  const cornerIDs = ['0-1-A', '7-1-A', '0-5-A', '7-5-A'] // Monday 8am, 3pm, Friday 8am, 3pm
-  for (let i=0; i<cornerIDs.length;i++) {
+  for (let i = 0; i < cornerIDs.length; i++) {
     cy.get(cornerIDs[i]).click();
   }
   // Testing that the four corners are filled properly
-  for (let i=0; i<cornerIDs.length;i++) {
+  for (let i = 0; i < cornerIDs.length; i++) {
     cy.get(cornerIDs[i]).contains('CST');
     cy.get(cornerIDs[i]).contains('COHS190');
     cy.get(cornerIDs[i]).contains('Benson');
@@ -52,12 +51,12 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
 
   // Selecting Seminar and placing it in the four corners
   cy.get('#Seminar-A').click();
-  for (let i=0; i<cornerIDs.length;i++) {
+  for (let i = 0; i < cornerIDs.length; i++) {
     cy.get(cornerIDs[i]).click();
   }
 
   // Testing that the four corners are filled properly
-  for (let i=0; i<cornerIDs.length;i++) {
+  for (let i = 0; i < cornerIDs.length; i++) {
     cy.get(cornerIDs[i]).contains('CST');
     cy.get(cornerIDs[i]).contains('SEM283');
     cy.get(cornerIDs[i]).contains('New');
@@ -73,13 +72,13 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
   cy.get(cornerIDs[3]).click();
 
   // Checking that it changed the room only for Monday 8am and Friday 3pm
-  for (let i=0; i<cornerIDs.length;i++) {
+  for (let i = 0; i < cornerIDs.length; i++) {
     cy.get(cornerIDs[i]).contains('CST');
     cy.get(cornerIDs[i]).contains('SEM283');
     cy.get(cornerIDs[i]).contains('New');
     cy.get(cornerIDs[i]).contains.not('Alternate');
     // Checking if it is even, as we only modified odd
-    if (i%2==0){
+    if (i % 2 == 0) {
       cy.get(cornerIDs[i]).contains('Room 241');
     } else {
       cy.get(cornerIDs[i]).contains('Room 240B');
@@ -91,10 +90,10 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
   cy.get(cornerIDs[0]).click();
   cy.get(cornerIDs[2]).click();
 
-  for (let i=0; i<cornerIDs.length;i++) {
+  for (let i = 0; i < cornerIDs.length; i++) {
 
     // Checking if it is even, as we only modified even
-    if (i%2==0){
+    if (i % 2 == 0) {
       cy.get(cornerIDs[i]).contains('CST');
       cy.get(cornerIDs[i]).contains('COHS190');
       cy.get(cornerIDs[i]).contains('Benson');
@@ -110,7 +109,7 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
   }
 
   // Now need to do cleanup - remove the added timeslot
-  for (let i=0; i<cornerIDs.length;i++) {
+  for (let i = 0; i < cornerIDs.length; i++) {
     cy.get(cornerIDs[i]).rightclick();
   }
 
@@ -127,12 +126,12 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
   // Making sure the first option in the classroom list is selected as default
   cy.get('#classroomSelect').find('option:selected').should('have.text', '239A');
 
-  for (let i=0; i<cornerIDs.length;i++) {
+  for (let i = 0; i < cornerIDs.length; i++) {
     cy.get(cornerIDs[i]).click();
   }
 
   // Testing that the four corners are filled properly
-  for (let i=0; i<cornerIDs.length;i++) {
+  for (let i = 0; i < cornerIDs.length; i++) {
     cy.get(cornerIDs[i]).contains('CST');
     cy.get(cornerIDs[i]).contains('SEM283');
     cy.get(cornerIDs[i]).contains('New');
@@ -141,7 +140,75 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
   }
 
   // Now need to do cleanup - remove the added timeslot
-  for (let i=0; i<cornerIDs.length;i++) {
+  for (let i = 0; i < cornerIDs.length; i++) {
     cy.get(cornerIDs[i]).rightclick();
   }
-})
+});
+
+/**
+ * Test that Classroom is handled when it is deleted after creating a timeslot
+ */
+it('testThatDeletedClassroomIsHandled', () => {
+  cy.visit('localhost:3000');
+  cy.contains('Schedule Builder').click();
+  cy.get('#programSelect').select('CST');
+  cy.get('#termSelect').select('2023-3'); //TODO: Change display for this
+  cy.get('#groupSelect').select('4');
+  cy.get('#modalSubmit').click();
+
+  // Check room dropdown is sorted numerically
+  for (let i = 0; i < EXPECTEDROOMS.length; i++) {
+    let nChild = i + 1;
+    cy.get('#classroomSelect > option:mth-child(' + nChild + ')').should('have.text', EXPECTEDROOMS[i]);
+  }
+
+  // Selecting Seminar and placing it in the four corners
+  cy.get('#Seminar-A').click();
+  for (let i = 0; i < cornerIDs.length; i++) {
+    cy.get(cornerIDs[i]).click();
+  }
+
+  // Testing that the four corners are filled properly
+  for (let i = 0; i < cornerIDs.length; i++) {
+    cy.get(cornerIDs[i]).contains('CST');
+    cy.get(cornerIDs[i]).contains('SEM283');
+    cy.get(cornerIDs[i]).contains('New');
+    cy.get(cornerIDs[i]).contains.not('Alternate');
+    cy.get(cornerIDs[i]).contains('Room 241');
+  }
+
+  // Going to the classroom page to delete Room 241
+  cy.visit('localhost:3000/Classroom');
+  cy.get('tbody > tr:nth-child(5) > td:nth-child(3) > btn:nth-child(2)').click();
+  cy.get('#delClassroom').click();
+
+  // revisiting the classroom
+  cy.contains('Schedule Builder').click();
+  cy.get('#programSelect').select('CST');
+  cy.get('#termSelect').select('2023-3'); //TODO: Change display for this
+  cy.get('#groupSelect').select('4');
+  cy.get('#modalSubmit').click();
+
+
+  const newROOMS = ['239A', '239B', '239a', '240B', '242C'];
+  // Checking that Room 241 is no longer an option
+  for (let i = 0; i < newROOMS.length; i++) {
+    let nChild = i + 1;
+    cy.get('#classroomSelect > option:mth-child(' + nChild + ')').should('have.text', newROOMS[i]);
+  }
+
+  for (let i = 0; i < cornerIDs.length; i++) {
+    cy.get(cornerIDs[i]).contains('CST');
+    cy.get(cornerIDs[i]).contains('COHS190');
+    cy.get(cornerIDs[i]).contains('Benson');
+    cy.get(cornerIDs[i]).contains('Alternate Lahoda');
+    cy.get(cornerIDs[i]).contains('Room Deleted');
+  }
+
+  // Now need to do cleanup - remove the added timeslot
+  for (let i = 0; i < cornerIDs.length; i++) {
+    cy.get(cornerIDs[i]).rightclick();
+  }
+
+  // TODO: Call loaddb again
+});
