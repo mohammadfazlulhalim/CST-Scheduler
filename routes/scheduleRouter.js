@@ -7,6 +7,7 @@ const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
 const defineDB = require('../fixtures/createTables.fix');
 const Instructor = require('../private/javascript/Instructor');
+const Classroom = require('../private/javascript/Classroom');
 
 router.get('/', async (req, res, next) => {
 
@@ -120,9 +121,11 @@ router.post('/', async (req, res, next) => {
     groupLetters[i] = GROUP_LETTERS[i];
   }
 
+  const classroomList = await Classroom.findAll();
+
 
   res.render('schedule', {
-    groups: groupLetters, groupArray, DAYS, TIMES,
+    groups: groupLetters, groupArray, DAYS, TIMES, classroomList,
   });
 });
 
@@ -133,14 +136,16 @@ router.put('/', async (req, res, next) => {
   const cellID = req.body.idCell.split('-');
   const CO = await CourseOffering.findByPk(req.body.CO);
 
+  console.log("Classroom to save: " + req.body.ClassroomId)
+
   const newtSlot = {
     startDate: CO.startDate,
     endDate: CO.endDate,
     CourseOfferingId: CO.id,
     InstructorId: CO.primaryInstructor,
-    ClassroomId: 1,
     TermId: CO.TermId,
     ProgramId: CO.ProgramId,
+    ClassroomId: req.body.ClassroomId,
     startTime: TIMES[parseInt(cellID[0])],
     endTime: TIMES[parseInt(cellID[0]) + 1], // Corrected
     day: cellID[1],
