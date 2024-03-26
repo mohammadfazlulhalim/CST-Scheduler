@@ -85,6 +85,9 @@ describe('template spec', () => {
     cy.get('#navClassroomReport').click(); // Select classroom report from the options
     // cy.wait('@classroomReportGET').its('request.method').should('eq', 'GET');
     // cy.intercept('POST', '/classroomReport/').as('classroomReportPOST');
+
+
+
     cy.get('#classroomReportInfoModal').should('be.visible'); // Check that the modal correctly popped up
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check the button is initially disabled
     cy.wait(100);
