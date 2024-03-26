@@ -274,6 +274,8 @@
                 "</td>";
         oldTD.outerHTML = newTD;
 
+        await fetchAndUpdateContent();
+
     }
 
     async function fetchAndUpdateContent() {
