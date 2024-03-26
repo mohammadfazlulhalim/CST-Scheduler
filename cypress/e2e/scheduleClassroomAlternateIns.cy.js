@@ -113,4 +113,35 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
   for (let i=0; i<cornerIDs.length;i++) {
     cy.get(cornerIDs[i]).rightclick();
   }
+
+  // Reloading the page, to test classroom has first in list default selected
+  cy.visit('localhost:3000');
+  cy.contains('Schedule Builder').click();
+  cy.get('#programSelect').select('CST');
+  cy.get('#termSelect').select('2023-3'); //TODO: Change display for this
+  cy.get('#groupSelect').select('4');
+  cy.get('#modalSubmit').click();
+
+  cy.get('#Hardware-A').click();
+
+  // Making sure the first option in the classroom list is selected as default
+  cy.get('#classroomSelect').find('option:selected').should('have.text', '239A');
+
+  for (let i=0; i<cornerIDs.length;i++) {
+    cy.get(cornerIDs[i]).click();
+  }
+
+  // Testing that the four corners are filled properly
+  for (let i=0; i<cornerIDs.length;i++) {
+    cy.get(cornerIDs[i]).contains('CST');
+    cy.get(cornerIDs[i]).contains('SEM283');
+    cy.get(cornerIDs[i]).contains('New');
+    cy.get(cornerIDs[i]).contains.not('Alternate');
+    cy.get(cornerIDs[i]).contains('Room 239A');
+  }
+
+  // Now need to do cleanup - remove the added timeslot
+  for (let i=0; i<cornerIDs.length;i++) {
+    cy.get(cornerIDs[i]).rightclick();
+  }
 })
