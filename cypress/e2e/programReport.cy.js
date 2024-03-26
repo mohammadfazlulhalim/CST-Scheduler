@@ -237,4 +237,108 @@ describe('Test Program Report Page', () => {
       return false;
     });
   });
+
+  /**
+   * STORY 53 NORMAL SPLITS
+   */
+  it('testStandardSplit', ()=> {
+
+    //Opens the landing page
+    cy.visit('localhost:3000');
+
+    //TODO: add in the course offering switch to group A
+
+    //create timeslot
+    cy.contains('Schedule Builder').click();
+    cy.get('#programSelect').select('CST');
+    cy.get('#termSelect').select('2023-1');
+    cy.get('#groupSelect').select('4');
+    cy.get('#modalSubmit').click();
+    cy.get('#Systems Administration 2-A"').click();
+    cy.get('#4-3-A').click();
+
+    // Click on the "Reports" dropdown toggle
+    // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
+    cy.get('#reportDropdown > a').click();
+
+    // Click on the "Instructor Report" option
+    cy.get('.nav-item.dropdown .dropdown-menu a[href="/programReport"]').click();
+
+    // Select the instructor from the dropdown based on value
+    cy.get('#selectProgramReport').select('#1');
+
+    // Select the term from the dropdown based on value
+    cy.get('#selectTermReport').select('#1');
+
+    // Select the group letter from the dropdown based on value
+    cy.get('#selectGroupReport').select('A');
+
+    // Submit the form
+    cy.get('#submitBtn').click();
+
+    //Test that the timeframe is correct
+    cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-09-30')
+    //map for valid timeslot locations
+    let classesInOrder = [
+      ['COOS293B', '', '', '', ''],
+      ['', 'COSA280A', '', '', 'COOS293B'],
+      ['', '', 'SEM283A', 'CWEB280A', ''],
+      ['', '', 'COHS280A', 'COOS291A', ''],
+      ['', '', '', '', ''], // 12:00 slot appears empty
+      ['', 'CDBM280A', '', '', 'MATH282A'],
+      ['MATH282A', '', '', '', ''],
+      ['', '', '', '', ''],
+    ];
+    //Check that theyre correct
+    checkCorrectSchedule(classesInOrder);
+
+    //go to the next split
+    cy.get('#btnRight').click();
+    //Test that the timeframe is correct
+    cy.get('#2023-10-01').contains('Schedule Range: 2023-10-01 to 2023-12-01')
+    //map for valid timeslot locations
+    classesInOrder = [
+      ['MATH282B', '', 'COOS293D', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''], // 12:00 slot appears empty
+      ['', '', '', 'COOS291B', ''],
+      ['', 'SEM283B', '', '', ''],
+      ['', '', '', '', ''],
+    ];
+    //Check that theyre correct
+    checkCorrectSchedule(classesInOrder);
+
+    //check that there's only 2 splits
+    cy.get('#btnRight').click();
+    classesInOrder = [
+      ['MATH282B', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', 'COOS291B', ''],
+      ['', 'SEM283B', '', '', ''],
+      ['', '', '', '', ''],
+    ];
+    checkCorrectSchedule(classesInOrder);
+
+    //check that the left button works
+    cy.get('#btnLeft').click();
+    classesInOrder = [
+      ['MATH282B', '', 'COOS293D', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''], // 12:00 slot appears empty
+      ['', '', '', 'COOS291B', ''],
+      ['', 'SEM283B', '', '', ''],
+      ['', '', '', '', ''],
+    ];
+    checkCorrectSchedule(classesInOrder);
+
+
+
+  });
 });

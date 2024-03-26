@@ -190,6 +190,16 @@ router.post('/', async function(req, res, next) {
   });
 });
 
+/**
+ * helper function that gets each unique date in a list of timeslots
+ * @param program
+ * @param term
+ * @returns {Promise<void>}
+ */
+async function getUniqueDates(program, term) {
+
+}
+
 
 /**
  * Helper function for the POST.
