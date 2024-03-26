@@ -1,46 +1,46 @@
 <div class="container-fluid">
-    <h1 class="display-6 text-center">{{title}}</h1>
+    <div class="row justify-content-center">
 
-    <!--    Check if courses was sent as undefined or not -->
+        <div class="offset-2 col-md-8 text-center">
+            <h1 class="display-4">{{title}}</h1>
+        </div>
+        <div class="col-md-2">
+            <button id="createCourseButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal">Add New Course</button>
+        </div>
+    </div>
+
     {{#if courseList}}
-        <!--        table for storing course items if they do exist -->
-        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addModal">Add New Course </button>
-        <table class="table table-striped">
-            <thead class="table-primary">
-
-            <tr>
-                <th>Course Code</th>
-                <th>Course Name</th>
-                <th>Number of Credits</th>
-                <th>Number of Hours</th>
-                <th>Preferred Instructor</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{#each courseList}}
+        <div class="table-wrapper table-responsive mt-3">
+            <table id="table" class="table table-striped fixed-size-table">
+                <thead class="table-primary fixed-size-table-header">
                 <tr>
-                    <td id="{{this.id}}courseCode">{{this.courseCode}}</td>
-                    <td id="{{this.id}}courseName">{{this.courseName}}</td>
-                    <td id="{{this.id}}courseNumCredits">{{this.courseNumCredits}}</td>
-                    <td id="{{this.id}}courseNumHoursPerWeek">{{this.courseNumHoursPerWeek}}</td>
-                    <td id="{{this.id}}instructor"
-                        data-instructorid="{{this.Instructor.id}}">{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
-                    <td>
-                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
-                                data-toggle="modal"
-                                data-target="#editModal">Edit
-                        </button>
-                        <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
-                                data-toggle="modal"
-                                data-target="#deleteModal">Delete
-                        </button>
-                    </td>
+                    <th class="text-center">Course Code</th>
+                    <th class="text-center">Course Name</th>
+                    <th class="text-center">Number of Credits</th>
+                    <th class="text-center">Number of Hours</th>
+                    <th class="text-center">Preferred Instructor</th>
+                    <th class="text-center">Actions</th>
                 </tr>
-            {{/each}}
-            </tbody>
-
-        </table>
+                </thead>
+                <tbody>
+                {{#each courseList}}
+                    <tr>
+                        <td class="text-center" id="{{this.id}}courseCode">{{this.courseCode}}</td>
+                        <td class="text-center" id="{{this.id}}courseName">{{this.courseName}}</td>
+                        <td class="text-center" id="{{this.id}}courseNumCredits">{{this.courseNumCredits}}</td>
+                        <td class="text-center" id="{{this.id}}courseNumHoursPerWeek">{{this.courseNumHoursPerWeek}}</td>
+                        <td class="text-center" id="{{this.id}}instructor" data-instructorid="{{this.Instructor.id}}">
+                            {{this.Instructor.firstName}} {{this.Instructor.lastName}}
+                        </td>
+                        <td>
+                            <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton" data-toggle="modal" data-target="#editModal">Edit</button>
+                            <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
 
         <!-- Delete Modal -->
         <div class="modal fade" id="deleteModal" role="dialog" tabindex="-1" aria-labelledby="deleteModalLabel"
@@ -76,7 +76,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editModalLabel">Edit Existing Course</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -128,6 +128,11 @@
     {{else}}
         <p>There are no courses stored</p>
     {{/if}}
+    <div class="text-end p-2">
+        <a href="{{URL}}">
+            <button class="btn btn-dark">Return</button>
+        </a>
+    </div>
 
 
 
@@ -222,7 +227,6 @@
         let courseName = $('#cCourseName').val();
         let courseNumCredits = $('#cCourseNumCredits').val();
         let courseNumHoursPerWeek = $('#cCourseNumHoursPerWeek').val();
-
 
 
         // If no instructor is selected (blank option), set selectedInstructor to null
@@ -406,5 +410,34 @@
         $('#cCourseNumHoursPerWeek').val('');
     }
 
+    function closeModal() {
+        $('#editModal').modal('hide');
+    }
+
 
 </script>
+
+<style>
+    .fixed-size-table td,
+    .fixed-size-table th {
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+
+    .fixed-size-table-header th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .fixed-size-table button {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .table-wrapper {
+        max-height: calc(100vh - 275px); /* Adjust the subtracted value as needed */
+        overflow-y: auto;
+        border: 1px solid #ccc; /* Add border to the div */
+    }
+</style>

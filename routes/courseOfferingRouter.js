@@ -20,7 +20,7 @@ router.get('/', async function(req, res, next) {
 
   // render the courseOffering template file with appropriate title and the retrieved list of course offerings
   res.render('courseOffering', {
-    title: 'Course Offerings',
+    title: 'Manage Course Offerings',
     listCO: listCO,
     listTerm,
     listProgram,
@@ -66,7 +66,7 @@ router.post('/', async function(req, res, next) {
   const listCO = await getCOList();
 
   res.render('courseOffering', {
-    title: 'Course Offerings',
+    title: 'Manage Course Offerings',
     listCO: listCO,
     err: violations,
     submittedCO: violations ? req.body : undefined,
@@ -115,7 +115,7 @@ router.put('/', async function(req, res, next) {
   const listCO = await getCOList();
 
   res.render('courseOffering', {
-    title: 'Course Offerings',
+    title: 'Manage Course Offerings',
     listCO: listCO,
     putErr: violations,
     submittedCO: violations ? req.body : undefined,
@@ -142,7 +142,7 @@ router.delete('/', async function(req, res, next) {
   const listCO = await getCOList();
 
   res.render('courseOffering', {
-    title: 'Course Offerings',
+    title: 'Manage Course Offerings',
     listCO: listCO,
     err: violations,
     submittedCO: violations ? req.body : undefined,

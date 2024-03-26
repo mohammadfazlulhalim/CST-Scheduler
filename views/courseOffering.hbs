@@ -286,7 +286,7 @@
                             <label>Number of Groups To Create:</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="decrementValue()">
+                                    <button id="decrement" class="btn btn-outline-secondary" type="button" onclick="decrementValue()">
                                         -
                                     </button>
                                 </div>
@@ -295,7 +295,7 @@
                                        max="4" aria-label="Number of Groups" aria-describedby="basic-addon1"
                                        readonly>
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="incrementValue()">
+                                    <button id="increment" class="btn btn-outline-secondary" type="button" onclick="incrementValue()">
                                         +
                                     </button>
                                 </div>
@@ -322,11 +322,19 @@
     'use strict';
     reLinkButtons();
 
+    /**
+     * Filter term rows based on the selected term.
+     */
     document.getElementById('filterTerm').addEventListener('change', function() {
+        // Get the value of the selected term
         var termId = this.value;
+        // Select all elements with class 'term-row'
         var termRows = document.querySelectorAll('.term-row');
+        // Iterate through term rows to show/hide based on selected term
         termRows.forEach(function(row) {
+            // Get the term id from the row's data attribute
             var rowTermId = row.getAttribute('data-termid');
+            // Show or hide the row based on the selected term
             if (termId === '' || rowTermId === termId) {
                 row.style.display = '';
             } else {
@@ -335,10 +343,15 @@
         });
     });
 
-    //This is just a sort functionality for the course offerings
+    /**
+     * Sorts the table by the specified column index.
+     *
+     * @param {number} columnIndex - The index of the column to sort by.
+     */
     function sortTable(columnIndex) {
         var table, rows, switching, i, x, y, shouldSwitch;
         table = document.getElementById('dataTable');
+        // Loop until no switching is needed
         switching = true;
         while (switching) {
             switching = false;
@@ -347,11 +360,13 @@
                 shouldSwitch = false;
                 x = rows[i].getElementsByTagName('TD')[columnIndex];
                 y = rows[i + 1].getElementsByTagName('TD')[columnIndex];
+                // Check if rows should be switched based on column values
                 if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                     shouldSwitch = true;
                     break;
                 }
             }
+            // Switch rows if needed
             if (shouldSwitch) {
                 rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
                 switching = true;
@@ -359,11 +374,16 @@
         }
     }
 
-    // Attach click event listeners to table headers for sorting
+    /**
+     * Attaches click event listeners to table headers for sorting.
+     */
     document.querySelectorAll('#dataTable th').forEach((header, index) => {
         header.addEventListener('click', () => sortTable(index));
     });
 
+    /**
+     * Increments the value of the number of groups if it's less than 4.
+     */
     function incrementValue() {
         let currentValue = parseInt(document.getElementById('numberOfGroups').value);
         if (currentValue < 4) {
@@ -371,6 +391,9 @@
         }
     }
 
+    /**
+     * Decrements the value of the number of groups if it's greater than 1.
+     */
     function decrementValue() {
         let currentValue = parseInt(document.getElementById('numberOfGroups').value);
         if (currentValue > 1) {
@@ -379,39 +402,36 @@
     }
 
     /**
-     * This function autofills the name field with the course name when the course is selected
+     * Autofills the course name field when a course is selected.
      */
     function selectedCourseCreate() {
-        // e.target.dataset.courseName;
         let courseCode = document.getElementById('cCourse').value;
+        // Try to autofill course name and primary instructor fields
         try {
             document.getElementById('cName').value = document.getElementById('optionCreateCourse' + courseCode).dataset.coursename;
             document.getElementById('cCourseInvalid').innerText = '';
             document.getElementById('cCourse').classList.remove('is-invalid');
             document.getElementById('cprimaryInstructor').value = (parseInt(document.getElementById('optionCreateCourse' + courseCode).dataset.instructorid));
         } catch (e) {
+            // Handle invalid course selection
             document.getElementById('cCourse').classList.add('is-invalid');
             document.getElementById('cCourseInvalid').innerText = 'Please select a Course Code from the list';
             document.getElementById('cName').value = '';
         }
-        checkCreateEnable();
     }
 
     /**
-     * This function autofills the start and end dates with the term start and end dates when the term is selected
+     * Autofills start and end dates when term is selected.
      */
     function selectedTermCreate() {
         let termID = document.getElementById('cTerm').value;
+        // Autofill start and end dates based on selected term
         document.getElementById('cStartDate').value = document.getElementById('optionCreateTerm' + termID).dataset.termstart;
         document.getElementById('cEndDate').value = document.getElementById('optionCreateTerm' + termID).dataset.termend;
-
-        checkCreateEnable();
     }
 
-
     /**
-     * This function checks that each dropdown has an associated property selected
-     * and if it does enables the submit button
+     * Checks that each dropdown has an associated property selected and enables the submit button if conditions are met.
      */
     function checkCreateEnable() {
         let termSelected = document.getElementById('cTerm').value.trim() !== '';
@@ -430,12 +450,10 @@
         let programSelected = document.getElementById('cProgram').value.trim() !== '';
         let alternativeInstructorSelect = document.getElementById('calternativeInstructor');
 
-
+        // Enable/disable create button based on selections
         if (termSelected && programSelected && courseSelected && primaryInstructorSelected) {
-            // Enable the "Create" button
             document.getElementById('createCO').removeAttribute('disabled');
         } else {
-            // Disable the "Create" button
             document.getElementById('createCO').disabled = true;
         }
 
@@ -447,21 +465,24 @@
             alternativeInstructorSelect.disabled = true;
         }
 
+        // Disable create button if primary instructor is same as alternative instructor
         document.getElementById('createCO').disabled = primaryInstructor === alternativeInstructorSelect && primaryInstructor !== "";
     }
 
-
+    /**
+     * Updates start and end dates when a term is selected for editing.
+     */
     function selectedTermUpdate() {
         let termID = document.getElementById('eTerm').value;
         document.getElementById('eStartDate').value = document.getElementById('optionEditTerm' + termID).dataset.termstart;
         document.getElementById('eEndDate').value = document.getElementById('optionEditTerm' + termID).dataset.termend;
 
+        // Check if update is enabled after selecting term
         checkUpdateEnable();
     }
 
     /**
-     * This method checks that a value has been selected for every dropdown field
-     * and if so enables the submit button
+     * Checks that a value has been selected for every dropdown field and enables the submit button if conditions are met.
      */
     function checkUpdateEnable() {
         var termSelected = document.getElementById('eTerm').value !== '';
@@ -469,6 +490,7 @@
         var programSelected = document.getElementById('eProgram').value !== '';
         var editCOButton = document.getElementById('editCO');
 
+        // Enable/disable alternative instructor select based on whether primary instructor is selected
         if (primaryInstructorSelected) {
             document.getElementById('ealternativeInstructor').removeAttribute('disabled');
         } else {
@@ -476,6 +498,7 @@
             document.getElementById('ealternativeInstructor').value = null;
         }
 
+        // Enable/disable edit button based on selections
         if (termSelected && programSelected && primaryInstructorSelected) {
             editCOButton.removeAttribute('disabled');
             checkEditInstructorMatch();
@@ -484,12 +507,15 @@
         }
     }
 
-
+    /**
+     * Checks if the primary and alternative instructors are the same during course creation and marks them as invalid if they match.
+     */
     function checkCreateInstructorMatch() {
         var primaryInstructor = document.getElementById('cprimaryInstructor').value;
         var alternativeInstructor = document.getElementById('calternativeInstructor').value;
         var createCOButton = document.getElementById('createCO');
 
+        // Disable create button and mark instructors as invalid if they match
         if (primaryInstructor === alternativeInstructor && primaryInstructor !== "") {
             createCOButton.disabled = true;
             document.getElementById('cprimaryInstructor').classList.add('is-invalid');
@@ -499,16 +525,19 @@
             document.getElementById('cprimaryInstructor').classList.remove('is-invalid');
             document.getElementById('calternativeInstructor').classList.remove('is-invalid');
         }
+        // Check if create is enabled after checking instructor match
         checkCreateEnable();
     }
 
-
+    /**
+     * Checks if the primary and alternative instructors are the same during course editing and marks them as invalid if they match.
+     */
     function checkEditInstructorMatch() {
         var primaryInstructor = document.getElementById('eprimaryInstructor').value;
         var alternativeInstructor = document.getElementById('ealternativeInstructor').value;
         var editCOButton = document.getElementById('editCO');
-        var invalidInstructorDiv = document.getElementById('einvalid-instructor');
 
+        // Disable edit button and mark instructors as invalid if they match
         if (primaryInstructor === alternativeInstructor) {
             editCOButton.disabled = true;
             document.getElementById('eprimaryInstructor').classList.add('is-invalid');
@@ -519,7 +548,6 @@
             document.getElementById('ealternativeInstructor').classList.remove('is-invalid');
         }
     }
-
 
     /**
      * This function links the buttons on the page to their appropriate handlers

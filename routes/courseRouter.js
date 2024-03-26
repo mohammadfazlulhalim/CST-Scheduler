@@ -19,7 +19,7 @@ router.get('/', async (req, res, next)=>{
   // console.log('List of Instructors:', listInstructor);
 
   res.render('course', {
-    title: 'Course Listings',
+    title: 'Manage Courses',
     listInstructor,
     courseList: courseLists, URL,
   });
@@ -99,7 +99,7 @@ router.delete('/', async function(req, res, next) {
   const courseLists = await readAllCourses();
   res.render('course', {
     listInstructor,
-    title: 'Course List',
+    title: 'Manage Courses',
     courseList: courseLists,
     putErr: violations,
     submittedCourse: violations ? req.body : undefined, URL,
@@ -136,7 +136,7 @@ router.put('/', async function(req, res, next) {
 
 
   res.render('course', {
-    title: 'Course List',
+    title: 'Manage Courses',
     courseList: courseLists,
     putErr: violations,
     listInstructor,

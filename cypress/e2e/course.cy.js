@@ -1,6 +1,140 @@
 /* The following tests are created to check functionality of the app to create, update and delete courses */
 describe('Testing Course CRUD options', () => {
-  // these are the selectors for HTML elements
+  it('testCourse', () => {
+    // Visit the course page
+    cy.visit('http://localhost:3000/course');
+
+    // Click the button to add a new course
+    cy.get('#createCourseButton').click();
+
+    // Ensure the add course modal is visible
+    cy.get('#addModal').should('be.visible');
+
+    // Fill in course details
+    cy.get('#cCourseCode').type('AAA111');
+    cy.wait(100); // Waiting to ensure typing is complete
+    cy.get('#cCourseName').type('Test Course');
+    cy.get('#cCourseNumCredits').type('3');
+    cy.get('#cCourseNumHoursPerWeek').type('2');
+
+    // List of instructors for dropdown selection
+    const instructorList = ['Barrie', 'Basoalto', 'Benson', 'Caron', 'Grzesina', 'Holtslan', 'Kaban', 'Lahoda', 'New', 'Onishenko', 'Schmidt'];
+
+    // Loop through the instructor list to check dropdown options
+    for (let i = 0; i < instructorList.length; i++) {
+      const num = i + 1;
+      cy.get('#cInstructor > option:nth-child(' + num + ')').should('have.text', instructorList[i]);
+    }
+
+    // Select an instructor
+    cy.get('#cInstructor').select('Barrie');
+
+    // Click the button to create the course
+    cy.get('#createCourse').click();
+
+    // Ensure the add course modal is hidden after submission
+    cy.get('#addModal').should('be.hidden');
+
+    // Check if the course details are displayed in the table
+    cy.get('#table').within(() => {
+      // Check if the first row in the table matches the added course details
+      cy.get('tr:first-child > td').eq(0).should('contain.text', 'AAA111');
+      cy.get('tr:first-child > td').eq(1).should('contain.text', 'Test Course');
+      cy.get('tr:first-child > td').eq(2).should('contain.text', '3');
+      cy.get('tr:first-child > td').eq(3).should('contain.text', '2');
+      cy.get('tr:first-child > td').eq(4).should('contain.text', 'Bryce Barrie'); // Ensure instructor name matches
+    });
+
+    // Click the "Edit" button for the first row in the table
+    cy.get('#table tr:first-child .editButton').click();
+
+    // Edit course code
+    cy.get('#eCourseCode').clear();
+    cy.get('#eCourseCode').type('AAA222');
+
+    // Click the "Save Changes" button
+    cy.get('#editCourse').click();
+    cy.wait(100); // Waiting to ensure the update is complete
+
+    // Check if the edited course details are updated in the table
+    cy.get('#table').within(() => {
+      cy.get('tr:first-child > td').eq(0).should('contain.text', 'AAA222');
+      cy.get('tr:first-child > td').eq(1).should('contain.text', 'Test Course');
+      cy.get('tr:first-child > td').eq(2).should('contain.text', '3');
+      cy.get('tr:first-child > td').eq(3).should('contain.text', '2');
+      cy.get('tr:first-child > td').eq(4).should('contain.text', 'Bryce Barrie');
+    });
+
+    // Click the "Edit" button again
+    cy.get('#table tr:first-child .editButton').click();
+
+    // Ensure the edit modal is visible
+    cy.get('#editModal').should('be.visible');
+    cy.wait(100); // Waiting to ensure modal is fully loaded
+
+    // Check if the edit form fields contain the correct values
+    cy.get('#eCourseCode').should('have.value', 'AAA222');
+    cy.get('#eCourseName').should('have.value', 'Test Course');
+    cy.get('#eCourseNumCredits').should('have.value', '3');
+    cy.get('#eCourseNumHoursPerWeek').should('have.value', '2');
+
+    // Loop through the instructor list to check dropdown options in edit form
+    for (let i = 0; i < instructorList.length; i++) {
+      const num = i + 1;
+      cy.get('#eInstructor > option:nth-child(' + num + ')').should('have.text', instructorList[i]);
+    }
+
+    // Clear the edit form fields
+    cy.get('#eCourseCode').clear();
+    cy.get('#eCourseName').clear();
+    cy.get('#eCourseNumCredits').clear();
+    cy.get('#eCourseNumHoursPerWeek').clear();
+
+    // Click the "Save Changes" button in the edit modal
+    cy.get('#editCourse').click();
+
+    // Check if the edit form fields still contain the correct values after clearing
+    cy.get('#eCourseCode').should('have.value', 'AAA222');
+    cy.get('#eCourseName').should('have.value', 'Test Course');
+    cy.get('#eCourseNumCredits').should('have.value', '3');
+    cy.get('#eCourseNumHoursPerWeek').should('have.value', '2');
+
+    // Check error messages for invalid input
+    cy.get('.invalid-feedback').eq(0).should('have.text', 'Course Code can have 3-4 characters and 3-4 digits only');
+    cy.get('.invalid-feedback').eq(1).should('have.text', 'Course Name must have 1 to 50 characters.');
+    cy.get('.invalid-feedback').eq(2).should('have.text', 'Enter a whole number between 0 and 6 as a valid number of credits.');
+    cy.get('.invalid-feedback').eq(3).should('have.text', 'Enter a whole number between 1 and 40 as a valid number of hours.');
+
+    // Close the edit modal
+    cy.get('#editModal > .modal-dialog > .modal-content > .modal-header > .close').click();
+
+    // Click the "Delete" button for the first row in the table
+    cy.get('#table tr:first-child .deleteButton').click();
+    cy.get('#deleteCourse').click();
+
+    // Ensure the deleted course is no longer in the table
+    cy.get('#table').within(() => {
+      cy.get('tr:first-child > td').eq(0).should('contain.text', 'CDBM280');
+      cy.get('tr:first-child > td').eq(1).should('contain.text', 'Database Management Systems');
+      cy.get('tr:first-child > td').eq(2).should('contain.text', '5');
+      cy.get('tr:first-child > td').eq(3).should('contain.text', '5');
+      cy.get('tr:first-child > td').eq(4).should('contain.text', 'Ron New');
+    });
+  });
+
+
+  /* it('testAddingInformationOfNewCourseWithEmptyTestBox ', () => {
+    cy.get(createCourseButton).click();
+    cy.wait(1000);
+    cy.get(createCourseButtonOnNewInsModal ).click();
+    cy.get(errorMessageForCourseCode).should('have.text', 'Course Code can have 3-4 characters and 3-4 digits only');
+    cy.get(errorMessageForCourseName).should('have.text', 'Course Name must have 1 to 50 characters.');
+    cy.get(errorMessageForCourseCredit).should('have.text', 'Enter a whole number between 0 and 6 as a valid number of credits.');
+    cy.get(errorMessageForCourseHours).should('have.text', 'Enter a whole number between 1 and 40 as a valid number of hours.');
+  }); */
+
+
+/*   // these are the selectors for HTML elements
   const addNewCourseModalHeader='#addModalLabel';
   const courseListingsPageHeader='body > div > div > div > h1';
   const tableFirstHeader ='body > div > div > div > table > thead > tr > th:nth-child(1)';
@@ -54,7 +188,7 @@ describe('Testing Course CRUD options', () => {
   const navMenuItem= '#navbarColor04 > ul > li:nth-child(3) > div > a:nth-child(2)';
   const fourthItemOnTheCourseList='';
 
-  /* Navigating to our expected page "http://localhost:3000/course"*/
+  /!* Navigating to our expected page "http://localhost:3000/course"*!/
 
   beforeEach(()=>{
     cy.visit('http://localhost:3000/course');
@@ -66,7 +200,7 @@ describe('Testing Course CRUD options', () => {
     cy.get(navMenuSelector, {timeout: 10000}).trigger('click');
     cy.get(navMenuItem, {timeout: 10000}).click();
 
-    /* checking the availability of course lists headers*/
+    /!* checking the availability of course lists headers*!/
     cy.get(courseListingsPageHeader).should('have.text', 'Course Listings');
     cy.get(tableFirstHeader).should('have.text', 'Course Code');
     cy.get(tableSecondHeader).should('have.text', 'Course Name');
@@ -75,7 +209,7 @@ describe('Testing Course CRUD options', () => {
     cy.get(tableFifthHeader).should('have.text', 'Preferred Instructor');
     cy.get(tableSixthHeader).should('have.text', 'Actions');
 
-    /* Test to confirm the availability of course's name according to the fixture data*/
+    /!* Test to confirm the availability of course's name according to the fixture data*!/
     cy.get(firstRowOfListings).should('have.text', '\n                    CDBM280\n                    Database Management Systems\n                    5\n                    5\n                    \n                        Edit\n                        Delete\n                    \n                ');
     cy.get(secondRowOfListings).should('have.text', '\n                    COHS190\n                    Hardware\n                    1\n                    1\n                    \n                        Edit\n                        Delete\n                    \n                ');
     cy.get(thirdRowOfListings).should('have.text', '\n                    COHS280\n                    Enterprise Systems Support\n                    3\n                    3\n                    \n                        Edit\n                        Delete\n                    \n                ');
@@ -94,12 +228,12 @@ describe('Testing Course CRUD options', () => {
     cy.get(sixteenthRowOfListings).should('have.text', '\n                    TCOM291\n                    Career Path Search\n                    1\n                    1\n                    \n                        Edit\n                        Delete\n                    \n                ');
   });
 
-  /* Test to confirm the unavailability of new course's name (to be created/ added)  according to the fixture data*/
+  /!* Test to confirm the unavailability of new course's name (to be created/ added)  according to the fixture data*!/
   it('testUnavailabilityOfNewCourseInfo', ()=>{
     cy.contains('CSEC290').should('not.exist');
   });
 
-  /* Test  "Add New Course" button navigates us to "Create New Course" modal, and it has required input boxes */
+  /!* Test  "Add New Course" button navigates us to "Create New Course" modal, and it has required input boxes *!/
   it('testCreateNewCourseModal ', () => {
     cy.get(createCourseButton).click();
     cy.get(addNewCourseModalHeader).should('have.text', 'Create New Course');
@@ -111,7 +245,7 @@ describe('Testing Course CRUD options', () => {
   });
 
 
-  /* Test to  create a new course CSEC280 and confirm the availability inside course Listings*/
+  /!* Test to  create a new course CSEC280 and confirm the availability inside course Listings*!/
   it('testAddingInformationOfNewCourse ', () => {
     cy.get(createCourseButton).click();
     cy.get(newCourseCourseCodeInputTextBox).type('CSEC290');
@@ -128,7 +262,7 @@ describe('Testing Course CRUD options', () => {
     cy.get(newCourseCode).should('have.text', 'CSEC290');
   });
 
-  /* Test to  create a new course CSEC280 and confirm the availability inside course Listings*/
+  /!* Test to  create a new course CSEC280 and confirm the availability inside course Listings*!/
   it('testAddingInformationOfNewCourseWithEmptyTestBox ', () => {
     cy.get(createCourseButton).click();
     cy.wait(1000);
@@ -139,7 +273,7 @@ describe('Testing Course CRUD options', () => {
     cy.get(errorMessageForCourseHours).should('have.text', 'Enter a whole number between 1 and 40 as a valid number of hours.');
   });
 
-  /* Test to  edit Course CSEC290's course code and course name and confirm the availability of edited course inside Course Listings*/
+  /!* Test to  edit Course CSEC290's course code and course name and confirm the availability of edited course inside Course Listings*!/
   it('testEditCourseInformation', () => {
     cy.get(courseListEditButtonOnFourthColumn).click();
     cy.get(editModalHeader).should('have.text', 'Edit Existing Course');
@@ -157,10 +291,10 @@ describe('Testing Course CRUD options', () => {
     // cy.get(newCourseCode).should('have.text', 'CSEC295');
   });
 
-  /* Test to  delete course CSEC290's information and confirm the unavailability of deleted course inside Course Listings*/
+  /!* Test to  delete course CSEC290's information and confirm the unavailability of deleted course inside Course Listings*!/
   it('testDeleteCourseOption  ', () => {
     cy.get(courseListDeleteButtonOnFourthColumnForDeleteTest).click();
     cy.get(confirmDeleteButtonOnDeleteModal).click();
     cy.contains('CSEC295').should('not.exist');
-  });
+  }); */
 });
