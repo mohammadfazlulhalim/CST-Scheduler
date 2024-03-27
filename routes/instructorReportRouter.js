@@ -7,6 +7,7 @@ const {sequelize} = require("../dataSource");
 const {QueryTypes} = require("sequelize");
 const globalConsts = require('../constants').globalConsts;
 
+
 // global constants here to work with time arrays
 const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
 const hours12 = globalConsts.timeColumn8amTo3pmDisplayArray;
@@ -99,7 +100,7 @@ router.post('/', async function(req, res, next) {
   // try to find the time slots based on selections
   try {
     instRepTimeslots = await Timeslot.findAll( {
-      where: {InstructorId: instructorID, TermId: termID},
+      where: {primaryInstructor: instructorID, TermId: termID},
       order: [['startTime', 'ASC'], ['day', 'ASC']],
     });
   } catch (e) {
@@ -249,11 +250,11 @@ async function generateSchedule(instRepTimeslots, start, end) {
 async function getUniqueDates(instructor, term) {
   //get all startdates and enddates from timeslots
   const sqlStart = `SELECT DISTINCT startDate AS date FROM timeslots 
-                         where InstructorId = ${instructor.id} and TermId = ${term.id}
+                         where primaryInstructor = ${instructor.id} and TermId = ${term.id}
                         and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'` ;
 
   const sqlEnd = `SELECT DISTINCT endDate AS date FROM timeslots 
-                        where InstructorId = ${instructor.id} and TermId = ${term.id}
+                        where primaryInstructor = ${instructor.id} and TermId = ${term.id}
                         and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'`;
 
   let arStart, arEnd;

@@ -122,7 +122,6 @@
                                     {{#if this.altInsFirst}}
                                         <p class="card-text">Alternate: {{this.altInsFirst}} {{this.altInsLast}}</p>
                                     {{/if}}
-                                    <p class="card-text">{{this.insFirst}} {{this.insLast}}</p>
                                     <p class="card-text">{{this.startDate}} - {{this.endDate}}</p>
                                 </div>
                             </div>
@@ -264,6 +263,7 @@
     function addTSToCell(idCell, tSlot, xtraInfo) {
         let oldTD = document.getElementById(idCell);
         let altIns = "";
+        console.log(xtraInfo.altInsLast);
         if (xtraInfo.altInsLast !== undefined) {
             altIns = '<p> Alternate: ' + xtraInfo.altInsLast + '<br/></p>'
         }

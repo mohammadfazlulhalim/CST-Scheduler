@@ -8,7 +8,7 @@ const Program = require('../private/javascript/Program');
 const defineDB = require('../fixtures/createTables.fix');
 const Instructor = require('../private/javascript/Instructor');
 const Classroom = require('../private/javascript/Classroom');
-const Course = require('../private/javascript/Course');
+// const Course = require('../private/javascript/Course');
 
 router.get('/', async (req, res, next) => {
 
@@ -83,11 +83,11 @@ router.post('/', async (req, res, next) => {
         COObj.insFirst = insObj.firstName;
         COObj.insLast = insObj.lastName;
         COObj.dName = COObj.name + '-' + COObj.group;
-        // If the alternate instructor exists
-        if (COObj.alternateInstructor != null) {
-          const alternateInsObj = await Instructor.findByPk(COObj.alternateInstructor);
-          COObj.altInsFirst = alternateInsObj.firstName;
-          COObj.altInsLast = alternateInsObj.lastName;
+        // If the alternative instructor exists
+        if (COObj.alternativeInstructor !== null) {
+          const altInsObj = await Instructor.findByPk(COObj.alternativeInstructor);;
+          COObj.altInsFirst = altInsObj.firstName;
+          COObj.altInsLast = altInsObj.lastName;
         }
       }
     } catch (error) {
@@ -108,10 +108,10 @@ router.post('/', async (req, res, next) => {
       }
 
       try {
-        altInsObj = await Instructor.findByPk(tSlot.alternateInstructor);
+        altInsObj = await Instructor.findByPk(tSlot.alternativeInstructor);
         tSlot.altInsLast = altInsObj.lastName;
       } catch (e) {
-        console.log('No alternate instructor');
+        console.log('No alternative instructor');
       }
 
       cObj = await coObj.getCourse();
@@ -163,7 +163,7 @@ router.put('/', async (req, res, next) => {
     endDate: CO.endDate,
     CourseOfferingId: CO.id,
     primaryInstructor: CO.primaryInstructor,
-    alternateInstructor: CO.alternateInstructor,
+    alternativeInstructor: CO.alternativeInstructor,
     TermId: CO.TermId,
     ProgramId: CO.ProgramId,
     ClassroomId: req.body.ClassroomId,
@@ -178,14 +178,15 @@ router.put('/', async (req, res, next) => {
   coObj = await retTSlot.getCourseOffering();
   prObj = await retTSlot.getProgram();
   insObj = await Instructor.findByPk(retTSlot.primaryInstructor);
-  if (retTSlot.alternateInstructor) {
-    altInsObj = await Instructor.findByPk(retTSlot.alternateInstructor);
-    xtraInfo.altInsLast = altInsObj.lastName;
-  }
 
   cObj = await coObj.getCourse();
 
   const xtraInfo = {};
+
+  if (retTSlot.alternativeInstructor != null) {
+    altInsObj = await Instructor.findByPk(retTSlot.alternativeInstructor);
+    xtraInfo.altInsLast = altInsObj.lastName;
+  }
 
   xtraInfo.program = prObj.programAbbreviation;
   xtraInfo.insLast = insObj.lastName;
