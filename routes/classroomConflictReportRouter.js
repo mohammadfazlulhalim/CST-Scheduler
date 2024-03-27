@@ -1,6 +1,6 @@
 const express= require('express');
 const router = express.Router();
-const {sequelize, Op} = require('../dataSource');
+const {sequelize, Op, DataTypes} = require('../dataSource');
 
 const Instructor= require('../private/javascript/Instructor');
 const Classroom= require('../private/javascript/Classroom');
@@ -13,6 +13,7 @@ const {QueryTypes} = require('sequelize');
 
 const term = require('../private/javascript/Term');
 const {stack} = require('sequelize/lib/utils');
+const {timeSlot1} = require("../fixtures/Timeslot.fix");
 
 // this is a quick array for designating weekdays as numbers
 // 0 is Sunday --> 6 is Saturday
@@ -29,7 +30,7 @@ router.post('/', async (req, res, next)=>{
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
   const terms= await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'ASC']]});
 
-  const headerArray=[{header: 'Term'}, {header: 'Course Code'}, {header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}, {header: 'Program'}];
+  const headerArray=[{header: 'Weekday'},  {header: 'Term'},{header: 'Course Code'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}, {header: 'Program'}];
 
   // Sequelize will automatically perform an SQL query to the database and create a table
   await sequelize.sync();
@@ -80,6 +81,7 @@ async function generateTimeslots(classroom, term) {
 
   const conflictingTimeslots0 = [];
   for (let i = 0; i < daysNumberedZeroIndex.length; i++) {
+    let count =0;
     const initialTimeslotsForTermClassroomWeekday = await Timeslot.findAll({
       where: {
         [Op.and]: [
@@ -184,11 +186,18 @@ async function generateTimeslots(classroom, term) {
 
         if (conflictingTimeslotsNow.length > 1) {
           conflictingTimeslots0.push(conflictingTimeslotsNow);
+          count++;
         }
       } catch (e) {
         console.error(e);
       }
     }
+
+    if (count >0) {
+      conflictingTimeslots0.push([{id: null, startDate: null, endDate: null, startTime: null, endTime: null}]);
+      count--;
+    }
+
   }
 
   // return classResult;

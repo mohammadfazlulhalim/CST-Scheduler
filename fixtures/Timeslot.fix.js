@@ -33,7 +33,7 @@ const s48validTimeslots = [
  */
 async function fillTimeslotTable() {
   await createTimeslot();
-  //await s50CreateConflictingTimeslot();
+  await s50CreateConflictingTimeslot();
 }
 
 // eslint-disable-next-line require-jsdoc
