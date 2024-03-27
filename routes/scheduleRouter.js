@@ -8,10 +8,11 @@ const Program = require('../private/javascript/Program');
 const defineDB = require('../fixtures/createTables.fix');
 const Instructor = require('../private/javascript/Instructor');
 const Classroom = require('../private/javascript/Classroom');
+const Course = require('../private/javascript/Course');
 
 router.get('/', async (req, res, next) => {
 
-  terms = await Term.findAll({order: [['startDate', 'DESC'],['termNumber', 'ASC']]});
+  terms = await Term.findAll({order: [['startDate', 'DESC'], ['termNumber', 'ASC']]});
   programs = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
 
 
@@ -63,6 +64,7 @@ router.post('/', async (req, res, next) => {
     try {
       // fetch all timeslots that match filters
       timeslotArray = await Timeslot.findAll({
+        include: [Classroom],
         where: {
           group: GROUP_LETTERS[i], ProgramId: req.body.program, TermId: req.body.term,
         },
@@ -77,10 +79,16 @@ router.post('/', async (req, res, next) => {
       // getting each course offering for this group
       for (let k = 0; k < groupArray[i].COArray.length; k++) {
         const COObj = groupArray[i].COArray[k];
-          const insObj = await Instructor.findByPk(COObj.primaryInstructor);
-          COObj.insFirst = insObj.firstName;
-          COObj.insLast = insObj.lastName;
-          COObj.dName = COObj.name + '-' + COObj.group;
+        const insObj = await Instructor.findByPk(COObj.primaryInstructor);
+        COObj.insFirst = insObj.firstName;
+        COObj.insLast = insObj.lastName;
+        COObj.dName = COObj.name + '-' + COObj.group;
+        // If the alternate instructor exists
+        if (COObj.alternateInstructor != null) {
+          const alternateInsObj = await Instructor.findByPk(COObj.alternateInstructor);
+          COObj.altInsFirst = alternateInsObj.firstName;
+          COObj.altInsLast = alternateInsObj.lastName;
+        }
       }
     } catch (error) {
 
@@ -92,21 +100,33 @@ router.post('/', async (req, res, next) => {
       // const formattedTSlot = await formatCellInfo(tSlot);
       coObj = await tSlot.getCourseOffering();
       prObj = await tSlot.getProgram();
-      insObj = await tSlot.getInstructor();
+      try {
+        insObj = await Instructor.findByPk(tSlot.primaryInstructor);
+        tSlot.insLast = insObj.lastName;
+      } catch (e) {
+        console.log('No Primary');
+      }
+
+      try {
+        altInsObj = await Instructor.findByPk(tSlot.alternateInstructor);
+        tSlot.altInsLast = altInsObj.lastName;
+      } catch (e) {
+        console.log('No alternate instructor');
+      }
+
       cObj = await coObj.getCourse();
 
       tSlot.program = prObj.programAbbreviation;
-      tSlot.insLast = insObj.lastName;
 
       tSlot.course = cObj.courseCode;
       tSlot.co = coObj.id;
 
       // Check if timeslotMatrix and the corresponding indices are defined
       if (
-          groupArray[i].timeslotMatrix &&
-          TIMES.indexOf(tSlot.startTime) !== -1 &&
-          groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)] &&
-          groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day]
+        groupArray[i].timeslotMatrix &&
+        TIMES.indexOf(tSlot.startTime) !== -1 &&
+        groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)] &&
+        groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day]
       ) {
         // Update properties only if the necessary objects and indices exist
         groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
@@ -136,13 +156,14 @@ router.put('/', async (req, res, next) => {
   const cellID = req.body.idCell.split('-');
   const CO = await CourseOffering.findByPk(req.body.CO);
 
-  console.log("Classroom to save: " + req.body.ClassroomId)
+  console.log('Classroom to save: ' + req.body.ClassroomId);
 
   const newtSlot = {
     startDate: CO.startDate,
     endDate: CO.endDate,
     CourseOfferingId: CO.id,
-    InstructorId: CO.primaryInstructor,
+    primaryInstructor: CO.primaryInstructor,
+    alternateInstructor: CO.alternateInstructor,
     TermId: CO.TermId,
     ProgramId: CO.ProgramId,
     ClassroomId: req.body.ClassroomId,
@@ -156,7 +177,12 @@ router.put('/', async (req, res, next) => {
 
   coObj = await retTSlot.getCourseOffering();
   prObj = await retTSlot.getProgram();
-  insObj = await retTSlot.getInstructor();
+  insObj = await Instructor.findByPk(retTSlot.primaryInstructor);
+  if (retTSlot.alternateInstructor) {
+    altInsObj = await Instructor.findByPk(retTSlot.alternateInstructor);
+    xtraInfo.altInsLast = altInsObj.lastName;
+  }
+
   cObj = await coObj.getCourse();
 
   const xtraInfo = {};
@@ -164,8 +190,10 @@ router.put('/', async (req, res, next) => {
   xtraInfo.program = prObj.programAbbreviation;
   xtraInfo.insLast = insObj.lastName;
 
+
   xtraInfo.course = cObj.courseCode;
   xtraInfo.co = coObj;
+  xtraInfo.room = (await retTSlot.getClassroom()).roomNumber;
 
 
   res.status(200).json({retTSlot, xtraInfo});

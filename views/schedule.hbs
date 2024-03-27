@@ -87,6 +87,12 @@
                                         <p>{{this.timeslot.program}}<br/></p>
                                         <p>{{this.timeslot.course}}<br/></p>
                                         <p>{{this.timeslot.insLast}}<br/></p>
+                                        {{#if this.timeslot.altInsLast}}
+                                            <p>Alternate: {{this.timeslot.altInsLast}}<br/></p>
+                                        {{/if}}
+                                        {{#if this.timeslot}}
+                                            <p>Room: {{this.timeslot.Classroom.roomNumber}}<br/></p>
+                                        {{/if}}
                                     </td>
                                 {{/if}}
                             {{/each}}
@@ -112,6 +118,10 @@
                                  onclick="onCOClick('{{this.id}}', '{{this.dName}}')" id="{{this.dName}}">
                                 <div class="card-body">
                                     <h5 class="card-title">{{this.name}}</h5>
+                                    <p class="card-text">{{this.insFirst}} {{this.insLast}}</p>
+                                    {{#if this.altInsFirst}}
+                                        <p class="card-text">Alternate: {{this.altInsFirst}} {{this.altInsLast}}</p>
+                                    {{/if}}
                                     <p class="card-text">{{this.insFirst}} {{this.insLast}}</p>
                                     <p class="card-text">{{this.startDate}} - {{this.endDate}}</p>
                                 </div>
@@ -201,9 +211,11 @@
     }
 
     async function onCellClick(idCell, tSlot, cellCO) {
+      console.log("Registered click");
         if (currCO) {
             //if not blank
             if (tSlot) {
+              console.log("Deleting");
                 //If the selected CO is not the same as the current CO
                 if (cellCO !== currCO) {
                     await fetch('/schedule', {
@@ -213,13 +225,11 @@
                         },
                         body: JSON.stringify({id: tSlot}),
                     });
-                } else { // timeslots are the same
-                    return;
                 }
             }
             try {
                 // Adding in a room number on save
-                let ClassroomId =document.getElementById('classroomSelect'+visibleGroup).value;
+                let ClassroomId = document.getElementById('classroomSelect' + visibleGroup).value;
 
                 const response = await fetch('/schedule', {
                     method: 'PUT',
@@ -229,7 +239,7 @@
                     body: JSON.stringify({
                         idCell: idCell,
                         CO: currCO,
-                        ClassroomId: ClassroomId
+                        ClassroomId: ClassroomId,
                     }),
                 });
 
@@ -253,6 +263,10 @@
 
     function addTSToCell(idCell, tSlot, xtraInfo) {
         let oldTD = document.getElementById(idCell);
+        let altIns = "";
+        if (xtraInfo.altInsLast !== undefined) {
+            altIns = '<p> Alternate: ' + xtraInfo.altInsLast + '<br/></p>'
+        }
 
         let newTD = '<td class="text-center" oncontextmenu="onCellRightClick(\'' + idCell + '\', \'' + tSlot.id + '\', \'' + tSlot.CourseOfferingId + '\')" ' +
                 'onclick="onCellClick(\'' + idCell + '\', \'' + tSlot.id + '\', \'' + tSlot.CourseOfferingId + '\')" ' +
@@ -260,6 +274,8 @@
                 '<p>' + xtraInfo.program + '<br/></p>' +
                 '<p>' + xtraInfo.course + '<br/></p>' +
                 '<p>' + xtraInfo.insLast + '<br/></p>' +
+                altIns +
+                '<p>Room: ' + xtraInfo.room + '<br/></p>' +
                 '</td>';
 
         oldTD.outerHTML = newTD;

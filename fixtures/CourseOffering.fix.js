@@ -18,6 +18,9 @@ async function fillCourseOfferingTable() {
     COB[i].setCourse(await course.findByPk((i%validCourses.length)+1));
   }
 
+  const wade = await Instructor.findOne({where: {
+      lastName: 'Lahoda'
+    }});
   let COHA = courseOffering1;
   let COSA = courseOffering2;
   COSA.group = 'A';
@@ -31,6 +34,8 @@ async function fillCourseOfferingTable() {
   COSA.setInstructor(3);
   COHA.setCourse(15);
   COSA.setCourse(4);
+
+  await CourseOffering.update({alternativeInstructor: wade.id}, {where: {id: COHA.id}});
 
 
 
