@@ -1,29 +1,30 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-2">
-            <label for="filterTerm" class="form-label">Filter by Term:</label>
-            <select class="form-select" id="filterTerm">
-                <option value="">All Terms</option>
-                {{#each listTerm}}
-                    <option value="{{id}}" data-termstart="{{startDate}}" data-termend="{{endDate}}">
-                        {{this.calendarYear}} - Term {{this.termNumber}}
-                    </option>
-                {{/each}}
-            </select>
-        </div>
-        <div class="col-md-8 text-center">
-            <h1 class="display-4">{{title}}</h1>
-        </div>
-        <div class="col-md-2 text-end align-text-bottom">
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal"
-                    id="openCreateModal">Add New Course Offering
-            </button>
+<div class="container-fluid px-5">
+    <div class="row mb-2">
+        <h1 class="col-md-4">{{title}}</h1>
+        <button type="button" class="btn btn-success col-md-2" data-toggle="modal" id="openCreateModal"
+                data-target="#addModal">Add New Course Offering
+        </button>
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+            <div class="input-group">
+                <label for="filterTerm" class="input-group-text">Filter by Term:</label>
+                <select class="form-select" id="filterTerm">
+                    <option value="">All Terms</option>
+                    {{#each listTerm}}
+                        <option value="{{id}}" data-termstart="{{startDate}}" data-termend="{{endDate}}">
+                            {{this.calendarYear}} - Term {{this.termNumber}}
+                        </option>
+                    {{/each}}
+                </select>
+            </div>
         </div>
     </div>
+
+
     {{#if listCO}}
         <div class="table-wrapper table-responsive mt-3">
             <table id="dataTable" class="table table-striped fixed-size-table">
-                <thead class="table-primary fixed-size-table-header">
+                <thead class="table-primary">
                 <tr>
                     <th>Name</th>
                     <th class="text-center">Group</th>
@@ -31,7 +32,7 @@
                     <th class="text-center">Term</th>
                     <th class="text-center">Start Date</th>
                     <th class="text-center">End Date</th>
-                    <th class="text-center"> Primary Instructor</th>
+                    <th class="text-center">Primary Instructor</th>
                     <th class="text-center">Alternative Instructor</th>
                     <th class="text-center">Program</th>
                     <th class="text-center">Actions</th>
@@ -40,7 +41,7 @@
                 <tbody id="tableBody">
                 {{#each listCO}}
                     <tr class="term-row" data-termid="{{Term.id}}">
-                        <td id="{{this.id}}name">{{this.name}} </td>
+                        <td id="{{this.id}}name">{{this.name}}</td>
                         <td class="text-center" id="{{this.id}}group">{{this.group}}</td>
                         <td class="text-center" id="{{this.id}}course"
                             data-courseid="{{this.Course.id}}">{{this.Course.courseCode}}</td>
@@ -264,7 +265,8 @@
                             </div>
                             <div class="form-group col">
                                 <label for="cprimaryInstructor">Primary Instructor:</label>
-                                <select id="cprimaryInstructor" class="form-select" onchange="checkCreateInstructorMatch()">
+                                <select id="cprimaryInstructor" class="form-select"
+                                        onchange="checkCreateInstructorMatch()">
                                     {{#each listInstructor}}
                                         <option value="{{id}}" id="optionCreateInstructor{{id}}">{{lastName}}</option>
                                     {{/each}}
@@ -274,7 +276,8 @@
 
                         <div class="form-group">
                             <label for="calternativeInstructor">Alternative Instructor: (Optional)</label>
-                            <select id="calternativeInstructor" class="form-select" onchange="checkCreateInstructorMatch()">
+                            <select id="calternativeInstructor" class="form-select"
+                                    onchange="checkCreateInstructorMatch()">
                                 <option></option>
                                 {{#each listInstructor}}
                                     <option value="{{id}}">{{lastName}}</option>
@@ -286,7 +289,8 @@
                             <label>Number of Groups To Create:</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <button id="decrement" class="btn btn-outline-secondary" type="button" onclick="decrementValue()">
+                                    <button id="decrement" class="btn btn-outline-secondary" type="button"
+                                            onclick="decrementValue()">
                                         -
                                     </button>
                                 </div>
@@ -295,7 +299,8 @@
                                        max="4" aria-label="Number of Groups" aria-describedby="basic-addon1"
                                        readonly>
                                 <div class="input-group-append">
-                                    <button id="increment" class="btn btn-outline-secondary" type="button" onclick="incrementValue()">
+                                    <button id="increment" class="btn btn-outline-secondary" type="button"
+                                            onclick="incrementValue()">
                                         +
                                     </button>
                                 </div>
@@ -466,7 +471,7 @@
         }
 
         // Disable create button if primary instructor is same as alternative instructor
-        document.getElementById('createCO').disabled = primaryInstructor === alternativeInstructorSelect && primaryInstructor !== "";
+        document.getElementById('createCO').disabled = primaryInstructor === alternativeInstructorSelect && primaryInstructor !== '';
     }
 
     /**
@@ -516,7 +521,7 @@
         var createCOButton = document.getElementById('createCO');
 
         // Disable create button and mark instructors as invalid if they match
-        if (primaryInstructor === alternativeInstructor && primaryInstructor !== "") {
+        if (primaryInstructor === alternativeInstructor && primaryInstructor !== '') {
             createCOButton.disabled = true;
             document.getElementById('cprimaryInstructor').classList.add('is-invalid');
             document.getElementById('calternativeInstructor').classList.add('is-invalid');
@@ -585,7 +590,6 @@
         let primaryInstructor = $('#cprimaryInstructor').val();
         let alternativeInstructor = $('#calternativeInstructor').val();
         let term = $('#cTerm').val();
-
 
 
         // Construct request body for course offering creation
@@ -852,7 +856,7 @@
     }
 
 </script>
-<style>
+<!--<style>
     .fixed-size-table td,
     .fixed-size-table th {
         padding: 0.8rem;
@@ -875,4 +879,4 @@
         overflow-y: auto;
         border: 1px solid #ccc; /* Add border to the div */
     }
-</style>
+</style>-->

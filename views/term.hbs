@@ -1,47 +1,46 @@
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="container p-2">
-                <div class="row mb-2">
-                    <h1 class="col">{{title}}</h1>
-                    <!--Empty spacer, to help with formatting-->
-                    <div class="col-md-6"></div>
-                    <!--Add button is at the top, for longer table lists-->
-                    <button type="button" class="btn btn-success col-md-2" data-toggle="modal" data-target="#addModal">
-                        Add New Term
-                    </button>
-                </div>
+<div class="container p-2">
+    <div class="row mb-2">
+        <h1 class="col-md-4">{{title}}</h1>
+        <!--Empty spacer, to help with formatting-->
+        <div class="col-md-6"></div>
+        <!--Add button is at the top, for longer table lists-->
+        <button type="button" class="btn btn-success col-md-2" data-toggle="modal" data-target="#addModal">
+            Add New Term
+        </button>
+    </div>
 
-                <!--If term entries are defined, we add in a table-->
-                {{#if termEntries}}
-                    <div class="table-wrapper table-responsive mt-3">
-                        <table class="table table-striped">
-                            <thead class="table-primary fixed-size-table-header">
-                            <tr>
-                                <th class="text-center">Term Number</th>
-                                <th class="text-center">Start Date</th>
-                                <th class="text-center">End Date</th>
-                                <th class="text-center">Year</th>
-                                <th class="text-center">Actions</th>
-                            </tr>
-                            </thead>
-                            <!--Here is where I loop through my array object and add in a <tr> for each loop, and a <td> for each object-->
-                            <tbody id="tableBody">
-                            {{#each termEntries}}
-                                <tr>
-                                    <td class="text-center" id="{{this.id}}number">{{this.termNumber}}</td>
-                                    <td  class="text-center" id="{{this.id}}start">{{this.startDate}}</td>
-                                    <td  class="text-center" id="{{this.id}}end">{{this.endDate}}</td>
-                                    <td  class="text-center" id="{{this.id}}year">{{this.calendarYear}}</td>
-                                    <td>
-                                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton" data-toggle="modal" data-target="#editModal">Edit</button>
-                                        <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton" data-toggle="modal" data-target="#deleteModal">Delete</button>
-                                    </td>
-                                </tr>
-                            {{/each}}
-                            </tbody>
-                        </table>
-                    </div>
+    <!--If term entries are defined, we add in a table-->
+    {{#if termEntries}}
+        <table class="table table-striped">
+            <thead class="table-primary">
+            <tr>
+                <th>Term Number</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Year</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <!--Here is where I loop through my array object and add in a <tr> for each loop, and a <td> for each object-->
+            <tbody id="tableBody">
+            {{#each termEntries}}
+                <tr>
+                    <td id="{{this.id}}number">{{this.termNumber}}</td>
+                    <td id="{{this.id}}start">{{this.startDate}}</td>
+                    <td id="{{this.id}}end">{{this.endDate}}</td>
+                    <td id="{{this.id}}year">{{this.calendarYear}}</td>
+                    <td>
+                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
+                                data-toggle="modal" data-target="#editModal">Edit
+                        </button>
+                        <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
+                                data-toggle="modal" data-target="#deleteModal">Delete
+                        </button>
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
 
         <!-- Delete Modal -->
         <div class="modal fade" id="deleteModal" role="dialog" tabindex="-1" aria-labelledby="deleteModalLabel"
@@ -265,7 +264,7 @@
                                name="endDate" value="{{submittedTerm.endDate}}">
                         <div class="invalid-feedback">{{err.endDate}}</div>
                         <label for="cAuto">Autogenerate Course Offerings?</label>
-                        <input type="checkbox" id="cAuto" value="auto"
+                        <input type="checkbox" class="form-check" id="cAuto" value="auto"
                                name="auto">
                     </div>
                     <div class="modal-footer">
@@ -559,21 +558,3 @@
         $('#cEndDate').val('');
     }
 </script>
-<style>
-    .fixed-size-table-header th {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
-
-    .fixed-size-table button {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.8rem;
-    }
-
-    .table-wrapper {
-        max-height: calc(100vh - 325px); /* Adjust the subtracted value as needed */
-        overflow-y: auto;
-        border: 1px solid #ccc; /* Add border to the div */
-    }
-</style>

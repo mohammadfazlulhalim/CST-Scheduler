@@ -1,51 +1,46 @@
-<div class="container-fluid">
-    <div class="row justify-content-center">
-
-        <div class="offset-2 col-md-8 text-center">
-            <h1 class="display-4">{{title}}</h1>
-        </div>
-        <div class="col-md-2">
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal">Add New
-                Instructor
-            </button>
-        </div>
+<div class="container p-1">
+    <div class="row mb-2">
+        <h1 class="col-md-5">{{title}}</h1>
+        <!--Empty spacer, to help with formatting-->
+        <div class="col-md-5"></div>
+        <!--Add button is at the top, for longer table lists-->
+        <button type="button" class="btn btn-success col-md-2" data-toggle="modal" data-target="#addModal">Add New Instructor</button>
     </div>
-
-
     {{#if instructorList}}
-        <div class="table-wrapper table-responsive mt-3">
-            <table class="table table-striped fixed-size-table">
-                <thead class="table-primary fixed-size-table-header">
+
+        <table class="table table-striped">
+            <thead class="table-primary">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Office Number</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <!--Here is where I loop through my array object and add in a <tr> for each loop, and a <td> for each object-->
+            <tbody>
+            {{#each instructorList}}
                 <tr>
-                    <th class="text-center">First Name</th>
-                    <th class="text-center">Last Name</th>
-                    <th class="text-center">Office Number</th>
-                    <th class="text-center">Phone Number</th>
-                    <th class="text-center">Email</th>
-                    <th class="text-center">Actions</th>
+                    <td id="{{this.id}}firstName">{{this.firstName}}</td>
+                    <td id="{{this.id}}lastName">{{this.lastName}}</td>
+                    <td id="{{this.id}}officeNum">{{this.officeNum}}</td>
+                    <td id="{{this.id}}phoneNum">{{this.phoneNum}}</td>
+                    <td id="{{this.id}}email">{{this.email}}</td>
+
+                    <td>
+                        <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
+                                data-toggle="modal" data-target="#editModal">Edit</button>
+                        <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
+                                data-toggle="modal" data-target="#deleteModal">Delete</button>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                {{#each instructorList}}
-                    <tr>
-                        <td class="text-center" id="{{this.id}}firstName">{{this.firstName}}</td>
-                        <td class="text-center" id="{{this.id}}lastName">{{this.lastName}}</td>
-                        <td class="text-center" id="{{this.id}}officeNum">{{this.officeNum}}</td>
-                        <td class="text-center" id="{{this.id}}phoneNum">{{this.phoneNum}}</td>
-                        <td class="text-center" id="{{this.id}}email">{{this.email}}</td>
-                        <td class="text-center">
-                            <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
-                                    data-toggle="modal" data-target="#editModal">Edit
-                            </button>
-                            <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
-                                    data-toggle="modal" data-target="#deleteModal">Delete
-                            </button>
-                        </td>
-                    </tr>
-                {{/each}}
-                </tbody>
-            </table>
-        </div>
+            {{/each}}
+            </tbody>
+
+        </table>
+
         <!-- Delete Modal -->
         <div class="modal fade" id="deleteModal" role="dialog" tabindex="-1" aria-labelledby="deleteModalLabel"
              aria-hidden="true">
@@ -121,9 +116,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeEdit()">
-                                Cancel
-                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeEdit()">Cancel</button>
                             <button type="button" id="editInstructor" class="btn btn-outline-success">Save</button>
                         </div>
                     </form>
@@ -160,37 +153,32 @@
                         <div class="invalid-feedback">{{err.lastName}}</div>
 
                         <Label for="cOfficeNum">Office Number:</Label>
-                        <input type="text" class="form-control {{#if err.officeNum}}is-invalid{{/if}}" id="cOfficeNum"
-                               name="officeNum" value="{{submittedInstructor.officeNum}}">
+                        <input type="text" class="form-control {{#if err.officeNum}}is-invalid{{/if}}" id="cOfficeNum" name="officeNum" value="{{submittedInstructor.officeNum}}">
                         <div Class="invalid-feedback">{{err.officeNum}}</div>
 
                         <Label for="cPhoneNum">Phone Number:</Label>
-                        <input type="text" class="form-control {{#if err.phoneNum}}is-invalid{{/if}}" id="cPhoneNum"
-                               name="phoneNum" value="{{submittedInstructor.phoneNum}}">
+                        <input type="text" class="form-control {{#if err.phoneNum}}is-invalid{{/if}}" id="cPhoneNum" name="phoneNum" value="{{submittedInstructor.phoneNum}}">
                         <div Class="invalid-feedback">{{err.phoneNum}}</div>
 
                         <Label for="cEmail">Email:</Label>
-                        <input type="text" class="form-control {{#if err.email}}is-invalid{{/if}}" id="cEmail"
-                               name="Email" value="{{submittedInstructor.Email}}">
+                        <input type="text" class="form-control {{#if err.email}}is-invalid{{/if}}" id="cEmail" name="Email" value="{{submittedInstructor.Email}}">
                         <div Class="invalid-feedback">{{err.email}}</div>
 
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeAdd()">
-                            Cancel
-                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeAdd()">Cancel</button>
                         <button type="button" id="createInstructor" class="btn btn-outline-success">Create</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div class="text-end p-2">
-        <a href="{{URL}}">
-            <button class="btn btn-dark">Return</button>
-        </a>
-    </div>
+
+
+    <a href="{{URL}}">
+        <button class="btn btn-outline-success">Return</button>
+    </a>
 </div>
 <!-- My own handlers for the form submits -->
 <script>
@@ -235,7 +223,7 @@
                 lastName: $('#cLastName').val(),
                 officeNum: $('#cOfficeNum').val(),
                 phoneNum: $('#cPhoneNum').val(),
-                email: $('#cEmail').val(),
+                email: $('#cEmail').val()
             }),
         });
 
@@ -294,7 +282,7 @@
                 lastName: $('#eLastName').val(),
                 officeNum: $('#eOfficeNum').val(),
                 phoneNum: $('#ePhoneNum').val(),
-                email: $('#eEmail').val(),
+                email:$('#eEmail').val(),
 
             }),
         });
@@ -375,27 +363,3 @@
     }
 
 </script>
-<style>
-    .fixed-size-table td,
-    .fixed-size-table th {
-        padding: 0.8rem;
-        font-size: 1rem;
-    }
-
-    .fixed-size-table-header th {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
-
-    .fixed-size-table button {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.8rem;
-    }
-
-    .table-wrapper {
-        max-height: calc(100vh - 275px); /* Adjust the subtracted value as needed */
-        overflow-y: auto;
-        border: 1px solid #ccc; /* Add border to the div */
-    }
-</style>

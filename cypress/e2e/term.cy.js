@@ -138,7 +138,7 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   for (let i = 0; i < newCOs.length; i++) {
     for (let j = 0; j < 8; j++) {
       const nChildCO = j + 1;
-        cy.get('#tableBody > tr:nth-child(' + newCOsIndex[i] + ') >td:nth-child(' + nChildCO + ')').should('have.text', newCOs[i][j]);
+      cy.get('#tableBody > tr:nth-child(' + newCOsIndex[i] + ') >td:nth-child(' + nChildCO + ')').should('have.text', newCOs[i][j]);
     }
   }
 
