@@ -271,6 +271,49 @@ describe('Test Program Report Page', () => {
     });
 
     /**
+     * STORY 53 NO SPLITS
+     */
+    it('testNoSplit', () => {
+
+        cy.visit('localhost:3000');
+        // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
+        cy.get('#reportDropdown > a').click();
+
+        // Select the instructor from the dropdown based on value
+        cy.get('#selectProgramReport').select('#1');
+
+        // Select the term from the dropdown based on value
+        cy.get('#selectTermReport').select('#1');
+
+        // Select the group letter from the dropdown based on value
+        cy.get('#selectGroupReport').select('A');
+
+        // Submit the form
+        cy.get('#submitBtn').click();
+
+        //Test that the timeframe is correct
+        cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-12-01')
+        //map for valid timeslot locations
+        let classesInOrder = [
+            ['COOS293B', '', '', '', ''],
+            ['', 'COSA280A', '', '', 'COOS293B'],
+            ['', '', 'SEM283A', 'CWEB280A', ''],
+            ['', '', 'COHS280A', 'COOS291A', ''],
+            ['', '', '', '', ''], // 12:00 slot appears empty
+            ['', 'CDBM280A', '', '', 'MATH282A'],
+            ['MATH282A', '', '', '', ''],
+            ['', '', '', '', ''],
+        ];
+        //Check that theyre correct
+        checkCorrectSchedule(classesInOrder);
+
+        //check that the buttons for splits dont exist
+        cy.get('#btnLeft').should('not.exist');
+        cy.get('#btnRight').should('not.exist');
+
+    });
+
+    /**
      * STORY 53 NORMAL SPLITS
      */
     it('testStandardSplit', () => {
@@ -409,10 +452,13 @@ describe('Test Program Report Page', () => {
         cy.get('.nav-item.dropdown .dropdown-menu a[href="/instructorReport"]').click();
 
         // Select the instructor from the dropdown based on value
-        cy.get('#selectInstructorInstructorReport').select('1');
+        cy.get('#selectProgramReport').select('#1');
 
         // Select the term from the dropdown based on value
-        cy.get('#selectTermInstructorReport').select('1');
+        cy.get('#selectTermReport').select('#1');
+
+        // Select the group letter from the dropdown based on value
+        cy.get('#selectGroupReport').select('A');
 
         // Submit the form
         cy.get('#submitBtn').click();
@@ -524,48 +570,6 @@ describe('Test Program Report Page', () => {
         checkCorrectSchedule(classesInOrder);
     });
 
-
-    /**
-     * now checking that no split reports generate properly
-     */
-    it('testNoSplit', () => {
-
-        cy.visit('localhost:3000');
-        // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
-        cy.get('#reportDropdown > a').click();
-
-        // Click on the "Instructor Report" option
-        cy.get('.nav-item.dropdown .dropdown-menu a[href="/programReport"]').click();
-
-        // Select the instructor from the dropdown based on value
-        cy.get('#selectInstructorInstructorReport').select('5');
-
-        // Select the term from the dropdown based on value
-        cy.get('#selectTermInstructorReport').select('1');
-
-        // Submit the form
-        cy.get('#submitBtn').click();
-
-        //Test that the timeframe is same as timeslot
-        cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-12-01')
-        //map for valid timeslot locations
-        let classesInOrder = [
-            ['', '', '', '', ''],
-            ['', '', '', '', ''],
-            ['', '', '', '', 'CDBM280B'],
-            ['', '', 'COOS293B', '', ''],
-            ['', '', '', '', ''], // 12:00 slot appears empty
-            ['COHS280B', '', '', '', ''],
-            ['', '', '', '', ''],
-            ['', '', '', '', ''],
-        ];
-        //Check that theyre correct
-        checkCorrectSchedule(classesInOrder);
-        //check that the buttons for splits dont exist
-        cy.get('#btnLeft').should('not.exist');
-        cy.get('#btnRight').should('not.exist');
-
-    });
 });
 
 

@@ -261,6 +261,58 @@ async function generateSchedule(instRepTimeslots) {
   return matrixTable;
 }
 
+/**
+ * returns a list of each unique date in the given term, or nothing if params are invalid
+ * @param program
+ * @param term
+ * @returns {Promise<Object[]>}
+ */
+async function getUniqueDates(program, term, groupLetter) {
+  //get all startdates and enddates from timeslots
+  const sqlStart = `SELECT DISTINCT startDate AS date FROM timeslots 
+                         where ProgramId = ${program.id} and TermId = ${term.id} and group = ${groupLetter}
+                        and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'` ;
 
+  const sqlEnd = `SELECT DISTINCT endDate AS date FROM timeslots 
+                        where ProgramId = ${program.id} and TermId = ${term.id} and group = ${groupLetter}
+                        and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'`;
+
+  let arStart, arEnd;
+
+  //query wtih strings
+  try {
+    arStart = await sequelize.query(sqlStart, {
+      type: QueryTypes.SELECT,
+      mapToModel: true,
+    });
+    arEnd = await sequelize.query(sqlEnd, {
+      type: QueryTypes.SELECT,
+      mapToModel: true,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+
+  //need to set date back one day, then stringify
+  arEnd.forEach((date) => {
+    if(date.date !== term.endDate){
+      let tempDate = new Date(date.date); //change to date to set back a day
+      tempDate.setDate(tempDate.getDate() + 1);
+      date.date = tempDate.toISOString().substring(0, 10);
+    }
+  })
+
+  //combine two lists, then sort
+  arStart = arStart.concat(arEnd);
+  arStart = [...new Set(arStart)];
+  arStart = arStart.sort((a,b) => {
+    if(a.date === b.date){ return 0; }
+    if(a.date >=  b.date) { return 1; }
+    else{ return -1; }
+  });
+
+  return arStart;
+
+}
 
 module.exports = router;
