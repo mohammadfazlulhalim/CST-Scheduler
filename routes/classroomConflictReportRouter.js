@@ -132,8 +132,8 @@ async function generateTimeslots(classroom, term) {
                     },
                   },
                   // or the end time conflicts
-                  [Op.and]: {
-                    endTime: {
+                  endTime: {
+                    [Op.and]: {
                       [Op.gt]: currentTimeslot.startTime,
                       [Op.lte]: currentTimeslot.endTime,
                     },

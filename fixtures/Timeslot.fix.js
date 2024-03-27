@@ -23,6 +23,7 @@ const s48validTimeslots = [
   {startDate: '2023-02-06', endDate: '2023-03-06', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
   {startDate: '2023-03-06', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
   //   TODO timeslots for room 241 - term 2 - either separately from the list or dynamically use existing list - but with changed start and end date values - could algorithmic
+
 ];
 
 /**
@@ -32,7 +33,7 @@ const s48validTimeslots = [
  */
 async function fillTimeslotTable() {
   await createTimeslot();
- await s50CreateConflictingTimeslot();
+  await s50CreateConflictingTimeslot();
 }
 
 // eslint-disable-next-line require-jsdoc
@@ -141,32 +142,87 @@ const timeSlot1 = {
 
 
 /**
- * function to asynchronously create new timeslot that deliberately conflicts with another timeslot
+ * function to asynchronously create new timeslots that deliberately conflict with another timeslot
+ * - targeting term 5!
  * @return {Promise<void>}
  */
 async function s50CreateConflictingTimeslot() {
 // TODO s50 establish a new timeslot matching the attributes of another timeslot
   const s50Timeslot = [
-    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'B'},
-    {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '08:00', endTime: '14:00', day: 5, group: 'B'},
-    {startDate: '2023-02-01', endDate: '2023-04-01', startTime: '08:30', endTime: '10:30', day: 1, group: 'B'},
+
+	  {startDate: '2024-05-01', endDate: '2023-05-31', startTime: '08:00', endTime: '09:00', day: 1, group: 'A'},
+	  {startDate: '2024-05-01', endDate: '2023-05-31', startTime: '14:00', endTime: '15:00', day: 1, group: 'A'},
+	  {startDate: '2024-05-01', endDate: '2023-05-31', startTime: '09:00', endTime: '10:00', day: 2, group: 'A'},
+	  {startDate: '2024-05-01', endDate: '2023-05-31', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
+	  {startDate: '2024-05-01', endDate: '2023-05-31', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
+	  {startDate: '2024-05-01', endDate: '2023-05-31', startTime: '11:00', endTime: '12:00', day: 3, group: 'A'},
+	  {startDate: '2024-05-01', endDate: '2023-05-31', startTime: '10:00', endTime: '11:00', day: 4, group: 'A'},
+	  {startDate: '2024-05-01', endDate: '2023-05-31', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
+	  {startDate: '2024-05-01', endDate: '2023-05-31', startTime: '09:00', endTime: '10:00', day: 5, group: 'A'},
+	  {startDate: '2024-05-01', endDate: '2023-05-31', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
+
 
   ];
 
   const classroomInstance239A = await Classroom.findOne({where: {roomNumber: '239A'}});
-  const termInstance = await Term.findOne({where: {termNumber: 1}});
+  const termInstance = await Term.findOne({where: {termNumber: 6}});
 
+
+  //  {termNumber: 6, startDate: '2023-05-01', endDate: '2023-05-31'},
+
+  const JasonInst = await Instructor.findOne({where: {firstName: 'Jason', lastName: 'Schmidt'}});
+  const CoraleeInst = await Instructor.findOne({where: {firstName: 'Coralee', lastName: 'Kaban'}});
+
+
+  const s50ConflictingTimeslots = [
+    // conflicting timeslots! Placed in "B" group
+    // note - InstructorId placed here - will check if works
+	  {startDate: '2024-01-01', endDate: '2023-02-01', startTime: '08:30', endTime: '10:30', day: 1, group: 'B'},
+    {startDate: '2024-01-01', endDate: '2023-04-01', startTime: '14:00', endTime: '15:00', day: 1, group: 'B'},
+	  {startDate: '2024-02-01', endDate: '2023-03-01', startTime: '09:00', endTime: '10:00', day: 2, group: 'B'},
+  	{startDate: '2024-02-01', endDate: '2023-03-01', startTime: '13:01', endTime: '14:01', day: 2, group: 'B'},
+  ];
+
+
+  // This is where we bulk create the timeslots from the hardcoded Array above
   const createdTimeslot1 = await Timeslot.bulkCreate(s50Timeslot);
+  const createdTimeslot2 = await Timeslot.bulkCreate(s50ConflictingTimeslots);
 
+  // place associations for regular timeslots
   for (let i = 0; i < createdTimeslot1.length; i++) {
-    await createdTimeslot1[i].setClassroom(classroomInstance239A);
-    await createdTimeslot1[i].setTerm(termInstance);
+    createdTimeslot1[i].setClassroom(classroomInstance239A);
+    createdTimeslot1[i].setTerm(termInstance);
+
+    // just a minor condition for assigning jason and coralee
+    if (i > 1) {
+      createdTimeslot1[i].setInstructor(CoraleeInst);
+    } else {
+      createdTimeslot1[i].setInstructor(JasonInst);
+    }
   }
+
+  // loop and associate to conflicting timeslots
+  for (let i = 0; i < createdTimeslot2.length; i++) {
+    createdTimeslot2[i].setClassroom(classroomInstance239A);
+    createdTimeslot2[i].setTerm(termInstance);
+  }
+
 
   // await createdTimeslot1.setTerm();
   // await createdTimeslot1.setInstructor();
   // await createdTimeslot1.setProgram();
   // await createdTimeslot1.setCourseOffering();
+}
+
+
+function displayTimeslot(ts) {
+  console.log(`ts.id:${ts.id}`);
+  console.log(`ts.startDate:${ts.startDate}`);
+  console.log(`ts.id:${ts.id}`);
+  console.log(`ts.startTime:${ts.startTime}`);
+  console.log(`ts.endTime:${ts.endTime}`);
+  // if it ts includes Classroom
+  // console.log(`ts.classroom:${ts.Classroom.roomNumber}`);
 }
 
 
