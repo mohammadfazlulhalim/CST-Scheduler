@@ -14,7 +14,7 @@ const Classroom = require('../private/javascript/Classroom');
 const {sequelize} = require('../dataSource');
 const {globalConsts} = require('../constants');
 const constants = require('constants');
-const {Sequelize} = require('sequelize');
+const {Sequelize, QueryTypes} = require('sequelize');
 
 // global constants here to work with time arrays
 const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
@@ -87,9 +87,10 @@ router.post('/', async function(req, res, next) {
   const group = req.body.selectGroupReport; // from the modal selection
   let termName;
   let programName;
-  let groupName;
   const today = new Date();
   let program;
+  let isSplit;
+  let reportArray = [];
 
   // Get the UTC day, month, and year components
   const day = today.getUTCDate();
@@ -154,12 +155,8 @@ router.post('/', async function(req, res, next) {
     termName = undefined;
   }
 
-  // try to find the group selected
-  try {
-    groupName = await CourseOffering.findOne({where: {id: group}});
-  } catch (e) {
-    groupName = undefined;
-  }
+  // get each unique start end date, or nothing if invalid term or instructor
+  const uniqueDates = await getUniqueDates(programName, termName, group);
 
   // try to find the time slots based on selections
   let instRepTimeslots;
@@ -172,34 +169,53 @@ router.post('/', async function(req, res, next) {
     instRepTimeslots=undefined;
   }
 
-  // generates the schedule
-  // eslint-disable-next-line prefer-const
-  let matrixTable = await generateSchedule(instRepTimeslots);
+  if (instRepTimeslots){ //if no unique dates, skip and display no schedule
+    for (let i=0; i < uniqueDates.length-1; i++) { //for each unique period of study
+      let tempJson = {};
+
+      let start = uniqueDates[i];
+      let end = uniqueDates[i+1];
+
+      if(i > 0){//notifies page that schedule is split
+        isSplit = true;
+      }
+
+      if(i < uniqueDates.length - 2){ //set end dates back one day except for end
+        let endDate = new Date(end.date);//change to date to set back a day
+        endDate.setDate(endDate.getDate() - 1);
+        endDate = endDate.toISOString().substring(0, 10)
+
+        tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, endDate); //assign time slots that match timeframe
+        tempJson.startDate = start.date;
+        tempJson.endDate = endDate;
+      } else { //use regular end time for last time
+        tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, end.date);
+        tempJson.startDate = start.date;
+        tempJson.endDate = end.date;
+      }
+
+      reportArray[i] = tempJson;
+    }
+  }
+
+  // // generates the schedule
+  // // eslint-disable-next-line prefer-const
+  // let matrixTable = await generateSchedule(instRepTimeslots);
 
   res.render('programReport', {
     programList,
     newTermList,
     groupList,
-    matrixTable,
+    reportArray,
     programName,
     group,
     termName,
     showModal: false,
     dateGen,
     program,
+    isSplit,
   });
 });
-
-/**
- * helper function that gets each unique date in a list of timeslots
- * @param program
- * @param term
- * @returns {Promise<void>}
- */
-async function getUniqueDates(program, term) {
-
-}
-
 
 /**
  * Helper function for the POST.
@@ -268,13 +284,14 @@ async function generateSchedule(instRepTimeslots) {
  * @returns {Promise<Object[]>}
  */
 async function getUniqueDates(program, term, groupLetter) {
-  //get all startdates and enddates from timeslots
+
+  //get all startdates and enddates from timeslots using program, term, and groupletter
   const sqlStart = `SELECT DISTINCT startDate AS date FROM timeslots 
-                         where ProgramId = ${program.id} and TermId = ${term.id} and group = ${groupLetter}
+                         where ProgramId = ${program.id} and TermId = ${term.id}
                         and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'` ;
 
   const sqlEnd = `SELECT DISTINCT endDate AS date FROM timeslots 
-                        where ProgramId = ${program.id} and TermId = ${term.id} and group = ${groupLetter}
+                        where ProgramId = ${program.id} and TermId = ${term.id}
                         and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'`;
 
   let arStart, arEnd;
@@ -292,6 +309,10 @@ async function getUniqueDates(program, term, groupLetter) {
   } catch (e) {
     console.log(e);
   }
+
+  //filter both by group letter
+  arStart = arStart.filter(timeslot => timeslot.group === groupLetter);
+  arEnd = arEnd.filter(timeslot => timeslot.group === groupLetter);
 
   //need to set date back one day, then stringify
   arEnd.forEach((date) => {

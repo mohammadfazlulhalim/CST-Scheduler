@@ -377,6 +377,8 @@ describe('Test Program Report Page', () => {
         ];
         //Check that theyre correct
         checkCorrectSchedule(classesInOrder);
+        //check that left buttons for dosen't exist for first split
+        cy.get('#btnLeft').should('not.exist');
 
         //go to the next split
         cy.get('#btnRight').click();
@@ -396,37 +398,9 @@ describe('Test Program Report Page', () => {
         //Check that theyre correct
         checkCorrectSchedule(classesInOrder);
 
-        //check that there's only 2 splits
-        cy.get('#btnRight').click();
-        //Test that the timeframe is correct
-        cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-09-30')
-        classesInOrder = [
-            ['COOS293B', '', '', '', ''],
-            ['', 'COSA280A', '', '', 'COOS293B'],
-            ['', '', 'SEM283A', 'CWEB280A', ''],
-            ['', '', 'COHS280A', 'COOS291A', ''],
-            ['', '', '', '', ''], // 12:00 slot appears empty
-            ['', 'CDBM280A', '', '', 'MATH282A'],
-            ['MATH282A', '', '', '', ''],
-            ['', '', '', '', ''],
-        ];
-        checkCorrectSchedule(classesInOrder);
+        //check that right buttons dosen't exist for last split
+        cy.get('#btnRight').should('not.exist');
 
-        //check that the left button works
-        cy.get('#btnLeft').click();
-        //Test that the timeframe is correct
-        cy.get('#2023-10-01').contains('Schedule Range: 2023-10-01 to 2023-12-01')
-        classesInOrder = [
-            ['COOS293B', '', '', '', ''],
-            ['', 'COSA280A', '', '', 'COOS293B'],
-            ['', '', 'SEM283A', 'CWEB280A', ''],
-            ['', '', 'COHS280A', 'COOS291A', ''],
-            ['', '', 'COOS293A', '', ''], // 12:00 slot appears empty
-            ['', 'CDBM280A', '', '', 'MATH282A'],
-            ['MATH282A', '', '', '', ''],
-            ['', '', '', '', ''],
-        ];
-        checkCorrectSchedule(classesInOrder);
     });
 
     /**
@@ -478,6 +452,8 @@ describe('Test Program Report Page', () => {
         ];
         //Check that theyre correct
         checkCorrectSchedule(classesInOrder);
+        //check that left buttons for dosen't exist for first split
+        cy.get('#btnLeft').should('not.exist');
 
         //go to the next split
         cy.get('#btnRight').click();
@@ -533,41 +509,8 @@ describe('Test Program Report Page', () => {
         //Check that theyre correct
         checkCorrectSchedule(classesInOrder);
 
-        //check that there's only 4 splits
-        cy.get('#btnRight').click();
-        //Test that the timeframe is correct
-        cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-09-30')
-        //map for valid timeslot locations
-        classesInOrder = [
-            ['COOS293B', '', '', '', ''],
-            ['', 'COSA280A', '', '', 'COOS293B'],
-            ['', '', 'SEM283A', 'CWEB280A', ''],
-            ['', '', 'COHS280A', 'COOS291A', ''],
-            ['', '', '', '', ''], // 12:00 slot appears empty
-            ['', 'CDBM280A', '', '', 'MATH282A'],
-            ['MATH282A', '', '', '', ''],
-            ['', '', '', '', ''],
-        ];
-        //Check that theyre correct
-        checkCorrectSchedule(classesInOrder);
-
-        //check that the left button works
-        cy.get('#btnLeft').click();
-        //Test that the timeframe is correct
-        cy.get('#2023-10-01').contains('Schedule Range: 2023-11-01 to 2023-12-01')
-        //map for valid timeslot locations
-        classesInOrder = [
-            ['COOS293B', '', '', '', ''],
-            ['', 'COSA280A', '', '', 'COOS293B'],
-            ['', '', 'SEM283A', 'CWEB280A', ''],
-            ['', '', 'COHS280A', 'COOS291A', ''],
-            ['', '', 'COOS293A', '', ''], // 12:00 slot appears empty
-            ['', 'CDBM280A', '', '', 'MATH282A'],
-            ['MATH282A', '', '', '', ''],
-            ['', '', '', '', ''],
-        ];
-        //Check that theyre correct
-        checkCorrectSchedule(classesInOrder);
+        //check that right buttons dosen't exist for last split
+        cy.get('#btnRight').should('not.exist');
     });
 
 });
