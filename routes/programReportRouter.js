@@ -14,7 +14,7 @@ const Classroom = require('../private/javascript/Classroom');
 const {sequelize} = require('../dataSource');
 const {globalConsts} = require('../constants');
 const constants = require('constants');
-const {Sequelize, QueryTypes} = require('sequelize');
+const {Sequelize, QueryTypes, Op} = require('sequelize');
 
 // global constants here to work with time arrays
 const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
@@ -181,17 +181,17 @@ router.post('/', async function(req, res, next) {
       }
 
       if(i < uniqueDates.length - 2){ //set end dates back one day except for end
-        let endDate = new Date(end.date);//change to date to set back a day
+        let endDate = new Date(end);//change to date to set back a day
         endDate.setDate(endDate.getDate() - 1);
         endDate = endDate.toISOString().substring(0, 10)
 
         tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, endDate); //assign time slots that match timeframe
-        tempJson.startDate = start.date;
+        tempJson.startDate = start;
         tempJson.endDate = endDate;
       } else { //use regular end time for last time
-        tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, end.date);
-        tempJson.startDate = start.date;
-        tempJson.endDate = end.date;
+        tempJson.matrixTable = await generateSchedule(instRepTimeslots, start, end);
+        tempJson.startDate = start;
+        tempJson.endDate = end;
       }
 
       reportArray[i] = tempJson;
@@ -284,42 +284,49 @@ async function generateSchedule(instRepTimeslots) {
  * @returns {Promise<Object[]>}
  */
 async function getUniqueDates(program, term, groupLetter) {
+// Sequelize query to get distinct start dates
+  const sequelizeQueryStart = {
+    attributes: [
+      [sequelize.fn('DISTINCT', sequelize.col('startDate')), 'date']
+    ],
+    where: { ProgramId: program.id, TermId: term.id, startDate: { [Op.gte]: term.startDate },
+      endDate: { [Op.lte]: term.endDate }, group: { [Op.eq]: groupLetter },
+    }
+  };
 
-  //get all startdates and enddates from timeslots using program, term, and groupletter
-  const sqlStart = `SELECT DISTINCT startDate AS date FROM timeslots 
-                         where ProgramId = ${program.id} and TermId = ${term.id}
-                        and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'` ;
-
-  const sqlEnd = `SELECT DISTINCT endDate AS date FROM timeslots 
-                        where ProgramId = ${program.id} and TermId = ${term.id}
-                        and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'`;
+// Sequelize query to get distinct end dates
+  const sequelizeQueryEnd = {
+    attributes: [
+      [sequelize.fn('DISTINCT', sequelize.col('endDate')), 'date']
+    ],
+    where: {
+      ProgramId: program.id, TermId: term.id, startDate: { [Op.gte]: term.startDate },
+      endDate: { [Op.lte]: term.endDate }, group: { [Op.eq]: groupLetter },
+    }
+  };
 
   let arStart, arEnd;
 
-  //query wtih strings
-  try {
-    arStart = await sequelize.query(sqlStart, {
-      type: QueryTypes.SELECT,
-      mapToModel: true,
-    });
-    arEnd = await sequelize.query(sqlEnd, {
-      type: QueryTypes.SELECT,
-      mapToModel: true,
-    });
-  } catch (e) {
-    console.log(e);
-  }
+// Get the start and end dates from the sequelize statements
+  arStart = await Timeslot.findAll(sequelizeQueryStart)
+      .then(timeslots => timeslots.map(timeslot => timeslot.dataValues.date))
+      .catch(error => {
+        console.error('Error executing Sequelize query for start dates:', error);
+      });
 
-  //filter both by group letter
-  arStart = arStart.filter(timeslot => timeslot.group === groupLetter);
-  arEnd = arEnd.filter(timeslot => timeslot.group === groupLetter);
+  arEnd = await Timeslot.findAll(sequelizeQueryEnd)
+      .then(timeslots => timeslots.map(timeslot => timeslot.dataValues.date))
+      .catch(error => {
+        console.error('Error executing Sequelize query for end dates:', error);
+      });
+
 
   //need to set date back one day, then stringify
   arEnd.forEach((date) => {
-    if(date.date !== term.endDate){
-      let tempDate = new Date(date.date); //change to date to set back a day
+    if(date !== term.endDate){
+      let tempDate = new Date(date); //change to date to set back a day
       tempDate.setDate(tempDate.getDate() + 1);
-      date.date = tempDate.toISOString().substring(0, 10);
+      date = tempDate.toISOString().substring(0, 10);
     }
   })
 
