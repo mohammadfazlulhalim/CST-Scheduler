@@ -18,17 +18,17 @@ const {sequelize, DataTypes} = require('../../datasource');
 const Course = sequelize.define('Course', {
   courseCode: {
     type: DataTypes.STRING,
-    //this field is mandatory.
+    // this field is mandatory.
     allowNull: false,
-    //course code has to be unique
+    // course code has to be unique
     unique: true,
-    validate:{
-      //course code consisting of 3 or 4 characters followed by 3 or 4 digits
-    is: {
-      args: /^[A-Za-z]{3,4}\s*[0-9]{3,4}\s*$/,
-      msg: 'Course Code can have 3-4 characters and 3-4 digits only'
-}
-    }
+    validate: {
+      // course code consisting of 3 or 4 characters followed by 3 or 4 digits
+      is: {
+        args: /^[A-Za-z]{3,4}\s*[0-9]{3,4}\s*$/,
+        msg: 'Course Code can have 3-4 characters and 3-4 digits only',
+      },
+    },
 
   },
   courseName: {
@@ -43,12 +43,12 @@ const Course = sequelize.define('Course', {
   },
   courseNumCredits: {
     type: DataTypes.INTEGER,
-    //allowNull: false,
+    // allowNull: false,
     allowNull: false,
 
     validate: {
-      notEmpty:{
-        msg:'Credit unit cannot be empty',
+      notEmpty: {
+        msg: 'Credit unit cannot be empty',
       },
 
       isInt: {

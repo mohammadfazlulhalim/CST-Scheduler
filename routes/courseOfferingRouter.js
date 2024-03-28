@@ -5,32 +5,35 @@ const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
 const Instructor = require('../private/javascript/Instructor');
 const Course = require('../private/javascript/Course');
-const URL = require('../constants').URL
+const URL = require('../constants').URL;
+const getSortedTerm = require('./termRouter').readAllTerms;
 
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
   const listCO = await getCOList();
-  const listTerm = await getTerms();
+  // const listTerm = await getTerms();
+  const listTerm = await getSortedTerm();
+  const listCourse = await getCourses();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
-  const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
 
 
   // render the courseOffering template file with appropriate title and the retrieved list of course offerings
   res.render('courseOffering', {
-    title: 'Course Offerings',
+    title: 'Manage Course Offerings',
     listCO: listCO,
     listTerm,
     listProgram,
     listInstructor,
     listCourse,
-    URL
+    URL,
   });
 });
 
 router.post('/', async function(req, res, next) {
+  console.log(JSON.stringify(req.body));
   await CourseOffering.sync();
-  const listTerm = await getTerms();
+  const listTerm = await getSortedTerm();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
   const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
@@ -42,7 +45,8 @@ router.post('/', async function(req, res, next) {
     group: req.body.group,
     CourseId: req.body.course,
     TermId: req.body.term,
-    primaryInstructor: req.body.instructor,
+    primaryInstructor: req.body.primaryInstructor,
+    alternativeInstructor: req.body.alternativeInstructor,
     ProgramId: req.body.program,
   };
 
@@ -62,7 +66,7 @@ router.post('/', async function(req, res, next) {
   const listCO = await getCOList();
 
   res.render('courseOffering', {
-    title: 'Course Offerings',
+    title: 'Manage Course Offerings',
     listCO: listCO,
     err: violations,
     submittedCO: violations ? req.body : undefined,
@@ -70,15 +74,15 @@ router.post('/', async function(req, res, next) {
     listProgram,
     listInstructor,
     listCourse,
-    URL
+    URL,
   });
 });
 
 router.put('/', async function(req, res, next) {
-  const listTerm = await getTerms();
+  const listTerm = await getSortedTerm();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
-  const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
+  const listCourse = await getCourses();
 
 
   const newCO = {
@@ -89,11 +93,13 @@ router.put('/', async function(req, res, next) {
     group: req.body.group,
     CourseId: req.body.course,
     TermId: req.body.term,
-    primaryInstructor: req.body.instructor,
+    primaryInstructor: req.body.primaryInstructor,
+    alternativeInstructor: req.body.alternativeInstructor,
     ProgramId: req.body.program,
   };
 
   const retUpdate = await updateCourseOffering(newCO);
+
   let violations;
   if (retUpdate.error) {
     res.status(422);
@@ -109,7 +115,7 @@ router.put('/', async function(req, res, next) {
   const listCO = await getCOList();
 
   res.render('courseOffering', {
-    title: 'Course Offerings',
+    title: 'Manage Course Offerings',
     listCO: listCO,
     putErr: violations,
     submittedCO: violations ? req.body : undefined,
@@ -117,15 +123,15 @@ router.put('/', async function(req, res, next) {
     listProgram,
     listInstructor,
     listCourse,
-    URL
+    URL,
   });
 });
 
 router.delete('/', async function(req, res, next) {
-  const listTerm = await getTerms();
+  const listTerm = await getSortedTerm();
   const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
-  const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
+  const listCourse = await getCourses();
   const retDelete = await deleteCourseOffering(req.body);
   let violations;
   if (retDelete <= 0) {
@@ -136,7 +142,7 @@ router.delete('/', async function(req, res, next) {
   const listCO = await getCOList();
 
   res.render('courseOffering', {
-    title: 'Course Offerings',
+    title: 'Manage Course Offerings',
     listCO: listCO,
     err: violations,
     submittedCO: violations ? req.body : undefined,
@@ -144,7 +150,7 @@ router.delete('/', async function(req, res, next) {
     listProgram,
     listInstructor,
     listCourse,
-    URL
+    URL,
   });
 });
 
@@ -154,8 +160,10 @@ router.delete('/', async function(req, res, next) {
  */
 async function createCourseOffering(createCO) {
   try {
+    // console.log('Syntax of the new create is: ' + JSON.stringify(createCO));
     return await CourseOffering.create(createCO);
   } catch (e) {
+    // console.log('Error is: ' + e);
     return mapErrors(e);
   }
 }
@@ -223,7 +231,6 @@ async function getCOList() {
 }
 
 
-
 /**
  * Given an error object, this function maps it to a more presentable format for the hbs template.
  * @param {Object} err  - An object representing errors
@@ -245,12 +252,23 @@ const mapErrors = (err) => {
 };
 
 async function getTerms() {
-  const terms = await Term.findAll({order: [['startDate', 'DESC'],['termNumber', 'ASC']]});
+  const terms = await Term.findAll({order: [['startDate', 'DESC'], ['termNumber', 'ASC']]});
   for (let i=0; i<terms.length; i++) {
     terms[i] = createTermTitle(terms[i]);
   }
 
   return terms;
+}
+
+async function getCourses() {
+  const courses = await Course.findAll({order: [['courseCode', 'ASC']]});
+
+  for (let i = 0; i < courses.length; i++) {
+    // Await the getInstructor() method call
+    courses[i].instructor = await courses[i].getInstructor();
+  }
+
+  return courses;
 }
 
 /**
@@ -262,7 +280,6 @@ function createTermTitle(term) {
   const splitDate = term.startDate.split('-');
   term.title = splitDate[0] + '-' + term.termNumber;
   return term;
-
 }
 
 module.exports = {router, createCourseOffering, updateCourseOffering, deleteCourseOffering};
