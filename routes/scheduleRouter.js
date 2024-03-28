@@ -40,118 +40,9 @@ router.post('/', async (req, res, next) => {
   const term = await Term.findByPk(req.body.term);
   const program = await Program.findByPk(req.body.program);
 
-
-  // looping through each group object requested
-  for (let i = 0; i < req.body.group; i++) {
-    groupArray.push({
-      timeslotMatrix: [[[], [], [], [], [], [], [], []]], // outer array is times, each inner array is days
-      COArray: new Array(req.body.group), groupLetter: GROUP_LETTERS[i],
-      uniqueDates: [term.startDate, term.endDate],
-    });
-
-
-    timeslotArray = await Timeslot.findAll({
-      where: {
-        group: GROUP_LETTERS[i], ProgramId: req.body.program, TermId: req.body.term,
-      },
-    });
-    // fetch all course offerings that match filters
-    groupArray[i].COArray = await CourseOffering.findAll({
-      where: {
-        group: GROUP_LETTERS[i], ProgramId: req.body.program, TermId: req.body.term,
-      },
-    });
-
-    for (let j = 0; j < timeslotArray.length; j++) {
-      // Correctly check if the startDate is in uniqueDates
-      if (groupArray[i].uniqueDates.indexOf(timeslotArray[j].startDate) === -1) {
-        // Assuming you want to add the startDate to the uniqueDates array
-        groupArray[i].uniqueDates.push(timeslotArray[j].startDate);
-      }
-
-      if (groupArray[i].uniqueDates.indexOf(timeslotArray[j].endDate) === -1) {
-        // Assuming you want to add the startDate to the uniqueDates array
-        groupArray[i].uniqueDates.push(timeslotArray[j].endDate);
-      }
-    }
-
-    // console.log(groupArray[i]);
-    console.log(groupArray[i].uniqueDates = groupArray[i].uniqueDates.sort());
-    // eslint-disable-next-line guard-for-in
-
-    groupArray[i].timeslotMatrix = new Array(groupArray[i].uniqueDates.length - 1)
-        .fill(0)
-        .map(() => new Array(TIMES.length)
-            .fill(0)
-            .map(() => new Array(DAYS.length).fill(null)));
-
-    // Populate the timeslotMatrix for each interval
-    for (let m = 0; m < groupArray[i].uniqueDates.length - 1; m++) {
-      for (let tIndex = 0; tIndex < TIMES.length; tIndex++) {
-        for (let dIndex = 0; dIndex < DAYS.length; dIndex++) {
-          const timeOb = dIndex == 0 ? DISPLAY_TIMES[tIndex] : null;
-          const cellID = `${tIndex}-${dIndex}-${GROUP_LETTERS[i]}`;
-
-          // Fill the matrix dynamically based on the current interval 'm', time 'tIndex', and day 'dIndex'
-          groupArray[i].timeslotMatrix[m][tIndex][dIndex] = {
-            hasObj: false,
-            cellID: cellID,
-            hTime: timeOb,
-            empty: 'empty',
-          };
-        }
-      }
-    }
-
-
-    // getting each course offering for this group
-    for (let k = 0; k < groupArray[i].COArray.length; k++) {
-      const COObj = groupArray[i].COArray[k];
-      const insObj = await Instructor.findByPk(COObj.primaryInstructor);
-      COObj.insFirst = insObj.firstName;
-      COObj.insLast = insObj.lastName;
-      COObj.dName = COObj.name + '-' + COObj.group;
-    }
-
-
-    // mapping each timeslot in this group to the matrix
-    for (const tSlot of timeslotArray) {
-      // const formattedTSlot = await formatCellInfo(tSlot);
-      coObj = await tSlot.getCourseOffering();
-      prObj = await tSlot.getProgram();
-      insObj = await tSlot.getInstructor();
-      cObj = await coObj.getCourse();
-      tSlot.program = prObj.programAbbreviation;
-      tSlot.insLast = insObj.lastName;
-      tSlot.course = cObj.courseCode;
-      tSlot.co = coObj.id;
-
-      const dateIndex = groupArray[i].uniqueDates.findIndex((date) =>
-        date === tSlot.startDate, // Assuming tSlot.startDate is the correct date field to compare
-      );
-
-      if (dateIndex !== -1 && // Ensure dateIndex is found
-          TIMES.indexOf(tSlot.startTime) !== -1 && // Check if startTime is valid
-          groupArray[i].timeslotMatrix[dateIndex][TIMES.indexOf(tSlot.startTime)] && // Check if the timeslot exists
-          groupArray[i].timeslotMatrix[dateIndex][TIMES.indexOf(tSlot.startTime)][tSlot.day] // Check if the day slot exists
-      ) {
-        // Update properties only if the necessary objects and indices exist
-        groupArray[i].timeslotMatrix[dateIndex][TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
-        groupArray[i].timeslotMatrix[dateIndex][TIMES.indexOf(tSlot.startTime)][tSlot.day].timeslot = tSlot;
-      } else {
-        // Handle the case where the structure or indices are not as expected
-        console.error(`Invalid structure or indices in timeslotMatrix for date index ${dateIndex}:`,
-            groupArray[i].timeslotMatrix[dateIndex]);
-      }
-    }
-
-    groupLetters[i] = GROUP_LETTERS[i];
-  }
-
-
   res.render('schedule', {
-    isHidden: false,
-    groups: groupLetters, groupArray, DAYS, TIMES,
+
+
   });
 });
 
@@ -202,24 +93,18 @@ router.delete('/', async (req, res, next) => {
   res.status(200).json();
 });
 
-// formatting each timeslot for easier displaying
-async function formatCellInfo(tSlot) {
-  coObj = await tSlot.getCourseOffering();
-  prObj = await tSlot.getProgram();
-  insObj = await tSlot.getInstructor();
-  cObj = await coObj.getCourse();
+function getGroupFill() {
 
-  return prObj.programAbbreviation + '\n' + cObj.courseCode + '\n' + insObj.lastName;
 }
 
+function getScheduleFill() {
 
-/**
- *  This function will handle the schedule changes.
- * @param saveArray - This array will contain the edit schedule timeslots to save to the database
- * @param deleteArray - This array will contain the timeslots to delete from the database
- */
-async function handleScheduleSave(saveArray, deleteArray) {
 }
+
+function getScheduleItems() {
+
+}
+
 
 
 module.exports = router;
