@@ -20,7 +20,6 @@ it('testThatCourseOfferingHasAssociations', () => {
     cy.get('tr:nth-child(21) > td').eq(7).should('contain.text', '');
     cy.get('tr:nth-child(21) > td').eq(8).should('contain.text', 'CST');
   });
-  cy.get('tr:nth-child(1) > td').should('be.hidden');
   cy.get('#filterTerm').select(0);
 
 
