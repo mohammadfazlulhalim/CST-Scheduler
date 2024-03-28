@@ -222,7 +222,7 @@ router.post('/', async function(req, res, next) {
  * Help to gather timeslots for instructor
  * //
  */
-async function generateSchedule(instRepTimeslots) {
+async function generateSchedule(instRepTimeslots, start, end) {
   const matrixTable = [];
   let currentCourseOffering;
   let currentClassroom;
@@ -242,28 +242,32 @@ async function generateSchedule(instRepTimeslots) {
   // eslint-disable-next-line guard-for-in
   // for every entry in the timeslots
   for (const timeslot of instRepTimeslots) {
-    // make day one less (offset)
-    const tDay= timeslot.day-1;
-    const tHour = hours24.findIndex((st)=> st === timeslot.startTime);
+    if(timeslot.startDate.localeCompare(end) < 1  &&
+        timeslot.endDate.localeCompare(start) > -1 ) { // if the timeslot falls within the current date range
+      // make day one less (offset)
+      const tDay = timeslot.day - 1;
+      const tHour = hours24.findIndex((st) => st === timeslot.startTime);
 
-    // try to find the course, courseoffering and course for this timeslot object entry
-    try {
-      currentCourseOffering = await timeslot.getCourseOffering();
-      currentClassroom = await timeslot.getClassroom();
-      currentCourse = await currentCourseOffering.getCourse();
-      currentInstructor = await timeslot.getInstructor();
-      currentClassroom = await timeslot.getClassroom();
-    } catch (e) {
-      console.error(e);
+      // try to find the course, courseoffering and course for this timeslot object entry
+      try {
+        currentCourseOffering = await timeslot.getCourseOffering();
+        currentClassroom = await timeslot.getClassroom();
+        currentCourse = await currentCourseOffering.getCourse();
+        currentInstructor = await timeslot.getInstructor();
+        currentClassroom = await timeslot.getClassroom();
+      } catch (e) {
+        console.error(e);
+      }
+      // put the items in the array
+      matrixTable[tHour][tDay + 1] = {
+        timeSlot: timeslot,
+        courseOffering: currentCourseOffering,
+        classRoom: currentClassroom,
+        course: currentCourse,
+        instructor: currentInstructor,
+        classroom: currentClassroom,
+      };
     }
-    // put the items in the array
-    matrixTable[tHour][tDay+1]= {timeSlot: timeslot,
-      courseOffering: currentCourseOffering,
-      classRoom: currentClassroom,
-      course: currentCourse,
-      instructor: currentInstructor,
-      classroom: currentClassroom,
-    };
   }
 
   // place the hours
@@ -321,21 +325,21 @@ async function getUniqueDates(program, term, groupLetter) {
       });
 
 
-  //need to set date back one day, then stringify
-  arEnd.forEach((date) => {
-    if(date !== term.endDate){
-      let tempDate = new Date(date); //change to date to set back a day
+  for(let i = 0; i < arEnd.length; i++)
+  {
+    if(arEnd[i] !== term.endDate){
+      let tempDate = new Date(arEnd[i]); //change to date to set back a day
       tempDate.setDate(tempDate.getDate() + 1);
-      date = tempDate.toISOString().substring(0, 10);
+      arEnd[i] = tempDate.toISOString().substring(0, 10);
     }
-  })
+  }
 
   //combine two lists, then sort
   arStart = arStart.concat(arEnd);
   arStart = [...new Set(arStart)];
   arStart = arStart.sort((a,b) => {
-    if(a.date === b.date){ return 0; }
-    if(a.date >=  b.date) { return 1; }
+    if(a === b){ return 0; }
+    if(a.date >=  b) { return 1; }
     else{ return -1; }
   });
 

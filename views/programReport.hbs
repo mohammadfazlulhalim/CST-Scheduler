@@ -15,7 +15,7 @@
 
     <div id="scheduleCarousel" class="carousel slide" data-bs-interval="false">
         <div class="carousel-inner">
-            {{#each reportArray}}
+            {{#each reportArray}} <!---each carosel item -->
             <div class="carousel-item {{#if @first}}active{{/if}}">
                 <p id="{{this.startDate}}">Schedule Range: {{this.startDate}} to {{this.endDate}}</p>
                 <div class="table-responsive">
@@ -57,8 +57,8 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
             {{/each}}
-        </div>
         </div>
         <!--if there are splits-->
     {{#if isSplit}}
@@ -74,7 +74,7 @@
                 <span class="visually-hidden">Next</span>
             </button>
     {{/if}}
-
+        </div>
 {{else}}
         <h1 id="nothingToShow">Nothing to display at the moment</h1>
 {{/if}}
@@ -144,114 +144,133 @@
     <!-- New report and print buttons -->
     <div class="btnPairsCustom">
         <button id="newProgramBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal"
-                data-bs-target="#instructorReportModal">
+                data-bs-target="#programReportModal">
             New Report
         </button>
         <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
     </div>
+</div>
 
-    <script defer>
-        'use strict';
-        // global variables
-        let submitBtn;
-        let selectedProgram;
-        let selectedTerm;
-        let selectedGroup;
-        let closeBtn;
-        let xBtn;
-        let newProgramBtn;
-        const modal = new bootstrap.Modal(document.getElementById("programReportModal"));
-        closeBtn = document.getElementById("modalCloseBtn");
-        xBtn = document.getElementById("xBtn");
+<script defer>
+    'use strict';
+    // global variables
+    let submitBtn;
+    let selectedProgram;
+    let selectedTerm;
+    let selectedGroup;
+    let closeBtn;
+    let xBtn;
+    let newProgramBtn;
+    const modal = new bootstrap.Modal(document.getElementById("programReportModal"));
+    closeBtn = document.getElementById("modalCloseBtn");
+    xBtn = document.getElementById("xBtn");
 
-        // On arrival the modal will open
-        window.onload = function () {
-            submitBtn = document.getElementById("submitBtn");
-            selectedProgram = document.getElementById("selectProgramReport");
-            selectedTerm = document.getElementById("selectTermReport");
-            selectedGroup = document.getElementById("selectGroupReport");
-            newProgramBtn = document.getElementById("newProgramBtn");
-            submitBtn.disabled = true;
+    // On arrival the modal will open
+    window.onload = function () {
+        submitBtn = document.getElementById("submitBtn");
+        selectedProgram = document.getElementById("selectProgramReport");
+        selectedTerm = document.getElementById("selectTermReport");
+        selectedGroup = document.getElementById("selectGroupReport");
+        newProgramBtn = document.getElementById("newProgramBtn");
+        submitBtn.disabled = true;
 
-            // only open upon first arrival
-            {{#if showModal}}
-                // check if the "close" button was clicked
-                closeBtn.addEventListener("click", function () {
-                    modal.hide();
-                });
-
-                // check if the 'x' button was clicked
-                xBtn.addEventListener("click", function () {
-                    modal.hide();
-                });
-
-                // show the modal
-                modal.show();
-
-            {{/if}}
-            selectedProgram.onchange = checkFormSelections;
-            selectedTerm.onchange = checkFormSelections;
-            selectedGroup.onchange = checkFormSelections;
-
-            // check if the "new report" button was clicked
-            newProgramBtn.addEventListener("click", function () {
-                modal.show();
+        // only open upon first arrival
+        {{#if showModal}}
+            // check if the "close" button was clicked
+            closeBtn.addEventListener("click", function () {
+                modal.hide();
             });
 
-        }
+            // check if the 'x' button was clicked
+            xBtn.addEventListener("click", function () {
+                modal.hide();
+            });
 
-        /**
-         * This function will enable and disable the modal submit button
-         */
-        function checkFormSelections() {
-            // If not enough selections disable the button
-            if (selectedProgram.value !== "" && selectedTerm.value !== "" && selectedGroup.value !== "") {
-                submitBtn.disabled = false;
-            }
-            // Else enable it
-            else {
-                submitBtn.disabled = true;
-            }
-        }
+            // show the modal
+            modal.show();
 
-        function printReport() {
-            const printWindow = window.open('', '_blank');
+        {{/if}}
+        selectedProgram.onchange = checkFormSelections;
+        selectedTerm.onchange = checkFormSelections;
+        selectedGroup.onchange = checkFormSelections;
 
-            // Add styles or additional content if needed
-            printWindow.document.write('<html><head><title>Program Report</title>');
-            printWindow.document.write('<style>');
-            printWindow.document.write('@media print { @page { size: landscape; } }'); // Set page orientation to landscape
-            printWindow.document.write('.table-bordered { border-collapse: collapse; width: 100%; }');
-            printWindow.document.write('.table-bordered th, .table-bordered td { border: 1px solid black; padding: 8px; }');
-            printWindow.document.write('</style>');
-            printWindow.document.write('</head><body>');
-
-            // Print date and name
-            const dateGen = document.getElementById("dateGenDisplayer").innerText;
-            const programName = document.getElementById("nameDisplayer").innerText;
-
-            printWindow.document.write('<h2>Program Report For: ' + programName + '</h2>');
-            printWindow.document.write('<p>Report Generated: ' + dateGen + '</p>');
-
-            // Print the table
-            const tableHtml = document.querySelector('.table-bordered').outerHTML;
-            printWindow.document.write(tableHtml);
-
-            printWindow.document.write('</body></html>');
-
-            printWindow.document.close();
-            printWindow.print();
-        }
-
-
-        // check if the "close" button was clicked
-        closeBtn.addEventListener("click", function () {
-            modal.hide();
+        // check if the "new report" button was clicked
+        newProgramBtn.addEventListener("click", function () {
+            modal.show();
         });
 
-        // check if the 'x' button was clicked
-        xBtn.addEventListener("click", function () {
-            modal.hide();
-        });
+    }
 
-    </script>
+    /**
+     * This function will enable and disable the modal submit button
+     */
+    function checkFormSelections() {
+        // If not enough selections disable the button
+        if (selectedProgram.value !== "" && selectedTerm.value !== "" && selectedGroup.value !== "") {
+            submitBtn.disabled = false;
+        }
+        // Else enable it
+        else {
+            submitBtn.disabled = true;
+        }
+    }
+
+    function printReport() {
+        const printWindow = window.open('', '_blank');
+
+        // Add styles or additional content if needed
+        printWindow.document.write('<html><head><title>Program Report</title>');
+        printWindow.document.write('<style>');
+        printWindow.document.write('@media print { @page { size: landscape; } }'); // Set page orientation to landscape
+        printWindow.document.write('.table-bordered { border-collapse: collapse; width: 100%; }');
+        printWindow.document.write('.table-bordered th, .table-bordered td { border: 1px solid black; padding: 8px; }');
+        printWindow.document.write('</style>');
+        printWindow.document.write('</head><body>');
+
+        // Print date and name
+        const dateGen = document.getElementById("dateGenDisplayer").innerText;
+        const programName = document.getElementById("nameDisplayer").innerText;
+
+        printWindow.document.write('<h2>Program Report For: ' + programName + '</h2>');
+        printWindow.document.write('<p>Report Generated: ' + dateGen + '</p>');
+
+        // Print the table
+        const tableHtml = document.querySelector('.table-bordered').outerHTML;
+        printWindow.document.write(tableHtml);
+
+        printWindow.document.write('</body></html>');
+
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+
+    // check if the "close" button was clicked
+    closeBtn.addEventListener("click", function () {
+        modal.hide();
+    });
+
+    // check if the 'x' button was clicked
+    xBtn.addEventListener("click", function () {
+        modal.hide();
+    });
+
+</script>
+
+<style>
+    .custom-carousel-control {
+        color: black;
+    }
+
+    .carousel-control-prev.custom-carousel-control {
+        left: -150px;
+    }
+
+    .carousel-control-next.custom-carousel-control {
+        right: -150px;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        background-color: black;
+    }
+</style>
