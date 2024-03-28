@@ -29,7 +29,6 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
   cy.get('#Seminar-A').contains('Ron New');
   cy.get('#Seminar-A').contains('Seminar');
   cy.get('#Seminar-A').contains('2023-09-01 - 2023-12-15');
-  //cy.get('#Seminar-A').contains.not('Alternate');
 
   // Select Room 241
   cy.get('#classroomSelectA').select('241');
@@ -46,10 +45,8 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
   }
   // Testing that the four corners are filled properly
   for (let i = 0; i < cornerIDs.length; i++) {
-    cy.get(cornerIDs[i]).contains('CST');
     cy.get(cornerIDs[i]).contains('COHS190');
-    cy.get(cornerIDs[i]).contains('Benson');
-    cy.get(cornerIDs[i]).contains('Alternate: Lahoda');
+    cy.get(cornerIDs[i]).contains('Benson / Lahoda');
     cy.get(cornerIDs[i]).contains('Room: 241');
   }
 
@@ -63,10 +60,8 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
 
   // Testing that the four corners are filled properly
   for (let i = 0; i < cornerIDs.length; i++) {
-    cy.get(cornerIDs[i]).contains('CST');
     cy.get(cornerIDs[i]).contains('SEM283');
     cy.get(cornerIDs[i]).contains('New');
-    //cy.get(cornerIDs[i]).contains.not('Alternate');
     cy.get(cornerIDs[i]).contains('Room: 241');
   }
 
@@ -82,10 +77,8 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
 
   // Checking that it changed the room only for Monday 8am and Friday 3pm
   for (let i = 0; i < cornerIDs.length; i++) {
-    cy.get(cornerIDs[i]).contains('CST');
     cy.get(cornerIDs[i]).contains('SEM283');
     cy.get(cornerIDs[i]).contains('New');
-    //cy.get(cornerIDs[i]).contains.not('Alternate');
     // Checking if it is even, as we only modified odd
     if (i % 2 == 0) {
       cy.get(cornerIDs[i]).contains('Room: 241');
@@ -106,16 +99,12 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
 
     // Checking if it is even, as we only modified even
     if (i % 2 == 0) {
-      cy.get(cornerIDs[i]).contains('CST');
       cy.get(cornerIDs[i]).contains('COHS190');
-      cy.get(cornerIDs[i]).contains('Benson');
-      cy.get(cornerIDs[i]).contains('Alternate: Lahoda');
+      cy.get(cornerIDs[i]).contains('Benson / Lahoda');
       cy.get(cornerIDs[i]).contains('Room: 240B');
     } else {
-      cy.get(cornerIDs[i]).contains('CST');
       cy.get(cornerIDs[i]).contains('SEM283');
       cy.get(cornerIDs[i]).contains('New');
-      //cy.get(cornerIDs[i]).contains.not('Alternate');
       cy.get(cornerIDs[i]).contains('Room: 240B');
     }
   }
@@ -147,10 +136,8 @@ it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
 
   // Testing that the four corners are filled properly
   for (let i = 0; i < cornerIDs.length; i++) {
-    cy.get(cornerIDs[i]).contains('CST');
     cy.get(cornerIDs[i]).contains('SEM283');
     cy.get(cornerIDs[i]).contains('New');
-    //cy.get(cornerIDs[i]).contains.not('Alternate');
     cy.get(cornerIDs[i]).contains('Room: 239A');
   }
 
@@ -189,10 +176,8 @@ it('testThatDeletedClassroomIsHandled', () => {
 
   // Testing that the four corners are filled properly
   for (let i = 0; i < cornerIDs.length; i++) {
-    cy.get(cornerIDs[i]).contains('CST');
     cy.get(cornerIDs[i]).contains('SEM283');
     cy.get(cornerIDs[i]).contains('New');
-    //cy.get(cornerIDs[i]).contains.not('Alternate');
     cy.get(cornerIDs[i]).contains('Room: 241');
   }
 
@@ -217,10 +202,8 @@ it('testThatDeletedClassroomIsHandled', () => {
   }
 
   for (let i = 0; i < cornerIDs.length; i++) {
-    cy.get(cornerIDs[i]).contains('CST');
     cy.get(cornerIDs[i]).contains('SEM283');
     cy.get(cornerIDs[i]).contains('New');
-    //cy.get(cornerIDs[i]).contains.not('Alternate');
     cy.get(cornerIDs[i]).contains('Room: Deleted');
   }
 

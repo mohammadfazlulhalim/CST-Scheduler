@@ -56,11 +56,11 @@ it('testThatModalWorks', () => {
   cy.get('#7-0-A').contains('3:00');
 
   // DONE check group a has specific tiles filled
-  cy.get('#0-1-A').should('have.text', '\n                                        CST\n                                        CSEC280\n                                        Benson\n                                            Room: 239a\n                                    ');
-  cy.get('#1-2-A').should('have.text', '\n                                        CST\n                                        CSEC280\n                                        Benson\n                                            Room: 239a\n                                    ');
-  cy.get('#2-3-A').should('have.text', '\n                                        CST\n                                        CSEC280\n                                        Benson\n                                            Room: 239a\n                                    ');
-  cy.get('#3-4-A').should('have.text', '\n                                        CST\n                                        CSEC280\n                                        Benson\n                                            Room: 239a\n                                    ');
-  cy.get('#4-5-A').should('have.text', '\n                                        CST\n                                        CSEC280\n                                        Benson\n                                            Room: 239a\n                                    ');
+  cy.get('#0-1-A').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#1-2-A').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#2-3-A').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#3-4-A').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#4-5-A').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
 
   // Looping to check that group a is visible and groub is hidden
   for (let t = 0; t < 8; t++) {
@@ -100,11 +100,12 @@ it('testThatModalWorks', () => {
   cy.get('#7-0-B').contains('3:00');
 
   // DONE check group a has specific tiles filled
-  cy.get('#7-1-B').should('have.text', '\n                                        CST\n                                        CSEC280\n                                        Benson\n                                            Room: 239a\n                                    ');
-  cy.get('#6-2-B').should('have.text', '\n                                        CST\n                                        CSEC280\n                                        Benson\n                                            Room: 239a\n                                    ');
-  cy.get('#5-3-B').should('have.text', '\n                                        CST\n                                        CSEC280\n                                        Benson\n                                            Room: 239a\n                                    ');
-  cy.get('#4-4-B').should('have.text', '\n                                        CST\n                                        CSEC280\n                                        Benson\n                                            Room: 239a\n                                    ');
-  cy.get('#3-5-B').should('have.text', '\n                                        CST\n                                        CSEC280\n                                        Benson\n                                            Room: 239a\n                                    ');
+
+  cy.get('#7-1-B').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#6-2-B').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#5-3-B').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#4-4-B').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#3-5-B').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
 
   // Looping to check that group a is visible and groub is hidden
   for (let t = 0; t < 8; t++) {

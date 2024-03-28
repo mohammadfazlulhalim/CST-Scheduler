@@ -54,11 +54,11 @@
         {{/each}}
     </div>
     {{#each groupArray}}
-        <div id="group{{groupLetter}}" class="row container" hidden>
-            <div id="calender{{groupLetter}}" class=" col container-fluid">
+        <div id="group{{groupLetter}}" class="row container-fluid" hidden>
+            <div id="calender{{groupLetter}}" class=" col-md-9 container-fluid">
                 <h2>Group {{groupLetter}} Calendar</h2>
-                <table class="table table-bordered table-hover border-dark">
-                    <thead class="thead-dark">
+                <table class="table table-bordered table-sm table-hover border-dark">
+                    <thead class="table-primary">
                     <tr>
                         <th class="text-center" scope="col" id="time">Time</th>
                         <th class="text-center" scope="col" id="mon">Monday</th>
@@ -77,22 +77,24 @@
                                 <!--                                    Then the 'each' will have different attributes and be loaded differently-->
                                 <!--                                    via html and the router sends attributes-->
                                 {{#if this.hTime}}
-                                    <td class="text-center time-cell" id="{{this.cellID}}">
+                                    <td class="text-center time-cell table-primary" id="{{this.cellID}}">
                                         <p>{{this.hTime}}</p>
                                     </td>
                                 {{else}}
                                     <td oncontextmenu="onCellRightClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')"
                                         onclick="onCellClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')"
                                         id="{{this.cellID}}" class="time-slot {{ this.empty }} text-center">
-                                        <p>{{this.timeslot.program}}<br/></p>
-                                        <p>{{this.timeslot.course}}<br/></p>
-                                        <p>{{this.timeslot.insLast}}<br/></p>
-                                        {{#if this.timeslot.altInsLast}}
-                                            <p>Alternate: {{this.timeslot.altInsLast}}<br/></p>
-                                        {{/if}}
-                                        {{#if this.timeslot}}
-                                            <p>Room: {{this.timeslot.Classroom.roomNumber}}<br/></p>
-                                        {{/if}}
+                                        <p>
+                                            {{this.timeslot.course}}<br/>
+                                            {{this.timeslot.insLast}}
+                                            {{#if this.timeslot.altInsLast}}
+                                                / {{this.timeslot.altInsLast}}
+                                            {{/if}}<br/>
+                                            {{#if this.timeslot}}
+                                                Room: {{this.timeslot.Classroom.roomNumber}}
+                                            {{/if}}
+                                        </p>
+
                                     </td>
                                 {{/if}}
                             {{/each}}
@@ -102,19 +104,21 @@
                 </table>
             </div>
             <div class="col container-fluid">
-                <!--                    Adding in Classroom select box-->
-                <label for="classroomSelect{{groupLetter}}" class="form-label">Current Classroom:</label>
-                <select id="classroomSelect{{groupLetter}}" class="form-select">
-                    {{#each ../classroomList}}
-                        <option value="{{this.id}}">{{this.roomNumber}}</option>
-                    {{/each}}
-                </select>
+                <div class="row">
+                    <!--                    Adding in Classroom select box-->
+                    <label for="classroomSelect{{groupLetter}}" class="form-label">Current Classroom:</label>
+                    <select id="classroomSelect{{groupLetter}}" class="form-select">
+                        {{#each ../classroomList}}
+                            <option value="{{this.id}}">{{this.roomNumber}}</option>
+                        {{/each}}
+                    </select>
+                </div>
 
                 <h2>Group {{groupLetter}} Courses</h2>
                 <div class="row">
                     {{#each COArray}}
                         <div class="mb-3">
-                            <div class="card bg-secondary course-offering" style="width: 12rem;"
+                            <div class="card bg-secondary course-offering"
                                  onclick="onCOClick('{{this.id}}', '{{this.dName}}')" id="{{this.dName}}">
                                 <div class="card-body">
                                     <h5 class="card-title">{{this.name}}</h5>
@@ -210,11 +214,11 @@
     }
 
     async function onCellClick(idCell, tSlot, cellCO) {
-      console.log("Registered click");
+        console.log('Registered click');
         if (currCO) {
             //if not blank
             if (tSlot) {
-              console.log("Deleting");
+                console.log('Deleting');
                 //If the selected CO is not the same as the current CO
                 if (cellCO !== currCO) {
                     await fetch('/schedule', {
@@ -262,20 +266,18 @@
 
     function addTSToCell(idCell, tSlot, xtraInfo) {
         let oldTD = document.getElementById(idCell);
-        let altIns = "";
+        let altIns = '';
         console.log(xtraInfo.altInsLast);
         if (xtraInfo.altInsLast !== undefined) {
-            altIns = '<p> Alternate: ' + xtraInfo.altInsLast + '<br/></p>'
+            altIns = ' / ' + xtraInfo.altInsLast;
         }
 
         let newTD = '<td class="text-center" oncontextmenu="onCellRightClick(\'' + idCell + '\', \'' + tSlot.id + '\', \'' + tSlot.CourseOfferingId + '\')" ' +
                 'onclick="onCellClick(\'' + idCell + '\', \'' + tSlot.id + '\', \'' + tSlot.CourseOfferingId + '\')" ' +
                 'id="' + idCell + '">' +
-                '<p>' + xtraInfo.program + '<br/></p>' +
-                '<p>' + xtraInfo.course + '<br/></p>' +
-                '<p>' + xtraInfo.insLast + '<br/></p>' +
-                altIns +
-                '<p>Room: ' + xtraInfo.room + '<br/></p>' +
+                '<p>' + xtraInfo.course + '<br/>' +
+                xtraInfo.insLast + altIns + '<br/>' +
+                'Room: ' + xtraInfo.room + '<br/></p>' +
                 '</td>';
 
         oldTD.outerHTML = newTD;
@@ -294,9 +296,7 @@
         let newTD = '<td class=\'empty text-center\' nu="onCellRightClick(\'' + idCell + '\', \'' + '' + '\', \'' + '' + '\')" ' +
                 'onclick="onCellClick(\'' + idCell + '\', \'' + '' + '\', \'' + '' + '\')" ' +
                 'id="' + idCell + '">' +
-                '<p><br/></p>' +
-                '<p><br/></p>' +
-                '<p><br/></p>' +
+                '<p></p>' +
                 '</td>';
         oldTD.outerHTML = newTD;
     }
