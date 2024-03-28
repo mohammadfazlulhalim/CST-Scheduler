@@ -100,6 +100,8 @@ router.post('/', async (req, res, next) => {
       // const formattedTSlot = await formatCellInfo(tSlot);
       coObj = await tSlot.getCourseOffering();
       prObj = await tSlot.getProgram();
+
+      // Loading the primary instructor information to display
       try {
         insObj = await Instructor.findByPk(tSlot.primaryInstructor);
         tSlot.insLast = insObj.lastName;
@@ -107,11 +109,17 @@ router.post('/', async (req, res, next) => {
         console.log('No Primary');
       }
 
+      // Loading the alternative instructor information, to display name
       try {
         altInsObj = await Instructor.findByPk(tSlot.alternativeInstructor);
         tSlot.altInsLast = altInsObj.lastName;
       } catch (e) {
         console.log('No alternative instructor');
+      }
+
+      // Checking if classroom is null, because then it was probably deleted
+      if (tSlot.ClassroomId === null) {
+        tSlot.Classroom = {roomNumber: "Deleted"};
       }
 
       cObj = await coObj.getCourse();
@@ -141,7 +149,7 @@ router.post('/', async (req, res, next) => {
     groupLetters[i] = GROUP_LETTERS[i];
   }
 
-  const classroomList = await Classroom.findAll();
+  const classroomList = await Classroom.findAll({order: [['roomNumber', 'ASC']]});
 
 
   res.render('schedule', {
@@ -195,7 +203,6 @@ router.put('/', async (req, res, next) => {
   xtraInfo.course = cObj.courseCode;
   xtraInfo.co = coObj;
   xtraInfo.room = (await retTSlot.getClassroom()).roomNumber;
-
 
   res.status(200).json({retTSlot, xtraInfo});
 });
