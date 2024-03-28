@@ -7,6 +7,23 @@ it('testThatCourseOfferingHasAssociations', () => {
 
   // At the course offering page, now test course offerings
 
+  // Test the select box
+  cy.get('#filterTerm').select(1);
+  cy.get('#dataTable').within(() => {
+    cy.get('tr:nth-child(21) > td').eq(0).should('contain.text', 'Mathematics of Computation');
+    cy.get('tr:nth-child(21) > td').eq(1).should('contain.text', 'C');
+    cy.get('tr:nth-child(21) > td').eq(2).should('contain.text', 'MATH282');
+    cy.get('tr:nth-child(21) > td').eq(3).should('contain.text', '2023-1');
+    cy.get('tr:nth-child(21) > td').eq(4).should('contain.text', '2023-09-01');
+    cy.get('tr:nth-child(21) > td').eq(5).should('contain.text', '2023-10-31');
+    cy.get('tr:nth-child(21) > td').eq(6).should('contain.text', 'Bryce Barrie');
+    cy.get('tr:nth-child(21) > td').eq(7).should('contain.text', '');
+    cy.get('tr:nth-child(21) > td').eq(8).should('contain.text', 'CST');
+  });
+  cy.get('tr:nth-child(1) > td').should('be.hidden');
+  cy.get('#filterTerm').select(0);
+
+
   // Creating a new entry
   cy.contains('Add New Course Offering').click();
   cy.get('#addModal').should('be.visible');
@@ -74,7 +91,7 @@ it('testThatCourseOfferingHasAssociations', () => {
   // created, now check that it exists
   const newRow = '#tableBody > tr:nth-child(1) > ';
   cy.get('#dataTable').within(() => {
-    cy.get('tr:first-child > td').eq(0).should('contain.text', 'AAAMATH ');
+    cy.get('tr:first-child > td').eq(0).should('contain.text', 'AAAMATH');
     cy.get('tr:first-child > td').eq(1).should('contain.text', 'A');
     cy.get('tr:first-child > td').eq(2).should('contain.text', 'MATH282');
     cy.get('tr:first-child > td').eq(3).should('contain.text', '2023-4');
@@ -85,7 +102,7 @@ it('testThatCourseOfferingHasAssociations', () => {
     cy.get('tr:first-child > td').eq(8).should('contain.text', 'CST');
   });
   // eslint-disable-next-line max-len
-  const expectedResult2 = ['AAAMATH ', 'B', 'MATH282', '2023-4', '2023-08-01', '2023-12-01', 'Micheal Grzesina', 'Bryce Barrie', 'CST'];
+  const expectedResult2 = ['AAAMATH', 'B', 'MATH282', '2023-4', '2023-08-01', '2023-12-01', 'Micheal Grzesina', 'Bryce Barrie', 'CST'];
 
   cy.get('#dataTable').within(() => {
     cy.get('tr:nth-child(2) > td').eq(0).should('contain.text', expectedResult2[0]);
@@ -128,7 +145,7 @@ it('testThatCourseOfferingHasAssociations', () => {
   });
 
   // checking the fields to make sure they pre-filled correctly
-  cy.get('#eName').should('contain.value', 'AAAMATH ');
+  cy.get('#eName').should('contain.value', 'AAAMATH');
   cy.get('#eTerm').find('option:selected').should('contain.text', '2023-2024');
   cy.get('#eStartDate').should('contain.value', '2023-08-01');
   cy.get('#eEndDate').should('contain.value', '2023-12-01');

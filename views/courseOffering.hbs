@@ -8,8 +8,9 @@
         <div class="col-md-5">
             <div class="input-group">
                 <label for="filterTerm" class="input-group-text">Filter by Term:</label>
-                <select class="form-select" id="filterTerm">
+                <select class="form-select" id="filterTerm" onchange="handleFilter()">
                     <option value="">All Terms</option>
+                    <!-- Dynamic generation of options based on listTerm -->
                     {{#each listTerm}}
                         <option value="{{id}}" data-termstart="{{startDate}}" data-termend="{{endDate}}">
                             {{this.calendarYear}} - Term {{this.termNumber}}
@@ -330,9 +331,10 @@
     /**
      * Filter term rows based on the selected term.
      */
-    document.getElementById('filterTerm').addEventListener('change', function() {
+    // Define a function to handle filtering
+    function handleFilter() {
         // Get the value of the selected term
-        var termId = this.value;
+        var termId = document.getElementById('filterTerm').value;
         // Select all elements with class 'term-row'
         var termRows = document.querySelectorAll('.term-row');
         // Iterate through term rows to show/hide based on selected term
@@ -346,7 +348,10 @@
                 row.style.display = 'none';
             }
         });
-    });
+    }
+
+    // Call the filter function initially to apply any default filtering
+    handleFilter();
 
     /**
      * Sorts the table by the specified column index.

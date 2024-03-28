@@ -4,12 +4,12 @@
         <!--Empty spacer, to help with formatting-->
         <div class="col-md-5"></div>
         <!--Add button is at the top, for longer table lists-->
-        <button type="button" class="btn btn-success col-md-2" data-toggle="modal" data-target="#addModal">Add New
+        <button id="createCourseButton" type="button" class="btn btn-success col-md-2" data-toggle="modal" data-target="#addModal">Add New
             Course
         </button>
     </div>
     {{#if courseList}}
-        <table class="table table-striped">
+        <table id="table" class="table table-striped">
             <thead class="table-primary">
             <tr>
                 <th>Course Code</th>
@@ -104,7 +104,7 @@
                                name="courseNumHoursPerWeek" value="{{putSubmittedCourse.courseNumHoursPerWeek}}">
                         <div class="invalid-feedback">{{putErr.courseNumHoursPerWeek}}</div>
                         <div>
-                            <label for="eInstructor">Instructor</label>
+                            <label for="eInstructor">Preferred Instructor:</label>
                             <select id="eInstructor" class="form-select" data-instructorEdit="">Instructor
                                 {{#each listInstructor}}
                                     <option value="{{id}}">{{lastName}}</option>
@@ -168,7 +168,7 @@
                            name="courseNumHoursPerWeek" value="{{putSubmittedCourse.courseNumHoursPerWeek}}">
                     <div class="invalid-feedback">{{putErr.courseNumHoursPerWeek}}</div>
                     <div>
-                        <label for="cInstructor">Instructor</label>
+                        <label for="cInstructor">Preferred Instructor:</label>
                         <select id="cInstructor" class="form-select">Default Instructor
                             {{#each listInstructor}}
                                 <option value="{{id}}">{{lastName}}</option>

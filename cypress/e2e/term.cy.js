@@ -10,7 +10,6 @@ const expectedInstructor = ['Ben Benson', 'Ron New'];
  * Test for checking if the autogenerate works
  */
 it('testThatTermAutogeneratesCourseOfferings', () => {
-  cy.viewport(1920, 1080);
   cy.visit('localhost:3000');
   cy.contains('Administration').click();
   cy.contains('Term').click();
@@ -22,8 +21,11 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
 
   // Fill out the add modal form
   cy.get('#cTermNumber').type('3');
+  cy.wait(100);
   cy.get('#cStartDate').type('2024-05-03');
+  cy.wait(100);
   cy.get('#cEndDate').type('2024-06-02');
+  cy.wait(100);
   cy.get('#cAuto').check();
   cy.wait(100);
   cy.get('#createTerm').click();
@@ -106,25 +108,25 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#' + 8 + 'coName').clear({force: true}).type('The Seminar', {force: true});
   // Instructor change
   cy.get('#' + 3 + 'coPrimaryInstructor').select('Bryce Barrie', {force: true});
-  cy.get('#' + 3 + 'coSecondaryInstructor').select("", {force: true});
+  cy.get('#' + 3 + 'coSecondaryInstructor').select('', {force: true});
   cy.get('#' + 6 + 'coSecondaryInstructor').select('Coralee Kaban', {force: true});
 
   // Program change
   cy.get('#' + 4 + 'coProgram').select('CNT', {force: true});
   // Skip
   cy.get('#' + 5 + 'coSkip').check();
-
+  cy.wait(300);
   cy.get('#createCO').click();
-
+  cy.wait(500);
   // Check that new term is added:
   cy.get('#tableBody > tr:nth-child(2) > td:nth-child(1)').contains('3');
   cy.get('#tableBody > tr:nth-child(2) > td:nth-child(2)').contains('2024-05-03');
   cy.get('#tableBody > tr:nth-child(2) > td:nth-child(3)').contains('2024-06-02');
   cy.get('#tableBody > tr:nth-child(2) > td:nth-child(4)').contains('2023-2024');
-
+  cy.wait(500);
   // // check that the entries are added to Course Offerings
-  cy.contains('Administration').click();
-  cy.contains('Course Offerings').click();
+  cy.contains('Administration').click({force: true});
+  cy.contains('Course Offerings').click({force: true});
   const newCOs = [
     ['Hardware', 'A', 'COHS190', '2024-3', '2024-05-05', '2024-05-29', 'Ben Benson', ' ', 'CST'],
     ['Hardware', 'B', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', 'Bryce Barrie', ' ', 'CST'],
@@ -152,7 +154,6 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.visit('localhost:3000/term');
   cy.get('#tableBody > tr:nth-child(1) > td:nth-child(5) > button:nth-child(2)').click();
   cy.get('#deleteTerm').click();
-
 });
 
 /*
@@ -170,11 +171,13 @@ it('testThatTermSkipsAutogeneratesCourseOfferings', () => {
 
   // Fill out the add modal form
   cy.get('#cTermNumber').type('6');
+  cy.wait(100);
   cy.get('#cStartDate').type('2024-05-03');
+  cy.wait(100);
   cy.get('#cEndDate').type('2024-06-02');
-
+  cy.wait(100);
   cy.get('#createTerm').click();
-
+  cy.wait(100);
   // checking the Course Offering modal is hidden
   cy.get('#coModal').should('be.hidden');
 
@@ -205,14 +208,19 @@ it('testThatTermWithNoAutogenerateOptionsDisplaysMessage ', () => {
 
   // Fill out the add modal form
   cy.get('#cTermNumber').type('1');
+  cy.wait(100);
   cy.get('#cStartDate').type('2024-08-15');
+  cy.wait(100);
   cy.get('#cEndDate').type('2024-12-15');
+  cy.wait(100);
   cy.get('#cAuto').check();
+  cy.wait(100);
   cy.get('#createTerm').click();
 
   // checking the Course Offering modal
   cy.get('#coModal').should('be.visible');
   cy.get('#createCOError').should('have.text', 'No course offerings found');
+  cy.wait(100);
   cy.get('#createCOClose').click();
 
   // CHecking that the term is created
@@ -242,9 +250,13 @@ it('testThatTermAutogeneratesCourseOfferingsHasValidation', () => {
 
   // Fill out the add modal form
   cy.get('#cTermNumber').type('3');
+  cy.wait(100);
   cy.get('#cStartDate').type('2024-05-03');
+  cy.wait(100);
   cy.get('#cEndDate').type('2024-06-02');
+  cy.wait(100);
   cy.get('#cAuto').check();
+  cy.wait(100);
   cy.get('#createTerm').click();
 
   // checking the Course Offering modal
