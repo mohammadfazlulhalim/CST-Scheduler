@@ -30,7 +30,7 @@ router.post('/', async (req, res, next)=>{
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
   const terms= await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'ASC']]});
 
-  const headerArray=[{header: 'Weekday'},  {header: 'Term'},{header: 'Course Code'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}, {header: 'Program'}];
+  const headerArray=[ {header: 'Term'},{header: 'Course Code'},{header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}, {header: 'Program'}];
 
   // Sequelize will automatically perform an SQL query to the database and create a table
   await sequelize.sync();
@@ -81,7 +81,7 @@ async function generateTimeslots(classroom, term) {
 
   const conflictingTimeslots0 = [];
   for (let i = 0; i < daysNumberedZeroIndex.length; i++) {
-    let count =0;
+    let count = 0;
     const initialTimeslotsForTermClassroomWeekday = await Timeslot.findAll({
       where: {
         [Op.and]: [
@@ -95,25 +95,14 @@ async function generateTimeslots(classroom, term) {
 
     });
 
-    // // imagining
-    // let timeslotsForCurrentDay = [];
-    //
-    // // O n^2 algo attempt
-    // // processing each timeslot in the initial timeslot list for conflicts
-    // for (let j = 0; j < initialTimeslotsForTermClassroomWeekday.length; j++) {
-    //   let currTimeslot = initialTimeslotsForTermClassroomWeekday[j];
-    //
-    //
-    // }
 
-
-    if (initialTimeslotsForTermClassroomWeekday.length>0) {
+    if (initialTimeslotsForTermClassroomWeekday.length > 0) {
       // - try out one of the O(n^2) algorithms later to detect conflicts on all timeslots.
-      // first timeslot in list
-      const currentTimeslot = initialTimeslotsForTermClassroomWeekday[0];
+     for (let j = 0; j < initialTimeslotsForTermClassroomWeekday.length; j++) {
+        let currentTimeslot = initialTimeslotsForTermClassroomWeekday[j];
+        let count = 0;
 
 
-      try {
         const conflictingTimeslotsNow = await Timeslot.findAll({
           where: {
             [Op.and]: [
@@ -160,7 +149,8 @@ async function generateTimeslots(classroom, term) {
                   },
                 },
               },
-            ]},
+            ]
+          },
           include: [
             {
               model: CourseOffering,
@@ -185,24 +175,50 @@ async function generateTimeslots(classroom, term) {
         });
 
         if (conflictingTimeslotsNow.length > 1) {
-          conflictingTimeslots0.push(conflictingTimeslotsNow);
-          count++;
+          if (conflictingTimeslots0.length >0) {
+              if (searchObj(conflictingTimeslots0[conflictingTimeslots0.length-1], conflictingTimeslotsNow)===false){
+                  conflictingTimeslots0.push(conflictingTimeslotsNow);
+                  count++;
+                }
+
+
+          }else{
+            conflictingTimeslots0.push(conflictingTimeslotsNow);
+            count++;}
+
         }
-      } catch (e) {
-        console.error(e);
+
       }
     }
 
-    if (count >0) {
-      conflictingTimeslots0.push([{id: null, startDate: null, endDate: null, startTime: null, endTime: null}]);
-      count--;
     }
-
-  }
 
   // return classResult;
   return conflictingTimeslots0;
+
+}
+
+/**
+ * Helper function to determine common object available on the 2nd array
+ * @param objArray1
+ * @param objArray2
+ * @returns {boolean}
+ */
+function searchObj(objArray1, objArray2) {
+  let found = false;
+
+  for (let i = 0; i < objArray1.length; i++) {
+    const obj1 = objArray1[i]
+    if (objArray2.some(obj2=> obj2.id === obj1.id)) {
+      found = true;
+
+      break;
+    }
+
+  }
+  return found;
 }
 
 
-module.exports = {router, generateTimeslotsTest: generateTimeslots};
+
+module.exports = {router, generateTimeslotsTest: generateTimeslots,searchObj };
