@@ -13,7 +13,7 @@ const {QueryTypes} = require('sequelize');
 
 const term = require('../private/javascript/Term');
 const {stack} = require('sequelize/lib/utils');
-const {timeSlot1} = require("../fixtures/Timeslot.fix");
+const {timeSlot1} = require('../fixtures/Timeslot.fix');
 
 // this is a quick array for designating weekdays as numbers
 // 0 is Sunday --> 6 is Saturday
@@ -30,7 +30,7 @@ router.post('/', async (req, res, next)=>{
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
   const terms= await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'ASC']]});
 
-  const headerArray=[ {header: 'Term'},{header: 'Course Code'},{header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}, {header: 'Program'}];
+  const headerArray=[{header: 'Term'}, {header: 'Course Code'}, {header: 'Weekday'}, {header: 'Start Time'}, {header: 'End Time'}, {header: 'Instructor'}, {header: 'Program'}];
 
   // Sequelize will automatically perform an SQL query to the database and create a table
   await sequelize.sync();
@@ -80,8 +80,11 @@ async function generateTimeslots(classroom, term) {
   // gather timeslots using Operators provided by Op class - will add onto it later
 
   const conflictingTimeslots0 = [];
+
+  const discoveredTimeslotsSoFar = [];
+
   for (let i = 0; i < daysNumberedZeroIndex.length; i++) {
-    let count = 0;
+    const count = 0;
     const initialTimeslotsForTermClassroomWeekday = await Timeslot.findAll({
       where: {
         [Op.and]: [
@@ -95,13 +98,15 @@ async function generateTimeslots(classroom, term) {
 
     });
 
+    // array of timeslots for the current day
+    const conflictingTimeslotsForCurrDay = [];
+
 
     if (initialTimeslotsForTermClassroomWeekday.length > 0) {
       // - try out one of the O(n^2) algorithms later to detect conflicts on all timeslots.
-     for (let j = 0; j < initialTimeslotsForTermClassroomWeekday.length; j++) {
-        let currentTimeslot = initialTimeslotsForTermClassroomWeekday[j];
-        let count = 0;
-
+      for (let j = 0; j < initialTimeslotsForTermClassroomWeekday.length; j++) {
+        const currentTimeslot = initialTimeslotsForTermClassroomWeekday[j];
+        // const count = 0;
 
         const conflictingTimeslotsNow = await Timeslot.findAll({
           where: {
@@ -149,7 +154,7 @@ async function generateTimeslots(classroom, term) {
                   },
                 },
               },
-            ]
+            ],
           },
           include: [
             {
@@ -175,50 +180,63 @@ async function generateTimeslots(classroom, term) {
         });
 
         if (conflictingTimeslotsNow.length > 1) {
-          if (conflictingTimeslots0.length >0) {
-              if (searchObj(conflictingTimeslots0[conflictingTimeslots0.length-1], conflictingTimeslotsNow)===false){
-                  conflictingTimeslots0.push(conflictingTimeslotsNow);
-                  count++;
-                }
+          // if (conflictingTimeslots0.length >0) {
+          //   if (searchObj(conflictingTimeslots0[conflictingTimeslots0.length-1], conflictingTimeslotsNow)===false) {
+          //     conflictingTimeslots0.push(conflictingTimeslotsNow);
 
+          //     /**
+          //          * 9:00   - 10:00
+          //          * 9:30   - 10:30
+          //          * 10:15  - 11:00
+          //          */
+          //     count++;
+          //   }
+          // } else {
+          //   conflictingTimeslots0.push(conflictingTimeslotsNow);
+          //   count++;
+          // }
+          for (let k = 0; k < conflictingTimeslotsNow.length; k++) {
+            const confTS = conflictingTimeslotsNow[k];
 
-          }else{
-            conflictingTimeslots0.push(conflictingTimeslotsNow);
-            count++;}
-
+            // if the timeslot exists in the list of conflicting timeslots for current day
+            if (!conflictingTimeslotsForCurrDay.find( (ts) => ts.id === confTS.id)) {
+              conflictingTimeslotsForCurrDay.push(confTS);
+            }
+          }
         }
+      } // end of initialTimeslotsForTermClassroomWeekday for loop
 
+      if (conflictingTimeslotsForCurrDay.length > 1) {
+        conflictingTimeslots0.push(conflictingTimeslotsForCurrDay);
       }
     }
+  } // end of weekday loop
 
-    }
+  console.log(`conflictingTimeslots0.length: ${conflictingTimeslots0.length}`);
 
   // return classResult;
   return conflictingTimeslots0;
-
 }
 
 /**
  * Helper function to determine common object available on the 2nd array
  * @param objArray1
  * @param objArray2
- * @returns {boolean}
+ * @return {boolean}
  */
 function searchObj(objArray1, objArray2) {
   let found = false;
 
   for (let i = 0; i < objArray1.length; i++) {
-    const obj1 = objArray1[i]
-    if (objArray2.some(obj2=> obj2.id === obj1.id)) {
+    const obj1 = objArray1[i];
+    if (objArray2.some((obj2)=> obj2.id === obj1.id)) {
       found = true;
 
       break;
     }
-
   }
   return found;
 }
 
 
-
-module.exports = {router, generateTimeslotsTest: generateTimeslots,searchObj };
+module.exports = {router, generateTimeslotsTest: generateTimeslots, searchObj};
