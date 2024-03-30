@@ -56,8 +56,10 @@
 
 <div class="p-4">
 
-        {{#each timeslotsReturned}}
-            <table id="reportTable" class="table table-striped">
+    {{#each timeslotsReturned}}
+        {{#if this}}
+        <table id="tblRoom{{../realClassroom.roomNumber}}Term{{../realTerm.termNumber}}Day{{lookup ../daysFullySpelled @index}}" 
+            class="table table-striped">
             <tr> 
                 {{#each ../headerArray as |headerItem|}}
                     <th>{{headerItem.header}} </th>
@@ -68,15 +70,17 @@
             <tr>
                 <td>{{this.Term.termNumber}} {{this.Term.startDate}}</td>
                 <td>{{this.CourseOffering.Course.courseCode}}</td>
-                <td>{{this.day}}</td>
+                <td>{{lookup ../../daysFullySpelled this.day}}</td>
                 <td>{{this.startTime}}</td>
                 <td>{{this.endTime}}</td>
                 <td>{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
                 <td>{{this.Program.programName}}</td>
             </tr>
             {{/each}}
-    </table>
-{{/each}}
+        </table>
+    {{/if}}
+
+    {{/each}}
 </div>
 {{else}}
     <h1 id="nothingToShow">Nothing to display at the moment</h1>

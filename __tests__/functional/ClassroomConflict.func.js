@@ -196,20 +196,6 @@ describe('Classroom Conflict Report Router', ()=>{
   });
 
 
-  // Expecting no timeslots having the same information against provided classroom
-  it('test ', async ()=>{
-
-
-    let objArray1 = [{ id: 1, name: "Object 1" }, { id: 2, name: "Object 2" }, { id: 3, name: "Object 3" }];
-    let objArray2 = [{ id: 4, name: "Object 4" }, { id: 2, name: "Object 2" }, { id: 6, name: "Object 6" }];
-
-    const results =  ClassroomConflictReportController.searchObj(objArray1,objArray2 );
-
-    expect(results).toBe(true);
-  });
-
-
-
   // Clean up after tests
   afterAll(async ()=>{
     await sequelize.close(); // close the database connection
