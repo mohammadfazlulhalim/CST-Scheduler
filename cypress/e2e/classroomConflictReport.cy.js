@@ -1,24 +1,23 @@
 
-// use this loop to check day and check the table id
-daysFullySpelled = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
 
 describe( 'classroom conflict report page', ()=>{
   const headingsForEachClassroomReportTable =
     ['Term ', 'Course Code ', 'Weekday ', 'Start Time ', 'End Time ', 'Instructor ', 'Program '];
   const rowContentsForConflictTimeslotsTable = [
     // TODO replace weekday integer with string - best use values from that daysFullySpelled array up there
-    ['6 2023-05-01', '', '1', '08:00', '09:00', 'Jason Schmidt', ''],
-    ['6 2023-05-01', '', '1', '08:30', '10:30', ' ', '', ''],
-    ['--', '--', '--', '--', '--', '--', '--'],
-    ['6 2023-05-01', '', '1', '14:00', '15:00', 'Jason Schmidt', ''],
-    ['6 2023-05-01', '', '1', '14:00', '15:00', ' ', ''],
-    ['--', '--', '--', '--', '--', '--', '--'],
-    ['6 2023-05-01', '', '2', '09:00', '10:00', 'Coralee Kaban', ''],
-    ['6 2023-05-01', '', '2', '09:00', '10:00', ' ', ''],
-    ['--', '--', '--', '--', '--', '--', '--'],
-    ['6 2023-05-01', '', '2', '13:00', '14:00', 'Coralee Kaban', ''],
-    ['6 2023-05-01', '', '2', '13:01', '14:01', ' ', ''],
-    ['--', '--', '--', '--', '--', '--', '--'],
+    ['6 2023-05-01', '', 'Monday', '08:00', '09:00', 'Jason Schmidt', ''],
+    ['6 2023-05-01', '', 'Monday', '08:30', '10:30', ' ', '', ''],
+    ['6 2023-05-01', '', 'Monday', '14:00', '15:00', 'Jason Schmidt', ''],
+    ['6 2023-05-01', '', 'Monday', '14:00', '15:00', ' ', ''],
+  ];
+  const rowContentsForConflictTimeslotsTable2 = [
+    ['6 2023-05-01', '', 'Tuesday', '09:00', '10:00', 'Coralee Kaban', ''],
+    ['6 2023-05-01', '', 'Tuesday', '09:30', '10:30', ' ', ''],
+    ['6 2023-05-01', '', 'Tuesday', '10:15', '11:00', ' ', ''],
+    ['6 2023-05-01', '', 'Tuesday', '13:00', '14:00', 'Coralee Kaban', ''],
+    ['6 2023-05-01', '', 'Tuesday', '13:01', '14:01', ' ', ''],
+
   ];
 
   const termsVisible = [
@@ -72,7 +71,7 @@ describe( 'classroom conflict report page', ()=>{
     /** testTableHeaderElements */
     // check table header elements
     for (let i = 0; i < headingsForEachClassroomReportTable.length; i++) {
-      cy.get(`#reportTable tbody th:eq(${i})`).should('have.text', headingsForEachClassroomReportTable[i]);
+      cy.get(`#tblRoom239ATerm6DaySunday tbody th:eq(${i})`).should('have.text', headingsForEachClassroomReportTable[i]);
     }
     // to select element inside 2D array we will use count which will be incremented inside the for loop
     let count =0;
@@ -80,10 +79,25 @@ describe( 'classroom conflict report page', ()=>{
     // check table header elements
     for (let i = 0; i < rowContentsForConflictTimeslotsTable.length; i++) {
       for (let j = 0; j < rowContentsForConflictTimeslotsTable[0].length; j++) {
-        cy.get(`#reportTable tbody td:eq(${count++})`).should('have.text', rowContentsForConflictTimeslotsTable[i][j]);
+        cy.get(`#tblRoom239ATerm6DaySunday tbody td:eq(${count++})`).should('have.text', rowContentsForConflictTimeslotsTable[i][j]);
       }
     }
-  });
+
+
+  // check table header elements
+  for (let i = 0; i < headingsForEachClassroomReportTable.length; i++) {
+    cy.get(`#tblRoom239ATerm6DayMonday tbody th:eq(${i})`).should('have.text', headingsForEachClassroomReportTable[i]);
+  }
+  // to select element inside 2D array we will use count which will be incremented inside the for loop
+  let count2 =0;
+  /** testTableElements */
+  // check table header elements
+  for (let i = 0; i < rowContentsForConflictTimeslotsTable2.length; i++) {
+    for (let j = 0; j < rowContentsForConflictTimeslotsTable2[0].length; j++) {
+      cy.get(`#tblRoom239ATerm6DayMonday tbody td:eq(${count2++})`).should('have.text', rowContentsForConflictTimeslotsTable2[i][j]);
+    }
+  }
+});
 
 
   it('testNoConflictAvailablePage', () => {
