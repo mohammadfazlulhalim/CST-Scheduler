@@ -55,13 +55,15 @@
 </div>
 
 <div class="p-4">
-    <table id="reportTable" class="table table-striped">
-            <tr> {{#each headerArray}}
-                <th>{{this.header}} </th>
-            {{/each}}
-            </tr>
 
         {{#each timeslotsReturned}}
+            <table id="reportTable" class="table table-striped">
+            <tr> 
+                {{#each ../headerArray as |headerItem|}}
+                    <th>{{headerItem.header}} </th>
+                {{/each}}
+            </tr>
+
             {{#each this}}
             <tr>
                 <td>{{this.Term.termNumber}} {{this.Term.startDate}}</td>
@@ -73,11 +75,8 @@
                 <td>{{this.Program.programName}}</td>
             </tr>
             {{/each}}
-            <tr>
-              <td>--</td><td>--</td><td>--</td>--<td>--</td><td>--</td><td>--</td><td>--</td>
-            </tr>
-        {{/each}}
     </table>
+{{/each}}
 </div>
 {{else}}
     <h1 id="nothingToShow">Nothing to display at the moment</h1>
