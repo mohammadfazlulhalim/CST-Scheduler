@@ -4,8 +4,8 @@
             <div class="col-9">
                 <h2><i>Program Report For:</i>
                     <span id="nameDisplayer">{{programName.programAbbreviation}}
-                        Term {{termName.termNumber}}{{group}}</span>
-                </h2>
+                        Term {{termName.termNumber}}{{group}}</span></h2>
+                <p>Overall Range: {{termName.startDate}} to {{termName.endDate}}</p>
             </div>
             <div class="col-3">
                 <small>Report Generated: <span id="dateGenDisplayer">{{dateGen}}</span></small>
@@ -40,7 +40,7 @@
                                 <!-- innerloop starts here-->
                                 {{#each this}}
                                     {{#if timeSlot}}
-                                        <td>{{../../program}}<br>{{course.courseCode}}{{courseOffering.group}}
+                                        <td>{{../../../program}}<br>{{course.courseCode}}{{courseOffering.group}}
                                             <br>{{instructor.lastName}}
                                             <br>{{classroom.roomNumber}}
                                         </td>

@@ -285,6 +285,7 @@ async function generateSchedule(instRepTimeslots, start, end) {
  * returns a list of each unique date in the given term, or nothing if params are invalid
  * @param program
  * @param term
+ * @param groupLetter
  * @returns {Promise<Object[]>}
  */
 async function getUniqueDates(program, term, groupLetter) {
@@ -339,7 +340,7 @@ async function getUniqueDates(program, term, groupLetter) {
   arStart = [...new Set(arStart)];
   arStart = arStart.sort((a,b) => {
     if(a === b){ return 0; }
-    if(a.date >=  b) { return 1; }
+    if(a >=  b) { return 1; }
     else{ return -1; }
   });
 

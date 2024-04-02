@@ -278,6 +278,7 @@ describe('Test Program Report Page', () => {
         cy.visit('localhost:3000');
         // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
         cy.get('#reportDropdown > a').click();
+        cy.get('[href="/programReport"]').click();
 
         // Select the instructor from the dropdown based on value
         cy.get('#selectProgramReport').select('#1');
@@ -346,6 +347,7 @@ describe('Test Program Report Page', () => {
         // Click on the "Reports" dropdown toggle
         // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
         cy.get('#reportDropdown > a').click();
+        cy.get('[href="/programReport"]').click();
 
         // Click on the "Instructor Report" option
         cy.get('.nav-item.dropdown .dropdown-menu a[href="/programReport"]').click();
@@ -421,6 +423,7 @@ describe('Test Program Report Page', () => {
         // Click on the "Reports" dropdown toggle
         // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
         cy.get('#reportDropdown > a').click();
+        cy.get('[href="/programReport"]').click();
 
         // Click on the "Instructor Report" option
         cy.get('.nav-item.dropdown .dropdown-menu a[href="/instructorReport"]').click();
