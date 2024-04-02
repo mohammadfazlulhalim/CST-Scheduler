@@ -1,12 +1,18 @@
 const groupLetters = ['A', 'B', 'C', 'D'];
 
 describe('Test Editing the Schedule', () => {
+
+  // Resets the DB before each test
+  beforeEach(()=>{
+    cy.exec('node electron-db-reset.js');
+  })
+
   it('Test1', ()=> {
   // Goes to the page and loads test schedule
     cy.visit('localhost:3000');
     cy.contains('Schedule Builder').click();
     cy.get('#programSelect').select('CST');
-    cy.get('#termSelect').select('2023-3');
+    cy.get('#termSelect').select('2022-2023 - Term 3');
     cy.get('#groupSelect').select('4');
     cy.get('#modalSubmit').click();
 
@@ -135,7 +141,7 @@ describe('Test Editing the Schedule', () => {
 
       cy.contains('Schedule Builder').click();
       cy.get('#programSelect').select('CST');
-      cy.get('#termSelect').select('2023-3');
+      cy.get('#termSelect').select('2022-2023 - Term 3');
       cy.get('#groupSelect').select('4');
       cy.get('#modalSubmit').click();
 

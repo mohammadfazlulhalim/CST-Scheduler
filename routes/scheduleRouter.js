@@ -8,19 +8,13 @@ const Program = require('../private/javascript/Program');
 const defineDB = require('../fixtures/createTables.fix');
 const Instructor = require('../private/javascript/Instructor');
 const Classroom = require('../private/javascript/Classroom');
+const getSortedTerm = require('./termRouter').readAllTerms;
 // const Course = require('../private/javascript/Course');
 
 router.get('/', async (req, res, next) => {
 
-  terms = await Term.findAll({order: [['startDate', 'DESC'], ['termNumber', 'ASC']]});
+  terms = await getSortedTerm();
   programs = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
-
-
-  // formatting the time
-  for (let i = 0; i < terms.length; i++) {
-    const splitDate = terms[i].startDate.split('-');
-    terms[i].title = splitDate[0] + '-' + terms[i].termNumber;
-  }
 
   res.render('schedule', {
     getrequest: true, terms, programs,

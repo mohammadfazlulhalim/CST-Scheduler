@@ -6,6 +6,7 @@ const Timeslot = require('../private/javascript/Timeslot');
 const {sequelize} = require("../dataSource");
 const {QueryTypes, Op} = require("sequelize");
 const globalConsts = require('../constants').globalConsts;
+const getSortedTerm = require('./termRouter').readAllTerms
 
 
 // global constants here to work with time arrays
@@ -32,18 +33,9 @@ router.get('/', async function(req, res, next) {
   }
   // try to find all the terms
   try {
-    termList= await Term.findAll({order: ['startDate', 'termNumber'],
-    });
-    // add the year
-    newTermList= termList.map((item)=>{
-      return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
-    });
-    // sort based on the year
-    newTermList.sort((a, b)=>{
-      return b.displayTerm - a.displayTerm;
-    });
+    newTermList= await getSortedTerm();
   } catch (err) {
-    termList = undefined;
+    newTermList = undefined;
   }
 
   res.render('instructorReport', {
@@ -149,17 +141,9 @@ router.post('/', async function(req, res, next) {
 
   // find all the terms
   try {
-    termList= await Term.findAll({order: ['startDate', 'termNumber'],
-    });
-    newTermList= termList.map((item)=>{
-      return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
-    });
-
-    newTermList.sort((a, b)=>{
-      return b.displayTerm - a.displayTerm;
-    });
+    newTermList= await getSortedTerm();
   } catch (err) {
-    termList = undefined;
+    newTermList = undefined;
   }
 
 

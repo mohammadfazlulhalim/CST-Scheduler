@@ -18,7 +18,7 @@ it('testThatModalWorks', () => {
 
   // Check that Term field can be entered
   cy.contains('Term');
-  cy.get('#termSelect').select('2024-5');
+  cy.get('#termSelect').select('2023-2024 - Term 5');
 
   // Check that Enter button is disabled
   cy.get('#modalSubmit').should('be.disabled');
@@ -156,13 +156,13 @@ it('testTechDebt', () => {
 
   // Check that Term field can be entered
   cy.contains('Term');
-  let termList = ['2024-5', '2023-1', '2023-4', '2023-3', '2023-6', '2023-2', '2023-5'];
+  let termList = ['2023-2024 - Term 1', '2023-2024 - Term 4', '2023-2024 - Term 5', '2022-2023 - Term 2', '2022-2023 - Term 3', '2022-2023 - Term 5', '2022-2023 - Term 6'];
   for (let i = 0; i < termList.length; i++) {
     let nChild = i + 2;
     cy.get('#termSelect > option:nth-child(' + nChild + ')').should('have.text', termList[i]);
   }
 
-  cy.get('#termSelect').select('2024-5');
+  cy.get('#termSelect').select('2023-2024 - Term 5');
 
   // Check that Enter button is disabled
   cy.get('#modalSubmit').should('be.disabled');
