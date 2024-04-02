@@ -77,6 +77,51 @@ router.post('/', async function(req, res, next) {
     URL,
   });
 });
+router.post('/forterm', async function(req, res, next) {
+  await CourseOffering.sync();
+  const listTerm = await getTerms();
+  const listProgram = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
+  const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
+  const listCourse = await Course.findAll({order: [['courseCode', 'ASC']]});
+
+  const newCO = {
+    name: req.body.name,
+    startDate: req.body.startDate,
+    endDate: req.body.endDate,
+    group: req.body.group,
+    CourseId: req.body.course,
+    TermId: req.body.term,
+    primaryInstructor: req.body.instructor,
+    ProgramId: req.body.program,
+  };
+
+  const retCreate = await createCourseOffering(newCO);
+  let violations;
+  if (retCreate.error) {
+    res.status(422);
+    // send error messages to the hbs template
+    violations = retCreate.error;
+  } else {
+    // creation was successful
+    res.status(201);
+    // put the ID in the response so tests can access it
+    res.set('id', retCreate.id);
+  }
+
+  const listCO = await getCOList();
+
+  res.render('courseOffering', {
+    title: 'Course Offerings',
+    listCO: listCO,
+    err: violations,
+    submittedCO: violations ? req.body : undefined,
+    listTerm,
+    listProgram,
+    listInstructor,
+    listCourse,
+    URL
+  });
+});
 
 router.put('/', async function(req, res, next) {
   const listTerm = await getSortedTerm();
@@ -181,6 +226,8 @@ async function updateCourseOffering(updateCO) {
     return mapErrors(e);
   }
 }
+
+
 
 /**
  * deletes a course offering from the database, void return
