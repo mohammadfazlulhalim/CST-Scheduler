@@ -163,7 +163,7 @@ describe('Classroom Conflict Report Router', ()=>{
     // sends in the term and classroom to the function in router
     const results = await ClassroomConflictReportController.generateTimeslotsTest(classroomInstance, termInstance1);
     // expected result should be a 2D array of length
-    expect(results.length).toBe(2);
+    expect(results.length).toBe(3);
 
     // we will check all objects inside the 2D Array
     for (let i=0; i<results.length; i++) {
