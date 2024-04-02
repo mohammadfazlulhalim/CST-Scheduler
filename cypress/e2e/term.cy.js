@@ -170,12 +170,13 @@ it('testThatTermSkipsAutogeneratesCourseOfferings', () => {
   cy.get('#addModal').should('be.visible');
 
   // Fill out the add modal form
+  cy.wait(100);
   cy.get('#cTermNumber').type('6');
-  cy.wait(100);
+  cy.wait(200);
   cy.get('#cStartDate').type('2024-05-03');
-  cy.wait(100);
+  cy.wait(200);
   cy.get('#cEndDate').type('2024-06-02');
-  cy.wait(100);
+  cy.wait(200);
   cy.get('#createTerm').click();
   cy.wait(100);
   // checking the Course Offering modal is hidden

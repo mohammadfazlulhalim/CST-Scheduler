@@ -4,7 +4,6 @@ const Program = require('../private/javascript/Program');
 const Classroom = require('../private/javascript/Classroom');
 const Term = require('../private/javascript/Term');
 const courseOffering = require('../private/javascript/CourseOffering');
-const TimeSlot = require('../private/javascript/Timeslot');
 const validInstructor = require('./Instructor.fix').validInstructor;
 const validCourseOfferingsA = require('./CourseOffering.fix').validCourseOfferingsA;
 const validCourseOfferingsB = require('./CourseOffering.fix').validCourseOfferingsB;
@@ -23,7 +22,6 @@ const s48validTimeslots = [
   {startDate: '2023-02-06', endDate: '2023-03-06', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
   {startDate: '2023-03-06', endDate: '2023-05-24', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
   //   TODO timeslots for room 241 - term 2 - either separately from the list or dynamically use existing list - but with changed start and end date values - could algorithmic
-
 ];
 
 /**
@@ -119,16 +117,16 @@ function GenerateTimeSlotData() {
 }
 
 validTimeslots = [
-  {startDate: '2023-08-01', endDate: '2023-12-01', startTime: '08:00', endTime: '09:00', day: 1, group: 'A'},
-  {startDate: '2023-08-01', endDate: '2023-12-01', startTime: '14:00', endTime: '15:00', day: 1, group: 'A'},
-  {startDate: '2023-08-01', endDate: '2023-12-01', startTime: '09:00', endTime: '10:00', day: 2, group: 'A'},
-  {startDate: '2023-08-01', endDate: '2023-12-01', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
-  {startDate: '2023-08-01', endDate: '2023-12-01', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
-  {startDate: '2023-08-01', endDate: '2023-12-01', startTime: '11:00', endTime: '12:00', day: 3, group: 'A'},
-  {startDate: '2023-08-01', endDate: '2023-12-01', startTime: '10:00', endTime: '11:00', day: 4, group: 'A'},
-  {startDate: '2023-08-01', endDate: '2023-12-01', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
-  {startDate: '2023-08-01', endDate: '2023-12-01', startTime: '09:00', endTime: '10:00', day: 5, group: 'A'},
-  {startDate: '2023-08-01', endDate: '2023-12-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '08:00', endTime: '09:00', day: 1, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '14:00', endTime: '15:00', day: 1, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '09:00', endTime: '10:00', day: 2, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '11:00', endTime: '12:00', day: 3, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '10:00', endTime: '11:00', day: 4, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '09:00', endTime: '10:00', day: 5, group: 'A'},
+  {startDate: '2023-01-01', endDate: '2023-04-01', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
 ];
 
 const timeSlot1 = {
@@ -150,16 +148,16 @@ async function s50CreateConflictingTimeslot() {
 // TODO s50 establish a new timeslot matching the attributes of another timeslot
   const s50Timeslot = [
 
-	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '08:00', endTime: '09:00', day: 1, group: 'A'},
-	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '14:00', endTime: '15:00', day: 1, group: 'A'},
-	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '09:00', endTime: '10:00', day: 2, group: 'A'},
-	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
-	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
-	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '11:00', endTime: '12:00', day: 3, group: 'A'},
-	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '10:00', endTime: '11:00', day: 4, group: 'A'},
-	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
-	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '09:00', endTime: '10:00', day: 5, group: 'A'},
-	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '08:00', endTime: '09:00', day: 1, group: 'A'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '14:00', endTime: '15:00', day: 1, group: 'A'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '09:00', endTime: '10:00', day: 2, group: 'A'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '13:00', endTime: '14:00', day: 2, group: 'A'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '10:00', endTime: '11:00', day: 3, group: 'A'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '11:00', endTime: '12:00', day: 3, group: 'A'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '10:00', endTime: '11:00', day: 4, group: 'A'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '11:00', endTime: '12:00', day: 4, group: 'A'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '09:00', endTime: '10:00', day: 5, group: 'A'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '13:00', endTime: '14:00', day: 5, group: 'A'},
 
 
   ];
@@ -177,13 +175,13 @@ async function s50CreateConflictingTimeslot() {
   const s50ConflictingTimeslots = [
     // conflicting timeslots! Placed in "B" group
     // note - InstructorId placed here - will check if works
-	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '08:30', endTime: '10:30', day: 1, group: 'B'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '08:30', endTime: '10:30', day: 1, group: 'B'},
     {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '14:00', endTime: '15:00', day: 1, group: 'B'},
 //	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '09:00', endTime: '10:00', day: 2, group: 'B'},
     {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '09:30', endTime: '10:30', day: 2, group: 'B'},
     {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '10:15', endTime: '11:00', day: 2, group: 'B'},
 
-  	{startDate: '2024-05-01', endDate: '2024-05-31', startTime: '13:01', endTime: '14:01', day: 2, group: 'B'},
+    {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '13:01', endTime: '14:01', day: 2, group: 'B'},
   ];
 
 
@@ -229,4 +227,5 @@ function displayTimeslot(ts) {
 }
 
 
-module.exports = {timeSlot1, validTimeslots, fillTimeslotTable};
+
+module.exports = { timeSlot1, validTimeslots, fillTimeslotTable};

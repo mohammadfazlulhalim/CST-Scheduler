@@ -11,8 +11,9 @@ describe('Testing Course CRUD options', () => {
     cy.get('#addModal').should('be.visible');
 
     // Fill in course details
+    cy.wait(100);
     cy.get('#cCourseCode').type('AAA111');
-    cy.wait(100); // Waiting to ensure typing is complete
+    cy.wait(200); // Waiting to ensure typing is complete
     cy.get('#cCourseName').type('Test Course');
     cy.get('#cCourseNumCredits').type('3');
     cy.get('#cCourseNumHoursPerWeek').type('2');
@@ -58,6 +59,7 @@ describe('Testing Course CRUD options', () => {
 
     // Check if the edited course details are updated in the table
     cy.get('#table').within(() => {
+      cy.wait (500);
       cy.get('tr:first-child > td').eq(0).should('contain.text', 'AAA222');
       cy.get('tr:first-child > td').eq(1).should('contain.text', 'Test Course');
       cy.get('tr:first-child > td').eq(2).should('contain.text', '3');
@@ -106,6 +108,7 @@ describe('Testing Course CRUD options', () => {
     cy.get('.invalid-feedback').eq(3).should('have.text', 'Enter a whole number between 1 and 40 as a valid number of hours.');
 
     // Close the edit modal
+    cy.wait(200);
     cy.get('#editModal > .modal-dialog > .modal-content > .modal-header > .close').click();
 
     // Click the "Delete" button for the first row in the table

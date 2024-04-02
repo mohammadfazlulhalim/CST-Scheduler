@@ -107,10 +107,14 @@ describe('Testing Instructor CRUD options', () => {
 
   /* Test to  edit instructor Ben Benson's name and confirm the availability of edited instructor inside Instructor Listings*/
   it('testEditInstructorInformation', () => {
+    cy.wait(200);
     cy.get(insListEditButtonOnFirstColumn).click();
+    cy.wait(200);
     cy.get(editModalHeader).should('have.text', 'Edit Existing Instructor');
     cy.get(firstTextBoxOnEditModal).clear();
+    cy.wait(200);
     cy.get(firstTextBoxOnEditModal).type('John');
+    cy.wait(200);
     cy.get(secondTextBoxOnEditModal).clear();
     cy.get(secondTextBoxOnEditModal).type('Doe');
     cy.get(saveButtonOnEditModal).click();
