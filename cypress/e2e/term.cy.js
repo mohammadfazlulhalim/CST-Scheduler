@@ -22,8 +22,11 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
 
   // Fill out the add modal form
   cy.get('#cTermNumber').type('3');
+  cy.wait(100);
   cy.get('#cStartDate').type('2024-05-03');
+  cy.wait(100);
   cy.get('#cEndDate').type('2024-06-02');
+  cy.wait(100);
   cy.get('#cAuto').check();
   cy.wait(100);
   cy.get('#createTerm').click();
@@ -100,39 +103,48 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#3coSecondaryInstructor').find('option:selected').should('have.text', 'Ernesto Basoalto');
 
   // Date change
+  cy.wait(100);
   cy.get('#' + 1 + 'coStartDate').type('2024-05-05');
+  cy.wait(100);
   cy.get('#' + 1 + 'coEndDate').type('2024-05-29');
   // Name change
+  cy.wait(100);
   cy.get('#' + 8 + 'coName').clear({force: true}).type('The Seminar', {force: true});
+  cy.wait(100);
   // Instructor change
   cy.get('#' + 3 + 'coPrimaryInstructor').select('Bryce Barrie', {force: true});
+  cy.wait(100);
   cy.get('#' + 3 + 'coSecondaryInstructor').select("", {force: true});
+  cy.wait(100);
   cy.get('#' + 6 + 'coSecondaryInstructor').select('Coralee Kaban', {force: true});
+  cy.wait(100);
 
   // Program change
+  cy.wait(100);
   cy.get('#' + 4 + 'coProgram').select('CNT', {force: true});
   // Skip
   cy.get('#' + 5 + 'coSkip').check();
-
+  cy.wait(100);
   cy.get('#createCO').click();
+  cy.wait(100);
 
   // Check that new term is added:
-  cy.get('#tableBody > tr:nth-child(5) > td:nth-child(1)').contains('3');
-  cy.get('#tableBody > tr:nth-child(5) > td:nth-child(2)').contains('2024-05-03');
-  cy.get('#tableBody > tr:nth-child(5) > td:nth-child(3)').contains('2024-06-02');
-  cy.get('#tableBody > tr:nth-child(5) > td:nth-child(4)').contains('2023-2024');
+  cy.get('#tableBody > tr:nth-child(2) > td:nth-child(1)').contains('3');
+  cy.get('#tableBody > tr:nth-child(2) > td:nth-child(2)').contains('2024-05-03');
+  cy.get('#tableBody > tr:nth-child(2) > td:nth-child(3)').contains('2024-06-02');
+  cy.get('#tableBody > tr:nth-child(2) > td:nth-child(4)').contains('2023-2024');
 
   // // check that the entries are added to Course Offerings
   cy.contains('Administration').click();
   cy.contains('Course Offerings').click();
   const newCOs = [
     ['Hardware', 'A', 'COHS190', '2024-3', '2024-05-05', '2024-05-29', '\n                            Ben Benson\n                        ', '\n                             \n                        ', 'CST'],
-    ['Hardware', 'A', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', 'Bryce Barrie', ' ', 'CST'],
-    ['Hardware', 'D', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', 'Ben Benson', ' ', 'CST'],
-    ['Seminar', 'A', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', ' ', 'CST'],
-    ['Seminar', 'B', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', ' ', 'CNT'],
-    ['Seminar', 'C', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', 'Coralee Kaban', 'CST'],
-    ['The Seminar', 'D', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', 'Ron New', ' ', 'CST'],
+    ['Hardware', 'B', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', '\n                            Bryce Barrie\n                        ',  '\n                             \n                        ', 'CST'],
+    ['Hardware', 'D', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', '\n                            Ben Benson\n                        ', '\n                             \n                        ', 'CST'],
+    ['Seminar', 'A', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', '\n                            Ron New\n                        ', '\n                             \n                        ', 'CST'],
+    ['Seminar', 'B', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', '\n                            Ron New\n                        ', '\n                             \n                        ', 'CNT'],
+    ['Seminar', 'C', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', '\n                            Ron New\n                        ', '\n                            Coralee Kaban\n                        ', 'CST'],
+    ['The Seminar', 'D', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', '\n                            Ron New\n                        ', '\n                             \n                        ', 'CST'],
   ];
   const newCOsIndex = [13, 15, 18, 26, 29, 31, 36];
   for (let i = 0; i < newCOs.length; i++) {
@@ -204,11 +216,17 @@ it('testThatTermWithNoAutogenerateOptionsDisplaysMessage ', () => {
   cy.get('#addModal').should('be.visible');
 
   // Fill out the add modal form
+  cy.wait(100);
   cy.get('#cTermNumber').type('1');
+  cy.wait(100);
   cy.get('#cStartDate').type('2024-08-15');
+  cy.wait(100);
   cy.get('#cEndDate').type('2024-12-15');
+  cy.wait(100);
   cy.get('#cAuto').check();
+  cy.wait(100);
   cy.get('#createTerm').click();
+  cy.wait(100);
 
   // checking the Course Offering modal
   cy.get('#coModal').should('be.visible');
@@ -241,10 +259,15 @@ it('testThatTermAutogeneratesCourseOfferingsHasValidation', () => {
   cy.get('#addModal').should('be.visible');
 
   // Fill out the add modal form
+  cy.wait(100);
   cy.get('#cTermNumber').type('3');
+  cy.wait(100);
   cy.get('#cStartDate').type('2024-05-03');
+  cy.wait(100);
   cy.get('#cEndDate').type('2024-06-02');
+  cy.wait(100);
   cy.get('#cAuto').check();
+  cy.wait(100);
   cy.get('#createTerm').click();
 
   // checking the Course Offering modal

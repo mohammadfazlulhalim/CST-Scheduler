@@ -5,7 +5,7 @@ const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
 const Instructor = require('../private/javascript/Instructor');
 const Course = require('../private/javascript/Course');
-const URL = require('../constants').URL
+const URL = require('../constants').URL;
 
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
@@ -18,13 +18,13 @@ router.get('/', async function(req, res, next) {
 
   // render the courseOffering template file with appropriate title and the retrieved list of course offerings
   res.render('courseOffering', {
-    title: 'Course Offerings',
+    title: 'Manage Course Offerings',
     listCO: listCO,
     listTerm,
     listProgram,
     listInstructor,
     listCourse,
-    URL
+    URL,
   });
 });
 
@@ -90,6 +90,7 @@ router.put('/', async function(req, res, next) {
     CourseId: req.body.course,
     TermId: req.body.term,
     primaryInstructor: req.body.instructor,
+    // primaryInstructor: req.body.primaryInstructor,
     ProgramId: req.body.program,
   };
 
