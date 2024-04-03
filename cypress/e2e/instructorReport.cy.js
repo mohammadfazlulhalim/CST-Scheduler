@@ -1,6 +1,10 @@
 // Cypress.config('viewportWidth', 1600);
 
 describe('Test Instructor Report Page', () => {
+  // Resets the DB before each test
+  beforeEach(()=>{
+    cy.exec('node electron-db-reset.js');
+  })
   it('testNavigationToTheReportInstructorPage', () => {
     cy.viewport(1920, 1080);
     const expectedTimes12 = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];

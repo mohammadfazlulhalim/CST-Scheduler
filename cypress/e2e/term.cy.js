@@ -6,6 +6,10 @@ const expectedCourseCode = ['COHS190', 'SEM283'];
 const expectedGroup = ['A', 'B', 'C', 'D'];
 const expectedInstructor = ['Ben Benson', 'Ron New'];
 
+// Resets the DB before each test
+beforeEach(()=>{
+  cy.exec('node electron-db-reset.js');
+})
 /*
  * Test for checking if the autogenerate works
  */

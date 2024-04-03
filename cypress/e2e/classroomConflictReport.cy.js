@@ -1,6 +1,3 @@
-
-
-
 describe( 'classroom conflict report page', ()=>{
   const headingsForEachClassroomReportTable =
     ['Term ', 'Course Code ', 'Weekday ', 'Start Time ', 'End Time ', 'Instructor ', 'Program '];
@@ -27,6 +24,11 @@ describe( 'classroom conflict report page', ()=>{
   const classroomsVisible = [
     '239A', '239B',
   ];
+
+  // Resets the DB before each test
+  beforeEach(()=>{
+    cy.exec('node electron-db-reset.js');
+  })
 
   it('testLoadClassroomConflictReport ', () => {
   // Opens main page - and go to Classroom Conflict Report Page

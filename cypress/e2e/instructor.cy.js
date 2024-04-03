@@ -48,7 +48,9 @@ describe('Testing Instructor CRUD options', () => {
     cy.visit('http://localhost:3000');
     cy.get(navMenuSelector, {timeout: 10000}).trigger('click');
     cy.get(navMenuItem, {timeout: 10000}).click();
+    cy.exec('node electron-db-reset.js');
   });
+
 
   /* checking the availability of instructor lists headers*/
   it('testInstructorListsAreShownUnderCertainHeaders  ', () => {

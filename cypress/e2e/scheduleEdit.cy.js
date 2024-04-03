@@ -1,7 +1,14 @@
+
+
 // groupLetters = ['A', 'B', 'C', 'D'];
 const groupLetters = ['A'];
 
 describe('Test Editing the Schedule', () => {
+
+  // Resets the DB before each test
+  beforeEach(()=>{
+    cy.exec('node electron-db-reset.js');
+  })
   it('Test1', ()=> {
   // Goes to the page and loads test schedule
     cy.visit('localhost:3000');

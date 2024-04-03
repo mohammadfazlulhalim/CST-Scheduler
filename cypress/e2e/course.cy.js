@@ -1,5 +1,8 @@
 /* The following tests are created to check functionality of the app to create, update and delete courses */
 describe('Testing Course CRUD options', () => {
+  beforeEach(()=>{
+    cy.exec('node electron-db-reset.js');
+  })
   it('testCourse', () => {
     // Visit the course page
     cy.visit('http://localhost:3000/course');
