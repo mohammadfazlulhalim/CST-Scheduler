@@ -326,17 +326,21 @@ describe('Test Program Report Page', () => {
         //Opens the landing page
         cy.visit('localhost:3000');
 
-        //switch the splitting course offerings to group A
+        //switch the splitting course offerings for standard split
         cy.contains('Administration').click();
         cy.contains('Course Offerings').click();
         cy.url().should('include', '/courseOffering');
         cy.get('#26edit').click();
-        cy.get('#cGroup').type('A');
+        cy.get('#eTerm').select('2023-08-01 - 1');
+        cy.get('#eGroup').clear().type('A');
+        cy.get('#eProgram').select('CST');
         cy.get('#editCO').click();
+
+        //switch course offering for weird split
         cy.get('#27edit').click();
-        cy.get('#cGroup').type('A');
-        cy.get('#eStartDate').type('2023-10-31');
-        cy.get('#eEndDate').type('2023-10-31');
+        cy.get('#eGroup').clear().type('A');
+        cy.get('#eStartDate').clear().type('2023-10-31');
+        cy.get('#eEndDate').clear().type('2023-10-31');
         cy.get('#editCO').click();
 
         //create timeslot
@@ -345,7 +349,7 @@ describe('Test Program Report Page', () => {
         cy.get('#termSelect').select('2023-1');
         cy.get('#groupSelect').select('4');
         cy.get('#modalSubmit').click();
-        cy.get('#Systems Administration 2-A"').click();
+        cy.get('#Systems\\ Administration\\ 2-A').click();
         cy.get('#4-3-A').click();
 
         // Click on the "Reports" dropdown toggle
@@ -353,14 +357,11 @@ describe('Test Program Report Page', () => {
         cy.get('#reportDropdown > a').click();
         cy.get('[href="/programReport"]').click();
 
-        // Click on the "Instructor Report" option
-        cy.get('.nav-item.dropdown .dropdown-menu a[href="/programReport"]').click();
-
         // Select the instructor from the dropdown based on value
-        cy.get('#selectProgramReport').select('#1');
+        cy.get('#selectProgramReport').select('1');
 
         // Select the term from the dropdown based on value
-        cy.get('#selectTermReport').select('#1');
+        cy.get('#selectTermReport').select('1');
 
         // Select the group letter from the dropdown based on value
         cy.get('#selectGroupReport').select('A');
@@ -383,8 +384,6 @@ describe('Test Program Report Page', () => {
         ];
         //Check that theyre correct
         checkCorrectSchedule(classesInOrder);
-        //check that left buttons for dosen't exist for first split
-        cy.get('#btnLeft').should('not.exist');
 
         //go to the next split
         cy.get('#btnRight').click();
@@ -396,7 +395,7 @@ describe('Test Program Report Page', () => {
             ['', 'COSA280A', '', '', 'COOS293B'],
             ['', '', 'SEM283A', 'CWEB280A', ''],
             ['', '', 'COHS280A', 'COOS291A', ''],
-            ['', '', 'COOS293A', '', ''], // 12:00 slot appears empty
+            ['', '', 'COOS293A', '', ''],
             ['', 'CDBM280A', '', '', 'MATH282A'],
             ['MATH282A', '', '', '', ''],
             ['', '', '', '', ''],
@@ -404,8 +403,35 @@ describe('Test Program Report Page', () => {
         //Check that theyre correct
         checkCorrectSchedule(classesInOrder);
 
-        //check that right buttons dosen't exist for last split
-        cy.get('#btnRight').should('not.exist');
+        //check that there's 2 splits
+        cy.get('#btnRight').click();
+
+        //map for valid timeslot locations
+        classesInOrder = [
+            ['COOS293B', '', '', '', ''],
+            ['', 'COSA280A', '', '', 'COOS293B'],
+            ['', '', 'SEM283A', 'CWEB280A', ''],
+            ['', '', 'COHS280A', 'COOS291A', ''],
+            ['', '', '', '', ''], // 12:00 slot appears empty
+            ['', 'CDBM280A', '', '', 'MATH282A'],
+            ['MATH282A', '', '', '', ''],
+            ['', '', '', '', ''],
+        ];
+
+        //check that left button works
+        cy.get('#btnLeft').click();
+
+        //map for valid timeslot locations
+        classesInOrder = [
+            ['COOS293B', '', '', '', ''],
+            ['', 'COSA280A', '', '', 'COOS293B'],
+            ['', '', 'SEM283A', 'CWEB280A', ''],
+            ['', '', 'COHS280A', 'COOS291A', ''],
+            ['', '', 'COOS293A', '', ''],
+            ['', 'CDBM280A', '', '', 'MATH282A'],
+            ['MATH282A', '', '', '', ''],
+            ['', '', '', '', ''],
+        ];
 
     });
 
@@ -433,10 +459,10 @@ describe('Test Program Report Page', () => {
         cy.get('.nav-item.dropdown .dropdown-menu a[href="/instructorReport"]').click();
 
         // Select the instructor from the dropdown based on value
-        cy.get('#selectProgramReport').select('#1');
+        cy.get('#selectProgramReport').select('1');
 
         // Select the term from the dropdown based on value
-        cy.get('#selectTermReport').select('#1');
+        cy.get('#selectTermReport').select('1');
 
         // Select the group letter from the dropdown based on value
         cy.get('#selectGroupReport').select('A');
