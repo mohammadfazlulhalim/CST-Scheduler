@@ -1,4 +1,4 @@
-
+Cypress.config('viewportWidth', 1600);
 /**
  * UI tests for program report
  * Author: Chritseen Shlimoon
@@ -6,7 +6,7 @@
 const urlGET = 'localhost:3000';
 const urlPOST = 'http://localhost:3000/programReport';
 describe('Test Program Report Page', () => {
-    before(()=>{
+    before(() => {
         cy.exec('node electron-db-reset.js');
     })
     it('testProgramGET', () => {
@@ -162,16 +162,56 @@ describe('Test Program Report Page', () => {
         ];
 
         const cellsToCheckCrissCross = [
-            {row: 1, col: 2, value: 'CST1COOS293B\n                                            Barrie\n                                            239A\n                                        '},
-            {row: 2, col: 3, value: 'CST1COSA280A\n                                            New\n                                            239A\n                                        '},
-            {row: 3, col: 4, value: 'CST1SEM283A\n                                            Basoalto\n                                            239A\n                                        '},
-            {row: 4, col: 4, value: 'CST1COHS280A\n                                            Holtslan\n                                            239A\n                                        '},
-            {row: 3, col: 5, value: 'CST1CWEB280A\n                                            Onishenko\n                                            239A\n                                        '},
-            {row: 4, col: 5, value: 'CST1COOS291A\n                                            Lahoda\n                                            239A\n                                        '},
-            {row: 2, col: 6, value: 'CST1COOS293B\n                                            Schmidt\n                                            239A\n                                        '},
-            {row: 6, col: 3, value: 'CST1CDBM280A\n                                            Caron\n                                            239A\n                                        '},
-            {row: 7, col: 2, value: 'CST1MATH282A\n                                            Kaban\n                                            239A\n                                        '},
-            {row: 6, col: 6, value: 'CST1MATH282A\n                                            Grzesina\n                                            239A\n                                        '},
+            {
+                row: 1,
+                col: 2,
+                value: 'CST1COOS293B\n                                            Barrie\n                                            239A\n                                        '
+            },
+            {
+                row: 2,
+                col: 3,
+                value: 'CST1COSA280A\n                                            New\n                                            239A\n                                        '
+            },
+            {
+                row: 3,
+                col: 4,
+                value: 'CST1SEM283A\n                                            Basoalto\n                                            239A\n                                        '
+            },
+            {
+                row: 4,
+                col: 4,
+                value: 'CST1COHS280A\n                                            Holtslan\n                                            239A\n                                        '
+            },
+            {
+                row: 3,
+                col: 5,
+                value: 'CST1CWEB280A\n                                            Onishenko\n                                            239A\n                                        '
+            },
+            {
+                row: 4,
+                col: 5,
+                value: 'CST1COOS291A\n                                            Lahoda\n                                            239A\n                                        '
+            },
+            {
+                row: 2,
+                col: 6,
+                value: 'CST1COOS293B\n                                            Schmidt\n                                            239A\n                                        '
+            },
+            {
+                row: 6,
+                col: 3,
+                value: 'CST1CDBM280A\n                                            Caron\n                                            239A\n                                        '
+            },
+            {
+                row: 7,
+                col: 2,
+                value: 'CST1MATH282A\n                                            Kaban\n                                            239A\n                                        '
+            },
+            {
+                row: 6,
+                col: 6,
+                value: 'CST1MATH282A\n                                            Grzesina\n                                            239A\n                                        '
+            },
         ];
 
 
@@ -233,7 +273,7 @@ describe('Test Program Report Page', () => {
          * testProgramAppearsOnTheReportHeader
          */
         // Check the content of the instructor's name element
-        cy.get('#nameDisplayer').should('have.text', 'CST\n Term 1A');
+        cy.get('#nameDisplayer').should('have.text', 'CST\n                        Term 1A');
 
         /**
          * testNewReportAndPrintButtonsAreVisible
@@ -338,9 +378,11 @@ describe('Test Program Report Page', () => {
 
         //switch course offering for weird split
         cy.get('#27edit').click();
+        cy.get('#eTerm').select('2023-08-01 - 1');
+        cy.get('#eStartDate').clear().wait(100).type('2023-10-31');
+        cy.get('#eEndDate').clear().wait(100).type('2023-10-31');
         cy.get('#eGroup').clear().type('A');
-        cy.get('#eStartDate').clear().type('2023-10-31');
-        cy.get('#eEndDate').clear().type('2023-10-31');
+        cy.get('#eProgram').select('CST');
         cy.get('#editCO').click();
 
         //create timeslot
@@ -417,6 +459,8 @@ describe('Test Program Report Page', () => {
             ['MATH282A', '', '', '', ''],
             ['', '', '', '', ''],
         ];
+//Check that theyre correct
+        checkCorrectSchedule(classesInOrder);
 
         //check that left button works
         cy.get('#btnLeft').click();
@@ -432,7 +476,8 @@ describe('Test Program Report Page', () => {
             ['MATH282A', '', '', '', ''],
             ['', '', '', '', ''],
         ];
-
+//Check that theyre correct
+        checkCorrectSchedule(classesInOrder);
     });
 
     /**
@@ -447,16 +492,13 @@ describe('Test Program Report Page', () => {
         cy.get('#termSelect').select('2023-1');
         cy.get('#groupSelect').select('4');
         cy.get('#modalSubmit').click();
-        cy.get('#Mathematics of Computation-A').click();
+        cy.get('#Mathematics\\ of\\ Computation-A').click();
         cy.get('#7-3-A').click();
 
         // Click on the "Reports" dropdown toggle
         // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
         cy.get('#reportDropdown > a').click();
         cy.get('[href="/programReport"]').click();
-
-        // Click on the "Instructor Report" option
-        cy.get('.nav-item.dropdown .dropdown-menu a[href="/instructorReport"]').click();
 
         // Select the instructor from the dropdown based on value
         cy.get('#selectProgramReport').select('1');
@@ -485,8 +527,6 @@ describe('Test Program Report Page', () => {
         ];
         //Check that theyre correct
         checkCorrectSchedule(classesInOrder);
-        //check that left buttons for dosen't exist for first split
-        cy.get('#btnLeft').should('not.exist');
 
         //go to the next split
         cy.get('#btnRight').click();
@@ -509,7 +549,7 @@ describe('Test Program Report Page', () => {
         //go to the next split
         cy.get('#btnRight').click();
         //Test that it splits on a single day
-        cy.get('#2023-10-01').contains('Schedule Range: 2023-10-31 to 2023-10-31')
+        cy.get('#2023-10-31').contains('Schedule Range: 2023-10-31 to 2023-10-31')
         //map for valid timeslot locations
         classesInOrder = [
             ['COOS293B', '', '', '', ''],
@@ -519,7 +559,7 @@ describe('Test Program Report Page', () => {
             ['', '', 'COOS293A', '', ''], // 12:00 slot appears empty
             ['', 'CDBM280A', '', '', 'MATH282A'],
             ['MATH282A', '', '', '', ''],
-            ['', '', '', '', ''],
+            ['', '', 'MATH282A', '', ''],
         ];
         //Check that theyre correct
         checkCorrectSchedule(classesInOrder);
@@ -527,7 +567,7 @@ describe('Test Program Report Page', () => {
         //go to the next split
         cy.get('#btnRight').click();
         //Test that the timeframe is correct
-        cy.get('#2023-10-01').contains('Schedule Range: 2023-11-01 to 2023-12-01')
+        cy.get('#2023-11-01').contains('Schedule Range: 2023-11-01 to 2023-12-01')
         //map for valid timeslot locations
         classesInOrder = [
             ['COOS293B', '', '', '', ''],
@@ -542,8 +582,42 @@ describe('Test Program Report Page', () => {
         //Check that theyre correct
         checkCorrectSchedule(classesInOrder);
 
-        //check that right buttons dosen't exist for last split
-        cy.get('#btnRight').should('not.exist');
+
+        //Chekc that there's only 4 splits
+        cy.get('#btnRight').click();
+        //Test that the timeframe is correct
+        cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-09-30')
+        //map for valid timeslot locations
+        classesInOrder = [
+            ['COOS293B', '', '', '', ''],
+            ['', 'COSA280A', '', '', 'COOS293B'],
+            ['', '', 'SEM283A', 'CWEB280A', ''],
+            ['', '', 'COHS280A', 'COOS291A', ''],
+            ['', '', '', '', ''], // 12:00 slot appears empty
+            ['', 'CDBM280A', '', '', 'MATH282A'],
+            ['MATH282A', '', '', '', ''],
+            ['', '', '', '', ''],
+        ];
+        //Check that theyre correct
+        checkCorrectSchedule(classesInOrder);
+
+        //Check that left button works
+        cy.get('#btnLeft').click();
+        //Test that the timeframe is correct
+        cy.get('#2023-11-01').contains('Schedule Range: 2023-11-01 to 2023-12-01')
+        //map for valid timeslot locations
+        classesInOrder = [
+            ['COOS293B', '', '', '', ''],
+            ['', 'COSA280A', '', '', 'COOS293B'],
+            ['', '', 'SEM283A', 'CWEB280A', ''],
+            ['', '', 'COHS280A', 'COOS291A', ''],
+            ['', '', 'COOS293A', '', ''], // 12:00 slot appears empty
+            ['', 'CDBM280A', '', '', 'MATH282A'],
+            ['MATH282A', '', '', '', ''],
+            ['', '', '', '', ''],
+        ];
+        //Check that theyre correct
+        checkCorrectSchedule(classesInOrder);
     });
 
 });
