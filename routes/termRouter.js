@@ -148,9 +148,6 @@ router.post('/course-offerings', async function(req, res, next) {
     programs,
   });
 });
-
-
-
 /**
  * DELETE handler for http://localhost:3000/term
  */
