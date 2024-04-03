@@ -350,9 +350,5 @@ it('testThatTermAutogeneratesCourseOfferingsHasValidation', () => {
   cy.get('#tableBody > tr:nth-child(2) > td:nth-child(3)').contains('2024-06-02');
   cy.get('#tableBody > tr:nth-child(2) > td:nth-child(4)').contains('2023-2024');
 
-
-  // Deleting the Term
-  cy.get('#tableBody > tr:nth-child(1) > td:nth-child(5) > button:nth-child(2)').click();
-  cy.get('#deleteTerm').click();
 });
 
