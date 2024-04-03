@@ -1,3 +1,4 @@
+
 /**
  * UI tests for program report
  * Author: Chritseen Shlimoon
@@ -5,6 +6,9 @@
 const urlGET = 'localhost:3000';
 const urlPOST = 'http://localhost:3000/programReport';
 describe('Test Program Report Page', () => {
+    before(()=>{
+        cy.exec('node electron-db-reset.js');
+    })
     it('testProgramGET', () => {
         /**
          * testNavigationToTheReportProgramPage
@@ -158,16 +162,16 @@ describe('Test Program Report Page', () => {
         ];
 
         const cellsToCheckCrissCross = [
-            {row: 1, col: 2, value: 'CST1COOS293BBarrie\n                        239A\n                    '},
-            {row: 2, col: 3, value: 'CST1COSA280ANew\n                        239A\n                    '},
-            {row: 3, col: 4, value: 'CST1SEM283ABasoalto\n                        239A\n                    '},
-            {row: 4, col: 4, value: 'CST1COHS280AHoltslan\n                        239A\n                    '},
-            {row: 3, col: 5, value: 'CST1CWEB280AOnishenko\n                        239A\n                    '},
-            {row: 4, col: 5, value: 'CST1COOS291ALahoda\n                        239A\n                    '},
-            {row: 2, col: 6, value: 'CST1COOS293BSchmidt\n                        239A\n                    '},
-            {row: 6, col: 3, value: 'CST1CDBM280ACaron\n                        239A\n                    '},
-            {row: 7, col: 2, value: 'CST1MATH282AKaban\n                        239A\n                    '},
-            {row: 6, col: 6, value: 'CST1MATH282AGrzesina\n                        239A\n                    '},
+            {row: 1, col: 2, value: 'CST1COOS293B\n                                            Barrie\n                                            239A\n                                        '},
+            {row: 2, col: 3, value: 'CST1COSA280A\n                                            New\n                                            239A\n                                        '},
+            {row: 3, col: 4, value: 'CST1SEM283A\n                                            Basoalto\n                                            239A\n                                        '},
+            {row: 4, col: 4, value: 'CST1COHS280A\n                                            Holtslan\n                                            239A\n                                        '},
+            {row: 3, col: 5, value: 'CST1CWEB280A\n                                            Onishenko\n                                            239A\n                                        '},
+            {row: 4, col: 5, value: 'CST1COOS291A\n                                            Lahoda\n                                            239A\n                                        '},
+            {row: 2, col: 6, value: 'CST1COOS293B\n                                            Schmidt\n                                            239A\n                                        '},
+            {row: 6, col: 3, value: 'CST1CDBM280A\n                                            Caron\n                                            239A\n                                        '},
+            {row: 7, col: 2, value: 'CST1MATH282A\n                                            Kaban\n                                            239A\n                                        '},
+            {row: 6, col: 6, value: 'CST1MATH282A\n                                            Grzesina\n                                            239A\n                                        '},
         ];
 
 
@@ -229,7 +233,7 @@ describe('Test Program Report Page', () => {
          * testProgramAppearsOnTheReportHeader
          */
         // Check the content of the instructor's name element
-        cy.get('#nameDisplayer').should('have.text', 'CST Term 1A');
+        cy.get('#nameDisplayer').should('have.text', 'CST\n Term 1A');
 
         /**
          * testNewReportAndPrintButtonsAreVisible
@@ -281,10 +285,10 @@ describe('Test Program Report Page', () => {
         cy.get('[href="/programReport"]').click();
 
         // Select the instructor from the dropdown based on value
-        cy.get('#selectProgramReport').select('#1');
+        cy.get('#selectProgramReport').select('1');
 
         // Select the term from the dropdown based on value
-        cy.get('#selectTermReport').select('#1');
+        cy.get('#selectTermReport').select('1');
 
         // Select the group letter from the dropdown based on value
         cy.get('#selectGroupReport').select('A');
