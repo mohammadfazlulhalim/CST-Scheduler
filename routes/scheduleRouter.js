@@ -132,11 +132,11 @@ async function getSchedules(term, program, groupLetter, schedule) {
   });
   uniqueDates.sort();
   for (let i=0; i<uniqueDates.length-1; i++) {
-    schedule[i].table.startDate = uniqueDates[i];
-    schedule[i].table.endDate = uniqueDates[i+1];
-    schedule[i].COArray = await getCOs(schedule[i].table, term, program, groupLetter);
-    schedule[i].table.tableRows = await getTableRows(
-        schedule[i].table, schedule[i].COArray, term, program, groupLetter, timeSlots,
+    schedule.table[i].startDate = uniqueDates[i];
+    schedule.table[i].endDate = uniqueDates[i+1];
+    schedule.COArray = await getCOs(schedule.table[i], term, program, groupLetter);
+    schedule.table[i].tableRows = await getTableRows(
+        schedule.table[i], schedule.COArray, term, program, groupLetter, timeSlots,
     );
   }
 }
@@ -151,9 +151,9 @@ async function getTableRows(table, COArray, term, program, groupLetter, timeSlot
   // eslint-disable-next-line no-unused-vars
   const topRow = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   // eslint-disable-next-line no-unused-vars
-  const times12hr = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+  const times12hr = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
   // eslint-disable-next-line no-unused-vars
-  const times24hr = ['08:00', '09:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
+  const times24hr = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
   const rowsToReturn = [];
   rowsToReturn[0] = topRow;
 
