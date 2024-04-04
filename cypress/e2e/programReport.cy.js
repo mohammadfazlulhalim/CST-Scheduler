@@ -112,106 +112,26 @@ describe('Test Program Report Page', () => {
         const expectedTimes12 = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
         const expectedHeaders = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-        const cellsToCheckFull = [
-            // eslint-disable-next-line max-len
-            {
-                row: 1,
-                col: 2,
-                value: '\n                                \n                                            8:00\n                                        CST1MATH282B\n                                            Barrie\n                                            239B\n                                        \n                                        CST1COOS291B\n                                            Onishenko\n                                            239B\n                                        \n                                        CST1COHS280B\n                                            Kaban\n                                            239B\n                                        \n                                        CST1CDBM280B\n                                            Lahoda\n                                            239B\n                                        \n                                        CST1MATH282B\n                                            New\n                                            239B\n                                        \n                            '
-            },
-            // eslint-disable-next-line max-len
-            {
-                row: 2,
-                col: 2,
-                value: '\n                                \n                                            9:00\n                                        CST1COSA280B\n                                            Kaban\n                                            239B\n                                        \n                                        CST1COOS293B\n                                            Lahoda\n                                            239B\n                                        \n                                        CST1CWEB280B\n                                            New\n                                            239B\n                                        \n                                        CST1SEM283B\n                                            Schmidt\n                                            239B\n                                        \n                                        CST1COSA280B\n                                            Caron\n                                            239B\n                                        \n                            '
-            },
-            // eslint-disable-next-line max-len
-            {
-                row: 3,
-                col: 2,
-                value: '\n                                \n                                            10:00\n                                        CST1CDBM280B\n                                            New\n                                            239B\n                                        \n                                        CST1MATH282B\n                                            Schmidt\n                                            239B\n                                        \n                                        CST1COOS291B\n                                            Caron\n                                            239B\n                                        \n                                        CST1COHS280B\n                                            Grzesina\n                                            239B\n                                        \n                                        CST1CDBM280B\n                                            Basoalto\n                                            239B\n                                        \n                            '
-            },
-            // eslint-disable-next-line max-len
-            {
-                row: 4,
-                col: 2,
-                value: '\n                                \n                                            11:00\n                                        CST1SEM283B\n                                            Caron\n                                            239B\n                                        \n                                        CST1COSA280B\n                                            Grzesina\n                                            239B\n                                        \n                                        CST1COOS293B\n                                            Basoalto\n                                            239B\n                                        \n                                        CST1CWEB280B\n                                            Benson\n                                            239B\n                                        \n                                        CST1SEM283B\n                                            Holtslan\n                                            239B\n                                        \n                            '
-            },
-            // eslint-disable-next-line max-len
-            {
-                row: 5,
-                col: 2,
-                value: '\n                                \n                                            12:00\n                                            \n                                            \n                                            \n                                            \n                                            \n                            '
-            },
-            // eslint-disable-next-line max-len
-            {
-                row: 7,
-                col: 2,
-                value: '\n                                \n                                            2:00\n                                        CST1CWEB280B\n                                            Holtslan\n                                            239B\n                                        \n                                        CST1SEM283B\n                                            Barrie\n                                            239B\n                                        \n                                        CST1COSA280B\n                                            Onishenko\n                                            239B\n                                        \n                                        CST1COOS293B\n                                            Kaban\n                                            239B\n                                        \n                                        CST1CWEB280B\n                                            Lahoda\n                                            239B\n                                        \n                            '
-            },
-            {
-                row: 6,
-                col: 2,
-                value: '\n                                \n                                            1:00\n                                        CST1COHS280B\n                                            Basoalto\n                                            239B\n                                        \n                                        CST1CDBM280B\n                                            Benson\n                                            239B\n                                        \n                                        CST1MATH282B\n                                            Holtslan\n                                            239B\n                                        \n                                        CST1COOS291B\n                                            Barrie\n                                            239B\n                                        \n                                        CST1COHS280B\n                                            Onishenko\n                                            239B\n                                        \n                            '
-            },
-            {
-                row: 8,
-                col: 2,
-                value: '\n                                \n                                            3:00\n                                            \n                                            \n                                            \n                                            \n                                            \n                            '
-            },
+        const cellsToCheckCrissCross = [
+            ['COOS293B', '', '', '', ''],
+            ['', 'COSA280A', '', '', 'COOS293B'],
+            ['', '', 'SEM283A', 'CWEB280A', ''],
+            ['', '', 'COHS280A', 'COOS291A', ''],
+            ['', '', '', '', ''], // 12:00 slot appears empty
+            ['', 'CDBM280A', '', '', 'MATH282A'],
+            ['MATH282A', '', '', '', ''],
+            ['', '', '', '', ''],
         ];
 
-        const cellsToCheckCrissCross = [
-            {
-                row: 1,
-                col: 2,
-                value: 'CST1COOS293B\n                                            Barrie\n                                            239A\n                                        '
-            },
-            {
-                row: 2,
-                col: 3,
-                value: 'CST1COSA280A\n                                            New\n                                            239A\n                                        '
-            },
-            {
-                row: 3,
-                col: 4,
-                value: 'CST1SEM283A\n                                            Basoalto\n                                            239A\n                                        '
-            },
-            {
-                row: 4,
-                col: 4,
-                value: 'CST1COHS280A\n                                            Holtslan\n                                            239A\n                                        '
-            },
-            {
-                row: 3,
-                col: 5,
-                value: 'CST1CWEB280A\n                                            Onishenko\n                                            239A\n                                        '
-            },
-            {
-                row: 4,
-                col: 5,
-                value: 'CST1COOS291A\n                                            Lahoda\n                                            239A\n                                        '
-            },
-            {
-                row: 2,
-                col: 6,
-                value: 'CST1COOS293B\n                                            Schmidt\n                                            239A\n                                        '
-            },
-            {
-                row: 6,
-                col: 3,
-                value: 'CST1CDBM280A\n                                            Caron\n                                            239A\n                                        '
-            },
-            {
-                row: 7,
-                col: 2,
-                value: 'CST1MATH282A\n                                            Kaban\n                                            239A\n                                        '
-            },
-            {
-                row: 6,
-                col: 6,
-                value: 'CST1MATH282A\n                                            Grzesina\n                                            239A\n                                        '
-            },
+        const cellsToCheckFull = [
+            ['MATH282B', 'COOS291B', 'COHS280B', 'CDBM280B', 'MATH282B'],
+            ['COSA280B', 'COOS293B', 'CWEB280B', 'SEM283B', 'COSA280B'],
+            ['CDBM280B', 'MATH282B', 'COOS291B', 'COHS280B', 'CDBM280B'],
+            ['SEM283B', 'COSA280B', 'COOS293B', 'CWEB280B', 'SEM283B'],
+            ['', '', '', '', ''], // 12:00 slot appears empty
+            ['COHS280B', 'CDBM280B', 'MATH282B', 'COOS291B', 'COHS280B'],
+            ['CWEB280B', 'SEM283B', 'COSA280B', 'COOS293B', 'CWEB280B'],
+            ['', '', '', '', ''],
         ];
 
 
@@ -249,10 +169,7 @@ describe('Test Program Report Page', () => {
         /**
          * testCrissCross
          */
-        cellsToCheckCrissCross.forEach(({row, col, value}) => {
-            const selector = `.table-bordered tbody tr:nth-child(${row}) td:nth-child(${col})`;
-            cy.get(selector).should('have.text', value);
-        });
+        checkCorrectSchedule(cellsToCheckCrissCross);
 
         // Check the content of the thead
         cy.get('.table-bordered thead tr th').each((header, index) => {
@@ -301,10 +218,7 @@ describe('Test Program Report Page', () => {
         /**
          * testFull
          */
-        cellsToCheckFull.forEach(({row, col, value}) => {
-            const selector = `.table-bordered tbody tr:nth-child(${row})`;
-            cy.get(selector).should('have.text', value);
-        });
+        checkCorrectSchedule(cellsToCheckFull);
 
 
         Cypress.on('uncaught:exception', (err, runnable) => {

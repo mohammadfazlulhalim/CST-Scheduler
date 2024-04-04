@@ -13,55 +13,58 @@
         </div>
     </div>
 
-    <div id="scheduleCarousel" class="carousel slide" data-bs-interval="false">
-        <div class="carousel-inner">
-            {{#each reportArray}} <!---each carosel item -->
-            <div class="carousel-item {{#if @first}}active{{/if}}">
-                <p id="{{this.startDate}}">Schedule Range: {{this.startDate}} to {{this.endDate}}</p>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover border-dark">
-                        <thead>
+    <div class="row justify-content-center">
+        <div id="scheduleCarousel" class="carousel slide col-9" data-bs-interval="false">
+            <div class="carousel-inner">
+                {{#each reportArray}} <!---each carosel item -->
+                    <div class="carousel-item {{#if @first}}active{{/if}} ">
+                        <p id="{{this.startDate}}">Schedule Range: {{this.startDate}} to {{this.endDate}}</p>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover border-dark">
+                                <thead>
 
-                        <!--        Header Row-->
-                        <tr>
-                            <!--            6 columns designated    -->
-                            <th class="text-center" scope="col">Time</th>
-                            <th class="text-center" scope="col">Monday</th>
-                            <th class="text-center" scope="col">Tuesday</th>
-                            <th class="text-center" scope="col">Wednesday</th>
-                            <th class="text-center" scope="col">Thursday</th>
-                            <th class="text-center" scope="col">Friday</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- 2D array looping through to display program report -->
-                        {{#each matrixTable}}
-                            <tr>
-                                <!-- innerloop starts here-->
-                                {{#each this}}
-                                    {{#if timeSlot}}
-                                        <td>{{../../../program}}<br>{{course.courseCode}}{{courseOffering.group}}
-                                            <br>{{instructor.lastName}}
-                                            <br>{{classroom.roomNumber}}
-                                        </td>
-                                    {{else}}
-                                        {{#if timeRow}}
-                                            <td class="text-center">{{timeRow}}</td>
-                                        {{else}}
-                                            <td></td>
-                                        {{/if}}
-                                    {{/if}}
+                                <!--        Header Row-->
+                                <tr>
+                                    <!--            6 columns designated    -->
+                                    <th class="text-center" scope="col">Time</th>
+                                    <th class="text-center" scope="col">Monday</th>
+                                    <th class="text-center" scope="col">Tuesday</th>
+                                    <th class="text-center" scope="col">Wednesday</th>
+                                    <th class="text-center" scope="col">Thursday</th>
+                                    <th class="text-center" scope="col">Friday</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- 2D array looping through to display program report -->
+                                {{#each matrixTable}}
+                                    <tr>
+                                        <!-- innerloop starts here-->
+                                        {{#each this}}
+                                            {{#if timeSlot}}
+                                                <td>{{../../../program}}
+                                                    <br>{{course.courseCode}}{{courseOffering.group}}
+                                                    <br>{{instructor.lastName}}
+                                                    <br>{{classroom.roomNumber}}
+                                                </td>
+                                            {{else}}
+                                                {{#if timeRow}}
+                                                    <td class="text-center">{{timeRow}}</td>
+                                                {{else}}
+                                                    <td></td>
+                                                {{/if}}
+                                            {{/if}}
+                                        {{/each}}
+                                    </tr>
                                 {{/each}}
-                            </tr>
-                        {{/each}}
-                        </tbody>
-                    </table>
-                </div>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {{/each}}
             </div>
-            {{/each}}
         </div>
         <!--if there are splits-->
-    {{#if isSplit}}
+        {{#if isSplit}}
             <!-- Carousel Controls -->
             <button class="carousel-control-prev custom-carousel-control" id="btnLeft" type="button"
                     data-bs-target="#scheduleCarousel" data-bs-slide="prev">
@@ -73,82 +76,82 @@
                 <span class="carousel-control-next-icon custom-carousel-control-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
-    {{/if}}
-        </div>
+        {{/if}}
+    </div>
 {{else}}
-        <h1 id="nothingToShow">Nothing to display at the moment</h1>
+    <h1 id="nothingToShow">Nothing to display at the moment</h1>
 {{/if}}
 
-    <!-- modal -->
-    <!-- Vertically centered scrollable modal -->
-    <div class="modal fade" id="programReportModal" tabindex="-1" aria-labelledby="programReportModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="programReportModalLabel">Create a Program Report For: </h5>
-                    <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
-                <div class="modal-body">
-                    <!--                form begins here-->
-                    <form method="POST" action="/programReport">
-                        <small class="text-info"> <b>Please select program, term, and a group.</b></small>
-                        <!-- Select box for program -->
-                        <div class="form-group">
-                            <label for="selectProgramReport" class="form-label mt-4">Program</label>
-                            <select name="selectProgramReport" class="form-select" id="selectProgramReport" required>
-                                <option value="" disabled selected>Select Program</option>
-                                {{#each programList}}
-                                    <option value="{{this.id}}">{{this.programName}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                        <!-- Select box for term -->
-                        <div class="form-group">
-                            <label for="selectTermReport" class="form-label mt-4">Terms</label>
-                            <select name="selectTermReport" class="form-select" id="selectTermReport" required>
-                                <option value="" disabled selected>Select Term</option>
-                                {{#each newTermList}}
-                                    <option value="{{this.id}}">{{this.displayTerm}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                        <!-- Select box for group -->
-                        <div class="form-group">
-                            <label for="selectGroupReport" class="form-label mt-4">Groups</label>
-                            <select name="selectGroupReport" class="form-select" id="selectGroupReport" required>
-                                <option value="" disabled selected>Select group</option>
-                                {{#each groupList}}
-                                    <option value="{{this.group}}">{{this.group}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="modalCloseBtn" type="button" class="btn btn-outline-danger"
-                                    data-bs-dismiss="modal">Close
-                            </button>
-                            <button id="submitBtn"
-                                    type="submit" class="btn btn-outline-success">Save changes
-                            </button>
-                        </div>
-                    </form>
-                    <!--                Form ends here-->
+<!-- modal -->
+<!-- Vertically centered scrollable modal -->
+<div class="modal fade" id="programReportModal" tabindex="-1" aria-labelledby="programReportModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="programReportModalLabel">Create a Program Report For: </h5>
+                <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
+            <div class="modal-body">
+                <!--                form begins here-->
+                <form method="POST" action="/programReport">
+                    <small class="text-info"> <b>Please select program, term, and a group.</b></small>
+                    <!-- Select box for program -->
+                    <div class="form-group">
+                        <label for="selectProgramReport" class="form-label mt-4">Program</label>
+                        <select name="selectProgramReport" class="form-select" id="selectProgramReport" required>
+                            <option value="" disabled selected>Select Program</option>
+                            {{#each programList}}
+                                <option value="{{this.id}}">{{this.programName}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <!-- Select box for term -->
+                    <div class="form-group">
+                        <label for="selectTermReport" class="form-label mt-4">Terms</label>
+                        <select name="selectTermReport" class="form-select" id="selectTermReport" required>
+                            <option value="" disabled selected>Select Term</option>
+                            {{#each newTermList}}
+                                <option value="{{this.id}}">{{this.displayTerm}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <!-- Select box for group -->
+                    <div class="form-group">
+                        <label for="selectGroupReport" class="form-label mt-4">Groups</label>
+                        <select name="selectGroupReport" class="form-select" id="selectGroupReport" required>
+                            <option value="" disabled selected>Select group</option>
+                            {{#each groupList}}
+                                <option value="{{this.group}}">{{this.group}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger"
+                                data-bs-dismiss="modal">Close
+                        </button>
+                        <button id="submitBtn"
+                                type="submit" class="btn btn-outline-success">Save changes
+                        </button>
+                    </div>
+                </form>
+                <!--                Form ends here-->
 
-                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- New report and print buttons -->
-    <div class="btnPairsCustom">
-        <button id="newProgramBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal"
-                data-bs-target="#programReportModal">
-            New Report
-        </button>
-        <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
-    </div>
+<!-- New report and print buttons -->
+<div class="btnPairsCustom">
+    <button id="newProgramBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal"
+            data-bs-target="#programReportModal">
+        New Report
+    </button>
+    <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
+</div>
 </div>
 
 <script defer>
@@ -263,11 +266,11 @@
     }
 
     .carousel-control-prev.custom-carousel-control {
-        left: -150px;
+        left: -50px;
     }
 
     .carousel-control-next.custom-carousel-control {
-        right: -150px;
+        right: -50px;
     }
 
     .carousel-control-prev-icon, .carousel-control-next-icon {
