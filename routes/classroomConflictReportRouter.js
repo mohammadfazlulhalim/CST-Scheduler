@@ -44,6 +44,18 @@ router.post('/', async (req, res, next)=>{
   // assign the final output of conflicting timeslots as an array of objects to timeslotsReturned
   const timeslotsReturned = await generateTimeslots(realClassroom, realTerm);
 
+  for (let i=0;i<timeslotsReturned.length;i++) {
+    console.log("Object is: " + JSON.stringify(timeslotsReturned[i]));
+    for (let j=0; j<timeslotsReturned[i];j++) {
+      console.log("Object nested is: " + JSON.stringify(timeslotsReturned[i][j]));
+      const primIns = Instructor.findByPk(timeslotsReturned[i][j].primaryInstructor);
+      timeslotsReturned[i][j].primaryInstructor = primIns;
+    }
+
+
+    // TODO: Implement alternative instructor
+  }
+
 
   res.render('classroomConflictReport', {
     routerPost: true,
