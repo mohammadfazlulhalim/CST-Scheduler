@@ -44,7 +44,7 @@ describe('Testing Instructor CRUD options', () => {
 
   /* Navigating to our expected page "http://localhost:3000/instructor"*/
 
-  beforeEach(()=>{
+  before(()=>{
     cy.visit('http://localhost:3000');
     cy.get(navMenuSelector, {timeout: 10000}).trigger('click');
     cy.get(navMenuItem, {timeout: 10000}).click();

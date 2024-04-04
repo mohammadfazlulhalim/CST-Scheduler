@@ -45,15 +45,14 @@ router.post('/', async (req, res, next)=>{
   const timeslotsReturned = await generateTimeslots(realClassroom, realTerm);
 
   for (let i=0;i<timeslotsReturned.length;i++) {
-    console.log("Object is: " + JSON.stringify(timeslotsReturned[i]));
-    for (let j=0; j<timeslotsReturned[i];j++) {
-      console.log("Object nested is: " + JSON.stringify(timeslotsReturned[i][j]));
-      const primIns = Instructor.findByPk(timeslotsReturned[i][j].primaryInstructor);
+    for (let j=0; j<timeslotsReturned[i].length;j++) {
+      const primIns = await Instructor.findByPk(timeslotsReturned[i][j].primaryInstructor);
       timeslotsReturned[i][j].primaryInstructor = primIns;
+      if (timeslotsReturned[i][j].alternativeInstructor != null) {
+        const altIns = await Instructor.findByPk(timeslotsReturned[i][j].alternativeInstructor);
+        timeslotsReturned[i][j].alternativeInstructor = altIns;
+      }
     }
-
-
-    // TODO: Implement alternative instructor
   }
 
 
