@@ -371,18 +371,19 @@ describe('Test Program Report Page', () => {
         cy.contains('Course Offerings').click();
         cy.url().should('include', '/courseOffering');
         cy.get('#26edit').click();
-        cy.get('#eTerm').select('2023-08-01 - 1');
+        cy.get('#eTerm').select(0);
         cy.get('#eGroup').clear().type('A');
-        cy.get('#eProgram').select('CST');
+        cy.get('#eProgram').select(1);
         cy.get('#editCO').click();
 
         //switch course offering for weird split
         cy.get('#27edit').click();
-        cy.get('#eTerm').select('2023-08-01 - 1');
+        cy.get('#eTerm').select(0);
         cy.get('#eStartDate').clear().wait(100).type('2023-10-31');
         cy.get('#eEndDate').clear().wait(100).type('2023-10-31');
         cy.get('#eGroup').clear().type('A');
-        cy.get('#eProgram').select('CST');
+        cy.get('#eProgram').select(1);
+
         cy.get('#editCO').click();
 
         //create timeslot

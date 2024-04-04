@@ -1,7 +1,10 @@
 /* eslint-disable linebreak-style */
 
 const Course = require('../private/javascript/Course');
-
+const Instructor = require('../private/javascript/Instructor');
+const {validInstructor} = require('./Instructor.fix');
+const {create} = require('hbs');
+const instructorList = require('./Instructor.fix').validInstructor;
 /**
  * clears the course table if it exists and fills it 5 courses
  */
@@ -113,10 +116,22 @@ async function createCourses() {
   // as rows in the Course table in scheduler.db
   for (let index = 0; index < courses.length; index++) {
     const course = courses[index];
-    await Course.create(course);
+    const instructor = await Instructor.findByPk((index%validInstructor.length)+1);
+
+    // Create course
+    const createdCourse = await Course.create(course);
+
+    // Check if instructor ID is not null before setting it
+    if (instructor && instructor.id) {
+      await createdCourse.setInstructor(instructor.id);
+    } else {
+      console.log('Instructor ID is null for course:', createdCourse.name);
+      // Handle the case where instructor ID is null
+    }
   }
 }
 
+// eslint-disable-next-line max-len
 const validCourses = [{courseCode: 'MATH282', courseName: 'Mathematics of Computation', courseNumCredits: 3, courseNumHoursPerWeek: 3},
   {courseCode: 'COSA280', courseName: 'IT Development Project 1', courseNumCredits: 3, courseNumHoursPerWeek: 3},
   {courseCode: 'CDBM280', courseName: 'Database Management Systems', courseNumCredits: 5, courseNumHoursPerWeek: 5},
@@ -141,3 +156,4 @@ const course1 = {
 };
 
 module.exports = {course1, validCourses, fillCourseTable};
+// module.exports = {course1, fillCourseTable};

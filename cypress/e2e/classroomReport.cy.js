@@ -3,6 +3,9 @@ describe('template spec', () => {
   const classroomList = ['Select Classroom', '239A', '239B', '239a', '240B', '241', '242C'];
   const termList = ['Select Term', '2023-2024 - Term 1', '2023-2024 - Term 4', '2023-2024 - Term 5', '2022-2023 - Term 2', '2022-2023 - Term 3', '2022-2023 - Term 5', '2022-2023 - Term 6'];
 
+  beforeEach(()=>{
+    cy.exec('node electron-db-reset.js');
+  })
   it('testThatGeneratingAReportWithAFullyScheduledClassWorks', () => {
     cy.visit('http://localhost:3000'); // Visit the home page
     cy.intercept('GET', '/classroomReport/').as('classroomReportGET');

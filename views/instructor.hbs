@@ -1,4 +1,4 @@
-<div class="container p-2">
+<div class="container p-1">
     <div class="row mb-2">
         <h1 class="col-md-5">{{title}}</h1>
         <!--Empty spacer, to help with formatting-->
@@ -80,7 +80,7 @@
                         </button>
                     </div>
                     <form action="/instructor" method="POST">
-                       <div class="modal-body">
+                        <div class="modal-body">
                             <label hidden for="eInstructorID">Instructor Number:</label>
                             <input hidden type="text"
                                    class="form-control {{#if putErr.id}}is-invalid{{/if}}" id="eInstructorID"
@@ -99,20 +99,20 @@
                                    value="{{putSubmittedInstructor.lastName}}" id="eLastName" name="lastName">
                             <div class="invalid-feedback">{{putErr.lastName}}</div>
 
-                           <label for="eOfficeNum">Office Number:</label>
-                           <input type="text" class="form-control {{#if putErr.officeNum}}is-invalid{{/if}}"
-                                  value="{{putSubmittedInstructor.officeNum}}" id="eOfficeNum" name="officeNum">
-                           <div class="invalid-feedback">{{putErr.officeNum}}</div>
+                            <label for="eOfficeNum">Office Number:</label>
+                            <input type="text" class="form-control {{#if putErr.officeNum}}is-invalid{{/if}}"
+                                   value="{{putSubmittedInstructor.officeNum}}" id="eOfficeNum" name="officeNum">
+                            <div class="invalid-feedback">{{putErr.officeNum}}</div>
 
-                           <label for="ePhoneNum">Phone Number:</label>
-                           <input type="text" class="form-control {{#if putErr.phoneNum}}is-invalid{{/if}}"
-                                  value="{{putSubmittedInstructor.phoneNum}}" id="ePhoneNum" name="phoneNum">
-                           <div class="invalid-feedback">{{putErr.phoneNum}}</div>
+                            <label for="ePhoneNum">Phone Number:</label>
+                            <input type="text" class="form-control {{#if putErr.phoneNum}}is-invalid{{/if}}"
+                                   value="{{putSubmittedInstructor.phoneNum}}" id="ePhoneNum" name="phoneNum">
+                            <div class="invalid-feedback">{{putErr.phoneNum}}</div>
 
-                           <label for="eEmail">Email:</label>
-                           <input type="text" class="form-control {{#if putErr.email}}is-invalid{{/if}}"
-                                  value="{{putSubmittedInstructor.email}}" id="eEmail" name="email">
-                           <div class="invalid-feedback">{{putErr.email}}</div>
+                            <label for="eEmail">Email:</label>
+                            <input type="text" class="form-control {{#if putErr.email}}is-invalid{{/if}}"
+                                   value="{{putSubmittedInstructor.email}}" id="eEmail" name="email">
+                            <div class="invalid-feedback">{{putErr.email}}</div>
 
                         </div>
                         <div class="modal-footer">
