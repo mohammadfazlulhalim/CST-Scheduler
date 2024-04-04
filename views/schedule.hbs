@@ -1,6 +1,5 @@
-
 <div id="entirePageBody">
-<div id="scheduleModal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="scheduleModalLabel"
+    <div id="scheduleModal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="scheduleModalLabel"
          aria-hidden="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -46,20 +45,22 @@
             </div>
         </div>
     </div>
+
+
     <div class="container-fluid" {{#if isHidden}}hidden{{/if}}>
         <div class="column">
-            <button class="btn btn-primary">A</button>
-            <button class="btn btn-primary">B</button>
-            <button class="btn btn-primary">C</button>
-            <button class="btn btn-primary">D</button>
+            <button class="btn btn-success">A</button>
+            <button class="btn btn-outline-success">B</button>
+            <button class="btn btn-outline-success">C</button>
+            <button class="btn btn-outline-success">D</button>
         </div>
         {{#each groups}}
             <div class="container">
                 <p>Overall Range: {{schedule.startDate}} to {{schedule.endDate}}</p>
                 <div class="row">
-                    <div class="col-md-8">
-                        {{#each schedule.table}}
-                            <p>Table Range: {{startDate}} to {{endDate}}</p>
+                    {{#each schedule.split}}
+                        <p>Table Range: {{startDate}} to {{endDate}}</p>
+                        <div class="col-md-8">
                             <table class="table table-bordered table-hover border-dark">
                                 {{#each tableRows}}
                                     <tr>
@@ -69,20 +70,20 @@
                                     </tr>
                                 {{/each}}
                             </table>
-                        {{/each}}
-                    </div>
-                    <div class="col-md-4">
-                        <h1>Course Offerings</h1>
-                        <div class="d-flex flex-column" role="group" aria-label="Course offerings">
-                            {{#each schedule.COArray}}
-                                <button class="btn btn-outline-primary mb-2">
-                                    <span>{{this.name}}</span>
-                                    <span>{{this.primaryInstructor.lastName}}</span>
-                                    <span>{{this.CourseId.courseName}}</span>
-                                </button>
-                            {{/each}}
                         </div>
-                    </div>
+                        <div class="col-md-4">
+                            <h1>Course Offerings</h1>
+                            <div class="d-flex flex-column" role="group" aria-label="Course offerings">
+                                {{#each COArray}}
+                                    <button class="btn mb-2 btn-outline-success">
+                                        <span>{{this.name}}</span>
+                                        <span>{{this.primaryInstructor.lastName}}</span>
+                                        <span>{{this.CourseId.courseName}}</span>
+                                    </button>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{/each}}
                 </div>
             </div>
         {{/each}}
@@ -91,7 +92,7 @@
         <a href="http://localhost:3000" class="btn btn-success mt-3">Return</a>
     </div>
 </div>
-    <script>
+<script>
     'use strict';
 
     let currCO = null;
@@ -113,9 +114,11 @@
         let bGroupSelected = document.getElementById('groupSelect').value !== '';
 
         if (bTermSelected && bProgramSelected && bGroupSelected) {
-            localStorage.setItem('PostData', JSON.stringify({term: document.getElementById('termSelect').value,
-                    program: document.getElementById('programSelect').value,
-                      group: document.getElementById('groupSelect').value}));
+            localStorage.setItem('PostData', JSON.stringify({
+                term: document.getElementById('termSelect').value,
+                program: document.getElementById('programSelect').value,
+                group: document.getElementById('groupSelect').value
+            }));
             document.getElementById('modalSubmit').removeAttribute('disabled');
         } else {
             document.getElementById('modalSubmit').disabled = 'disabled';
@@ -282,4 +285,4 @@
         }
     }
 
-    </script>
+</script>

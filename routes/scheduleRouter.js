@@ -35,11 +35,11 @@ router.post('/', async (req, res) => {
     schedule: {
       startDate: term.startDate,
       endDate: term.endDate,
-      COArray: [undefined],
-      table: [{
+      split: [{
         startDate: undefined,
         endDate: undefined,
         tableRows: undefined,
+        COArray: [undefined],
       }],
     },
   }];
@@ -132,11 +132,11 @@ async function getSchedules(term, program, groupLetter, schedule) {
   });
   uniqueDates.sort();
   for (let i=0; i<uniqueDates.length-1; i++) {
-    schedule.table[i].startDate = uniqueDates[i];
-    schedule.table[i].endDate = uniqueDates[i+1];
-    schedule.COArray = await getCOs(schedule.table[i], term, program, groupLetter);
-    schedule.table[i].tableRows = await getTableRows(
-        schedule.table[i], schedule.COArray, term, program, groupLetter, timeSlots,
+    schedule.split[i].startDate = uniqueDates[i];
+    schedule.split[i].endDate = uniqueDates[i+1];
+    schedule.split[i].COArray = await getCOs(schedule.split[i], term, program, groupLetter);
+    schedule.split[i].tableRows = await getTableRows(
+        schedule.split[i], schedule.COArray, term, program, groupLetter, timeSlots,
     );
   }
 }
@@ -147,7 +147,7 @@ async function getSchedules(term, program, groupLetter, schedule) {
  * and edit the information for the hbs
  * each table has a startdate, enddate, tablerow[] which has tableItem[]
  */
-async function getTableRows(table, COArray, term, program, groupLetter, timeSlots) {
+async function getTableRows(split, COArray, term, program, groupLetter, timeSlots) {
   // eslint-disable-next-line no-unused-vars
   const topRow = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   // eslint-disable-next-line no-unused-vars
@@ -176,12 +176,12 @@ async function getTableRows(table, COArray, term, program, groupLetter, timeSlot
  * course offerings so that they can show up alongside the tables
  * in a manner that is easy to navigate
  */
-async function getCOs(table, term, program, groupLetter) {
+async function getCOs(split, term, program, groupLetter) {
   const courseOfferings = await CourseOffering.findAll({
     where: {
       [Op.and]: [
-        {startDate: {[Op.lte]: table.endDate}},
-        {endDate: {[Op.gte]: table.startDate}},
+        {startDate: {[Op.lte]: split.endDate}},
+        {endDate: {[Op.gte]: split.startDate}},
       ],
       group: groupLetter,
       ProgramId: program.id,
