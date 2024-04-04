@@ -73,7 +73,7 @@
                 <td>{{lookup ../../daysFullySpelled this.day}}</td>
                 <td>{{this.startTime}}</td>
                 <td>{{this.endTime}}</td>
-                <td>{{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}</td>
+                <td>{{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}{{#if alternativeInstructor.lastName}}/{{this.alternativeInstructor.firstName}} {{this.alternativeInstructor.lastName}}{{/if}}</td>
                 <td>{{this.Program.programName}}</td>
             </tr>
             {{/each}}

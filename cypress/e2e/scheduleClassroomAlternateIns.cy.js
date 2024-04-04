@@ -71,6 +71,67 @@ describe('story52Tests', async () => {
 
 
   /**
+   * This test creates a classroom conflict, and checks if the conflict is found
+   */
+  it('testThatClassroomConflictIsFound', ()=>{
+    // Visiting the page
+    cy.visit('localhost:3000');
+    cy.contains('Schedule Builder').click();
+    cy.get('#programSelect').select('CST');
+    cy.get('#termSelect').select('2022-2023 - Term 3');
+    cy.get('#groupSelect').select('2');
+    cy.get('#modalSubmit').click();
+
+    // Select Room 241
+    cy.get('#classroomSelectA').select('241');
+    cy.wait(50);
+
+    // Save both Hardware and Seminar, making sure that both have 241 selected
+    cy.get('#Hardware-A').click();
+    cy.wait(50);
+
+    cy.get(cornerIDs[0]).click();
+    cy.wait(50);
+
+    // switching to groupB
+    cy.get('#btnB').click();
+
+    // Select Room 241
+    cy.get('#classroomSelectB').select('241');
+    cy.wait(50);
+
+    cy.get('#Seminar-B').click();
+    cy.wait(50);
+
+    cy.get('#0-1-B').click();
+    cy.wait(50);
+
+    // navigating to classroom conflict page
+    cy.contains('Reports').click();
+    cy.contains('Classroom Conflict Report').click();
+
+    cy.get('#classroomSelect').select('241');
+    cy.get('#termSelect').select('3 2023-05-01');
+
+    cy.get('#modalSubmit').click();
+
+    const conflict1 = ['3 2023-05-01','COHS190', 'Monday', '08:00', '09:00', 'Ben Benson/Wade Lahoda'];
+    const conflict2 = ['3 2023-05-01','SEM283', 'Monday', '08:00', '09:00', 'Ron New'];
+
+    // checking that conflict is there
+    const table = 'table > tbody >tr'
+    for (let i=0;i<conflict1.length;i++) {
+      const nChild = i+1;
+      cy.get(table + ":nth-child(2) > td:nth-child(" +nChild + ")").contains(conflict1[i]);
+      cy.get(table + ":nth-child(3) > td:nth-child(" +nChild + ")").contains(conflict2[i]);
+    }
+
+
+
+  })
+
+
+  /**
    * Test for alternate instructor and classroom
    * Relies on existing schedule tests for full coverage
    */

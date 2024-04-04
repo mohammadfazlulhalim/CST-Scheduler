@@ -151,7 +151,7 @@ describe('Test Editing the Schedule', () => {
       cy.get('#btn' + letter).click();
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','SEM283\nNew\nRoom: 239A\n');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','\n                                        \n                                            SEM283\n                                            New\n\n                                                Room: 239A\n                                        \n\n                                    ');
         }
       }
 

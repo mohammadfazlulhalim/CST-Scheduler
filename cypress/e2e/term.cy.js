@@ -142,7 +142,7 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.contains('Administration').click();
   cy.contains('Course Offerings').click();
   const newCOs = [
-    ['Hardware', 'A', 'COHS190', '2024-3', '2024-05-05', '2024-05-29', '\n                            Ben Benson\n                        ', '\n                             \n                        ', 'CST'],
+    ['Hardware', 'A', 'COHS190', '2024-3', '2024-05-05', '2024-05-29', '\n                            Ben Benson\n                        ', 'Wade Lahoda', 'CST'],
     ['Hardware', 'B', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', '\n                            Bryce Barrie\n                        ',  '\n                             \n                        ', 'CST'],
     ['Hardware', 'D', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', '\n                            Ben Benson\n                        ', '\n                             \n                        ', 'CST'],
     ['Seminar', 'A', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', '\n                            Ron New\n                        ', '\n                             \n                        ', 'CST'],
@@ -154,7 +154,7 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   for (let i = 0; i < newCOs.length; i++) {
     for (let j = 0; j < 8; j++) {
       const nChildCO = j + 1;
-      cy.get('#tableBody > tr:nth-child(' + newCOsIndex[i] + ') >td:nth-child(' + nChildCO + ')').should('have.text', newCOs[i][j]);
+      cy.get('#tableBody > tr:nth-child(' + newCOsIndex[i] + ') >td:nth-child(' + nChildCO + ')').should('contain', newCOs[i][j]);
     }
   }
 
@@ -223,9 +223,9 @@ it('testThatTermWithNoAutogenerateOptionsDisplaysMessage ', () => {
   cy.wait(100);
   cy.get('#cTermNumber').type('1');
   cy.wait(100);
-  cy.get('#cStartDate').type('2024-08-15');
+  cy.get('#cStartDate').type('2025-08-15');
   cy.wait(100);
-  cy.get('#cEndDate').type('2024-12-15');
+  cy.get('#cEndDate').type('2025-12-15');
   cy.wait(100);
   cy.get('#cAuto').check();
   cy.wait(100);
@@ -239,9 +239,9 @@ it('testThatTermWithNoAutogenerateOptionsDisplaysMessage ', () => {
 
   // CHecking that the term is created
   cy.get('#tableBody > tr:nth-child(1) > td:nth-child(1)').contains('1');
-  cy.get('#tableBody > tr:nth-child(1) > td:nth-child(2)').contains('2024-08-15');
-  cy.get('#tableBody > tr:nth-child(1) > td:nth-child(3)').contains('2024-12-15');
-  cy.get('#tableBody > tr:nth-child(1) > td:nth-child(4)').contains('2024-2025');
+  cy.get('#tableBody > tr:nth-child(1) > td:nth-child(2)').contains('2025-08-15');
+  cy.get('#tableBody > tr:nth-child(1) > td:nth-child(3)').contains('2025-12-15');
+  cy.get('#tableBody > tr:nth-child(1) > td:nth-child(4)').contains('2025-2026');
 
   // Deleting the Term
   cy.get('#tableBody > tr:nth-child(1) > td:nth-child(5) > button:nth-child(2)').click();

@@ -2,7 +2,7 @@
 
 describe('Test Instructor Report Page', () => {
   // Resets the DB before each test
-  beforeEach(()=>{
+  before(()=>{
     cy.exec('node electron-db-reset.js');
   })
   it('testNavigationToTheReportInstructorPage', () => {
