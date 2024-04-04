@@ -47,74 +47,23 @@
         </div>
     </div>
     <div class="container-fluid">
-        <!-- Change this to a loop later -->
-        <div id="tabBar" class="column">
-            {{#each groupArray}}
-                <button id="btn{{groupLetter}}" onclick="changeGroup('{{groupLetter}}')" class="btn btn-primary">
-                    Group {{groupLetter}}
-                </button>
-            {{/each}}
-        </div>
-        {{#each groupArray}}
-            <div id="group{{groupLetter}}" class="row container" {{isHidden}}>
-                <div id="calender{{groupLetter}}" class=" col container-fluid">
-                    <h2>Group {{groupLetter}} Calendar</h2>
-                     {{#each timeslotMatrix}}
-                    <table class="table table-bordered table-hover border-dark">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th class="text-center" scope="col" id="time">Time</th>
-                            <th class="text-center" scope="col" id="mon">Monday</th>
-                            <th class="text-center" scope="col" id="tues">Tuesday</th>
-                            <th class="text-center" scope="col" id="wed">Wednesday</th>
-                            <th class="text-center" scope="col" id="thurs">Thursday</th>
-                            <th class="text-center" scope="col" id="fri">Friday</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{#each this}}
-                            <!--loops each timeslot, outer loop is hours, inner loop is days  -->
-                            <tr>
-                                {{#each this}}
-                                    <!--                                    Do an if/else if it has data - bool created in router-->
-                                    <!--                                    Then the 'each' will have different attributes and be loaded differently-->
-                                    <!--                                    via html and the router sends attributes-->
-                                    {{#if this.hTime}}
-                                        <td class="text-center time-cell" id="{{this.cellID}}">
-                                            <p>{{this.hTime}}</p>
-                                        </td>
-                                    {{else}}
-                                        <td oncontextmenu="onCellRightClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')" onclick="onCellClick('{{this.cellID}}', '{{this.timeslot.id}}', '{{this.timeslot.co}}')" id="{{this.cellID}}" class="time-slot {{ this.empty }} text-center">
-                                            <p>{{this.timeslot.program}}<br/></p>
-                                            <p>{{this.timeslot.course}}<br/></p>
-                                            <p>{{this.timeslot.insLast}}<br/></p>
-                                        </td>
-                                    {{/if}}
-                                {{/each}}
-                            </tr>
+        {{#each groups}}
+            {{this schedule}}
+                Overall Range: {{this.startDate}} to {{this.endDate}}
+                {{#each table}}
+                    Table Range: {{this.startDate}} to {{this.endDate}}
+                    <table>
+                        {{#each tableRows}}
+                            <p>TableHi</p>
                         {{/each}}
-                        </tbody>
                     </table>
-                     {{/each}}
-                </div>
-                <div class="col container-fluid">
-                    <h2>Group {{groupLetter}} Courses</h2>
-                    <div class="row">
-                        {{#each COArray}}
-                            <div class="mb-3">
-                                <div class="card bg-secondary course-offering" style="width: 12rem;" onclick="onCOClick('{{this.id}}', '{{this.dName}}')" id="{{this.dName}}">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{this.name}}</h5>
-                                        <p class="card-text">{{this.insFirst}} {{this.insLast}}</p>
-                                        <p class="card-text">{{this.startDate}} - {{this.endDate}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        {{/each}}
-                    </div>
-                </div>
-            </div>
+                {{/each}}
+                {{#each COArray}}
+                    <p>COHi</p>
+                {{/each}}
+            {{/each}}
         {{/each}}
+
         <a href="http://localhost:3000" class="btn btn-success mt-3">Return</a>
     </div>
 </div>
