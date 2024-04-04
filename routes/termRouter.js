@@ -8,7 +8,7 @@ const CourseOffering = require('../private/javascript/CourseOffering');
 const Program = require('../private/javascript/Program');
 const Instructor = require('../private/javascript/Instructor');
 const {Op} = require('sequelize');
-const createCourseOffering = require('./courseOfferingRouter').createCourseOffering;
+const createCourseOffering = require('../private/javascript/courseOfferingMethods').createCourseOffering;
 const Course = require('../private/javascript/Course');
 const title = require('../constants').pageTitles.term;
 

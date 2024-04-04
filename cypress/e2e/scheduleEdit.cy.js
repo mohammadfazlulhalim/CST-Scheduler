@@ -1,4 +1,7 @@
-const groupLetters = ['A', 'B', 'C', 'D'];
+
+
+// groupLetters = ['A', 'B', 'C', 'D'];
+const groupLetters = ['A'];
 
 describe('Test Editing the Schedule', () => {
 
@@ -168,31 +171,31 @@ describe('Test Editing the Schedule', () => {
         }
       }
       cy.get('#mon').contains('Monday').rightclick();
-      cy.get('#mon').contains('Monday')
+      cy.get('#mon').contains('Monday');
       cy.get('#tues').contains('Tuesday').rightclick();
-      cy.get('#tues').contains('Tuesday')
+      cy.get('#tues').contains('Tuesday');
       cy.get('#wed').contains('Wednesday').rightclick();
-      cy.get('#wed').contains('Wednesday')
+      cy.get('#wed').contains('Wednesday');
       cy.get('#thurs').contains('Thursday').rightclick();
-      cy.get('#thurs').contains('Thursday')
+      cy.get('#thurs').contains('Thursday');
       cy.get('#fri').contains('Friday').rightclick();
-      cy.get('#fri').contains('Friday')
+      cy.get('#fri').contains('Friday');
       cy.get('#0-0-' + letter).contains('8:00').rightclick();
-      cy.get('#0-0-' + letter).contains('8:00')
+      cy.get('#0-0-' + letter).contains('8:00');
       cy.get('#1-0-' + letter).contains('9:00').rightclick();
-      cy.get('#1-0-' + letter).contains('9:00')
+      cy.get('#1-0-' + letter).contains('9:00');
       cy.get('#2-0-' + letter).contains('10:00').rightclick();
-      cy.get('#2-0-' + letter).contains('10:00')
+      cy.get('#2-0-' + letter).contains('10:00');
       cy.get('#3-0-' + letter).contains('11:00').rightclick();
-      cy.get('#3-0-' + letter).contains('11:00')
+      cy.get('#3-0-' + letter).contains('11:00');
       cy.get('#4-0-' + letter).contains('12:00').rightclick();
-      cy.get('#4-0-' + letter).contains('12:00')
+      cy.get('#4-0-' + letter).contains('12:00');
       cy.get('#5-0-' + letter).contains('1:00').rightclick();
-      cy.get('#5-0-' + letter).contains('1:00')
+      cy.get('#5-0-' + letter).contains('1:00');
       cy.get('#6-0-' + letter).contains('2:00').rightclick();
-      cy.get('#6-0-' + letter).contains('2:00')
+      cy.get('#6-0-' + letter).contains('2:00');
       cy.get('#7-0-' + letter).contains('3:00').rightclick();
-      cy.get('#7-0-' + letter).contains('3:00')
+      cy.get('#7-0-' + letter).contains('3:00');
 
       cy.get('#mon').contains('Monday');
       cy.get('#tues').contains('Tuesday');

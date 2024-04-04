@@ -1,3 +1,8 @@
+// Resets the DB before each test
+beforeEach(()=>{
+  cy.exec('node electron-db-reset.js');
+})
+
 it('testThatModalWorks', () => {
   // Opens main page - and go to Schedule Courses
   cy.visit('localhost:3000');

@@ -5,6 +5,10 @@
 const urlGET = 'localhost:3000';
 const urlPOST= 'http://localhost:3000/programReport';
 describe('Test Program Report Page', () => {
+  // Resets the DB before each test
+  beforeEach(()=>{
+    cy.exec('node electron-db-reset.js');
+  })
   it('testProgramGET', ()=> {
     /**
          * testNavigationToTheReportProgramPage

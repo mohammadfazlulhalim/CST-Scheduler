@@ -21,7 +21,7 @@ const CourseOffering = sequelize.define('CourseOffering', {
         args: [1, 50],
         msg: 'Name must have 1 to 50 characters.',
       },
-    }
+    },
   },
 
   // Dates - YYYY-MM-DD

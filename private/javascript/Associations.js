@@ -7,6 +7,7 @@ const Classroom = require('../../private/javascript/Classroom');
 const Timeslot = require('../../private/javascript/Timeslot');
 
 addAssociations = () => {
+  Course.belongsTo(Instructor); // Default Instructor
   // Course offering associations:
   Term.hasMany(CourseOffering);
   Course.hasMany(CourseOffering, {foreignKey: {allowNull: false}});
