@@ -130,6 +130,41 @@ describe('story52Tests', async () => {
 
   })
 
+  /**
+   * Deletes all classrooms and then tries to save it
+   */
+  it('testThatTimeslotDoesNotSaveWithoutClassroom', ()=>{
+
+    // deleting all classrooms
+    cy.visit('localhost:3000/Classroom');
+    for (let i=1;i<7;i++) {
+      cy.get('tbody > tr:nth-child(1) > td:nth-child(3) > button:nth-child(2)').click(); // deleting the first one, seven times
+      cy.get('#delClassroom').click();
+    }
+
+    // Visiting the page
+    cy.visit('localhost:3000');
+    cy.contains('Schedule Builder').click();
+    cy.get('#programSelect').select('CST');
+    cy.get('#termSelect').select('2022-2023 - Term 3');
+    cy.get('#groupSelect').select('4');
+    cy.get('#modalSubmit').click();
+
+    // trying to save
+    cy.get('#classroomSelectA > option:nth-child(2)').should('not.exist');
+
+
+    cy.get('#Hardware-A').click();
+    cy.wait(50);
+
+    // Saving Hardware in first spot
+    cy.get(cornerIDs[0]).click();
+    cy.wait(50);
+
+    // checking that it has class empty - no room selected, does not save
+    cy.get(cornerIDs[0]).should('have.class', 'empty');
+  })
+
 
   /**
    * Test for alternate instructor and classroom
