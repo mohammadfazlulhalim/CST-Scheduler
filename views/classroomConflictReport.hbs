@@ -58,9 +58,9 @@
 
     {{#each timeslotsReturned}}
         {{#if this}}
-        <table id="tblRoom{{../realClassroom.roomNumber}}Term{{../realTerm.termNumber}}Day{{lookup ../daysFullySpelled @index}}" 
+        <table id="tblRoom{{../realClassroom.roomNumber}}Term{{../realTerm.termNumber}}Day{{lookup ../daysFullySpelled @index}}"
             class="table table-striped">
-            <tr> 
+            <tr>
                 {{#each ../headerArray as |headerItem|}}
                     <th>{{headerItem.header}} </th>
                 {{/each}}
@@ -73,7 +73,7 @@
                 <td>{{lookup ../../daysFullySpelled this.day}}</td>
                 <td>{{this.startTime}}</td>
                 <td>{{this.endTime}}</td>
-                <td>{{this.Instructor.firstName}} {{this.Instructor.lastName}}</td>
+                <td>{{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}{{#if alternativeInstructor.lastName}}/{{this.alternativeInstructor.firstName}} {{this.alternativeInstructor.lastName}}{{/if}}</td>
                 <td>{{this.Program.programName}}</td>
             </tr>
             {{/each}}

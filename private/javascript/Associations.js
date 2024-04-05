@@ -29,7 +29,8 @@ addAssociations = () => {
 
   Timeslot.belongsTo(Term);
   Timeslot.belongsTo(CourseOffering);
-  Timeslot.belongsTo(Instructor);
+  Timeslot.belongsTo(Instructor, {foreignKey: {name: 'primaryInstructor'}});
+  Timeslot.belongsTo(Instructor, {foreignKey: {name: 'alternativeInstructor'}});
   Timeslot.belongsTo(Program);
   Timeslot.belongsTo(Classroom);
 };

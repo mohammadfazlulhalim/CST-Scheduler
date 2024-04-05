@@ -7,18 +7,14 @@ const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
 const defineDB = require('../fixtures/createTables.fix');
 const Instructor = require('../private/javascript/Instructor');
+const Classroom = require('../private/javascript/Classroom');
+const getSortedTerm = require('./termRouter').readAllTerms;
+// const Course = require('../private/javascript/Course');
 
 router.get('/', async (req, res, next) => {
 
-  terms = await Term.findAll({order: [['startDate', 'DESC'],['termNumber', 'ASC']]});
+  terms = await getSortedTerm();
   programs = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
-
-
-  // formatting the time
-  for (let i = 0; i < terms.length; i++) {
-    const splitDate = terms[i].startDate.split('-');
-    terms[i].title = splitDate[0] + '-' + terms[i].termNumber;
-  }
 
   res.render('schedule', {
     getrequest: true, terms, programs,
@@ -62,6 +58,7 @@ router.post('/', async (req, res, next) => {
     try {
       // fetch all timeslots that match filters
       timeslotArray = await Timeslot.findAll({
+        include: [Classroom],
         where: {
           group: GROUP_LETTERS[i], ProgramId: req.body.program, TermId: req.body.term,
         },
@@ -76,10 +73,16 @@ router.post('/', async (req, res, next) => {
       // getting each course offering for this group
       for (let k = 0; k < groupArray[i].COArray.length; k++) {
         const COObj = groupArray[i].COArray[k];
-          const insObj = await Instructor.findByPk(COObj.primaryInstructor);
-          COObj.insFirst = insObj.firstName;
-          COObj.insLast = insObj.lastName;
-          COObj.dName = COObj.name + '-' + COObj.group;
+        const insObj = await Instructor.findByPk(COObj.primaryInstructor);
+        COObj.insFirst = insObj.firstName;
+        COObj.insLast = insObj.lastName;
+        COObj.dName = COObj.name + '-' + COObj.group;
+        // If the alternative instructor exists
+        if (COObj.alternativeInstructor !== null) {
+          const altInsObj = await Instructor.findByPk(COObj.alternativeInstructor);;
+          COObj.altInsFirst = altInsObj.firstName;
+          COObj.altInsLast = altInsObj.lastName;
+        }
       }
     } catch (error) {
 
@@ -91,21 +94,41 @@ router.post('/', async (req, res, next) => {
       // const formattedTSlot = await formatCellInfo(tSlot);
       coObj = await tSlot.getCourseOffering();
       prObj = await tSlot.getProgram();
-      insObj = await tSlot.getInstructor();
+
+      // Loading the primary instructor information to display
+      try {
+        insObj = await Instructor.findByPk(tSlot.primaryInstructor);
+        tSlot.insLast = insObj.lastName;
+      } catch (e) {
+        console.log('No Primary');
+      }
+
+      // Loading the alternative instructor information, to display name
+      try {
+        altInsObj = await Instructor.findByPk(tSlot.alternativeInstructor);
+        tSlot.altInsLast = altInsObj.lastName;
+      } catch (e) {
+        console.log('No alternative instructor');
+      }
+
+      // Checking if classroom is null, because then it was probably deleted
+      if (tSlot.ClassroomId === null) {
+        tSlot.Classroom = {roomNumber: "Deleted"};
+      }
+
       cObj = await coObj.getCourse();
 
       tSlot.program = prObj.programAbbreviation;
-      tSlot.insLast = insObj.lastName;
 
       tSlot.course = cObj.courseCode;
       tSlot.co = coObj.id;
 
       // Check if timeslotMatrix and the corresponding indices are defined
       if (
-          groupArray[i].timeslotMatrix &&
-          TIMES.indexOf(tSlot.startTime) !== -1 &&
-          groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)] &&
-          groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day]
+        groupArray[i].timeslotMatrix &&
+        TIMES.indexOf(tSlot.startTime) !== -1 &&
+        groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)] &&
+        groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day]
       ) {
         // Update properties only if the necessary objects and indices exist
         groupArray[i].timeslotMatrix[TIMES.indexOf(tSlot.startTime)][tSlot.day].empty = '';
@@ -120,9 +143,11 @@ router.post('/', async (req, res, next) => {
     groupLetters[i] = GROUP_LETTERS[i];
   }
 
+  const classroomList = await Classroom.findAll({order: [['roomNumber', 'ASC']]});
+
 
   res.render('schedule', {
-    groups: groupLetters, groupArray, DAYS, TIMES,
+    groups: groupLetters, groupArray, DAYS, TIMES, classroomList,
   });
 });
 
@@ -133,14 +158,17 @@ router.put('/', async (req, res, next) => {
   const cellID = req.body.idCell.split('-');
   const CO = await CourseOffering.findByPk(req.body.CO);
 
+  console.log('Classroom to save: ' + req.body.ClassroomId);
+
   const newtSlot = {
     startDate: CO.startDate,
     endDate: CO.endDate,
     CourseOfferingId: CO.id,
-    InstructorId: CO.primaryInstructor,
-    ClassroomId: 1,
+    primaryInstructor: CO.primaryInstructor,
+    alternativeInstructor: CO.alternativeInstructor,
     TermId: CO.TermId,
     ProgramId: CO.ProgramId,
+    ClassroomId: req.body.ClassroomId,
     startTime: TIMES[parseInt(cellID[0])],
     endTime: TIMES[parseInt(cellID[0]) + 1], // Corrected
     day: cellID[1],
@@ -151,17 +179,24 @@ router.put('/', async (req, res, next) => {
 
   coObj = await retTSlot.getCourseOffering();
   prObj = await retTSlot.getProgram();
-  insObj = await retTSlot.getInstructor();
+  insObj = await Instructor.findByPk(retTSlot.primaryInstructor);
+
   cObj = await coObj.getCourse();
 
   const xtraInfo = {};
 
+  if (retTSlot.alternativeInstructor != null) {
+    altInsObj = await Instructor.findByPk(retTSlot.alternativeInstructor);
+    xtraInfo.altInsLast = altInsObj.lastName;
+  }
+
   xtraInfo.program = prObj.programAbbreviation;
   xtraInfo.insLast = insObj.lastName;
 
+
   xtraInfo.course = cObj.courseCode;
   xtraInfo.co = coObj;
-
+  xtraInfo.room = (await retTSlot.getClassroom()).roomNumber;
 
   res.status(200).json({retTSlot, xtraInfo});
 });

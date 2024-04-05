@@ -9,12 +9,13 @@ describe('Test Editing the Schedule', () => {
   beforeEach(()=>{
     cy.exec('node electron-db-reset.js');
   })
+
   it('Test1', ()=> {
   // Goes to the page and loads test schedule
     cy.visit('localhost:3000');
     cy.contains('Schedule Builder').click();
     cy.get('#programSelect').select('CST');
-    cy.get('#termSelect').select('2023-3');
+    cy.get('#termSelect').select('2022-2023 - Term 3');
     cy.get('#groupSelect').select('4');
     cy.get('#modalSubmit').click();
 
@@ -103,7 +104,7 @@ describe('Test Editing the Schedule', () => {
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
           cy.get('#'+t+'-'+d+'-'+letter).click();
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', 'CSTCOHS190Benson');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', 'COHS190Benson / LahodaRoom: 239A');
         }
       }
 
@@ -113,7 +114,7 @@ describe('Test Editing the Schedule', () => {
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
           cy.get('#'+t+'-'+d+'-'+letter).click();
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', 'CSTSEM283New');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','SEM283NewRoom: 239A');
         }
       }
 
@@ -134,7 +135,7 @@ describe('Test Editing the Schedule', () => {
       cy.get('#btn' + letter).click();
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', 'CSTSEM283New');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','SEM283NewRoom: 239A');
         }
       }
 
@@ -143,14 +144,14 @@ describe('Test Editing the Schedule', () => {
 
       cy.contains('Schedule Builder').click();
       cy.get('#programSelect').select('CST');
-      cy.get('#termSelect').select('2023-3');
+      cy.get('#termSelect').select('2022-2023 - Term 3');
       cy.get('#groupSelect').select('4');
       cy.get('#modalSubmit').click();
 
       cy.get('#btn' + letter).click();
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', '\n                                            CST\n                                            SEM283\n                                            New\n                                        ' );
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','\n                                        \n                                            SEM283\n                                            New\n\n                                                Room: 239A\n                                        \n\n                                    ');
         }
       }
 

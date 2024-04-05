@@ -303,7 +303,7 @@ describe('Test Program Report Page', () => {
         //create timeslot
         cy.contains('Schedule Builder').click();
         cy.get('#programSelect').select('CST');
-        cy.get('#termSelect').select('2023-1');
+        cy.get('#termSelect').select('1');
         cy.get('#groupSelect').select('4');
         cy.get('#modalSubmit').click();
         cy.get('#Systems\\ Administration\\ 2-A').click();
@@ -404,7 +404,7 @@ describe('Test Program Report Page', () => {
         //create timeslot
         cy.contains('Schedule Builder').click();
         cy.get('#programSelect').select('CST');
-        cy.get('#termSelect').select('2023-1');
+        cy.get('#termSelect').select('1');
         cy.get('#groupSelect').select('4');
         cy.get('#modalSubmit').click();
         cy.get('#Mathematics\\ of\\ Computation-A').click();

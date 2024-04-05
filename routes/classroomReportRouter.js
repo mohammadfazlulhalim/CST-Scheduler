@@ -12,6 +12,7 @@ const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
 const hours12 = globalConsts.timeColumn8amTo3pmDisplayArray;
 const weekdaysAllFullySpelled = globalConsts.weekdaysFullySpelled;
 const getSortedTerm = require('./termRouter').readAllTerms
+const Instructor = require('../private/javascript/Instructor');
 
 router.get('/', async (req, res, next) => {
   const newTermList = await getSortedTerm();
@@ -134,7 +135,7 @@ async function generateScheduleTable(TimeSlots, TIMES) {
 
   for (const ts of TimeSlots) {
     const currentCourseOffering = await ts.getCourseOffering();
-    const currentInstructorOffering = await ts.getInstructor();
+    const currentInstructorOffering = await Instructor.findByPk(ts.primaryInstructor);
     const currentCourse= await currentCourseOffering.getCourse();
     try {
       scheduleArray[TIMES.indexOf(ts.startTime)][ts.day - 1] =
