@@ -1,10 +1,28 @@
 describe('story52Tests', async () => {
+  // List of all instructors, sorted by last name
+  const INSTRUCTORLIST =
+    [
+      'Bryce Barrie',
+      'Ernesto Basoalto',
+      'Ben Benson',
+      'Rick Caron',
+      'Micheal Grzesina',
+      'firstName Holtslan',
+      'Coralee Kaban',
+      'Wade Lahoda',
+      'Ron New',
+      'Donovan Onishenko',
+      'Jason Schmidt',
+    ];
 
-  // Resets the DB before each test
-  beforeEach(()=>{
+  // Resets the DB before each test, and then using the UI creates fixtures needed for test
+  // So it creates a new term, creates 8 course offerings, and then schedules those course
+  // offerings so that it can be tested, but is not permanent data in our DB, so that it does
+  // not break other tests
+  beforeEach(() => {
     cy.exec('node electron-db-reset.js');
 
-    // setup the fixtures needed for these tests - first create a term to use
+    // set up the fixtures needed for these tests - first create a term to use
     cy.visit('localhost:3000/term');
     cy.contains('Add New Term').click();
 
@@ -20,6 +38,7 @@ describe('story52Tests', async () => {
 
     // have 8 COs available, with 2 Courses and 4 groups that are hardcoded,
     // so need to modify as needed with instructors/programs
+
     // Hardware A - Bryce, CST - Using Bryce for ATP #1
     cy.get('#1coPrimaryInstructor').select('Bryce Barrie', {force: true});
     cy.get('#1coSecondaryInstructor').select('', {force: true});
@@ -29,13 +48,13 @@ describe('story52Tests', async () => {
     // Hardware B - Ben/Ron, CST - Using Ron for ATP #3
     cy.get('#3coPrimaryInstructor').select('Ben Benson', {force: true});
     cy.get('#3coSecondaryInstructor').select('Ron New', {force: true});
-    // Seminar B - Ben, CST - Using Ben for ATP $5
+    // Seminar B - Ben, CST - Using Ben for ATP #5
     cy.get('#4coPrimaryInstructor').select('Ben Benson', {force: true});
     cy.get('#4coSecondaryInstructor').select('', {force: true});
-    // Hardware C - Coralee, CST
+    // Hardware C - Coralee, CST - Using Coralee for ATP #4
     cy.get('#5coPrimaryInstructor').select('Coralee Kaban', {force: true});
     cy.get('#5coSecondaryInstructor').select('', {force: true});
-    // Seminar C - Wade ,CNT
+    // Seminar C - Wade ,CNT - Using Wade for ATP #6
     cy.get('#6coPrimaryInstructor').select('Wade Lahoda', {force: true});
     cy.get('#6coSecondaryInstructor').select('', {force: true});
     cy.get('#6coProgram').select('CNT', {force: true});
@@ -56,7 +75,7 @@ describe('story52Tests', async () => {
     cy.get('#groupSelect').select('4');
     cy.get('#modalSubmit').click();
 
-    //ATP #1 Total Bryce hours: 3
+    // ATP #1 Total Bryce hours: 3
     cy.get('#Hardware-A').click();
     cy.wait(25);
     cy.get('#0-1-A').click();
@@ -66,7 +85,7 @@ describe('story52Tests', async () => {
     cy.get('#0-5-A').click();
     cy.wait(25);
 
-    //ATP #2 Total Ernesto hours: 2
+    // ATP #2 Total Ernesto hours: 2
     cy.get('#Seminar-A').click();
     cy.wait(25);
     cy.get('#3-1-A').click();
@@ -74,7 +93,7 @@ describe('story52Tests', async () => {
     cy.get('#3-3-A').click();
     cy.wait(25);
 
-    //ATP #3 Total Ron hours: 4
+    // ATP #3 Total Ron hours: 4
     cy.get('#btnB').click();
     cy.wait(25);
     cy.get('#Hardware-B').click();
@@ -94,7 +113,7 @@ describe('story52Tests', async () => {
     cy.get('#5-5-B').click();
     cy.wait(25);
 
-    //ATP #4 Total Coralee Hours: 2
+    // ATP #4 Total Coralee Hours: 2
     cy.get('#btnC').click();
     cy.wait(25);
     cy.get('#Hardware-C').click();
@@ -148,13 +167,30 @@ describe('story52Tests', async () => {
     cy.wait(25);
     cy.get('#2-5-C').click();
     cy.wait(25);
-
   });
 
 
-  it('testThatInstructorHoursAreCalculated', () =>{
+  it('testThatInstructorHoursAreCalculated', () => {
     cy.visit('localhost:3000');
-    cy.contains('Schedule Builder');
-  });
+    cy.contains('Reports').click();
+    cy.contains('Instructor Hours Report').click();
 
+    // Need to enter the modal
+    cy.get('#termSelect').select('2023-2024 Term 3');
+    cy.wait('20');
+
+    // Arrays with each number representing an instructor's hours, sorted by last name
+    const expectedPrimaryHours = [3, 0, 5, 0, 0, 0, 2, 11, 2, 0, 0];
+    const expectedAlternativeHours = [0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0];
+    const expectedTotalHours = [3, 2, 5, 0, 0, 0, 2, 11, 4, 0, 0];
+
+    // Looping through each row in the table, and checking that the hours are what is expected
+    for (let i = 0; i < INSTRUCTORLIST.length; i++) {
+      const nChild = i + 1;
+      cy.get('tbody > tr:nth-child(' + nChild + ') >td:nth-child(1)').contains(INSTRUCTORLIST[i]);
+      cy.get('tbody > tr:nth-child(' + nChild + ') >td:nth-child(2)').contains(expectedPrimaryHours[i]);
+      cy.get('tbody > tr:nth-child(' + nChild + ') >td:nth-child(3)').contains(expectedAlternativeHours[i]);
+      cy.get('tbody > tr:nth-child(' + nChild + ') >td:nth-child(4)').contains(expectedTotalHours[i]);
+    };
+  });
 });
