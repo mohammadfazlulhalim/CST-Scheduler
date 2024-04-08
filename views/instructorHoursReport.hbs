@@ -1,0 +1,33 @@
+<!--Modal for selecting term-->
+<div class="modal fade" id="programReportModal" tabindex="-1" aria-labelledby="programReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="programReportModalLabel">Create a Program Report For: </h5>
+                <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
+            <div class="modal-body">
+                <!--                form begins here-->
+                <form method="POST" action="/programReport">
+                    <small class="text-info"> <b>Please select program, term, and a group.</b></small>
+                    <!-- Select box for term -->
+                    <div class="form-group">
+                        <label for="selectTermReport" class="form-label mt-4">Terms</label>
+                        <select name="selectTermReport" class="form-select" id="selectTerm" required>
+                            <option value="" disabled selected>Select Term</option>
+                            {{#each termList}}
+                                <option value="{{this.id}}">{{this.calendarYear}} - Term: {{this.termNumber}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                        <button id="submitBtn"
+                                type="submit" class="btn btn-outline-success" >Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
