@@ -43,7 +43,8 @@
                                             {{#if timeSlot}}
                                                 <td>{{../../../program}}
                                                     <br>{{course.courseCode}}{{courseOffering.group}}
-                                                    <br>{{instructor.lastName}}
+                                                    <br>{{instructor.lastName}}{{#if altInstructor}}/{{altInstructor.lastName}}
+                                                    {{/if}}
                                                     <br>{{classroom.roomNumber}}
                                                 </td>
                                             {{else}}

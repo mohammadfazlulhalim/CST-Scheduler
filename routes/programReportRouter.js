@@ -74,10 +74,6 @@ router.get('/', async function (req, res, next) {
     });
 });
 
-async function getUniqueDates(programName, termName, group) {
-
-}
-
 /**
  * After the completion of the program report form,
  * this processes the POST request to render the program report
@@ -235,6 +231,7 @@ async function generateSchedule(instRepTimeslots, start, end) {
     let currentClassroom;
     let currentCourse;
     let currentInstructor;
+    let currentAltIns;
 
 
     // import both the 24 hr and 12 hr array to use them for checks and display respectively
@@ -262,6 +259,11 @@ async function generateSchedule(instRepTimeslots, start, end) {
                 currentCourse = await currentCourseOffering.getCourse();
                 currentInstructor = await Instructor.findByPk(timeslot.primaryInstructor);
                 currentClassroom = await timeslot.getClassroom();
+                //get alt instructor if it exists
+                if(timeslot.alternativeInstructor)
+                {
+                    currentAltIns = await Instructor.findByPk(timeslot.alternativeInstructor);
+                }
             } catch (e) {
                 console.error(e);
             }
@@ -272,6 +274,7 @@ async function generateSchedule(instRepTimeslots, start, end) {
                 classRoom: currentClassroom,
                 course: currentCourse,
                 instructor: currentInstructor,
+                altInstructor: currentAltIns,
                 classroom: currentClassroom,
             };
         }

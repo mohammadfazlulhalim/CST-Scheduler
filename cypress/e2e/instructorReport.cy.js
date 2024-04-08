@@ -79,9 +79,9 @@ describe('Test Instructor Report Page', () => {
     // Check for oen of bens scheduled classes in the cell
     cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', 'CST 1');
 
-    cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', 'MATH282B');
+    cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', 'COOS293B');
 
-    cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', '239B');
+    cy.get('.table-bordered tbody tr:nth-child(1) td:nth-child(2)').should('contain', '239A');
 
     // Check the content of the thead
     cy.get('.table-bordered thead tr th').each((header, index) => {
@@ -155,7 +155,7 @@ describe('Test Instructor Report Page', () => {
     cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-09-30');
     // map for valid timeslot locations
     let classesInOrder = [
-      ['MATH282B', '', '', '', ''],
+      ['COOS293B', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
@@ -173,7 +173,7 @@ describe('Test Instructor Report Page', () => {
     cy.get('#2023-10-01').contains('Schedule Range: 2023-10-01 to 2023-12-01');
     // map for valid timeslot locations
     classesInOrder = [
-      ['MATH282B', '', 'COOS293D', '', ''],
+      ['COOS293B', '', 'COOS293D', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
@@ -188,7 +188,7 @@ describe('Test Instructor Report Page', () => {
     // check that there's only 2 splits
     cy.get('#btnRight').click();
     classesInOrder = [
-      ['MATH282B', '', '', '', ''],
+      ['COOS293B', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
@@ -202,7 +202,7 @@ describe('Test Instructor Report Page', () => {
     // check that the left button works
     cy.get('#btnLeft').click();
     classesInOrder = [
-      ['MATH282B', '', 'COOS293D', '', ''],
+      ['COOS293B', '', 'COOS293D', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
@@ -251,7 +251,7 @@ describe('Test Instructor Report Page', () => {
     cy.get('#2023-08-01').contains('Schedule Range: 2023-08-01 to 2023-08-31');
     // map for valid timeslot locations
     let classesInOrder = [
-      ['MATH282B', '', '', '', ''],
+      ['COOS293B', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
@@ -269,7 +269,7 @@ describe('Test Instructor Report Page', () => {
     cy.get('#2023-09-01').contains('Schedule Range: 2023-09-01 to 2023-09-30');
     // map for valid timeslot locations
     classesInOrder = [
-      ['MATH282B', '', '', '', ''],
+      ['COOS293B', '', '', '', ''],
       ['', '', '', '', ''],
       ['', 'MATH282C', '', '', ''],
       ['', '', '', '', ''],
@@ -287,7 +287,7 @@ describe('Test Instructor Report Page', () => {
     cy.get('#2023-10-01').contains('Schedule Range: 2023-10-01 to 2023-10-31');
     // map for valid timeslot locations
     classesInOrder = [
-      ['MATH282B', '', 'COOS293D', '', ''],
+      ['COOS293B', '', 'COOS293D', '', ''],
       ['', '', '', '', ''],
       ['', 'MATH282C', '', '', ''],
       ['', '', '', '', ''],
@@ -305,7 +305,7 @@ describe('Test Instructor Report Page', () => {
     cy.get('#2023-11-01').contains('Schedule Range: 2023-11-01 to 2023-12-01');
     // map for valid timeslot locations
     classesInOrder = [
-      ['MATH282B', '', 'COOS293D', '', ''],
+      ['COOS293B', '', 'COOS293D', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
@@ -320,7 +320,7 @@ describe('Test Instructor Report Page', () => {
     // check that there's only 4 splits
     cy.get('#btnRight').click();
     classesInOrder = [
-      ['MATH282B', '', '', '', ''],
+      ['COOS293B', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
@@ -334,7 +334,7 @@ describe('Test Instructor Report Page', () => {
     // check that the left button works
     cy.get('#btnLeft').click();
     classesInOrder = [
-      ['MATH282B', '', 'COOS293D', '', ''],
+      ['COOS293B', '', 'COOS293D', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
       ['', '', '', '', ''],
