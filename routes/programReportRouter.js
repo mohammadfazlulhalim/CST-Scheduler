@@ -265,7 +265,7 @@ async function generateSchedule(instRepTimeslots, start, end) {
                     currentAltIns = await Instructor.findByPk(timeslot.alternativeInstructor);
                 }
             } catch (e) {
-                console.error(e);
+                console.error("Error: failure in timeslots for schedule generator", e);
             }
             // put the items in the array
             matrixTable[tHour][tDay + 1] = {

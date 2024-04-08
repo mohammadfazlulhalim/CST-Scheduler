@@ -373,7 +373,7 @@ describe('Test Instructor Report Page', () => {
     const classesInOrder = [
       ['', '', '', '', ''],
       ['', '', '', '', ''],
-      ['', '', '', '', 'CDBM280B'],
+      ['', '', 'SEM283A', '', 'CDBM280B'],
       ['', '', 'COOS293B', '', ''],
       ['', '', '', '', ''], // 12:00 slot appears empty
       ['COHS280B', '', '', '', ''],
