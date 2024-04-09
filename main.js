@@ -15,6 +15,7 @@ function main() {
   });
   mainWindow.maximize();
 
+
   mainWindow.loadURL('http://localhost:3000/').catch((err) => {
     console.error('Failed to load URL:', err);
   });

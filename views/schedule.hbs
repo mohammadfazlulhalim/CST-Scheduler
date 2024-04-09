@@ -49,7 +49,7 @@
 
     <div class="container-fluid" {{#if isHidden}}hidden{{/if}}>
         <div class="column">
-            <button class="btn btn-success">A</button>
+            <button class="btn btn-success ">A</button>
             <button class="btn btn-outline-success">B</button>
             <button class="btn btn-outline-success">C</button>
             <button class="btn btn-outline-success">D</button>
@@ -65,7 +65,7 @@
                                 {{#each tableRows}}
                                     <tr>
                                         {{#each this}}
-                                            <td>{{this}}</td>
+                                            <td onclick="onTSClick({{@../../index}}, {{@../index}}, {{@index}})">{{this}}hi</td>
                                         {{/each}}
                                     </tr>
                                 {{/each}}
@@ -75,7 +75,7 @@
                             <h1>Course Offerings</h1>
                             <div class="d-flex flex-column overflow-auto py-2" role="group" aria-label="Course offerings" style="max-height: 800px;">
                                 {{#each COArray}}
-                                    <button value="{{this.id}}" class="btn btn-outline-success mb-2 d-flex flex-column justify-content-center py-3 align-items-center" style="min-height: 100px;">
+                                    <button id={{this.id}} onclick="onCOClick({{this.id}})" class="bottons btn btn-outline-success mb-2 d-flex flex-column justify-content-center py-3 align-items-center" style="min-height: 100px;">
                                         <span class="btn-custom-content text-center h5"><strong>{{this.name}}</strong></span>
                                         <span class="btn-custom-content text-center">Primary Instructor: <strong> {{this.primaryInstructor.lastName}} </strong></span>
                                         <span class="btn-custom-content text-center">{{#if this.alternativeInstructor.lastName}}Alternative Instructor:{{this.alternativeInstructor.lastName}}{{else}}&nbsp;{{/if}}</span>
@@ -94,6 +94,7 @@
 </div>
 <script>
     'use strict';
+    let currentCOID;
 
     let currCO = null;
     let currDOM = null;
@@ -146,7 +147,7 @@
      * onclick handler for course offerings
      * @param idCO
      */
-    function onCOClick(idCO, domObj) {
+    function onCOClick2(idCO, domObj) {
         //retrieving DOM objects by id
         const objCO = document.getElementById(domObj);
         const currObjCO = document.getElementById(currDOM)
@@ -285,6 +286,33 @@
         }
     }
 
+    function onCOClick(COId) {
+        if (currentCOID === COId) {
+            currentCOID = null;
+        }
+        else {
+            currentCOID = COId;
+        }
+        document.getElementById(COId).classList.remove('btn-outline-success');
+        document.getElementById(COId).classList.add('btn-success');
+        // document.querySelector('botton').classList.remove()
+    }
+
+    //todo need 2 know courseofferingid, starttime, day
+    async function onTSClick(tableIndex, rowIndex, itemIndex) {
+        const response = await fetch('/schedule', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                dayOfWeek: itemIndex,
+                timeIndex: rowIndex,
+                COId:currentCOID,
+                group: tableIndex
+            }),
+        });
+    }
 </script>
 
 <style>
