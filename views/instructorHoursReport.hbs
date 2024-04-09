@@ -1,3 +1,4 @@
+<div class="container p-2">
 <!--Modal for selecting term-->
 <div class="modal fade" id="instructorHoursModal" tabindex="-1" aria-labelledby="programReportModalLabel"
      aria-hidden="true">
@@ -11,14 +12,14 @@
             <div class="modal-body">
                 <!--                form begins here-->
                 <form method="POST" action="/instructorHours">
-                    <small class="text-info"> <b>Please select program, term, and a group.</b></small>
+                    <small class="text-info"> <b>Please select term.</b></small>
                     <!-- Select box for term -->
                     <div class="form-group">
                         <label for="termSelect" class="form-label mt-4">Terms</label>
                         <select name="termSelect"class="form-select" id="termSelect" required>
                             <option value="" disabled selected>Select Term</option>
                             {{#each termList}}
-                                <option value="{{this.season}}_{{this.calendarYear}}">{{this.season}} {{this.calendarYear}}</option>
+                                <option value="{{this.season}}_{{this.calendarYear}}_{{this.startDate}}_{{this.endDate}}">{{this.season}} {{this.calendarYear}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -35,10 +36,10 @@
         </div>
     </div>
 </div>
-
+<h1>Instructor Hours for {{termSelected.startDate}} - {{termSelected.endDate}}</h1>
 {{#if instructorList}}
-    <table>
-        <thead>
+    <table  class="table table-striped">
+        <thead  class="table-primary">
         <tr>
             <th>Instructor</th>
             <th>Primary Hours</th>
@@ -60,6 +61,7 @@
     </table>
 
 {{/if}}
+</div>
 
 <script>
     window.onload = function() {

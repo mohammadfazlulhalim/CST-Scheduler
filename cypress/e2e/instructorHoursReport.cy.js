@@ -68,6 +68,8 @@ describe('story52Tests', async () => {
     cy.get('#createCO').click();
     cy.wait(100);
 
+    // TODO: Add fixtures for bridging between term 3&6
+
     // Have to then schedule them as needed
     cy.contains('Schedule Builder').click();
     cy.get('#programSelect').select('CST');
@@ -167,6 +169,8 @@ describe('story52Tests', async () => {
     cy.wait(25);
     cy.get('#2-5-C').click();
     cy.wait(25);
+
+    // TODO: Add fixtures for bridging between term 3&6
   });
 
 
@@ -195,5 +199,9 @@ describe('story52Tests', async () => {
       cy.get('tbody > tr:nth-child(' + nChild + ') >td:nth-child(3)').contains(expectedAlternativeHours[i]);
       cy.get('tbody > tr:nth-child(' + nChild + ') >td:nth-child(4)').contains(expectedTotalHours[i]);
     };
+
+    // TODO: Add tests for bridging between term 3&6
+
+    // TODO: Add in test for term startDate and endDate
   });
 });
