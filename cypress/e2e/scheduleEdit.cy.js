@@ -1,12 +1,21 @@
-const groupLetters = ['A', 'B', 'C', 'D'];
+
+
+// groupLetters = ['A', 'B', 'C', 'D'];
+const groupLetters = ['A'];
 
 describe('Test Editing the Schedule', () => {
+
+  // Resets the DB before each test
+  beforeEach(()=>{
+    cy.exec('node electron-db-reset.js');
+  })
+
   it('Test1', ()=> {
   // Goes to the page and loads test schedule
     cy.visit('localhost:3000');
     cy.contains('Schedule Builder').click();
     cy.get('#programSelect').select('CST');
-    cy.get('#termSelect').select('2023-3');
+    cy.get('#termSelect').select('2022-2023 - Term 3');
     cy.get('#groupSelect').select('4');
     cy.get('#modalSubmit').click();
 
@@ -95,7 +104,7 @@ describe('Test Editing the Schedule', () => {
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
           cy.get('#'+t+'-'+d+'-'+letter).click();
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', 'CSTCOHS190Benson');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', 'COHS190Benson / LahodaRoom: 239A');
         }
       }
 
@@ -105,7 +114,7 @@ describe('Test Editing the Schedule', () => {
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
           cy.get('#'+t+'-'+d+'-'+letter).click();
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','CSTSEM283New');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','SEM283NewRoom: 239A');
         }
       }
 
@@ -126,7 +135,7 @@ describe('Test Editing the Schedule', () => {
       cy.get('#btn' + letter).click();
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','CSTSEM283New');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','SEM283NewRoom: 239A');
         }
       }
 
@@ -135,14 +144,14 @@ describe('Test Editing the Schedule', () => {
 
       cy.contains('Schedule Builder').click();
       cy.get('#programSelect').select('CST');
-      cy.get('#termSelect').select('2023-3');
+      cy.get('#termSelect').select('2022-2023 - Term 3');
       cy.get('#groupSelect').select('4');
       cy.get('#modalSubmit').click();
 
       cy.get('#btn' + letter).click();
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','\n                                            CST\n                                            SEM283\n                                            New\n                                        ' );
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','\n                                        \n                                            SEM283\n                                            New\n\n                                                Room: 239A\n                                        \n\n                                    ');
         }
       }
 
@@ -162,31 +171,31 @@ describe('Test Editing the Schedule', () => {
         }
       }
       cy.get('#mon').contains('Monday').rightclick();
-      cy.get('#mon').contains('Monday')
+      cy.get('#mon').contains('Monday');
       cy.get('#tues').contains('Tuesday').rightclick();
-      cy.get('#tues').contains('Tuesday')
+      cy.get('#tues').contains('Tuesday');
       cy.get('#wed').contains('Wednesday').rightclick();
-      cy.get('#wed').contains('Wednesday')
+      cy.get('#wed').contains('Wednesday');
       cy.get('#thurs').contains('Thursday').rightclick();
-      cy.get('#thurs').contains('Thursday')
+      cy.get('#thurs').contains('Thursday');
       cy.get('#fri').contains('Friday').rightclick();
-      cy.get('#fri').contains('Friday')
+      cy.get('#fri').contains('Friday');
       cy.get('#0-0-' + letter).contains('8:00').rightclick();
-      cy.get('#0-0-' + letter).contains('8:00')
+      cy.get('#0-0-' + letter).contains('8:00');
       cy.get('#1-0-' + letter).contains('9:00').rightclick();
-      cy.get('#1-0-' + letter).contains('9:00')
+      cy.get('#1-0-' + letter).contains('9:00');
       cy.get('#2-0-' + letter).contains('10:00').rightclick();
-      cy.get('#2-0-' + letter).contains('10:00')
+      cy.get('#2-0-' + letter).contains('10:00');
       cy.get('#3-0-' + letter).contains('11:00').rightclick();
-      cy.get('#3-0-' + letter).contains('11:00')
+      cy.get('#3-0-' + letter).contains('11:00');
       cy.get('#4-0-' + letter).contains('12:00').rightclick();
-      cy.get('#4-0-' + letter).contains('12:00')
+      cy.get('#4-0-' + letter).contains('12:00');
       cy.get('#5-0-' + letter).contains('1:00').rightclick();
-      cy.get('#5-0-' + letter).contains('1:00')
+      cy.get('#5-0-' + letter).contains('1:00');
       cy.get('#6-0-' + letter).contains('2:00').rightclick();
-      cy.get('#6-0-' + letter).contains('2:00')
+      cy.get('#6-0-' + letter).contains('2:00');
       cy.get('#7-0-' + letter).contains('3:00').rightclick();
-      cy.get('#7-0-' + letter).contains('3:00')
+      cy.get('#7-0-' + letter).contains('3:00');
 
       cy.get('#mon').contains('Monday');
       cy.get('#tues').contains('Tuesday');

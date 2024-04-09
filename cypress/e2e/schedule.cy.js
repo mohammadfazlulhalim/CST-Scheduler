@@ -1,3 +1,8 @@
+// Resets the DB before each test
+beforeEach(()=>{
+  cy.exec('node electron-db-reset.js');
+})
+
 it('testThatModalWorks', () => {
   // Opens main page - and go to Schedule Courses
   cy.visit('localhost:3000');
@@ -18,7 +23,7 @@ it('testThatModalWorks', () => {
 
   // Check that Term field can be entered
   cy.contains('Term');
-  cy.get('#termSelect').select('2024-5');
+  cy.get('#termSelect').select('2023-2024 - Term 5');
 
   // Check that Enter button is disabled
   cy.get('#modalSubmit').should('be.disabled');
@@ -56,17 +61,11 @@ it('testThatModalWorks', () => {
   cy.get('#7-0-A').contains('3:00');
 
   // DONE check group a has specific tiles filled
-  cy.get('#0-1-A').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
-  cy.get('#1-2-A').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
-  cy.get('#2-3-A').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
-  cy.get('#3-4-A').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
-  cy.get('#4-5-A').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
-  // cy.get('#0-1-A').should('have.text', 'CST\nCSEC280\nBenson');
-  // cy.get('#1-2-A').should('have.text', 'CST\nCSEC280\nBenson');
-  // cy.get('#2-3-A').should('have.text', 'CST\nCSEC280\nBenson');
-  // cy.get('#3-4-A').should('have.text', 'CST\nCSEC280\nBenson');
-  // cy.get('#4-5-A').should('have.text', 'CST\nCSEC280\nBenson');
-
+  cy.get('#0-1-A').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#1-2-A').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#2-3-A').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#3-4-A').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#4-5-A').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
 
   // Looping to check that group a is visible and groub is hidden
   for (let t = 0; t < 8; t++) {
@@ -106,17 +105,12 @@ it('testThatModalWorks', () => {
   cy.get('#7-0-B').contains('3:00');
 
   // DONE check group a has specific tiles filled
-  cy.get('#7-1-B').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
-  cy.get('#6-2-B').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
-  cy.get('#5-3-B').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
-  cy.get('#4-4-B').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
-  cy.get('#3-5-B').should('have.text', '\n                                            CST\n                                            CSEC280\n                                            Benson\n                                        ');
-  // cy.get('#7-1-B').should('have.text', 'CST\nCSEC280\nBenson');
-  // cy.get('#6-2-B').should('have.text', 'CST\nCSEC280\nBenson');
-  // cy.get('#5-3-B').should('have.text', 'CST\nCSEC280\nBenson');
-  // cy.get('#4-4-B').should('have.text', 'CST\nCSEC280\nBenson');
-  // cy.get('#3-5-B').should('have.text', 'CST\nCSEC280\nBenson');
 
+  cy.get('#7-1-B').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#6-2-B').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#5-3-B').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#4-4-B').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
+  cy.get('#3-5-B').should('have.text', '\n                                        \n                                            CSEC280\n                                            Benson\n\n                                                Room: 239a\n                                        \n\n                                    ');
 
   // Looping to check that group a is visible and groub is hidden
   for (let t = 0; t < 8; t++) {
@@ -167,13 +161,13 @@ it('testTechDebt', () => {
 
   // Check that Term field can be entered
   cy.contains('Term');
-  let termList = ['2024-5', '2023-1', '2023-4', '2023-3', '2023-6', '2023-2', '2023-5'];
+  let termList = ['2023-2024 - Term 1', '2023-2024 - Term 4', '2023-2024 - Term 5', '2022-2023 - Term 2', '2022-2023 - Term 3', '2022-2023 - Term 5', '2022-2023 - Term 6'];
   for (let i = 0; i < termList.length; i++) {
     let nChild = i + 2;
     cy.get('#termSelect > option:nth-child(' + nChild + ')').should('have.text', termList[i]);
   }
 
-  cy.get('#termSelect').select('2024-5');
+  cy.get('#termSelect').select('2023-2024 - Term 5');
 
   // Check that Enter button is disabled
   cy.get('#modalSubmit').should('be.disabled');

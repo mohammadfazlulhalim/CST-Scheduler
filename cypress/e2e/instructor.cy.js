@@ -44,11 +44,16 @@ describe('Testing Instructor CRUD options', () => {
 
   /* Navigating to our expected page "http://localhost:3000/instructor"*/
 
+  before( ()=>{
+    cy.exec('node electron-db-reset.js');
+  })
+
   beforeEach(()=>{
     cy.visit('http://localhost:3000');
     cy.get(navMenuSelector, {timeout: 10000}).trigger('click');
     cy.get(navMenuItem, {timeout: 10000}).click();
   });
+
 
   /* checking the availability of instructor lists headers*/
   it('testInstructorListsAreShownUnderCertainHeaders  ', () => {
@@ -107,10 +112,14 @@ describe('Testing Instructor CRUD options', () => {
 
   /* Test to  edit instructor Ben Benson's name and confirm the availability of edited instructor inside Instructor Listings*/
   it('testEditInstructorInformation', () => {
+    cy.wait(200);
     cy.get(insListEditButtonOnFirstColumn).click();
+    cy.wait(200);
     cy.get(editModalHeader).should('have.text', 'Edit Existing Instructor');
     cy.get(firstTextBoxOnEditModal).clear();
+    cy.wait(200);
     cy.get(firstTextBoxOnEditModal).type('John');
+    cy.wait(200);
     cy.get(secondTextBoxOnEditModal).clear();
     cy.get(secondTextBoxOnEditModal).type('Doe');
     cy.get(saveButtonOnEditModal).click();

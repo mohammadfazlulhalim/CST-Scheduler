@@ -225,7 +225,7 @@ async function generateSchedule(instRepTimeslots) {
       currentCourseOffering = await timeslot.getCourseOffering();
       currentClassroom = await timeslot.getClassroom();
       currentCourse = await currentCourseOffering.getCourse();
-      currentInstructor = await timeslot.getInstructor();
+      currentInstructor = await Instructor.findByPk(timeslot.primaryInstructor);
       currentClassroom = await timeslot.getClassroom();
     } catch (e) {
       console.error(e);

@@ -4,8 +4,10 @@ const Instructor = require('../private/javascript/Instructor');
 const Term = require('../private/javascript/Term');
 const Timeslot = require('../private/javascript/Timeslot');
 const {sequelize} = require("../dataSource");
-const {QueryTypes} = require("sequelize");
+const {QueryTypes, Op} = require("sequelize");
 const globalConsts = require('../constants').globalConsts;
+const getSortedTerm = require('./termRouter').readAllTerms
+
 
 // global constants here to work with time arrays
 const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
@@ -31,18 +33,9 @@ router.get('/', async function(req, res, next) {
   }
   // try to find all the terms
   try {
-    termList= await Term.findAll({order: ['startDate', 'termNumber'],
-    });
-    // add the year
-    newTermList= termList.map((item)=>{
-      return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
-    });
-    // sort based on the year
-    newTermList.sort((a, b)=>{
-      return b.displayTerm - a.displayTerm;
-    });
+    newTermList= await getSortedTerm();
   } catch (err) {
-    termList = undefined;
+    newTermList = undefined;
   }
 
   res.render('instructorReport', {
@@ -99,7 +92,7 @@ router.post('/', async function(req, res, next) {
   // try to find the time slots based on selections
   try {
     instRepTimeslots = await Timeslot.findAll( {
-      where: {InstructorId: instructorID, TermId: termID},
+      where: {[Op.or]:{primaryInstructor: instructorID, alternativeInstructor: instructorID}, TermId: termID},
       order: [['startTime', 'ASC'], ['day', 'ASC']],
     });
   } catch (e) {
@@ -148,17 +141,9 @@ router.post('/', async function(req, res, next) {
 
   // find all the terms
   try {
-    termList= await Term.findAll({order: ['startDate', 'termNumber'],
-    });
-    newTermList= termList.map((item)=>{
-      return {id: item.id, displayTerm: item.startDate.substring(0, 4)+' - '+item.termNumber};
-    });
-
-    newTermList.sort((a, b)=>{
-      return b.displayTerm - a.displayTerm;
-    });
+    newTermList= await getSortedTerm();
   } catch (err) {
-    termList = undefined;
+    newTermList = undefined;
   }
 
 
@@ -249,11 +234,11 @@ async function generateSchedule(instRepTimeslots, start, end) {
 async function getUniqueDates(instructor, term) {
   //get all startdates and enddates from timeslots
   const sqlStart = `SELECT DISTINCT startDate AS date FROM timeslots 
-                         where InstructorId = ${instructor.id} and TermId = ${term.id}
+                         where (primaryInstructor = ${instructor.id} OR alternativeInstructor = ${instructor.id}) and TermId = ${term.id}
                         and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'` ;
 
   const sqlEnd = `SELECT DISTINCT endDate AS date FROM timeslots 
-                        where InstructorId = ${instructor.id} and TermId = ${term.id}
+                        where (primaryInstructor = ${instructor.id} OR alternativeInstructor = ${instructor.id}) and TermId = ${term.id}
                         and startDate >= '${term.startDate}' AND endDate <= '${term.endDate}'`;
 
   let arStart, arEnd;

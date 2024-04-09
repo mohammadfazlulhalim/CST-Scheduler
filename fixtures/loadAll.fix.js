@@ -13,14 +13,17 @@ const fillTimeslot = require('./AssociatedTimeSlot.fix');
 // eslint-disable-next-line require-jsdoc
 async function loadEverything() {
   await createAllTables(true);
+
   await fillTermTable();
   await fillInstructorTable();
   await fillClassroomTable();
-  await fillCourseTable();
   await fillProgramTable();
+  await fillCourseTable();
   await fillCourseOfferingTable();
   await fillTimeslotTable();
   await fillTimeslot();
 }
 
 loadEverything();
+
+module.exports= {loadEverything};

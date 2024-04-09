@@ -1,0 +1,137 @@
+<h1 id="pageTitleClassroomConflicts">Classroom Conflicts</h1>
+
+<!--find classroom conflict modal   -->
+<div id="classroomConflictModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Find Classroom conflicts </h5>
+                <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="#" class="mb-3">
+                    <div class="mb-3">
+                        <label for="termSelect" class="form-label">Term:</label>
+                        <select id="termSelect" name="term" class="form-select">
+                            <option value="" selected disabled>Select Term</option>
+                            {{#each terms}}
+                                <option value="{{this.id}}">{{this.termNumber}} {{this.startDate}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="classroomSelect" class="form-label">Classroom:</label>
+                        <select id="classroomSelect" name="classroom" class="form-select">
+                            <option value="" selected disabled>Select Classroom</option>
+                            {{#each classrooms}}
+                                <option value="{{this.id}}">{{this.roomNumber}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button id="modalSubmit"
+                                type="submit" class="btn btn-outline-success" disabled>Generate Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- Table for conflicting timeslots --}}
+{{#if timeslotsReturned}}
+<div>
+        <div class="row">
+            <h2 id="selectedClassroom"><i>Classroom:</i> {{realClassroom.roomNumber}}</h2>
+        </div>
+        <div class="row">
+            <h2 id="selectedTerm"><i>Term:</i> {{realTerm.termNumber}} {{realTerm.startDate}}</h2>
+        </div>
+</div>
+
+<div class="p-4">
+
+    {{#each timeslotsReturned}}
+        {{#if this}}
+        <table id="tblRoom{{../realClassroom.roomNumber}}Term{{../realTerm.termNumber}}Day{{lookup ../daysFullySpelled @index}}"
+            class="table table-striped">
+            <tr>
+                {{#each ../headerArray as |headerItem|}}
+                    <th>{{headerItem.header}} </th>
+                {{/each}}
+            </tr>
+
+            {{#each this}}
+            <tr>
+                <td>{{this.Term.termNumber}} {{this.Term.startDate}}</td>
+                <td>{{this.CourseOffering.Course.courseCode}}</td>
+                <td>{{lookup ../../daysFullySpelled this.day}}</td>
+                <td>{{this.startTime}}</td>
+                <td>{{this.endTime}}</td>
+                <td>{{this.primaryInstructor.firstName}} {{this.primaryInstructor.lastName}}{{#if alternativeInstructor.lastName}}/{{this.alternativeInstructor.firstName}} {{this.alternativeInstructor.lastName}}{{/if}}</td>
+                <td>{{this.Program.programName}}</td>
+            </tr>
+            {{/each}}
+        </table>
+    {{/if}}
+
+    {{/each}}
+</div>
+{{else}}
+    <h1 id="nothingToShow">Nothing to display at the moment</h1>
+{{/if}}
+{{!-- TODO determine if it's better to move button up --}}
+<button id="newReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#classroomConflictModal">
+    New Report</button>
+
+
+<script>
+
+    'use strict';
+
+    window.onload = function() {
+        const modal = new bootstrap.Modal(document.getElementById('classroomConflictModal'));
+
+
+        let termSelect = document.getElementById('termSelect');
+        let classroomSelect = document.getElementById('classroomSelect');
+
+        let submitBtn = document.getElementById('modalSubmit');
+        let closeBtn = document.getElementById('modalCloseBtn');
+        let xBtn =document.getElementById('xBtn');
+        let newReportBtn=document.getElementById('newReportBtn');
+
+
+        {{#if showModal}}
+            // check if the "close" button was clicked
+            closeBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+            // check if the 'x' button was clicked
+            xBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+            modal.show();
+
+        {{/if}}
+
+        // check if the "new report" button was clicked
+        newReportBtn.addEventListener("click", function () {
+            modal.show();
+        });
+        // Add event listeners to the selects
+        termSelect.addEventListener('change', handleSelectChange);
+        classroomSelect.addEventListener('change', handleSelectChange);
+
+        function handleSelectChange() {
+            // Enable or disable the submit button based on whether both selects have values
+            submitBtn.disabled = termSelect.value === '' || classroomSelect.value === '';
+        }
+
+    };
+</script>

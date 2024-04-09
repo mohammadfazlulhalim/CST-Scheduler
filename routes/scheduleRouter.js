@@ -191,12 +191,6 @@ async function getCOs(split, term, program, groupLetter) {
   return courseOfferings;
 }
 
-/**
- * This will create an a tablerow[] in each of the schedules, which will
- * be 8 long, and each tableRow[N] has a tableItem[] which is 6 long and
- * contains a program, course, and name. The name will instead be a time
- * if it is the first index
- */
 
 
 module.exports = router;
