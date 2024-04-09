@@ -1,3 +1,45 @@
+const conflicts = [
+  {
+    course: 'COHS 190 - PrimaryInstructor',
+    group: 'Group A',
+    program: 'Program CST',
+    time: 'Monday 8:00 - 9:00',
+    date: 'September 1 - December 15',
+  },
+  {
+    course: 'COHS 190 - PrimaryInstructor',
+    group: 'Group B',
+    program: 'Program CST',
+    time: 'Monday 8:00 - 9:00',
+    date: 'September 1 - December 15',
+  },
+  {
+    course: 'MATH 282 - Primary Instructor',
+    group: 'Group A',
+    program: 'Program CST',
+    time: 'Tuesday 8:00 - 9:00',
+    date: 'September 1 - December 15',
+  },
+  // Add more conflicts as needed
+];
+const secondaryConflicts = [
+  {
+    course: 'MATH 282 - Secondary Instructor',
+    group: 'Group A',
+    program: 'Program CST',
+    time: 'Tuesday 3:00 - 4:00',
+    date: 'September 1 - December 15',
+  },
+  {
+    course: 'MATH 282 - Secondary Instructor',
+    group: 'Group B',
+    program: 'Program CST',
+    time: 'Tuesday 3:00 - 4:00',
+    date: 'September 1 - December 15',
+  },
+];
+
+
 beforeEach(()=>{
   cy.exec('node electron-db-reset.js');
 });
@@ -34,17 +76,11 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#termSelect').select('2022-2023 - Term 3');
   cy.get('#groupSelect').select('4');
   cy.get('#modalSubmit').click();
-
   cy.get('#Hardware-A').click();
   cy.get('#0-1-A').click();
-
-
   cy.get('#Test\\ Course-A').click();
   cy.get('#0-2-A').click();
-
-
   cy.get('#btnB').click();
-
   cy.get('#Hardware-B').click();
   cy.get('#0-1-B').click();
   cy.get('#Test\\ Course-B').click();
@@ -55,15 +91,15 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.visit('localhost:3000');
   cy.contains('Conflicts').click();
   cy.contains('Instructor Conflicts').click();
-  // Tests that the term dropdown contains all Terms in the proper format
 
+  // Tests that the term dropdown contains all Terms in the proper format
   const termList = ['2023-2024 - Term 1', '2023-2024 - Term 4', '2023-2024 - Term 5', '2022-2023 - Term 2', '2022-2023 - Term 3', '2022-2023 - Term 5', '2022-2023 - Term 6'];
   termList.forEach((term) => {
     cy.get('#cTerm').should('contain', term);
   });
 
 
-  // Test that there are no conflicts and peroper messages are displayed.
+  // Test that there are no conflicts and proper messages are displayed.
   cy.get('#cTerm').select(2);
   cy.get('#generate').click();
   cy.get('#noConflictMessage').should('be.visible');
@@ -73,30 +109,27 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#generate').click();
   cy.get('#noConflictMessage').should('be.hidden');
 
-  const ConflictList1 = ['COHS 190 - PrimaryInstructor', 'Group A', 'Program CST', 'Tuesday 8:00 - 9:00', 'Jan 1 - May 30'];
-  const ConflictList2 = ['COHS 190 - PrimaryInstructor', 'Group B', 'Program CST', 'Tuesday 8:00 - 9:00', 'Jan 1 - May 30'];
+  // Loop through conflicts array and perform Cypress checks
+  conflicts.forEach((conflict, index) => {
+    const instructorId = index < 2 ? 1 : 11; // Determine which set of instructors to use
+    checkConflict(conflict, instructorId, index % 2);
+  });
 
-  const ConflictList3 = ['COHS 190 - PrimaryInstructor', 'Group A', 'Program CST', 'Tuesday 8:00 - 9:00', 'Jan 1 - May 30'];
-  const ConflictList4 = ['COHS 190 - PrimaryInstructor', 'Group A', 'Program CST', 'Tuesday 8:00 - 9:00', 'Jan 1 - May 30'];
-
-  const ConflictList5 = ['COHS 190 - PrimaryInstructor', 'Group A', 'Program CST', 'Monday 3:00 - 4:00', 'Jan 1 - May 30'];
-  const ConflictList6 = ['COHS 190 - PrimaryInstructor', 'Group A', 'Program CST', 'Monday 3:00 - 4:00', 'Jan 1 - May 30'];
-
-  cy.get('#instructor1course1').contains(ConflictList1[0]);
-  cy.get('#instructor1group1').contains(ConflictList1[1]);
-  cy.get('#instructor1program1').contains(ConflictList1[2]);
-  cy.get('#instructor1time1').contains(ConflictList1[3]);
-  cy.get('#instructor1day1').contains(ConflictList1[4]);
-
-  cy.get('#instructor1course2').contains(ConflictList2[0]);
-  cy.get('#instructor1group2').contains(ConflictList2[1]);
-  cy.get('#instructor1program2').contains(ConflictList2[2]);
-  cy.get('#instructor1time2').contains(ConflictList2[3]);
-  cy.get('#instructor1day2').contains(ConflictList2[4]);
-
-
-  // Test that Secondary Instructors Show Up
-
-
-  // Test that only the conflicts for the instructor and Term are displayed properly
+  // Additional test for secondary instructors
+  // Loop through secondary conflicts array and perform Cypress checks
+  secondaryConflicts.forEach((conflict, index) => {
+    const instructorId = 8; // Use secondary instructors
+    checkConflict(conflict, instructorId, index);
+  });
 });
+
+
+// Define a function to reduce repetition in Cypress commands
+// eslint-disable-next-line require-jsdoc
+function checkConflict(conflict, instructorId, index) {
+  cy.get(`#instructor${instructorId}course${index + 1}`).contains(conflict.course);
+  cy.get(`#instructor${instructorId}group${index + 1}`).contains(conflict.group);
+  cy.get(`#instructor${instructorId}program${index + 1}`).contains(conflict.program);
+  cy.get(`#instructor${instructorId}time${index + 1}`).contains(conflict.time);
+  cy.get(`#instructor${instructorId}day${index + 1}`).contains(conflict.date);
+}
