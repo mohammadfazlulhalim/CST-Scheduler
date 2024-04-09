@@ -62,8 +62,8 @@ describe('story52Tests', async () => {
     cy.get('#7coPrimaryInstructor').select('Coralee Kaban', {force: true});
     cy.get('#7coSecondaryInstructor').select('', {force: true});
     // Seminar D - Wade, CST - Using Wade for ATP #6
-    cy.get('#6coPrimaryInstructor').select('Wade Lahoda', {force: true});
-    cy.get('#6coSecondaryInstructor').select('', {force: true});
+    cy.get('#8coPrimaryInstructor').select('Wade Lahoda', {force: true});
+    cy.get('#8coSecondaryInstructor').select('', {force: true});
 
     cy.get('#createCO').click();
     cy.wait(100);
@@ -176,8 +176,11 @@ describe('story52Tests', async () => {
     cy.contains('Instructor Hours Report').click();
 
     // Need to enter the modal
-    cy.get('#termSelect').select('2023-2024 Term 3');
-    cy.wait('20');
+    cy.get('#termSelect').select('Spring 2023-2024');
+    cy.wait(20);
+
+    cy.get('#submitBtn').click();
+    cy.wait(20);
 
     // Arrays with each number representing an instructor's hours, sorted by last name
     const expectedPrimaryHours = [3, 0, 5, 0, 0, 0, 2, 11, 2, 0, 0];
