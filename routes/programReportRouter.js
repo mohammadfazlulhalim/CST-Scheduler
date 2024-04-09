@@ -36,6 +36,7 @@ router.get('/', async function (req, res, next) {
     try {
         programList = await Program.findAll({order: ['programName']});
     } catch (err) {
+        console.error("Error: couldnt get program list", e);
         programList = undefined;
     }
 
@@ -53,6 +54,7 @@ router.get('/', async function (req, res, next) {
             return b.displayTerm - a.displayTerm;
         });
     } catch (err) {
+        console.error("Error: couldnt get term list", err);
         termList = undefined;
     }
 
@@ -64,6 +66,7 @@ router.get('/', async function (req, res, next) {
                 [Sequelize.fn('DISTINCT', Sequelize.col('group')), 'group']],
         });
     } catch (err) {
+        console.error("Error: couldnt get course offering list", err);
         groupList = undefined;
     }
     res.render('programReport', {
@@ -109,6 +112,7 @@ router.post('/', async function (req, res, next) {
     try {
         programList = await Program.findAll({order: ['programName']});
     } catch (err) {
+        console.error("Error: couldnt get program list", err);
         programList = undefined;
     }
 
@@ -126,18 +130,20 @@ router.post('/', async function (req, res, next) {
             return b.displayTerm - a.displayTerm;
         });
     } catch (err) {
+        //make termlist null
+        console.error("Error: couldnt get term list", err);
         termList = undefined;
     }
 
 
     // Find the groups to list in the select box
     try {
-        // groupList= await CourseOffering.findAll({order: ['group']});
         groupList = await CourseOffering.findAll({
             attributes: [
                 [Sequelize.fn('DISTINCT', Sequelize.col('group')), 'group']], order: ['group'],
         });
     } catch (err) {
+        console.error("Error: couldnt get course offering list", err);
         groupList = undefined;
     }
 
@@ -147,6 +153,7 @@ router.post('/', async function (req, res, next) {
         // append to program name to be displayed in cell
         program = '' + programName.programAbbreviation;
     } catch (e) {
+        console.error("Error: couldnt get program name", err);
         programName = undefined;
     }
 
@@ -156,6 +163,7 @@ router.post('/', async function (req, res, next) {
         // append to program name to be displayed in cell
         program += '' + termName.year;
     } catch (e) {
+        console.error("Error: couldnt get term by search", err);
         termName = undefined;
     }
 
@@ -169,6 +177,7 @@ router.post('/', async function (req, res, next) {
             order: [['startTime', 'ASC'], ['day', 'ASC']],
         });
     } catch (e) {
+        console.error("Error: couldnt get timeslot list", err);
         instRepTimeslots = undefined;
     }
 
@@ -201,10 +210,6 @@ router.post('/', async function (req, res, next) {
         }
     }
 
-    // // generates the schedule
-    // // eslint-disable-next-line prefer-const
-    // let matrixTable = await generateSchedule(instRepTimeslots);
-
     res.render('programReport', {
         programList,
         newTermList,
@@ -221,9 +226,11 @@ router.post('/', async function (req, res, next) {
 });
 
 /**
- * Helper function for the POST.
- * Help to gather timeslots for instructor
- * //
+ * Helper function for the POST to generate a schedule.
+ * @param instRepTimeslots
+ * @param start
+ * @param end
+ * @returns {Promise<*[]>}
  */
 async function generateSchedule(instRepTimeslots, start, end) {
     const matrixTable = [];
