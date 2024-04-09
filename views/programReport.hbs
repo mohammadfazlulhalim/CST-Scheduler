@@ -1,64 +1,98 @@
-{{#if matrixTable}}
+{{#if reportArray}}
     <div>
         <div class="row">
             <div class="col-9">
                 <h2><i>Program Report For:</i>
-                    <span id="nameDisplayer">{{programName.programAbbreviation}} Term {{termName.termNumber}}{{group}}</span>
-                </h2>
+                    <span id="nameDisplayer">{{programName.programAbbreviation}}
+                        Term {{termName.termNumber}}{{group}}</span></h2>
+                <p>Overall Range: {{termName.startDate}} to {{termName.endDate}}</p>
             </div>
             <div class="col-3">
                 <small>Report Generated: <span id="dateGenDisplayer">{{dateGen}}</span></small>
             </div>
         </div>
     </div>
-<table class="table table-bordered table-hover border-dark">
-    <thead>
 
-    <!--        Header Row-->
-    <tr>
-        <!--            6 columns designated    -->
-        <th class="text-center" scope="col">Time</th>
-        <th class="text-center" scope="col">Monday</th>
-        <th class="text-center" scope="col">Tuesday</th>
-        <th class="text-center" scope="col">Wednesday</th>
-        <th class="text-center" scope="col">Thursday</th>
-        <th class="text-center" scope="col">Friday</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- 2D array looping through to display program report -->
-    {{#each matrixTable}}
-        <tr>
-            <!-- innerloop starts here-->
-            {{#each this}}
-                {{#if timeSlot}}
-                    <td>{{../../program}}<br>{{course.courseCode}}{{courseOffering.group}}<br>{{instructor.lastName}}
-                        <br>{{classroom.roomNumber}}
-                    </td>
-                {{else}}
-                    {{#if timeRow}}
-                        <td class="text-center">{{timeRow}}</td>
-                    {{else}}
-                        <td></td>
-                    {{/if}}
-                {{/if}}
-            {{/each}}
-        </tr>
-    {{/each}}
-    </tbody>
-</table>
+    <div class="row justify-content-center">
+        <div id="scheduleCarousel" class="carousel slide col-9" data-bs-interval="false">
+            <div class="carousel-inner">
+                {{#each reportArray}} <!---each carosel item -->
+                    <div class="carousel-item {{#if @first}}active{{/if}} ">
+                        <p id="{{this.startDate}}">Schedule Range: {{this.startDate}} to {{this.endDate}}</p>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover border-dark">
+                                <thead>
+
+                                <!--        Header Row-->
+                                <tr>
+                                    <!--            6 columns designated    -->
+                                    <th class="text-center" scope="col">Time</th>
+                                    <th class="text-center" scope="col">Monday</th>
+                                    <th class="text-center" scope="col">Tuesday</th>
+                                    <th class="text-center" scope="col">Wednesday</th>
+                                    <th class="text-center" scope="col">Thursday</th>
+                                    <th class="text-center" scope="col">Friday</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- 2D array looping through to display program report -->
+                                {{#each matrixTable}}
+                                    <tr>
+                                        <!-- innerloop starts here-->
+                                        {{#each this}}
+                                            {{#if timeSlot}}
+                                                <td>{{../../../program}}
+                                                    <br>{{course.courseCode}}{{courseOffering.group}}
+                                                    <br>{{instructor.lastName}}{{#if altInstructor}}/{{altInstructor.lastName}}
+                                                    {{/if}}
+                                                    <br>{{classroom.roomNumber}}
+                                                </td>
+                                            {{else}}
+                                                {{#if timeRow}}
+                                                    <td class="text-center">{{timeRow}}</td>
+                                                {{else}}
+                                                    <td></td>
+                                                {{/if}}
+                                            {{/if}}
+                                        {{/each}}
+                                    </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+        <!--if there are splits-->
+        {{#if isSplit}}
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev custom-carousel-control" id="btnLeft" type="button"
+                    data-bs-target="#scheduleCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon custom-carousel-control-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next custom-carousel-control" id="btnRight" type="button"
+                    data-bs-target="#scheduleCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon custom-carousel-control-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        {{/if}}
+    </div>
 {{else}}
-<h1 id="nothingToShow">Nothing to display at the moment</h1>
+    <h1 id="nothingToShow">Nothing to display at the moment</h1>
 {{/if}}
 
 <!-- modal -->
 <!-- Vertically centered scrollable modal -->
-<div class="modal fade" id="programReportModal" tabindex="-1" aria-labelledby="programReportModalLabel" aria-hidden="true">
+<div class="modal fade" id="programReportModal" tabindex="-1" aria-labelledby="programReportModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="programReportModalLabel">Create a Program Report For: </h5>
-                <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
             </div>
             <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
             <div class="modal-body">
@@ -96,9 +130,12 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger"
+                                data-bs-dismiss="modal">Close
+                        </button>
                         <button id="submitBtn"
-                                type="submit" class="btn btn-outline-success" >Save changes</button>
+                                type="submit" class="btn btn-outline-success">Save changes
+                        </button>
                     </div>
                 </form>
                 <!--                Form ends here-->
@@ -110,9 +147,12 @@
 
 <!-- New report and print buttons -->
 <div class="btnPairsCustom">
-    <button id="newProgramBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#instructorReportModal">
-        New Report</button>
+    <button id="newProgramBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal"
+            data-bs-target="#programReportModal">
+        New Report
+    </button>
     <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
+</div>
 </div>
 
 <script defer>
@@ -130,8 +170,8 @@
     xBtn = document.getElementById("xBtn");
 
     // On arrival the modal will open
-    window.onload = function(){
-        submitBtn= document.getElementById("submitBtn");
+    window.onload = function () {
+        submitBtn = document.getElementById("submitBtn");
         selectedProgram = document.getElementById("selectProgramReport");
         selectedTerm = document.getElementById("selectTermReport");
         selectedGroup = document.getElementById("selectGroupReport");
@@ -168,17 +208,17 @@
     /**
      * This function will enable and disable the modal submit button
      */
-    function checkFormSelections(){
+    function checkFormSelections() {
         // If not enough selections disable the button
-        if(selectedProgram.value !== ""  && selectedTerm.value !== "" && selectedGroup.value !== "")
-        {
+        if (selectedProgram.value !== "" && selectedTerm.value !== "" && selectedGroup.value !== "") {
             submitBtn.disabled = false;
         }
         // Else enable it
-        else{
+        else {
             submitBtn.disabled = true;
         }
     }
+
     function printReport() {
         const printWindow = window.open('', '_blank');
 
@@ -220,3 +260,21 @@
     });
 
 </script>
+
+<style>
+    .custom-carousel-control {
+        color: black;
+    }
+
+    .carousel-control-prev.custom-carousel-control {
+        left: -50px;
+    }
+
+    .carousel-control-next.custom-carousel-control {
+        right: -50px;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        background-color: black;
+    }
+</style>
