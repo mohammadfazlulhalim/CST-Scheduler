@@ -188,6 +188,12 @@ async function getCOs(split, term, program, groupLetter) {
       TermId: term.id,
     },
   });
+
+  for (const e of courseOfferings) {
+    e.primaryInstructor = await Instructor.findByPk(e.primaryInstructor);
+    e.alternativeInstructor = await Instructor.findByPk(e.alternativeInstructor);
+
+  }
   return courseOfferings;
 }
 

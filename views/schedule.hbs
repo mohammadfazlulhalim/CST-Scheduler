@@ -61,7 +61,7 @@
                     {{#each schedule.split}}
                         <p>Table Range: {{startDate}} to {{endDate}}</p>
                         <div class="col-md-8">
-                            <table class="table table-bordered table-hover border-dark">
+                            <table class="table table-bordered table-hover border-dark scrollable-container">
                                 {{#each tableRows}}
                                     <tr>
                                         {{#each this}}
@@ -73,12 +73,12 @@
                         </div>
                         <div class="col-md-4">
                             <h1>Course Offerings</h1>
-                            <div class="d-flex flex-column" role="group" aria-label="Course offerings">
+                            <div class="d-flex flex-column overflow-auto py-2" role="group" aria-label="Course offerings" style="max-height: 800px;">
                                 {{#each COArray}}
-                                    <button class="btn mb-2 btn-outline-success">
-                                        <span>{{this.name}}</span>
-                                        <span>{{this.primaryInstructor.lastName}}</span>
-                                        <span>{{this.CourseId.courseName}}</span>
+                                    <button value="{{this.id}}" class="btn btn-outline-success mb-2 d-flex flex-column justify-content-center py-3 align-items-center" style="min-height: 100px;">
+                                        <span class="btn-custom-content text-center h5"><strong>{{this.name}}</strong></span>
+                                        <span class="btn-custom-content text-center">Primary Instructor: <strong> {{this.primaryInstructor.lastName}} </strong></span>
+                                        <span class="btn-custom-content text-center">{{#if this.alternativeInstructor.lastName}}Alternative Instructor:{{this.alternativeInstructor.lastName}}{{else}}&nbsp;{{/if}}</span>
                                     </button>
                                 {{/each}}
                             </div>
@@ -286,3 +286,14 @@
     }
 
 </script>
+
+<style>
+
+.scrollable-container {
+max-height: 400px; /* Adjust based on your needs */
+overflow-y: auto;
+}
+
+
+
+</style>
