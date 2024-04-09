@@ -1,66 +1,69 @@
 <div class="container p-2">
-<!--Modal for selecting term-->
-<div class="modal fade" id="instructorHoursModal" tabindex="-1" aria-labelledby="programReportModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="programReportModalLabel">Create a Program Report For: </h5>
-                <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
-            <div class="modal-body">
-                <!--                form begins here-->
-                <form method="POST" action="/instructorHours">
-                    <small class="text-info"> <b>Please select term.</b></small>
-                    <!-- Select box for term -->
-                    <div class="form-group">
-                        <label for="termSelect" class="form-label mt-4">Terms</label>
-                        <select name="termSelect"class="form-select" id="termSelect" required>
-                            <option value="" disabled selected>Select Term</option>
-                            {{#each termList}}
-                                <option value="{{this.season}}_{{this.calendarYear}}_{{this.startDate}}_{{this.endDate}}">{{this.season}} {{this.calendarYear}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
-                            Close
-                        </button>
-                        <button id="submitBtn"
-                                type="submit" class="btn btn-outline-success">Save changes
-                        </button>
-                    </div>
-                </form>
+    <!--Modal for selecting term-->
+    <div class="modal fade" id="instructorHoursModal" tabindex="-1" aria-labelledby="programReportModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="programReportModalLabel">Create a Program Report For: </h5>
+                    <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
+                <div class="modal-body">
+                    <!--                form begins here-->
+                    <form method="POST" action="/instructorHours">
+                        <small class="text-info"> <b>Please select term.</b></small>
+                        <!-- Select box for term -->
+                        <div class="form-group">
+                            <label for="termSelect" class="form-label mt-4">Terms</label>
+                            <select name="termSelect" class="form-select" id="termSelect" required>
+                                <option value="" disabled selected>Select Term</option>
+                                {{#each termList}}
+                                    <option value="{{this.season}}_{{this.calendarYear}}_{{this.startDate}}_{{this.endDate}}">{{this.season}} {{this.calendarYear}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="modalCloseBtn" type="button" class="btn btn-outline-danger"
+                                    data-bs-dismiss="modal">
+                                Close
+                            </button>
+                            <button id="submitBtn"
+                                    type="submit" class="btn btn-outline-success">Save changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<h1>Instructor Hours for {{termSelected.startDate}} - {{termSelected.endDate}}</h1>
-{{#if instructorList}}
-    <table  class="table table-striped">
-        <thead  class="table-primary">
-        <tr>
-            <th>Instructor</th>
-            <th>Primary Hours</th>
-            <th>Alternative Hours</th>
-            <th>Total Hours</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each instructorList}}
+    <h1>Instructor Hours for {{termSelected.season}} {{termSelected.calendarYear}}</h1>
+    <h3>Date Range: {{termSelected.startDate}} - {{termSelected.endDate}}</h3>
+    {{#if instructorList}}
+        <table class="table table-striped">
+            <thead class="table-primary">
             <tr>
-                <td>{{this.firstName}} {{this.lastName}}</td>
-                <td>{{this.primaryHours}}</td>
-                <td>{{this.alternativeHours}}</td>
-                <td>{{this.totalHours}}</td>
+                <th>Instructor</th>
+                <th>Primary Hours</th>
+                <th>Alternative Hours</th>
+                <th>Total Hours</th>
             </tr>
+            </thead>
+            <tbody>
+            {{#each instructorList}}
+                <tr>
+                    <td>{{this.firstName}} {{this.lastName}}</td>
+                    <td>{{this.primaryHours}}</td>
+                    <td>{{this.alternativeHours}}</td>
+                    <td>{{this.totalHours}}</td>
+                </tr>
 
-        {{/each}}
-        </tbody>
-    </table>
+            {{/each}}
+            </tbody>
+        </table>
 
-{{/if}}
+    {{/if}}
 </div>
 
 <script>

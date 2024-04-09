@@ -28,7 +28,7 @@ describe('story52Tests', async () => {
 
     cy.get('#cTermNumber').type('3');
     cy.wait(150);
-    cy.get('#cStartDate').type('2024-05-03');
+    cy.get('#cStartDate').type('2024-05-02');
     cy.wait(150);
     cy.get('#cEndDate').type('2024-06-02');
     cy.wait(150);
@@ -68,7 +68,40 @@ describe('story52Tests', async () => {
     cy.get('#createCO').click();
     cy.wait(100);
 
-    // TODO: Add fixtures for bridging between term 3&6
+    // Creating a term6 for testing
+    cy.contains('Add New Term').click();
+    cy.get('#cTermNumber').type('6', {force: true});
+    cy.wait(150);
+    cy.get('#cStartDate').type('2024-05-02', {force: true});
+    cy.wait(150);
+    cy.get('#cEndDate').type('2024-06-02', {force: true});
+    cy.wait(150);
+    cy.get('#createTerm').click();
+
+    // Manually creating course offerings for term 3 & 6 with Donovan primary, Rick alternative
+    cy.visit('localhost:3000/courseOffering');
+    cy.wait(20);
+    cy.get('#openCreateModal').click();
+    cy.wait(50);
+    cy.get('#cCourse').type('TCOM291');
+    cy.get('#cName').clear({force: true}).type('Communications')
+    cy.get('#cTerm').select('2023-2024 - Term 3');
+    cy.get('#cProgram').select('CST');
+    cy.get('#cprimaryInstructor').select('Onishenko')
+    cy.get('#calternativeInstructor').select('Caron')
+    cy.get('#createCO').click();
+    cy.wait(50);
+
+    cy.get('#openCreateModal').click();
+    cy.wait(50);
+    cy.get('#cCourse').type('COOS291');
+    cy.get('#cName').clear({force: true}).type('Linux')
+    cy.get('#cTerm').select('2023-2024 - Term 6', {force: true});
+    cy.get('#cProgram').select('CST', {force: true});
+    cy.get('#calternativeInstructor').select('Caron', {force: true})
+    cy.get('#createCO').click();
+    cy.wait(50);
+
 
     // Have to then schedule them as needed
     cy.contains('Schedule Builder').click();
@@ -94,6 +127,17 @@ describe('story52Tests', async () => {
     cy.wait(25);
     cy.get('#3-3-A').click();
     cy.wait(25);
+
+    // ATP #9 Onishenko Year 1 Hours: 2
+    cy.get('#Communications-A').click();
+    cy.wait(25);
+    // Tuesday at 9am and 11am
+    cy.get('#2-2-A').click();
+    cy.wait(25);
+    cy.get('#4-2-A').click();
+    cy.wait(25);
+
+
 
     // ATP #3 Total Ron hours: 4
     cy.get('#btnB').click();
@@ -170,7 +214,23 @@ describe('story52Tests', async () => {
     cy.get('#2-5-C').click();
     cy.wait(25);
 
-    // TODO: Add fixtures for bridging between term 3&6
+    // ATP #9 - navigating to other term
+    cy.contains('Schedule Builder').click();
+    cy.get('#programSelect').select('CST');
+    cy.get('#termSelect').select('2023-2024 - Term 6');
+    cy.get('#groupSelect').select('1');
+    cy.get('#modalSubmit').click();
+    cy.wait(25);
+
+    // ATP #9 Onishenko Year 2 Hours: 2, total 4
+    cy.get('#Linux-A').click();
+    cy.wait(25);
+    // Thursday at 9am and 11am
+    cy.get('#2-4-A').click();
+    cy.wait(25);
+    cy.get('#4-4-A').click();
+    cy.wait(25);
+
   });
 
 
@@ -187,9 +247,9 @@ describe('story52Tests', async () => {
     cy.wait(20);
 
     // Arrays with each number representing an instructor's hours, sorted by last name
-    const expectedPrimaryHours = [3, 0, 5, 0, 0, 0, 2, 11, 2, 0, 0];
-    const expectedAlternativeHours = [0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0];
-    const expectedTotalHours = [3, 2, 5, 0, 0, 0, 2, 11, 4, 0, 0];
+    const expectedPrimaryHours = [3, 0, 5, 0, 0, 0, 2, 11, 2, 4, 0];
+    const expectedAlternativeHours = [0, 2, 0, 4, 0, 0, 0, 0, 2, 0, 0];
+    const expectedTotalHours = [3, 2, 5, 4, 0, 0, 2, 11, 4, 4, 0];
 
     // Looping through each row in the table, and checking that the hours are what is expected
     for (let i = 0; i < INSTRUCTORLIST.length; i++) {
@@ -199,9 +259,6 @@ describe('story52Tests', async () => {
       cy.get('tbody > tr:nth-child(' + nChild + ') >td:nth-child(3)').contains(expectedAlternativeHours[i]);
       cy.get('tbody > tr:nth-child(' + nChild + ') >td:nth-child(4)').contains(expectedTotalHours[i]);
     };
-
-    // TODO: Add tests for bridging between term 3&6
-
     // TODO: Add in test for term startDate and endDate
   });
 });
