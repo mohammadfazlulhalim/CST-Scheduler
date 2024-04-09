@@ -103,7 +103,7 @@ describe('template spec', () => {
       expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
     });
     cy.get('#btnGenerateSchedule').should('be.disabled'); // Check that the button is still disabled
-    cy.get('#termSelect').select('2022-2023 - Term 5');// Select term 5
+    cy.get('#termSelect').select('2023-2024 - Term 1');// Select term 5
     cy.get('#btnGenerateSchedule').should('be.enabled'); // Check that the button is now enabled
     cy.get('#btnGenerateSchedule').click(); // Click generate schedule
 

@@ -3,10 +3,10 @@
     <div>
         <div class="row">
             <div class="col-9">
-                <h2><i>Instructor Report For:</i> {{#if instructorName}}
-                    <span id="nameDisplayer">{{instructorName.lastName}}, {{instructorName.firstName}}</span></h2>
+            <h2><i>Instructor Report For:</i> {{#if instructorName}}
+                <span id="nameDisplayer">{{instructorName.lastName}}, {{instructorName.firstName}}</span></h2>
                 <p>Overall Range: {{termName.startDate}} to {{termName.endDate}}</p>
-                {{/if}}
+            {{/if}}
             </div>
             <div class="col-3">
                 <small>Report Generated: <span id="dateGenDisplayer">{{dateGen}}</span></small>
@@ -17,56 +17,58 @@
     <div id="scheduleCarousel" class="carousel slide" data-bs-interval="false">
         <div class="carousel-inner">
             {{#each reportArray}}
-            <div class="carousel-item {{#if @first}}active{{/if}}">
-                <p id="{{this.startDate}}">Schedule Range: {{this.startDate}} to {{this.endDate}}</p>
-                <div class="table-responsive">
-                <table class="table table-bordered table-hover border-dark">
-                    <thead>
+                <div class="carousel-item {{#if @first}}active{{/if}}">
+                    <p id="{{this.startDate}}">Schedule Range: {{this.startDate}} to {{this.endDate}}</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover border-dark">
+                            <thead>
 
-                    <!--        Header Row-->
-                    <tr>
-                        <!--            6 columns designated    -->
-                        <th class="text-center" scope="col">Time</th>
-                        <th class="text-center" scope="col">Monday</th>
-                        <th class="text-center" scope="col">Tuesday</th>
-                        <th class="text-center" scope="col">Wednesday</th>
-                        <th class="text-center" scope="col">Thursday</th>
-                        <th class="text-center" scope="col">Friday</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- 2D array looping through to display instuctor report -->
-                    {{#each matrixTable}}
-                        <tr>
-                            <!-- innerloop starts here-->
-                            {{#each this}}
-                                {{#if timeSlot}}
-                                    <td>{{../../../program}}<br>{{course.courseCode}}{{courseOffering.group}}
-                                        <br>{{classRoom.roomNumber}}</td>
-                                {{else}}
-                                    {{#if timeRow}}
-                                        <td class="text-center">{{timeRow}}</td>
-                                    {{else}}
-                                        <td></td>
-                                    {{/if}}
-                                {{/if}}
+                            <!--        Header Row-->
+                            <tr>
+                                <!--            6 columns designated    -->
+                                <th class="text-center" scope="col">Time</th>
+                                <th class="text-center" scope="col">Monday</th>
+                                <th class="text-center" scope="col">Tuesday</th>
+                                <th class="text-center" scope="col">Wednesday</th>
+                                <th class="text-center" scope="col">Thursday</th>
+                                <th class="text-center" scope="col">Friday</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- 2D array looping through to display instuctor report -->
+                            {{#each matrixTable}}
+                                <tr>
+                                    <!-- innerloop starts here-->
+                                    {{#each this}}
+                                        {{#if timeSlot}}
+                                            <td>{{../../../program}}<br>{{course.courseCode}}{{courseOffering.group}}
+                                                <br>{{classRoom.roomNumber}}</td>
+                                        {{else}}
+                                            {{#if timeRow}}
+                                                <td class="text-center">{{timeRow}}</td>
+                                            {{else}}
+                                                <td></td>
+                                            {{/if}}
+                                        {{/if}}
+                                    {{/each}}
+                                </tr>
                             {{/each}}
-                        </tr>
-                    {{/each}}
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
             {{/each}}
         </div>
         <!--if there are splits-->
         {{#if isSplit}}
             <!-- Carousel Controls -->
-            <button class="carousel-control-prev custom-carousel-control" id="btnLeft" type="button" data-bs-target="#scheduleCarousel" data-bs-slide="prev">
+            <button class="carousel-control-prev custom-carousel-control" id="btnLeft" type="button"
+                    data-bs-target="#scheduleCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon custom-carousel-control-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next custom-carousel-control" id="btnRight" type="button" data-bs-target="#scheduleCarousel" data-bs-slide="next">
+            <button class="carousel-control-next custom-carousel-control" id="btnRight" type="button"
+                    data-bs-target="#scheduleCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon custom-carousel-control-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
