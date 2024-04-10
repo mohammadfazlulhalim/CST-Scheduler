@@ -65,7 +65,12 @@
                                 {{#each tableRows}}
                                     <tr>
                                         {{#each this}}
-                                            <td onclick="onTSClick({{@../../index}}, {{@../index}}, {{@index}})">{{this}}</td>
+                                            <td onclick="onTSClick({{@../../index}}, {{@../index}}, {{@index}})">
+                                                {{this.dateTime}}
+                                                <p>{{this.course.courseName}}</p>
+                                                <p>{{this.primaryInstructor.lastName}}{{#if this.alternativeInstructor.lastName}}{{this.alternativeInstructor.lastName}}{{/if}}</p>
+                                                <p>{{this.classroom.roomNumber}}</p>
+                                            </td>
                                         {{/each}}
                                     </tr>
                                 {{/each}}

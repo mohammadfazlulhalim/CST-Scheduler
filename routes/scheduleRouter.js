@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const CourseOffering = require('../private/javascript/CourseOffering');
+const Course = require('../private/javascript/Course');
+const Classroom = require('../private/javascript/Classroom');
 const Timeslot = require('../private/javascript/Timeslot');
 const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
@@ -133,6 +135,16 @@ async function getSchedules(term, program, groupLetter, schedule) {
   const timeSlots = await Timeslot.findAll({
     where: {group: groupLetter, ProgramId: program.id, TermId: term.id},
   });
+  for (const e of timeSlots) {
+    e.primaryInstructor = await Instructor.findByPk(e.primaryInstructor);
+    e.alternativeInstructor = await Instructor.findByPk(e.alternativeInstructor);
+    e.courseOffering = await CourseOffering.findByPk(e.CourseOfferingId);
+    e.classroom = await Classroom.findByPk(e.ClassroomId);
+     e.course = await e.courseOffering.getCourse();
+    console.log(e.course);
+
+  }
+
   const uniqueDates = [term.startDate, term.endDate];
   timeSlots.forEach((CO) => {
     if (!uniqueDates.includes(CO.startDate)) {
@@ -158,16 +170,20 @@ async function getSchedules(term, program, groupLetter, schedule) {
  */
 async function getTableRows(split, COArray, term, program, groupLetter, timeSlots) {
   const topRow = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  const times12hr = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
-  const times24hr = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
+  const times24hr = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+  const times12hr = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
   const rowsToReturn = [];
   rowsToReturn[0] = topRow;
 
-  for (let i=1; i<9; i++) {
+  for (let i=0; i<9; i++) {
     rowsToReturn[i] = [];
     for (let j=0; j<6; j++) {
+      if (i===0) {
+        rowsToReturn[i][j] = {dateTime: topRow[j]};
+        continue;
+      }
       if (j===0) {
-        rowsToReturn[i][j] = times24hr[i-1];
+        rowsToReturn[i][j] = {dateTime: times12hr[i-1]};
         continue;
       }
       rowsToReturn[i][j] = timeSlots.find((ts) => ts.day === topRow[j] && ts.startTime === times24hr[i-1]);
@@ -198,7 +214,6 @@ async function getCOs(split, term, program, groupLetter) {
   for (const e of courseOfferings) {
     e.primaryInstructor = await Instructor.findByPk(e.primaryInstructor);
     e.alternativeInstructor = await Instructor.findByPk(e.alternativeInstructor);
-
   }
   return courseOfferings;
 }
