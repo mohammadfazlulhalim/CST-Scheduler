@@ -96,9 +96,10 @@ describe('story52Tests', async () => {
     cy.wait(50);
     cy.get('#cCourse').type('COOS291');
     cy.get('#cName').clear({force: true}).type('Linux')
-    cy.get('#cTerm').select('2023-2024 - Term 6', {force: true});
-    cy.get('#cProgram').select('CST', {force: true});
-    cy.get('#calternativeInstructor').select('Caron', {force: true})
+    cy.get('#cTerm').select('2023-2024 - Term 6');
+    cy.get('#cProgram').select('CST');
+    cy.get('#cprimaryInstructor').select('Onishenko')
+    cy.get('#calternativeInstructor').select('Caron')
     cy.get('#createCO').click();
     cy.wait(50);
 
@@ -231,6 +232,40 @@ describe('story52Tests', async () => {
     cy.get('#4-4-A').click();
     cy.wait(25);
 
+    // ATP #11 Creating three terms, one with earliest start date, one with latest end date
+    // and having one be term 3, and one term 6
+    // and one so that it is not just retreiving the last option
+    cy.visit('localhost:3000/term');
+    cy.contains('Add New Term').click();
+
+    cy.get('#cTermNumber').type('3');
+    cy.wait(50);
+    cy.get('#cStartDate').type('2024-05-01');
+    cy.wait(50);
+    cy.get('#cEndDate').type('2024-05-27');
+    cy.wait(50);
+    cy.get('#createTerm').click();
+    cy.wait(50);
+
+    cy.contains('Add New Term').click();
+
+    cy.get('#cTermNumber').type('6');
+    cy.wait(50);
+    cy.get('#cStartDate').type('2024-05-15');
+    cy.wait(50);
+    cy.get('#cEndDate').type('2024-06-21');
+    cy.wait(50);
+    cy.get('#createTerm').click();
+    cy.wait(50);
+
+    cy.contains('Add New Term').click();
+    cy.get('#cTermNumber').type('3');
+    cy.wait(50);
+    cy.get('#cStartDate').type('2024-05-12');
+    cy.wait(50);
+    cy.get('#cEndDate').type('2024-05-29');
+    cy.wait(50);
+    cy.get('#createTerm').click();
   });
 
 
@@ -246,6 +281,11 @@ describe('story52Tests', async () => {
     cy.get('#submitBtn').click();
     cy.wait(20);
 
+    // TODO: Check sort order for terms
+
+    // Checking the start and end dates
+    cy.get('#dateRange').contains('Date Range: 2024-05-01 - 2024-06-21');
+
     // Arrays with each number representing an instructor's hours, sorted by last name
     const expectedPrimaryHours = [3, 0, 5, 0, 0, 0, 2, 11, 2, 4, 0];
     const expectedAlternativeHours = [0, 2, 0, 4, 0, 0, 0, 0, 2, 0, 0];
@@ -259,6 +299,5 @@ describe('story52Tests', async () => {
       cy.get('tbody > tr:nth-child(' + nChild + ') >td:nth-child(3)').contains(expectedAlternativeHours[i]);
       cy.get('tbody > tr:nth-child(' + nChild + ') >td:nth-child(4)').contains(expectedTotalHours[i]);
     };
-    // TODO: Add in test for term startDate and endDate
   });
 });
