@@ -257,10 +257,10 @@ async function getUniqueDates(instructor, term) {
     console.log(e);
   }
 
-  //need to set date back one day, then stringify
+  //need to set date forward one day if not the last date, then stringify
   arEnd.forEach((date) => {
     if(date.date !== term.endDate){
-      let tempDate = new Date(date.date); //change to date to set back a day
+      let tempDate = new Date(date.date); //change to date to forward a day
       tempDate.setDate(tempDate.getDate() + 1);
       date.date = tempDate.toISOString().substring(0, 10);
     }
