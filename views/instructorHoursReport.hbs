@@ -25,7 +25,7 @@
                             </select>
                         </div>
                         <div class="modal-footer">
-                            <button id="modalCloseBtn" type="button" class="btn btn-outline-danger"
+                            <button id="closeBtn" type="button" class="btn btn-outline-danger"
                                     data-bs-dismiss="modal">
                                 Close
                             </button>
@@ -38,9 +38,8 @@
             </div>
         </div>
     </div>
-    <h1>Instructor Hours for {{termSelected.season}} {{termSelected.calendarYear}}</h1>
-    <h3 id="dateRange">Date Range: {{termSelected.startDate}} - {{termSelected.endDate}}</h3>
-    {{#if instructorList}}
+    <h1>Instructor Hours for {{#if termSelected}}{{termSelected.season}} {{termSelected.calendarYear}}{{else}}No Term Selected{{/if}}</h1>
+    <h3 id="dateRange">Date Range: {{#if termSelected}}{{termSelected.startDate}} - {{termSelected.endDate}}{{else}}No Term Selected{{/if}}</h3>
         <table class="table table-striped">
             <thead class="table-primary">
             <tr>
@@ -63,7 +62,6 @@
             </tbody>
         </table>
 
-    {{/if}}
 </div>
 
 <script>
@@ -71,6 +69,16 @@
         const modal = new bootstrap.Modal(document.getElementById('instructorHoursModal'));
         {{#if modal}}
             modal.show();
+
+            // check if the "close" button was clicked
+            closeBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+
+            // check if the 'x' button was clicked
+            xBtn.addEventListener("click", function () {
+                modal.hide();
+            });
         {{/if}}
     };
 </script>

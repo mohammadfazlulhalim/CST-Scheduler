@@ -15,6 +15,7 @@ const {sequelize} = require('../dataSource');
 const {globalConsts} = require('../constants');
 const constants = require('constants');
 const {Sequelize, QueryTypes, Op} = require('sequelize');
+const GetTermsSorted = require('./termRouter').readAllTerms;
 
 // global constants here to work with time arrays
 const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
@@ -42,17 +43,7 @@ router.get('/', async function (req, res, next) {
 
     // Find the terms to list in the modal select box
     try {
-        termList = await Term.findAll({
-            order: ['startDate', 'termNumber'],
-        });
-        // add the year
-        newTermList = termList.map((item) => {
-            return {id: item.id, displayTerm: item.startDate + ' - ' + item.termNumber};
-        });
-        // sort based on the year
-        newTermList.sort((a, b) => {
-            return b.displayTerm - a.displayTerm;
-        });
+        newTermList = await GetTermsSorted();
     } catch (err) {
         console.error("Error: couldnt get term list", err);
         termList = undefined;
@@ -118,17 +109,7 @@ router.post('/', async function (req, res, next) {
 
     // Find the terms to list in the modal select box
     try {
-        termList = await Term.findAll({
-            order: ['startDate', 'termNumber'],
-        });
-        // add the year
-        newTermList = termList.map((item) => {
-            return {id: item.id, displayTerm: item.startDate + ' - ' + item.termNumber};
-        });
-        // sort based on the year
-        newTermList.sort((a, b) => {
-            return b.displayTerm - a.displayTerm;
-        });
+        newTermList = await GetTermsSorted();
     } catch (err) {
         //make termlist null
         console.error("Error: couldnt get term list", err);

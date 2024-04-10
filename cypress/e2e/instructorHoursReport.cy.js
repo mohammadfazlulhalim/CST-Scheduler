@@ -237,32 +237,32 @@ describe('story52Tests', async () => {
     cy.contains('Add New Term').click();
 
     cy.get('#cTermNumber').type('3');
-    cy.wait(50);
+    cy.wait(100);
     cy.get('#cStartDate').type('2024-05-01');
-    cy.wait(50);
+    cy.wait(100);
     cy.get('#cEndDate').type('2024-05-27');
-    cy.wait(50);
+    cy.wait(100);
     cy.get('#createTerm').click();
-    cy.wait(50);
+    cy.wait(100);
 
     cy.contains('Add New Term').click();
 
     cy.get('#cTermNumber').type('6');
-    cy.wait(50);
+    cy.wait(100);
     cy.get('#cStartDate').type('2024-05-15');
-    cy.wait(50);
+    cy.wait(100);
     cy.get('#cEndDate').type('2024-06-21');
-    cy.wait(50);
+    cy.wait(100);
     cy.get('#createTerm').click();
-    cy.wait(50);
+    cy.wait(100);
 
     cy.contains('Add New Term').click();
     cy.get('#cTermNumber').type('3');
-    cy.wait(50);
+    cy.wait(100);
     cy.get('#cStartDate').type('2024-05-12');
-    cy.wait(50);
+    cy.wait(100);
     cy.get('#cEndDate').type('2024-05-29');
-    cy.wait(50);
+    cy.wait(100);
     cy.get('#createTerm').click();
   });
 

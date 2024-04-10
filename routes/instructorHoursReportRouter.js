@@ -8,9 +8,17 @@ const Timeslot = require('../private/javascript/Timeslot');
 router.get('/', async function(req, res, next) {
   const termList = await termMethods.reduceTermsToSeason();
 
+  const instructorList = await Instructor.findAll({order: ['lastName']});
+  for (let i=0; i<instructorList.length; i++) {
+    instructorList[i].primaryHours = 0;
+    instructorList[i].alternativeHours = 0;
+    instructorList[i].totalHours = 0;
+  }
+
   res.render('instructorHoursReport', {
     modal: true,
     termList,
+    instructorList
   });
 });
 

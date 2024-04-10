@@ -115,7 +115,7 @@
                         <select name="selectTermReport" class="form-select" id="selectTermReport" required>
                             <option value="" disabled selected>Select Term</option>
                             {{#each newTermList}}
-                                <option value="{{this.id}}">{{this.displayTerm}}</option>
+                                <option value="{{this.id}}">{{this.calendarYear}} - Term {{this.termNumber}}</option>
                             {{/each}}
                         </select>
                     </div>

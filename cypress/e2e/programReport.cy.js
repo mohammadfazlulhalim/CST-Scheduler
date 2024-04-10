@@ -66,20 +66,23 @@ describe('Test Program Report Page', () => {
         /**
          * testThatTermSelectBoxesAreSorted
          */
-        // Get the options from the select box
-        cy.get('#selectTermReport').find('option').then((options) => {
-            // Check if options are present and there is more than one option
-            if (options.length > 2) {
-                // Iterate over options to check ascending order
-                for (let i = 1; i < options.length - 1; i++) {
-                    const currentOption = options.eq(i).text().substring(0, 14);
-                    const nextOption = options.eq(i + 1).text().substring(0, 14);
 
-                    // Compare current option with the next option using localeCompare
-                    expect(currentOption.localeCompare(nextOption, undefined, {numeric: true})).to.be.lessThan(0);
-                }
-            }
-        });
+        const TERM_LIST =
+          [
+            'Select Term',
+            '2023-2024 - Term 1',
+            '2023-2024 - Term 4',
+            '2023-2024 - Term 5',
+            '2022-2023 - Term 2',
+            '2022-2023 - Term 3',
+            '2022-2023 - Term 5',
+            '2022-2023 - Term 6',
+          ];
+        for (let i=0; i <TERM_LIST.length;i++) {
+            const nChild = i+1;
+            cy.get('#selectTermReport > option:nth-child('+nChild+')').should('have.text', TERM_LIST[i]);
+        }
+
         // Check if the generate button is still disabled
         cy.get('#submitBtn').should('be.disabled');
 
