@@ -65,7 +65,7 @@
                                 {{#each tableRows}}
                                     <tr>
                                         {{#each this}}
-                                            <td onclick="onTSClick({{@../../index}}, {{@../index}}, {{@index}})">{{this}}hi</td>
+                                            <td onclick="onTSClick({{@../../index}}, {{@../index}}, {{@index}})">{{this}}</td>
                                         {{/each}}
                                     </tr>
                                 {{/each}}
@@ -75,7 +75,7 @@
                             <h1>Course Offerings</h1>
                             <div class="d-flex flex-column overflow-auto py-2" role="group" aria-label="Course offerings" style="max-height: 800px;">
                                 {{#each COArray}}
-                                    <button id={{this.id}} onclick="onCOClick({{this.id}})" class="bottons btn btn-outline-success mb-2 d-flex flex-column justify-content-center py-3 align-items-center" style="min-height: 100px;">
+                                    <button id={{this.id}} onclick="onCOClick({{this.id}})" class="COButtons btn btn-outline-success mb-2 d-flex flex-column justify-content-center py-3 align-items-center" style="min-height: 100px;">
                                         <span class="btn-custom-content text-center h5"><strong>{{this.name}}</strong></span>
                                         <span class="btn-custom-content text-center">Primary Instructor: <strong> {{this.primaryInstructor.lastName}} </strong></span>
                                         <span class="btn-custom-content text-center">{{#if this.alternativeInstructor.lastName}}Alternative Instructor:{{this.alternativeInstructor.lastName}}{{else}}&nbsp;{{/if}}</span>
@@ -289,28 +289,40 @@
     function onCOClick(COId) {
         if (currentCOID === COId) {
             currentCOID = null;
+            removeHighlights();
         }
         else {
             currentCOID = COId;
+            removeHighlights();
+            document.getElementById(COId).classList.remove('btn-outline-success');
+            document.getElementById(COId).classList.add('btn-success');
         }
-        document.getElementById(COId).classList.remove('btn-outline-success');
-        document.getElementById(COId).classList.add('btn-success');
-        // document.querySelector('botton').classList.remove()
+
+    }
+    async function onTSClick(tableIndex, rowIndex, itemIndex) {
+
+        if (currentCOID) {
+            console.log('hi');
+             await fetch('/schedule', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    dayOfWeek: itemIndex,
+                    timeIndex: rowIndex,
+                    COId: currentCOID,
+                    group: tableIndex
+                }),
+            });
+        }
     }
 
-    //todo need 2 know courseofferingid, starttime, day
-    async function onTSClick(tableIndex, rowIndex, itemIndex) {
-        const response = await fetch('/schedule', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                dayOfWeek: itemIndex,
-                timeIndex: rowIndex,
-                COId:currentCOID,
-                group: tableIndex
-            }),
+    function removeHighlights() {
+        const buttons = document.querySelectorAll('.COButtons');
+        buttons.forEach((button) => {
+            button.classList.remove('btn-success');
+            button.classList.add('btn-outline-success');
         });
     }
 </script>

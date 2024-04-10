@@ -54,42 +54,51 @@ router.post('/', async (req, res) => {
 
 
 router.put('/', async (req, res) => {
+  //            body: JSON.stringify({
+  //                 dayOfWeek: itemIndex,
+  //                 timeIndex: rowIndex,
+  //                 COId:currentCOID,
+  //                 group: tableIndex
+  //             }),
   const TIMES = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
+  const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+  const GROUPS = ['A','B','C','D'];
 
-  const cellID = req.body.idCell.split('-');
-  const CO = await CourseOffering.findByPk(req.body.CO);
-
+  const CO = await CourseOffering.findByPk(req.body.COId);
+//todo make classroom not static
   const newtSlot = {
     startDate: CO.startDate,
     endDate: CO.endDate,
     CourseOfferingId: CO.id,
-    InstructorId: CO.primaryInstructor,
-    ClassroomId: 1,
+    primaryInstructor: CO.primaryInstructor,
+    alternativeInstructor: CO.alternativeInstructor,
+    ClassroomId: 3,
     TermId: CO.TermId,
     ProgramId: CO.ProgramId,
-    startTime: TIMES[parseInt(cellID[0])],
-    endTime: TIMES[parseInt(cellID[0]) + 1], // Corrected
-    day: cellID[1],
-    group: cellID[2],
+    startTime: TIMES[req.body.timeIndex-1],
+    endTime: TIMES[req.body.timeIndex], // Corrected
+    day: DAYS[req.body.dayOfWeek-1],
+    group: GROUPS[req.body.group],
   };
 
   const retTSlot = await Timeslot.create(newtSlot);
+  // await Timeslot.create(newtSlot);
 
-  const coObj = await retTSlot.getCourseOffering();
-  const prObj = await retTSlot.getProgram();
-  const insObj = await retTSlot.getInstructor();
-  const cObj = await coObj.getCourse();
-
-  const xtraInfo = {};
-
-  xtraInfo.program = prObj.programAbbreviation;
-  xtraInfo.insLast = insObj.lastName;
-
-  xtraInfo.course = cObj.courseCode;
-  xtraInfo.co = coObj;
-
-
-  res.status(200).json({retTSlot, xtraInfo});
+  // const coObj = await retTSlot.getCourseOffering();
+  // const prObj = await retTSlot.getProgram();
+  // const insObj = await retTSlot.getInstructor();
+  // const cObj = await coObj.getCourse();
+  //
+  // const xtraInfo = {};
+  //
+  // xtraInfo.program = prObj.programAbbreviation;
+  // xtraInfo.insLast = insObj.lastName;
+  //
+  // xtraInfo.course = cObj.courseCode;
+  // xtraInfo.co = coObj;
+  //
+  //
+  // res.status(200).json({retTSlot, xtraInfo});
 });
 
 
@@ -148,11 +157,8 @@ async function getSchedules(term, program, groupLetter, schedule) {
  * each table has a startdate, enddate, tablerow[] which has tableItem[]
  */
 async function getTableRows(split, COArray, term, program, groupLetter, timeSlots) {
-  // eslint-disable-next-line no-unused-vars
   const topRow = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  // eslint-disable-next-line no-unused-vars
   const times12hr = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
-  // eslint-disable-next-line no-unused-vars
   const times24hr = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
   const rowsToReturn = [];
   rowsToReturn[0] = topRow;
@@ -164,7 +170,7 @@ async function getTableRows(split, COArray, term, program, groupLetter, timeSlot
         rowsToReturn[i][j] = times24hr[i-1];
         continue;
       }
-      rowsToReturn[i][j] = timeSlots.find((ts) => ts.day === j && ts.time === times24hr[i-1]);
+      rowsToReturn[i][j] = timeSlots.find((ts) => ts.day === topRow[j] && ts.startTime === times24hr[i-1]);
     }
   }
 
