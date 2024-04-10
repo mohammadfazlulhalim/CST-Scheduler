@@ -138,8 +138,6 @@ describe('story52Tests', async () => {
     cy.get('#4-2-A').click();
     cy.wait(25);
 
-
-
     // ATP #3 Total Ron hours: 4
     cy.get('#btnB').click();
     cy.wait(25);
@@ -268,11 +266,24 @@ describe('story52Tests', async () => {
     cy.get('#createTerm').click();
   });
 
-
   it('testThatInstructorHoursAreCalculated', () => {
     cy.visit('localhost:3000');
     cy.contains('Reports').click();
     cy.contains('Instructor Hours Report').click();
+
+    // ATP #10 Sort list for terms
+    const TERM_LIST =
+      [
+        'Fall 2023-2024',
+        'Winter 2023-2024',
+        'Spring 2023-2024',
+        'Winter 2022-2023',
+        'Spring 2022-2023',
+      ];
+    for (let i=0; i <TERM_LIST.length;i++) {
+      const nChild = i+2;
+      cy.get('#termSelect > option:nth-child('+nChild+')').should('have.text', TERM_LIST[i]);
+    }
 
     // Need to enter the modal
     cy.get('#termSelect').select('Spring 2023-2024');
@@ -280,8 +291,6 @@ describe('story52Tests', async () => {
 
     cy.get('#submitBtn').click();
     cy.wait(20);
-
-    // TODO: Check sort order for terms
 
     // Checking the start and end dates
     cy.get('#dateRange').contains('Date Range: 2024-05-01 - 2024-06-21');

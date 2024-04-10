@@ -16,7 +16,7 @@
                         <select id="termSelect" name="term" class="form-select">
                             <option value="" selected disabled>Select Term</option>
                             {{#each terms}}
-                                <option value="{{this.id}}">{{this.termNumber}} {{this.startDate}}</option>
+                                <option value="{{this.id}}">{{this.calendarYear}} - Term {{this.termNumber}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -50,7 +50,7 @@
             <h2 id="selectedClassroom"><i>Classroom:</i> {{realClassroom.roomNumber}}</h2>
         </div>
         <div class="row">
-            <h2 id="selectedTerm"><i>Term:</i> {{realTerm.termNumber}} {{realTerm.startDate}}</h2>
+            <h2 id="selectedTerm">{{realTerm.calendarYear}} - Term {{realTerm.termNumber}}</h2>
         </div>
 </div>
 

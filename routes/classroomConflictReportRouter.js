@@ -8,6 +8,7 @@ const CourseOffering= require('../private/javascript/CourseOffering');
 const Course= require('../private/javascript/Course');
 const Program= require('../private/javascript/Program');
 const Term=require('../private/javascript/Term');
+const GetTermsSorted = require('./termRouter').readAllTerms;
 const Timeslot = require('../private/javascript/Timeslot');
 const {QueryTypes} = require('sequelize');
 
@@ -29,8 +30,7 @@ const daysFullySpelled = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'
  */
 router.post('/', async (req, res, next)=>{
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
-  const terms= await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'ASC']]});
-
+  const terms= await GetTermsSorted();
   const headerArray=[
     {header: 'Term'}, {header: 'Course Code'},
     {header: 'Weekday'}, {header: 'Start Time'},
@@ -78,8 +78,7 @@ router.post('/', async (req, res, next)=>{
 router.get('/', async (req, res, next)=>{
   const classrooms= await Classroom.findAll({order: [['roomNumber', 'ASC']]});
 
-  const terms= await Term.findAll({order: [['termNumber', 'ASC'], ['startDate', 'ASC']]});
-
+  const terms= await GetTermsSorted();
   res.render('classroomConflictReport', {
     classrooms,
     terms,
