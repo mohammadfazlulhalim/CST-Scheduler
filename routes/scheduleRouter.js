@@ -32,21 +32,11 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const term = await Term.findByPk(req.body.term);
   const program = await Program.findByPk(req.body.program);
+  const groupCount = req.body.group;
 
-  groups = [{
-    schedule: {
-      startDate: term.startDate,
-      endDate: term.endDate,
-      split: [{
-        startDate: undefined,
-        endDate: undefined,
-        tableRows: undefined,
-        COArray: [undefined],
-      }],
-    },
-  }];
+  groups = [];
 
-  await getGroups(term, program);
+  await getGroups(term, program, groupCount);
 
   res.render('schedule', {
     isHidden: false,
@@ -101,6 +91,8 @@ router.put('/', async (req, res) => {
   //
   //
   // res.status(200).json({retTSlot, xtraInfo});
+
+  res.redirect()
 });
 
 
@@ -115,10 +107,17 @@ router.delete('/', async (req, res) => {
  * and it will fill each groups as specified in the module
  * to be filled with the accompanying information
  */
-async function getGroups(term, program) {
+async function getGroups(term, program, groupCount) {
   const groupLetters = ['A', 'B', 'C', 'D'];
 
-  for (let i=0; i<groups.length; i++) {
+  for (let i=0; i<groupCount; i++) {
+    groups[i] = {
+      schedule: {
+        startDate: term.startDate,
+        endDate: term.endDate,
+        split: [],
+      },
+    }
     try {
       await getSchedules(term, program, groupLetters[i], groups[i].schedule);
     } catch (e) {
@@ -141,18 +140,26 @@ async function getSchedules(term, program, groupLetter, schedule) {
     e.courseOffering = await CourseOffering.findByPk(e.CourseOfferingId);
     e.classroom = await Classroom.findByPk(e.ClassroomId);
      e.course = await e.courseOffering.getCourse();
-    console.log(e.course);
-
   }
 
   const uniqueDates = [term.startDate, term.endDate];
-  timeSlots.forEach((CO) => {
-    if (!uniqueDates.includes(CO.startDate)) {
-      uniqueDates.push(CO.startDate);
+  timeSlots.forEach((ts) => {
+    if (!uniqueDates.includes(ts.startDate) && ts.startDate > term.startDate) {
+      uniqueDates.push(ts.startDate);
+    }
+    if (!uniqueDates.includes(ts.endDate) && ts.endDate < term.endDate) {
+      uniqueDates.push(ts.endDate);
     }
   });
   uniqueDates.sort();
+
   for (let i=0; i<uniqueDates.length-1; i++) {
+    schedule.split[i] = {
+      startDate: undefined,
+      endDate: undefined,
+      tableRows: undefined,
+      COArray: [undefined],
+    }
     schedule.split[i].startDate = uniqueDates[i];
     schedule.split[i].endDate = uniqueDates[i+1];
     schedule.split[i].COArray = await getCOs(schedule.split[i], term, program, groupLetter);
@@ -186,7 +193,7 @@ async function getTableRows(split, COArray, term, program, groupLetter, timeSlot
         rowsToReturn[i][j] = {dateTime: times12hr[i-1]};
         continue;
       }
-      rowsToReturn[i][j] = timeSlots.find((ts) => ts.day === topRow[j] && ts.startTime === times24hr[i-1]);
+      rowsToReturn[i][j] = timeSlots.find((ts) => ts.day === topRow[j] && ts.startTime === times24hr[i-1] &&  (ts.startDate < split.endDate && ts.endDate > split.startDate));
     }
   }
 
@@ -202,8 +209,8 @@ async function getCOs(split, term, program, groupLetter) {
   const courseOfferings = await CourseOffering.findAll({
     where: {
       [Op.and]: [
-        {startDate: {[Op.lte]: split.endDate}},
-        {endDate: {[Op.gte]: split.startDate}},
+        {startDate: {[Op.lt]: split.endDate}},
+        {endDate: {[Op.gt]: split.startDate}},
       ],
       group: groupLetter,
       ProgramId: program.id,

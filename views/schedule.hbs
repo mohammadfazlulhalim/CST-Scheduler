@@ -65,7 +65,7 @@
                                 {{#each tableRows}}
                                     <tr>
                                         {{#each this}}
-                                            <td onclick="onTSClick({{@../../index}}, {{@../index}}, {{@index}})">
+                                            <td onclick="onTSClick({{@../../../index}},{{@../../index}}, {{@../index}}, {{@index}})">
                                                 {{this.dateTime}}
                                                 <p>{{this.course.courseName}}</p>
                                                 <p>{{this.primaryInstructor.lastName}}{{#if this.alternativeInstructor.lastName}}{{this.alternativeInstructor.lastName}}{{/if}}</p>
@@ -304,24 +304,28 @@
         }
 
     }
-    async function onTSClick(tableIndex, rowIndex, itemIndex) {
-
+    async function onTSClick(groupIndex, tableIndex, rowIndex, itemIndex) {
         if (currentCOID) {
-            console.log('hi');
-             await fetch('/schedule', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    dayOfWeek: itemIndex,
-                    timeIndex: rowIndex,
-                    COId: currentCOID,
-                    group: tableIndex
-                }),
-            });
+            try {
+                await fetch('/schedule', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        dayOfWeek: itemIndex,
+                        timeIndex: rowIndex,
+                        COId: currentCOID,
+                        group: groupIndex
+                    }),
+                });
+            } catch (error) {
+                console.error("Fetch error:", error);
+            }
         }
+        await fetchAndUpdateContent();
     }
+
 
     function removeHighlights() {
         const buttons = document.querySelectorAll('.COButtons');
