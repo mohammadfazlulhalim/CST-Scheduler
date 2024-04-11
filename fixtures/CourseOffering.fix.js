@@ -23,8 +23,8 @@ async function fillCourseOfferingTable() {
   }
 
   const wade = await Instructor.findOne({where: {
-      lastName: 'Lahoda'
-    }});
+    lastName: 'Lahoda',
+  }});
   let COHA = courseOffering1;
   let COSA = courseOffering2;
   for (let i=0; i<COSPLIT.length; i++) {
@@ -41,6 +41,15 @@ async function fillCourseOfferingTable() {
   COSPLIT[1].setCourse(11);
   COSPLIT[2].setCourse(4);
   COSPLIT[3].setCourse(14);
+
+  COSPLIT[4].setInstructor(11);
+  COSPLIT[5].setInstructor(1);
+  COSPLIT[6].setInstructor(7);
+  COSPLIT[7].setInstructor(6);
+  COSPLIT[4].setCourse(15);
+  COSPLIT[5].setCourse(11);
+  COSPLIT[6].setCourse(4);
+  COSPLIT[7].setCourse(14);
 
 
   /* CourseOffering.belongsTo(Term);
@@ -60,8 +69,6 @@ async function fillCourseOfferingTable() {
   COSA.setCourse(4);
 
   await CourseOffering.update({alternativeInstructor: wade.id}, {where: {id: COHA.id}});
-
-
 
 
   let COHB = courseOffering1;
@@ -164,6 +171,11 @@ const validSplitCourseOfferings =[
   {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-28', group: 'A', CourseId: 1},
   {name: 'Seminar', startDate: '2023-01-02', endDate: '2023-02-02', group: 'A', CourseId: 1},
   {name: 'Technical Communications', startDate: '2023-04-15', endDate: '2023-05-14', group: 'A', CourseId: 1},
+  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'B', CourseId: 1},
+  {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-28', group: 'B', CourseId: 1},
+  {name: 'Seminar', startDate: '2023-01-02', endDate: '2023-02-02', group: 'B', CourseId: 1},
+  {name: 'Technical Communications', startDate: '2023-04-15', endDate: '2023-05-14', group: 'B', CourseId: 1},
+
 ]
 
 

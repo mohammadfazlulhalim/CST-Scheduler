@@ -55,7 +55,6 @@ router.put('/', async (req, res) => {
 
 
   const CO = await CourseOffering.findByPk(req.body.COId);
-  // todo make classroom not static
   const newtSlot = {
     startDate: CO.startDate,
     endDate: CO.endDate,
@@ -72,6 +71,7 @@ router.put('/', async (req, res) => {
   };
 
   const retTSlot = await Timeslot.create(newtSlot);
+  res.send(201);
 });
 
 
