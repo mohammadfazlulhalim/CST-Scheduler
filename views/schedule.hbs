@@ -66,7 +66,7 @@
                         </button>
                         <div class="carousel-inner">
                             {{#each schedule.split}}
-                                <div class="carousel-item {{#if @first}}active{{/if}}">
+                                <div id="carousel{{../groupLetter}}{{@../index}}{{@index}}" class="carousel-item carousels {{../groupLetter}} {{#if @first}}active{{/if}}">
                                     <p>Table Range: <strong>{{startDate}}</strong> to <strong>{{endDate}}</strong></p>
                                     <div class="row"> <!-- Ensure this row is here to contain the columns properly -->
                                         <div class="col-md-8">
@@ -185,6 +185,12 @@
     }
 
     async function fetchAndUpdateContent() {
+        let selectedButton = document.querySelector('button.groupButtons.btn-success').id;
+        let selectedGroup = document.querySelector('div.groups:not(.visually-hidden)').id;
+        let currentCarousel = document.querySelectorAll('div.carousels.active');
+        console.log(selectedGroup);
+        console.log(selectedButton);
+        console.log(currentCarousel);
         let postData = JSON.parse(localStorage.getItem('PostData'))
         const response = await fetch('/schedule', {
             method: 'POST',
@@ -202,7 +208,9 @@
         if (!response.ok) {
             throw new Error('Failed to fetch updated schedule');
         }
-
+        console.log(selectedButton);
+        console.log(selectedGroup);
+        console.log(currentCarousel);
         const htmlString = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlString, 'text/html');
@@ -212,6 +220,15 @@
         } catch (error) {
             console.error('Error setting innerHTML:', error);
         }
+
+        let buttons = document.querySelectorAll('.groupButtons');
+        buttons.forEach((button) => {
+            button.classList.remove('btn-success');
+            button.classList.add('btn-outline-success');
+        });
+        document.getElementById(selectedButton).classList.add('btn-success');
+        document.getElementById(selectedButton).classList.remove('btn-outline-success');
+
     }
 
     function onCOClick(COId, button) {

@@ -38,7 +38,6 @@ router.post('/', async (req, res) => {
   const groupLetters = [];
   groups.forEach((e) => groupLetters.push(e.groupLetter));
 
-
   res.render('schedule', {
     isHidden: false,
     groups,
