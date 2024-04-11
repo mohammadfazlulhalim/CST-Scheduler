@@ -2,12 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const CourseOffering = require('../private/javascript/CourseOffering');
-const Course = require('../private/javascript/Course');
 const Classroom = require('../private/javascript/Classroom');
 const Timeslot = require('../private/javascript/Timeslot');
 const Term = require('../private/javascript/Term');
 const Program = require('../private/javascript/Program');
-// eslint-disable-next-line no-unused-vars
 const Instructor = require('../private/javascript/Instructor');
 const {Op} = require('sequelize');
 let groups;
@@ -34,8 +32,6 @@ router.post('/', async (req, res) => {
   const program = await Program.findByPk(req.body.program);
   const groupCount = req.body.group;
   const classrooms = await Classroom.findAll();
-
-
   groups = [];
 
   await getGroups(term, program, groupCount);
@@ -53,12 +49,6 @@ router.post('/', async (req, res) => {
 
 
 router.put('/', async (req, res) => {
-  //            body: JSON.stringify({
-  //                 dayOfWeek: itemIndex,
-  //                 timeIndex: rowIndex,
-  //                 COId:currentCOID,
-  //                 group: tableIndex
-  //             }),
   const TIMES = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
   const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   const GROUPS = ['A', 'B', 'C', 'D'];
@@ -82,30 +72,11 @@ router.put('/', async (req, res) => {
   };
 
   const retTSlot = await Timeslot.create(newtSlot);
-  // await Timeslot.create(newtSlot);
-
-  // const coObj = await retTSlot.getCourseOffering();
-  // const prObj = await retTSlot.getProgram();
-  // const insObj = await retTSlot.getInstructor();
-  // const cObj = await coObj.getCourse();
-  //
-  // const xtraInfo = {};
-  //
-  // xtraInfo.program = prObj.programAbbreviation;
-  // xtraInfo.insLast = insObj.lastName;
-  //
-  // xtraInfo.course = cObj.courseCode;
-  // xtraInfo.co = coObj;
-  //
-  //
-  // res.status(200).json({retTSlot, xtraInfo});
-
-  res.redirect();
 });
 
 
 router.delete('/', async (req, res) => {
-  await Timeslot.destroy({where: {id: req.body.id}});
+  await Timeslot.destroy({where: {id: req.body.tsID}});
 
   res.status(200).json();
 });
@@ -202,7 +173,9 @@ async function getTableRows(split, COArray, term, program, groupLetter, timeSlot
         rowsToReturn[i][j] = {dateTime: times12hr[i-1]};
         continue;
       }
-      rowsToReturn[i][j] = timeSlots.find((ts) => ts.day === topRow[j] && ts.startTime === times24hr[i-1] && (ts.startDate < split.endDate && ts.endDate > split.startDate));
+      rowsToReturn[i][j] = timeSlots.find(
+          (ts) => ts.day === topRow[j] && ts.startTime === times24hr[i-1] &&
+              (ts.startDate < split.endDate && ts.endDate > split.startDate));
     }
   }
 

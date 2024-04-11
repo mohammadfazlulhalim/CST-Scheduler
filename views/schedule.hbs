@@ -74,7 +74,7 @@
                                                 {{#each tableRows}}
                                                     <tr>
                                                         {{#each this}}
-                                                            <td id="{{@../../../index}}{{@../../index}}{{@../index}}{{@index}}" onclick="onTSClick({{@../../../index}},{{@../../index}}, {{@../index}}, {{@index}})">
+                                                            <td id="{{@../../../index}}{{@../../index}}{{@../index}}{{@index}}" oncontextmenu="onRightClick('{{this.id}}')" onclick="onTSClick({{@../../../index}},{{@../../index}}, {{@../index}}, {{@index}})">
                                                                 <p>{{#if this.course.courseName}}{{this.course.courseName}}{{else}}{{this.dateTime}}{{/if}}</p>
                                                                 <p>{{this.primaryInstructor.lastName}}{{#if
                                                                         this.alternativeInstructor.lastName}}{{this.alternativeInstructor.lastName}}{{/if}}</p>
@@ -170,13 +170,14 @@
         }
     }
 
-    async function onCellRightClick(idCell, tSlot, cellCO) {
+    async function onRightClick(tsID) {
+
         await fetch('/schedule', {
             method: 'DELETE',
             headers: {
                 'Content-Type': "application/json"
             },
-            body: JSON.stringify({id: tSlot}),
+            body: JSON.stringify({tsID,}),
         })
 
         await fetchAndUpdateContent();
@@ -248,7 +249,7 @@
     }
 
     async function onTSClick(groupIndex, tableIndex, rowIndex, itemIndex) {
-        const classroom = document.getElementById('classroomSelect').value;
+        const classroom = document.getElementById('classroomSelect00').value;
         const cell = document.getElementById(`${groupIndex}${tableIndex}${rowIndex}${itemIndex}`);
         let pElement = cell.querySelector('p');
         let isEmpty = false; // Assume not empty by default
