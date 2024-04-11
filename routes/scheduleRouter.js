@@ -12,7 +12,6 @@ const getSortedTerm = require('./termRouter').readAllTerms;
 // const Course = require('../private/javascript/Course');
 
 router.get('/', async (req, res, next) => {
-
   terms = await getSortedTerm();
   programs = await Program.findAll({order: [['programAbbreviation', 'ASC']]});
 
@@ -79,7 +78,7 @@ router.post('/', async (req, res, next) => {
         COObj.dName = COObj.name + '-' + COObj.group;
         // If the alternative instructor exists
         if (COObj.alternativeInstructor !== null) {
-          const altInsObj = await Instructor.findByPk(COObj.alternativeInstructor);;
+          const altInsObj = await Instructor.findByPk(COObj.alternativeInstructor); ;
           COObj.altInsFirst = altInsObj.firstName;
           COObj.altInsLast = altInsObj.lastName;
         }
@@ -113,7 +112,7 @@ router.post('/', async (req, res, next) => {
 
       // Checking if classroom is null, because then it was probably deleted
       if (tSlot.ClassroomId === null) {
-        tSlot.Classroom = {roomNumber: "Deleted"};
+        tSlot.Classroom = {roomNumber: 'Deleted'};
       }
 
       cObj = await coObj.getCourse();
