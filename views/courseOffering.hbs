@@ -1,7 +1,7 @@
 <div class="container-fluid px-5">
     <div class="row mb-2">
         <h1 class="col-md-4">{{title}}</h1>
-        <button type="button" class="btn btn-success col-md-2" data-toggle="modal" id="openCreateModal"
+        <button type="button" class="btn btn-primary col-md-2" data-toggle="modal" id="openCreateModal"
                 data-target="#addModal">Add New Course Offering
         </button>
         <div class="col-md-1"></div>
@@ -62,11 +62,11 @@
                             {{this.Program.programAbbreviation}}
                         </td>
                         <td class="text-center">
-                            <button id="{{this.id}}edit" type="button" class="btn btn-primary editButton"
+                            <button id="{{this.id}}edit" type="button" class="btn btn-outline-warning editButton"
                                     data-toggle="modal" data-target="#editModal"
                                     onclick="handleEditModal('{{this.id}}')">Edit
                             </button>
-                            <button id="{{this.id}}delete" type="button" class="btn btn-danger deleteButton"
+                            <button id="{{this.id}}delete" type="button" class="btn btn-outline-danger deleteButton"
                                     data-toggle="modal" data-target="#deleteModal">Delete
                             </button>
                         </td>
@@ -82,7 +82,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-danger" id="deleteModalLabel">Delete Course Offering </h5>
+                        <h4 class="modal-title text-primary" id="deleteModalLabel">Delete Course Offering </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -96,8 +96,8 @@
                                name="id" value="{{submittedCO.id}}">
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button type="button" id="deleteCO" class="btn btn-outline-danger">Delete</button>
+                            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                            <button type="button" id="deleteCO" class="btn btn-primary">Delete</button>
                         </div>
                     </form>
                 </div>
@@ -110,7 +110,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-warning" id="editModalLabel">Edit Existing Course Offering</h5>
+                        <h4 class="modal-title text-primary" id="editModalLabel">Edit Existing Course Offering</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -182,8 +182,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button type="button" id="editCO" class="btn btn-outline-success" disabled>Save</button>
+                            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                            <button type="button" id="editCO" class="btn btn-primary" disabled>Save</button>
                         </div>
                     </form>
                 </div>
@@ -198,7 +198,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-success" id="addModalLabel">Create New Course Offering</h5>
+                    <h4 class="modal-title text-primary" id="addModalLabel">Create New Course Offering</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -309,8 +309,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" id="createCO" class="btn btn-success" disabled>Create</button>
+                        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="createCO" class="btn btn-primary" disabled>Create</button>
                     </div>
                 </form>
             </div>
@@ -319,7 +319,7 @@
 
     <div class="text-end p-2">
         <a href="{{URL}}">
-            <button class="btn btn-dark">Return</button>
+            <button class="btn btn-outline-primary">Return</button>
         </a>
     </div>
 </div>
