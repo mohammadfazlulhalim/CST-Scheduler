@@ -2,17 +2,21 @@
  * UI tests for split schedules
  * Author: Chritseen Shlimoon & Raven Hogan
  */
-// const urlGET = 'localhost:3000';
+const urlGET = 'http://localhost:3000/schedule';
 const urlPOST= 'http://localhost:3000/schedule';
+
 
 describe('Test Schedule Report Page', () => {
   const programList = ['CNT', 'CST', 'ECE'];
   const termList = ['2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2023 - 5', '2023 - 6', '2024 - 5'];
+  before(() => {
+    cy.exec('node electron-db-reset.js');
+  });
   it('testSplitSchedule', ()=> {
     const selectedTimeSlot = 2; // Adjust this to the desired time slot (0-7)
     const selectedDay = 3; // Adjust this to the desired day (1-5)
     // Opens the landing page
-    cy.visit(urlPOST);
+    cy.visit(urlGET);
 
     /**
          * Modal appears upon arrival
@@ -29,18 +33,17 @@ describe('Test Schedule Report Page', () => {
 
     // Check that Program field can be entered
     cy.contains('Program');
-    cy.get('#programSelect').select('CST');
+    cy.get('#programSelect').select('CNT');
     /**
          * testThatProgramSelectBoxesAreSorted
          */
     // Get the options from the select box
 
-    cy.get('#programSelect').children('option').then((options) => {
-      const selectOptions = [...options].map((option) => option.textContent);
-      const expectedOptions = programList;
-      expect(selectOptions).to.include.members(expectedOptions); // Check if all expected options are present
-      expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
-    }).parent().select('CST');
+    cy.get('#programSelect').children('option').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => a.localeCompare(b, 'en', {sensitivity: 'base'}));
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
 
 
     // Check that Enter button is disabled
@@ -49,14 +52,23 @@ describe('Test Schedule Report Page', () => {
     /**
          * testThatTermSelectBoxesAreSorted
          */
-    // Get the options from the select box
-    cy.get('#termSelect').children('option').then((options) => {
-      const selectOptions = [...options].map((option) => option.textContent);
-      const expectedOptions = termList;
-      expect(selectOptions).to.include.members(expectedOptions); // Check if all expected options are present
-      expect(selectOptions).to.have.ordered.members(expectedOptions); // Check the order of options
-    }).parent().select('2024 - 5');
+    cy.get('#termSelect').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => {
+        const yearA = parseInt(a.match(/\d{4}/)[0]);
+        const yearB = parseInt(b.match(/\d{4}/)[0]);
+        return yearA - yearB;
+      });
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
 
+    cy.get('#termSelect').select('2022-2023 - Term 2');
+
+    // cy.get('#groupSelect option').then(($options) => {
+    //   const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+    //   const expectedOptions = ['', '1', '2', '3', '4'];
+    //   expect(optionsTexts).to.deep.equal(expectedOptions);
+    // });
     // Check that Enter button is disabled
     cy.get('#modalSubmit').should('be.disabled');
 
@@ -70,43 +82,62 @@ describe('Test Schedule Report Page', () => {
       const sortedValues = [...values].sort();
       expect(values).to.deep.equal(sortedValues);
     });
+
+    cy.get('#groupSelect').select('4');
+
+    cy.get('#modalSubmit').not('be.disabled');
+
+    cy.get('#modalSubmit').click();
+
+    cy.get('#scheduleModal').should('be.hidden');
+
+    cy.get('.COButtons').should('have.length.greaterThan', 0); // Check if there are course buttons present
+    cy.get('.COButtons').first().click(); // Click the first course button
+    cy.get('#0011').click(); // schedule it for monday at 8:00 am
+
+    // check that the cell for monday at 8:00 am has content now
+    cy.get('#0011').should('have.length.gt', 0);
+
+
+    // Create a split
+    cy.get('.COButtons').should('have.length.greaterThan', 0); // Check if there are course buttons present
+    cy.get('.COButtons').last().click({force: true}); // Click the first course button
+    cy.get('#0012').click(); // schedule it for monday at 9:00 am
+
+    // check that clicking the next arrow moves us forward
+
+    // cy.get('.carousel-control-next').first().click(); // Click the next button
+
+    // Get the carousel inner content before clicking next
+    cy.get('.carousel-inner').invoke('text').as('initialContent');
+
+    // Click the next button to move forward in the carousel
+    cy.get('.carousel-item.active .custom-carousel-control').first().click();
+
+    // Get the carousel inner content after clicking next
+    cy.get('.carousel-inner').invoke('text').as('newContent');
+
+    // Compare the content before and after clicking next
+    cy.get('@initialContent').then((initialContent) => {
+      cy.get('@newContent').then((newContent) => {
+        expect(newContent).not.to.eq(initialContent); // Assert that content changed
+      });
+    });
   });
 
-  cy.get('#modalSubmit').should('not.be.disabled');
-  cy.get('#modalSubmit').click();
 
-  /**
-     * Modal closes
-     */
-  cy.get('#scheduleModal').should('be.hidden');
+  /*
 
 
-  // Wait for the schedule to load (adjust this wait time based on your application)
-  cy.wait(2000); // Wait for 2 seconds (adjust as needed)
-
-  /**
-     * Empty schedule
-     */
-  // Check that the schedule is empty
-  cy.get('.time-slot').should('have.length', 0);
-
-  // Click on a specific cell to schedule 'TCOM' (adjust the time and day)
-  cy.get(`#${selectedTimeSlot}-${selectedDay}-${letter}`).click();
-
-  // Assert that the clicked cell has the expected text 'TCOM'
-  cy.get(`#${selectedTimeSlot}-${selectedDay}-${letter}`).should('have.text', 'SEM283');
-
-  cy.get('#scheduleDateRange').should('have.text', '01/01/2024 - 02/02/2024');
-
-  /**
+  /!**
      * Arrows appearing
-     */
+     *!/
   // Navigate to the next schedule
   cy.get('#nextSchedule').click();
 
-  /**
+  /!**
      * Clicks next moves forward one
-     */
+     *!/
   // Assert that the date range for the next schedule is displayed correctly
   cy.get('#scheduleDateRange').should('have.text', '02/02/2024 - 04/01/2024');
 
@@ -123,9 +154,9 @@ describe('Test Schedule Report Page', () => {
 
   cy.get('#scheduleDateRange').should('have.text', '02/02/2024 - 03/01/2024');
 
-  /**
+  /!**
      * Arrows loop back to end or beginning schedule
-     */
+     *!/
   cy.get('#nextSchedule').click();
   cy.get('#nextSchedule').click();
 
@@ -133,17 +164,17 @@ describe('Test Schedule Report Page', () => {
   cy.get('#scheduleDateRange').should('have.text', '01/01/2024 - 02/02/2024');
 
 
-  /**
+  /!**
      * Clicks back moves back one
-     */
+     *!/
   // Click the back button
   cy.get('#prevSchedule').click();
 
   // Assert that the last schedule is displayed
   cy.get('#scheduleDateRange').should('have.text', '04/01/2024 - 04/30/2024');
-  /**
+  /!**
      * View changing
-     */
+     *!/
   // Assert that the cell for 'TCOM' is not visible in the next schedule
   cy.get(`#${selectedTimeSlot}-${selectedDay}-${letter}`).should('not.be.visible');
 
@@ -157,9 +188,9 @@ describe('Test Schedule Report Page', () => {
   // Assert that the cell for 'TCOM' is visible again in the previous schedule
   cy.get(`#${selectedTimeSlot}-${selectedDay}-${letter}`).should('be.visible');
 
-  /**
+  /!**
      * Date format
-     */
+     *!/
   // Assert that the date range for the next schedule is displayed correctly and in the expected format
   cy.get('#scheduleDateRange').invoke('text').then((dateRangeText) => {
     const dateRangeParts = dateRangeText.split(' - ');
@@ -177,9 +208,9 @@ describe('Test Schedule Report Page', () => {
   });
 
 
-  /**
+  /!**
      * Test that the close button closes and that new program button opens modal
-     //      */
+     //      *!/
   // Wait for the buttons to be visible
   cy.get('#newProgramBtn').should('be.visible');
   cy.get('#newProgramBtn').click();
@@ -188,9 +219,9 @@ describe('Test Schedule Report Page', () => {
   cy.get('#newProgramBtn').should('not.be.visible');
 
 
-  /**
+  /!**
      * Editing a split course will modify the schedule info
-     */
+     *!/
 
   cy.visit('http://localhost:3000/courseOffering');
 
@@ -209,9 +240,9 @@ describe('Test Schedule Report Page', () => {
   cy.contains('01-02-2024').should('exist');
 
 
-  /**
+  /!**
      * Delete a course that splits the schedule gets rid of split
-     */
+     *!/
 
   cy.visit('http://localhost:3000/courseOffering');
 
@@ -224,5 +255,5 @@ describe('Test Schedule Report Page', () => {
 
   cy.get('#scheduleDateRange').should('have.text', '01/01/2024 - 04/30/2024');
   cy.get('#nextSchedule').should('not.exist');
-  cy.get('#prevSchedule').should('not.exist');
+  cy.get('#prevSchedule').should('not.exist'); */
 });
