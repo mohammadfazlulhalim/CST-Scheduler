@@ -58,15 +58,15 @@
                 <p class="mb-5">Overall Range: <strong>{{schedule.startDate}}</strong> to <strong>{{schedule.endDate}}</strong></p>
                 <div class="row">
                     <div id="scheduleCarousel{{@index}}" class="carousel slide" data-bs-interval="false">
-                        <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#scheduleCarousel{{@index}}" data-bs-slide="prev" onclick="onCarouselArrowClick()">
+                        <button id="next{{groupLetter}}" class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#scheduleCarousel{{@index}}" data-bs-slide="prev" onclick="onCarouselArrowClick()">
                             <span class="carousel-control-prev-icon custom-carousel-control-icon" aria-hidden="true"></span>
                         </button>
-                        <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#scheduleCarousel{{@index}}" data-bs-slide="next" onclick="onCarouselArrowClick()">
+                        <button id="prev{{groupLetter}}" class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#scheduleCarousel{{@index}}" data-bs-slide="next" onclick="onCarouselArrowClick()">
                             <span class="carousel-control-next-icon custom-carousel-control-icon" aria-hidden="true"></span>
                         </button>
                         <div class="carousel-inner">
                             {{#each schedule.split}}
-                                <div id="carousel{{../groupLetter}}{{@../index}}{{@index}}" class="carousel-item carousels {{../groupLetter}} {{#if @first}}active{{/if}}">
+                                <div id="carousel{{../groupLetter}}{{@../index}}{{@index}}" class="carousel-item carousels {{../groupLetter}} {{#if @first}}active first{{/if}}">
                                     <p>Table Range: <strong>{{startDate}}</strong> to <strong>{{endDate}}</strong></p>
                                     <div class="row"> <!-- Ensure this row is here to contain the columns properly -->
                                         <div class="col-md-8">
@@ -187,10 +187,15 @@
     async function fetchAndUpdateContent() {
         let selectedButton = document.querySelector('button.groupButtons.btn-success').id;
         let selectedGroup = document.querySelector('div.groups:not(.visually-hidden)').id;
-        let currentCarousel = document.querySelectorAll('div.carousels.active');
-        console.log(selectedGroup);
-        console.log(selectedButton);
-        console.log(currentCarousel);
+        let currentCarousels = document.querySelectorAll('div.carousels.active');
+        let highlightedButton;
+        if (document.querySelector('button.COButtons.btn-success')) {
+             highlightedButton = document.querySelector('button.COButtons.btn-success').id;
+        }
+        let carouselIds = [];
+        currentCarousels.forEach(e => {
+            carouselIds.push(e.id);
+        })
         let postData = JSON.parse(localStorage.getItem('PostData'))
         const response = await fetch('/schedule', {
             method: 'POST',
@@ -208,9 +213,6 @@
         if (!response.ok) {
             throw new Error('Failed to fetch updated schedule');
         }
-        console.log(selectedButton);
-        console.log(selectedGroup);
-        console.log(currentCarousel);
         const htmlString = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlString, 'text/html');
@@ -222,12 +224,47 @@
         }
 
         let buttons = document.querySelectorAll('.groupButtons');
+        let carousels = document.querySelectorAll('.carousels');
+        let groups = document.querySelectorAll('.groups');
+
         buttons.forEach((button) => {
             button.classList.remove('btn-success');
             button.classList.add('btn-outline-success');
         });
+
+        carousels.forEach(carousel => {
+            carousel.classList.remove('active');
+        });
+
+        groups.forEach(group => {
+            group.classList.add('visually-hidden');
+        });
+
+
+        document.getElementById(selectedGroup).classList.remove('visually-hidden');
         document.getElementById(selectedButton).classList.add('btn-success');
         document.getElementById(selectedButton).classList.remove('btn-outline-success');
+
+        if (document.getElementById(highlightedButton)) {
+            document.getElementById(highlightedButton).classList.add('btn-success');
+            document.getElementById(highlightedButton).classList.remove('btn-outline-success');
+        } else {
+            currentCOID = null;
+        }
+
+
+
+            carouselIds.forEach(carousel => {
+                if(document.getElementById(carousel)) {
+                    document.getElementById(carousel).classList.add('active');
+                } else {
+                    const firstCarousel = carousel.slice(0,10)+'0';
+                    document.getElementById(firstCarousel).classList.add('active');
+                }
+
+            })
+
+
 
     }
 
@@ -267,16 +304,16 @@
 
     async function onTSClick(groupIndex, tableIndex, rowIndex, itemIndex) {
         const classroom = document.getElementById('classroomSelect00').value;
-        const cell = document.getElementById(`${groupIndex}${tableIndex}${rowIndex}${itemIndex}`);
-        let pElement = cell.querySelector('p');
-        let isEmpty = false; // Assume not empty by default
-        if (pElement) {
-            // Check if the <p> is visually empty (including whitespace-only scenarios)
-            if (pElement.innerText.trim() === '') {
-                isEmpty = true;
-            }
-        }
-        if (currentCOID && isEmpty) {
+        // const cell = document.getElementById(`${groupIndex}${tableIndex}${rowIndex}${itemIndex}`);
+        // let pElement = cell.querySelector('p');
+        // let isEmpty = false; // Assume not empty by default
+        // if (pElement) {
+        //     // Check if the <p> is visually empty (including whitespace-only scenarios)
+        //     if (pElement.innerText.trim() === '') {
+        //         isEmpty = true;
+        //     }
+        // }
+        if (currentCOID && rowIndex !== 0 && itemIndex !== 0) {
             try {
                 await fetch('/schedule', {
                     method: 'PUT',
@@ -294,7 +331,6 @@
             } catch (error) {
                 console.error("Fetch error:", error);
             }
-            currentCOID = null;
             await fetchAndUpdateContent();
         }
 
