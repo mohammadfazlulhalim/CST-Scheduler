@@ -16,7 +16,7 @@
                             <select id="termSelect" name="term" onchange="checkEnable()" class="form-select">
                                 <option id="blankTerm"></option>
                                 {{#each terms}}
-                                    <option value="{{id}}">{{title}}</option> <!-- fix date in get -->
+                                    <option value="{{id}}">{{this.calendarYear}} - Term {{this.termNumber}}</option>
                                 {{/each}}
                             </select>
                         </div>
@@ -48,53 +48,88 @@
 
 
     <div class="container-fluid" {{#if isHidden}}hidden{{/if}}>
-        <div class="column">
-            <button class="btn btn-success ">A</button>
-            <button class="btn btn-outline-success">B</button>
-            <button class="btn btn-outline-success">C</button>
-            <button class="btn btn-outline-success">D</button>
+        <div id="groupButtons" class="d-flex mx-5">
+        {{#each groupLetters}}
+            <button id="{{this}}button" class="btn {{#if @first}}btn-success{{else}}btn-outline-success{{/if}} groupButtons ms-2" onclick="onGroupClick({{this}})">{{this}}</button>
+        {{/each}}
         </div>
+<!--        <div id="groupButtons" class="d-flex mx-5">-->
+<!--            <button class="btn btn-success groupButtons ms-2" onclick="onGroupClick('A')">A</button>-->
+<!--            <button class="btn btn-outline-success groupButtons ms-2" onclick="onGroupClick('B')">B</button>-->
+<!--            <button class="btn btn-outline-success groupButtons ms-2" onclick="onGroupClick('C')">C</button>-->
+<!--            <button class="btn btn-outline-success groupButtons ms-2" onclick="onGroupClick('D')">D</button>-->
+<!--        </div>-->
         {{#each groups}}
-            <div class="container">
-                <p>Overall Range: {{schedule.startDate}} to {{schedule.endDate}}</p>
+            <div id="{{groupLetter}}" class="container groups {{#unless @first}}visually-hidden{{/unless}}">
+                <p class="mb-5">Overall Range: <strong>{{schedule.startDate}}</strong> to <strong>{{schedule.endDate}}</strong></p>
                 <div class="row">
-                    {{#each schedule.split}}
-                        <p>Table Range: {{startDate}} to {{endDate}}</p>
-                        <div class="col-md-8">
-                            <table class="table table-bordered table-hover border-dark scrollable-container">
-                                {{#each tableRows}}
-                                    <tr>
-                                        {{#each this}}
-                                            <td onclick="onTSClick({{@../../../index}},{{@../../index}}, {{@../index}}, {{@index}})">
-                                                {{this.dateTime}}
-                                                <p>{{this.course.courseName}}</p>
-                                                <p>{{this.primaryInstructor.lastName}}{{#if this.alternativeInstructor.lastName}}{{this.alternativeInstructor.lastName}}{{/if}}</p>
-                                                <p>{{this.classroom.roomNumber}}</p>
-                                            </td>
-                                        {{/each}}
-                                    </tr>
-                                {{/each}}
-                            </table>
+                    <div id="scheduleCarousel{{@index}}" class="carousel slide" data-bs-interval="false">
+                        <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#scheduleCarousel{{@index}}" data-bs-slide="prev" onclick="onCarouselArrowClick()">
+                            <span class="carousel-control-prev-icon custom-carousel-control-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#scheduleCarousel{{@index}}" data-bs-slide="next" onclick="onCarouselArrowClick()">
+                            <span class="carousel-control-next-icon custom-carousel-control-icon" aria-hidden="true"></span>
+                        </button>
+                        <div class="carousel-inner">
+                            {{#each schedule.split}}
+                                <div class="carousel-item {{#if @first}}active{{/if}}">
+                                    <p>Table Range: <strong>{{startDate}}</strong> to <strong>{{endDate}}</strong></p>
+                                    <div class="row"> <!-- Ensure this row is here to contain the columns properly -->
+                                        <div class="col-md-8">
+                                            <table class="table table-bordered table-hover border-dark scrollable-container table-sm">
+                                                {{#each tableRows}}
+                                                    <tr>
+                                                        {{#each this}}
+                                                            <td onclick="onTSClick({{@../../../index}},{{@../../index}}, {{@../index}}, {{@index}})">
+                                                                {{this.dateTime}}
+                                                                <p>{{this.course.courseName}}</p>
+                                                                <p>{{this.primaryInstructor.lastName}}{{#if
+                                                                        this.alternativeInstructor.lastName}}{{this.alternativeInstructor.lastName}}{{/if}}</p>
+                                                                <p>{{this.classroom.roomNumber}}</p>
+                                                            </td>
+                                                        {{/each}}
+                                                    </tr>
+                                                {{/each}}
+                                            </table>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="classroomSelect" class="form-label">Current Classroom:</label>
+                                            <select class="mb-5" id="classroomSelect" class="form-select">
+                                                {{#each ../../classrooms}}
+                                                    <option value="{{id}}">{{roomNumber}}</option>
+                                                {{/each}}
+                                            </select>
+                                            <h1>Course Offerings</h1>
+                                            <div class="d-flex flex-column overflow-auto py-2" role="group"
+                                                 aria-label="Course offerings" style="max-height: 800px;">
+                                                {{#each COArray}}
+                                                    <button id="{{this.id}}{{@../index}}"
+                                                            onclick="onCOClick({{this.id}}, {{this.id}}{{@../index}})"
+                                                            class="COButtons btn btn-outline-success mb-2 d-flex flex-column justify-content-center py-3 align-items-center"
+                                                            style="min-height: 100px;">
+                                                        <span class="btn-custom-content text-center h5"><strong>{{this.name}}</strong></span>
+                                                        <span class="btn-custom-content text-center">Primary Instructor: <strong> {{this.primaryInstructor.lastName}} </strong></span>
+                                                        <span class="btn-custom-content text-center">{{#if
+                                                                this.alternativeInstructor.lastName}}
+                                                            Alternative Instructor:{{this.alternativeInstructor.lastName}}{{else}}
+                                                            &nbsp;{{/if}}</span>
+                                                        <span class="btn-custom-content text-center">Range: <strong>{{this.startDate}}</strong> to <strong>{{this.endDate}}</strong></span>
+                                                    </button>
+                                                {{/each}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
                         </div>
-                        <div class="col-md-4">
-                            <h1>Course Offerings</h1>
-                            <div class="d-flex flex-column overflow-auto py-2" role="group" aria-label="Course offerings" style="max-height: 800px;">
-                                {{#each COArray}}
-                                    <button id={{this.id}} onclick="onCOClick({{this.id}})" class="COButtons btn btn-outline-success mb-2 d-flex flex-column justify-content-center py-3 align-items-center" style="min-height: 100px;">
-                                        <span class="btn-custom-content text-center h5"><strong>{{this.name}}</strong></span>
-                                        <span class="btn-custom-content text-center">Primary Instructor: <strong> {{this.primaryInstructor.lastName}} </strong></span>
-                                        <span class="btn-custom-content text-center">{{#if this.alternativeInstructor.lastName}}Alternative Instructor:{{this.alternativeInstructor.lastName}}{{else}}&nbsp;{{/if}}</span>
-                                    </button>
-                                {{/each}}
-                            </div>
-                        </div>
-                    {{/each}}
+                    </div>
                 </div>
             </div>
         {{/each}}
 
 
-        <a href="http://localhost:3000" class="btn btn-success mt-3">Return</a>
+
+        <a href="http://localhost:3000" class="mx-5 btn btn-success mt-3">Return</a>
     </div>
 </div>
 <script>
@@ -131,112 +166,6 @@
         }
     }
 
-    function changeGroup(group) {
-        // Disable all groups
-        hideAllGroups();
-        // enable the current one
-        document.getElementById('group' + group).removeAttribute('hidden');
-        document.getElementById('btn' + group).setAttribute('class', 'btn btn-primary');
-
-    }
-
-    function hideAllGroups() {
-        {{#each groupArray}}
-            document.getElementById("group{{groupLetter}}").setAttribute('hidden', '');
-            document.getElementById("btn{{groupLetter}}").setAttribute('class', 'btn btn-secondary');
-        {{/each}}
-
-    }
-
-    /**
-     * onclick handler for course offerings
-     * @param idCO
-     */
-    function onCOClick2(idCO, domObj) {
-        //retrieving DOM objects by id
-        const objCO = document.getElementById(domObj);
-        const currObjCO = document.getElementById(currDOM)
-
-        if (currCO === idCO) //if clicked CO is alreaady highlighted
-        {
-            objCO.removeAttribute('class', 'card bg-info mb-3 course-offering');
-            objCO.setAttribute('class', 'card bg-secondary mb-3 course-offering');
-            currCO = null;
-            currDOM = null;
-        } else {
-            if (currCO !== null) { // if there's a differnt CO highlighted, otherwise its jusst null
-                currObjCO.removeAttribute('class', 'card bg-info mb-3 course-offering');
-                currObjCO.setAttribute('class', 'card bg-secondary mb-3 course-offering');
-            }
-            objCO.removeAttribute('class', 'card bg-secondary mb-3 course-offering');
-            objCO.setAttribute('class', 'card bg-info mb-3 course-offering');
-            currCO = idCO;
-            currDOM = domObj;
-        }
-    }
-
-    async function onCellClick(idCell, tSlot, cellCO) {
-        if (currCO) {
-            //if not blank
-            if (tSlot) {
-                //If the selected CO is not the same as the current CO
-                if (cellCO !== currCO) {
-                    await fetch('/schedule', {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': "application/json"
-                        },
-                        body: JSON.stringify({id: tSlot}),
-                    })
-                } else { // timeslots are the same
-                    return;
-                }
-            }
-            try {
-                const response = await fetch('/schedule', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        idCell: idCell,
-                        CO: currCO
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to update schedule');
-                }
-
-                const data = await response.json();
-                // Access retTSlot data here
-
-                addTSToCell(idCell, data.retTSlot, data.xtraInfo);
-            } catch (error) {
-                // Handle errors
-                console.error('Error updating schedule:', error);
-            }
-
-
-        }
-        await fetchAndUpdateContent();
-    }
-
-
-    function addTSToCell(idCell, tSlot, xtraInfo) {
-        let oldTD = document.getElementById(idCell);
-
-        let newTD = "<td class=\"text-center\" oncontextmenu=\"onCellRightClick('" + idCell + "', '" + tSlot.id + "', '" + tSlot.CourseOfferingId + "')\" " +
-                "onclick=\"onCellClick('" + idCell + "', '" + tSlot.id + "', '" + tSlot.CourseOfferingId + "')\" " +
-                "id=\"" + idCell + "\">" +
-                "<p>" + xtraInfo.program + "<br/></p>" +
-                "<p>" + xtraInfo.course + "<br/></p>" +
-                "<p>" + xtraInfo.insLast + "<br/></p>" +
-                "</td>";
-
-        oldTD.outerHTML = newTD;
-    }
-
     async function onCellRightClick(idCell, tSlot, cellCO) {
         await fetch('/schedule', {
             method: 'DELETE',
@@ -245,16 +174,6 @@
             },
             body: JSON.stringify({id: tSlot}),
         })
-
-        let oldTD = document.getElementById(idCell);
-        let newTD = "<td class='empty text-center' nu=\"onCellRightClick('" + idCell + "', '" + "" + "', '" + "" + "')\" " +
-                "onclick=\"onCellClick('" + idCell + "', '" + "" + "', '" + "" + "')\" " +
-                "id=\"" + idCell + "\">" +
-                "<p><br/></p>" +
-                "<p><br/></p>" +
-                "<p><br/></p>" +
-                "</td>";
-        oldTD.outerHTML = newTD;
 
         await fetchAndUpdateContent();
 
@@ -291,20 +210,42 @@
         }
     }
 
-    function onCOClick(COId) {
+    function onCOClick(COId, button) {
         if (currentCOID === COId) {
             currentCOID = null;
             removeHighlights();
-        }
-        else {
+        } else {
             currentCOID = COId;
             removeHighlights();
-            document.getElementById(COId).classList.remove('btn-outline-success');
-            document.getElementById(COId).classList.add('btn-success');
+            document.getElementById(button).classList.remove('btn-outline-success');
+            document.getElementById(button).classList.add('btn-success');
         }
 
     }
+
+    function onCarouselArrowClick() {
+        currentCOID = null;
+        removeHighlights();
+    }
+
+    function onGroupClick(groupLetter) {
+        const buttons = document.querySelectorAll('.groupButtons');
+        buttons.forEach((button) => {
+            button.classList.remove('btn-success');
+            button.classList.add('btn-outline-success');
+        });
+        const allGroups = document.querySelectorAll('.groups');
+        allGroups.forEach((groups) => {
+            groups.classList.add('visually-hidden');
+        });
+        console.log(groupLetter.id+'button');
+        document.getElementById(groupLetter.id+'button').classList.add('btn-success');
+        document.getElementById(groupLetter.id+'button').classList.remove('btn-outline-success');
+        groupLetter.classList.remove('visually-hidden');
+    }
+
     async function onTSClick(groupIndex, tableIndex, rowIndex, itemIndex) {
+        const classroom = document.getElementById('classroomSelect').value;
         if (currentCOID) {
             try {
                 await fetch('/schedule', {
@@ -316,13 +257,15 @@
                         dayOfWeek: itemIndex,
                         timeIndex: rowIndex,
                         COId: currentCOID,
-                        group: groupIndex
+                        group: groupIndex,
+                        classroom: classroom
                     }),
                 });
             } catch (error) {
                 console.error("Fetch error:", error);
             }
         }
+        currentCOID = null;
         await fetchAndUpdateContent();
     }
 
@@ -338,11 +281,26 @@
 
 <style>
 
-.scrollable-container {
-max-height: 400px; /* Adjust based on your needs */
-overflow-y: auto;
-}
+    .scrollable-container {
+        max-height: 400px; /* Adjust based on your needs */
+        overflow-y: auto;
+    }
 
+    .custom-carousel-control {
+        color: black;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        background-color: black;
+    }
+
+    .carousel-control-prev.custom-carousel-control {
+        left: -150px;
+    }
+
+    .carousel-control-next.custom-carousel-control {
+        right: -150px;
+    }
 
 
 </style>

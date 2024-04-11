@@ -33,14 +33,21 @@ router.post('/', async (req, res) => {
   const term = await Term.findByPk(req.body.term);
   const program = await Program.findByPk(req.body.program);
   const groupCount = req.body.group;
+  const classrooms = await Classroom.findAll();
+
 
   groups = [];
 
   await getGroups(term, program, groupCount);
+  const groupLetters = [];
+  groups.forEach((e) => groupLetters.push(e.groupLetter));
+
 
   res.render('schedule', {
     isHidden: false,
     groups,
+    classrooms,
+    groupLetters,
   });
 });
 
@@ -53,18 +60,19 @@ router.put('/', async (req, res) => {
   //                 group: tableIndex
   //             }),
   const TIMES = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
-  const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
-  const GROUPS = ['A','B','C','D'];
+  const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+  const GROUPS = ['A', 'B', 'C', 'D'];
+
 
   const CO = await CourseOffering.findByPk(req.body.COId);
-//todo make classroom not static
+  // todo make classroom not static
   const newtSlot = {
     startDate: CO.startDate,
     endDate: CO.endDate,
     CourseOfferingId: CO.id,
     primaryInstructor: CO.primaryInstructor,
     alternativeInstructor: CO.alternativeInstructor,
-    ClassroomId: 3,
+    ClassroomId: req.body.classroom,
     TermId: CO.TermId,
     ProgramId: CO.ProgramId,
     startTime: TIMES[req.body.timeIndex-1],
@@ -92,7 +100,7 @@ router.put('/', async (req, res) => {
   //
   // res.status(200).json({retTSlot, xtraInfo});
 
-  res.redirect()
+  res.redirect();
 });
 
 
@@ -112,12 +120,13 @@ async function getGroups(term, program, groupCount) {
 
   for (let i=0; i<groupCount; i++) {
     groups[i] = {
+      groupLetter: groupLetters[i],
       schedule: {
         startDate: term.startDate,
         endDate: term.endDate,
         split: [],
       },
-    }
+    };
     try {
       await getSchedules(term, program, groupLetters[i], groups[i].schedule);
     } catch (e) {
@@ -139,7 +148,7 @@ async function getSchedules(term, program, groupLetter, schedule) {
     e.alternativeInstructor = await Instructor.findByPk(e.alternativeInstructor);
     e.courseOffering = await CourseOffering.findByPk(e.CourseOfferingId);
     e.classroom = await Classroom.findByPk(e.ClassroomId);
-     e.course = await e.courseOffering.getCourse();
+    e.course = await e.courseOffering.getCourse();
   }
 
   const uniqueDates = [term.startDate, term.endDate];
@@ -159,7 +168,7 @@ async function getSchedules(term, program, groupLetter, schedule) {
       endDate: undefined,
       tableRows: undefined,
       COArray: [undefined],
-    }
+    };
     schedule.split[i].startDate = uniqueDates[i];
     schedule.split[i].endDate = uniqueDates[i+1];
     schedule.split[i].COArray = await getCOs(schedule.split[i], term, program, groupLetter);
@@ -193,7 +202,7 @@ async function getTableRows(split, COArray, term, program, groupLetter, timeSlot
         rowsToReturn[i][j] = {dateTime: times12hr[i-1]};
         continue;
       }
-      rowsToReturn[i][j] = timeSlots.find((ts) => ts.day === topRow[j] && ts.startTime === times24hr[i-1] &&  (ts.startDate < split.endDate && ts.endDate > split.startDate));
+      rowsToReturn[i][j] = timeSlots.find((ts) => ts.day === topRow[j] && ts.startTime === times24hr[i-1] && (ts.startDate < split.endDate && ts.endDate > split.startDate));
     }
   }
 
@@ -224,7 +233,6 @@ async function getCOs(split, term, program, groupLetter) {
   }
   return courseOfferings;
 }
-
 
 
 module.exports = router;
