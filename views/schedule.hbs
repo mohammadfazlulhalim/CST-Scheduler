@@ -53,12 +53,6 @@
             <button id="{{this}}button" class="btn {{#if @first}}btn-success{{else}}btn-outline-success{{/if}} groupButtons ms-2" onclick="onGroupClick({{this}})">{{this}}</button>
         {{/each}}
         </div>
-<!--        <div id="groupButtons" class="d-flex mx-5">-->
-<!--            <button class="btn btn-success groupButtons ms-2" onclick="onGroupClick('A')">A</button>-->
-<!--            <button class="btn btn-outline-success groupButtons ms-2" onclick="onGroupClick('B')">B</button>-->
-<!--            <button class="btn btn-outline-success groupButtons ms-2" onclick="onGroupClick('C')">C</button>-->
-<!--            <button class="btn btn-outline-success groupButtons ms-2" onclick="onGroupClick('D')">D</button>-->
-<!--        </div>-->
         {{#each groups}}
             <div id="{{groupLetter}}" class="container groups {{#unless @first}}visually-hidden{{/unless}}">
                 <p class="mb-5">Overall Range: <strong>{{schedule.startDate}}</strong> to <strong>{{schedule.endDate}}</strong></p>
@@ -80,9 +74,8 @@
                                                 {{#each tableRows}}
                                                     <tr>
                                                         {{#each this}}
-                                                            <td onclick="onTSClick({{@../../../index}},{{@../../index}}, {{@../index}}, {{@index}})">
-                                                                {{this.dateTime}}
-                                                                <p>{{this.course.courseName}}</p>
+                                                            <td id="{{@../../../index}}{{@../../index}}{{@../index}}{{@index}}" onclick="onTSClick({{@../../../index}},{{@../../index}}, {{@../index}}, {{@index}})">
+                                                                <p>{{#if this.course.courseName}}{{this.course.courseName}}{{else}}{{this.dateTime}}{{/if}}</p>
                                                                 <p>{{this.primaryInstructor.lastName}}{{#if
                                                                         this.alternativeInstructor.lastName}}{{this.alternativeInstructor.lastName}}{{/if}}</p>
                                                                 <p>{{this.classroom.roomNumber}}</p>
@@ -93,8 +86,8 @@
                                             </table>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="classroomSelect" class="form-label">Current Classroom:</label>
-                                            <select class="mb-5" id="classroomSelect" class="form-select">
+                                            <label for="classroomSelect{{@../index}}{{@index}}" class="form-label">Current Classroom:</label>
+                                            <select class="mb-5 classroomSelect form-select" id="classroomSelect{{@../index}}{{@index}}" onchange="updateDropdowns(this.value)">
                                                 {{#each ../../classrooms}}
                                                     <option value="{{id}}">{{roomNumber}}</option>
                                                 {{/each}}
@@ -149,6 +142,17 @@
 
     };
 
+    function updateDropdowns(selectedValue) {
+        const dropdowns = document.querySelectorAll('.classroomSelect');
+        dropdowns.forEach((dropdown) => {
+            dropdown.value = selectedValue;
+        });
+    }
+
+
+
+
+
     function checkEnable() {
         let bTermSelected = document.getElementById('termSelect').value !== '';
         let bProgramSelected = document.getElementById('programSelect').value !== '';
@@ -202,7 +206,6 @@
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlString, 'text/html');
         const newBodyContent = doc.getElementById('entirePageBody').innerHTML;
-        console.log(newBodyContent);
         try {
             document.getElementById('entirePageBody').innerHTML = newBodyContent;
         } catch (error) {
@@ -228,6 +231,7 @@
         removeHighlights();
     }
 
+
     function onGroupClick(groupLetter) {
         const buttons = document.querySelectorAll('.groupButtons');
         buttons.forEach((button) => {
@@ -238,7 +242,6 @@
         allGroups.forEach((groups) => {
             groups.classList.add('visually-hidden');
         });
-        console.log(groupLetter.id+'button');
         document.getElementById(groupLetter.id+'button').classList.add('btn-success');
         document.getElementById(groupLetter.id+'button').classList.remove('btn-outline-success');
         groupLetter.classList.remove('visually-hidden');
@@ -246,7 +249,16 @@
 
     async function onTSClick(groupIndex, tableIndex, rowIndex, itemIndex) {
         const classroom = document.getElementById('classroomSelect').value;
-        if (currentCOID) {
+        const cell = document.getElementById(`${groupIndex}${tableIndex}${rowIndex}${itemIndex}`);
+        let pElement = cell.querySelector('p');
+        let isEmpty = false; // Assume not empty by default
+        if (pElement) {
+            // Check if the <p> is visually empty (including whitespace-only scenarios)
+            if (pElement.innerText.trim() === '') {
+                isEmpty = true;
+            }
+        }
+        if (currentCOID && isEmpty) {
             try {
                 await fetch('/schedule', {
                     method: 'PUT',
@@ -264,9 +276,10 @@
             } catch (error) {
                 console.error("Fetch error:", error);
             }
+            currentCOID = null;
+            await fetchAndUpdateContent();
         }
-        currentCOID = null;
-        await fetchAndUpdateContent();
+
     }
 
 
