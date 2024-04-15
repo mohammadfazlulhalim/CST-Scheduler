@@ -48,7 +48,7 @@
 
 
     <div class="container-fluid" {{#if isHidden}}hidden{{/if}}>
-        <div id="groupButtons" class="d-flex mx-5">
+        <div id="groupButtons" style="margin-left: 200px;" class="d-flex mx-5">
         {{#each groupLetters}}
             <button id="{{this}}button" class="btn {{#if @first}}btn-success{{else}}btn-outline-success{{/if}} groupButtons ms-2" onclick="onGroupClick({{this}})">{{this}}</button>
         {{/each}}
@@ -69,7 +69,7 @@
                                 <div id="carousel{{../groupLetter}}{{@../index}}{{@index}}" class="carousel-item carousels {{../groupLetter}} {{#if @first}}active first{{/if}}">
                                     <p>Table Range: <strong>{{startDate}}</strong> to <strong>{{endDate}}</strong></p>
                                     <div class="row"> <!-- Ensure this row is here to contain the columns properly -->
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 table-responsive table-sm">
                                             <table class="table table-bordered table-hover border-dark scrollable-container table-sm">
                                                 {{#each tableRows}}
                                                     <tr>
@@ -94,12 +94,12 @@
                                             </select>
                                             <h1>Course Offerings</h1>
                                             <div class="d-flex flex-column overflow-auto py-2" role="group"
-                                                 aria-label="Course offerings" style="max-height: 800px;">
+                                                 aria-label="Course offerings" style="max-height: 500px;">
                                                 {{#each COArray}}
                                                     <button id="{{this.id}}{{@../index}}"
                                                             onclick="onCOClick({{this.id}}, {{this.id}}{{@../index}})"
                                                             class="COButtons btn btn-outline-success mb-2 d-flex flex-column justify-content-center py-3 align-items-center"
-                                                            style="min-height: 100px;">
+                                                            style="height: 400px;">
                                                         <span class="btn-custom-content text-center h5"><strong>{{this.name}}</strong></span>
                                                         <span class="btn-custom-content text-center">Primary Instructor: <strong> {{this.primaryInstructor.lastName}} </strong></span>
                                                         <span class="btn-custom-content text-center">{{#if
@@ -122,7 +122,7 @@
 
 
 
-        <a href="http://localhost:3000" class="mx-5 btn btn-success mt-3">Return</a>
+        <a href="http://localhost:3000" style="margin-left: 200px;" class="mx-5 btn btn-success mt-3">Return</a>
     </div>
 </div>
 <script>
@@ -300,6 +300,8 @@
         document.getElementById(groupLetter.id+'button').classList.add('btn-success');
         document.getElementById(groupLetter.id+'button').classList.remove('btn-outline-success');
         groupLetter.classList.remove('visually-hidden');
+        removeHighlights();
+        currentCOID = null;
     }
 
     async function onTSClick(groupIndex, tableIndex, rowIndex, itemIndex, tsID) {
@@ -378,6 +380,33 @@
     .carousel-control-next.custom-carousel-control {
         right: -150px;
     }
+
+    td {
+        height: 75px;  /* Fixed height */
+        width: 75px;   /* Fixed width */
+    }
+
+    .table {
+        table-layout: fixed; /* Ensures the table respects fixed cell width regardless of content */
+    }
+
+    .overflow-auto {
+        max-height: 50vh;  /* Adjust based on the view height */
+        overflow-y: auto;
+    }
+
+    .COButtons {
+        height: 100px; /* Makes height responsive to the container's height */
+        padding: 10px; /* Comfortable padding */
+        box-sizing: border-box; /* Include padding and border in the height */
+    }
+
+    td p {
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+
+
 
 
 </style>

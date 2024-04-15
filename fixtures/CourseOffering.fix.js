@@ -31,25 +31,18 @@ async function fillCourseOfferingTable() {
     COSPLIT[i].setTerm(2);
     COSPLIT[i].setProgram(2);
   }
+  const insArray = [11,1,7,6];
+  const courseArray = [15,11,4,14];
 
 
-  COSPLIT[0].setInstructor(11);
-  COSPLIT[1].setInstructor(1);
-  COSPLIT[2].setInstructor(7);
-  COSPLIT[3].setInstructor(6);
-  COSPLIT[0].setCourse(15);
-  COSPLIT[1].setCourse(11);
-  COSPLIT[2].setCourse(4);
-  COSPLIT[3].setCourse(14);
+  for (let i=0; i<16; i++) {
+    const index =   i   %   4    ;
+    COSPLIT[i].setInstructor(insArray[index]);
+    COSPLIT[i].setCourse(courseArray[index]);
+  }
 
-  COSPLIT[4].setInstructor(11);
-  COSPLIT[5].setInstructor(1);
-  COSPLIT[6].setInstructor(7);
-  COSPLIT[7].setInstructor(6);
-  COSPLIT[4].setCourse(15);
-  COSPLIT[5].setCourse(11);
-  COSPLIT[6].setCourse(4);
-  COSPLIT[7].setCourse(14);
+
+
 
 
   /* CourseOffering.belongsTo(Term);
@@ -175,6 +168,14 @@ const validSplitCourseOfferings =[
   {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-28', group: 'B', CourseId: 1},
   {name: 'Seminar', startDate: '2023-01-02', endDate: '2023-02-02', group: 'B', CourseId: 1},
   {name: 'Technical Communications', startDate: '2023-04-15', endDate: '2023-05-14', group: 'B', CourseId: 1},
+  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'C', CourseId: 1},
+  {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-28', group: 'C', CourseId: 1},
+  {name: 'Seminar', startDate: '2023-01-02', endDate: '2023-02-02', group: 'C', CourseId: 1},
+  {name: 'Technical Communications', startDate: '2023-04-15', endDate: '2023-05-14', group: 'C', CourseId: 1},
+  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'D', CourseId: 1},
+  {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-28', group: 'D', CourseId: 1},
+  {name: 'Seminar', startDate: '2023-01-02', endDate: '2023-02-02', group: 'D', CourseId: 1},
+  {name: 'Technical Communications', startDate: '2023-04-15', endDate: '2023-05-14', group: 'D', CourseId: 1},
 
 ]
 
