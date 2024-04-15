@@ -104,119 +104,43 @@ describe('Test Schedule Report Page', () => {
     cy.get('.COButtons').last().click({force: true}); // Click the first course button
     cy.get('#0012').click(); // schedule it for monday at 9:00 am
 
-    // check that clicking the next arrow moves us forward
+    //clicking arrows and checking for content
+    cy.wait(100);
+    cy.get('#nextA').should('be.visible').click();
+    cy.get('#tableRange01').contains('2023-04-15 to 2023-04-28');
+    cy.get('#prevA').should('be.visible').click({force: true});
+    cy.get('#tableRange00').contains('2023-01-02 to 2023-04-15');
+    // make sure clcking the buttons loops to begining again
+    cy.get('#nextA').should('be.visible').click();
+    cy.get('#tableRange01').contains('2023-04-15 to 2023-04-28');
+    // test that the date format is correct
+    // Assuming you want to check all elements with IDs that start with 'tableRange'
+    cy.get('[id^="tableRange"]').each($el => {
+      const text = $el.text();
+      const dates = text.replace(/Table Range: /, '').split(' to ');
+      const regex = /^\d{4}-\d{2}-\d{2}$/;
 
-    // cy.get('.carousel-control-next').first().click(); // Click the next button
+      // Extract start and end dates
+      const startDate = dates[0].trim();
+      const endDate = dates[1].trim();
 
-    // Get the carousel inner content before clicking next
-    cy.get('.carousel-inner').invoke('text').as('initialContent');
-
-    // Click the next button to move forward in the carousel
-    cy.get('.carousel-item.active .custom-carousel-control').first().click();
-
-    // Get the carousel inner content after clicking next
-    cy.get('.carousel-inner').invoke('text').as('newContent');
-
-    // Compare the content before and after clicking next
-    cy.get('@initialContent').then((initialContent) => {
-      cy.get('@newContent').then((newContent) => {
-        expect(newContent).not.to.eq(initialContent); // Assert that content changed
-      });
+      // Check each date format
+      expect(startDate, 'Start Date Format').to.match(regex);
+      expect(endDate, 'End Date Format').to.match(regex);
     });
+
+
+
+
+
+
+
   });
 
 
   /*
 
 
-  /!**
-     * Arrows appearing
-     *!/
-  // Navigate to the next schedule
-  cy.get('#nextSchedule').click();
-
-  /!**
-     * Clicks next moves forward one
-     *!/
-  // Assert that the date range for the next schedule is displayed correctly
-  cy.get('#scheduleDateRange').should('have.text', '02/02/2024 - 04/01/2024');
-
-  // Click on a specific cell to schedule 'TCOM' (adjust the time and day)
-  cy.get(`#${selectedTimeSlot}-${selectedDay}-${letter}`).click();
-
-  // Assert that the clicked cell has the expected text 'TCOM'
-  cy.get(`#${selectedTimeSlot}-${selectedDay}-${letter}`).should('have.text', 'COSC292');
-
-  cy.get('#scheduleDateRange').should('have.text', '03/01/2024 - 04/01/2024');
-
-  // Go back to the previous time range
-  cy.get('#prevSchedule').click();
-
-  cy.get('#scheduleDateRange').should('have.text', '02/02/2024 - 03/01/2024');
-
-  /!**
-     * Arrows loop back to end or beginning schedule
-     *!/
-  cy.get('#nextSchedule').click();
-  cy.get('#nextSchedule').click();
-
-  // Assert that the first schedule is displayed again
-  cy.get('#scheduleDateRange').should('have.text', '01/01/2024 - 02/02/2024');
-
-
-  /!**
-     * Clicks back moves back one
-     *!/
-  // Click the back button
-  cy.get('#prevSchedule').click();
-
-  // Assert that the last schedule is displayed
-  cy.get('#scheduleDateRange').should('have.text', '04/01/2024 - 04/30/2024');
-  /!**
-     * View changing
-     *!/
-  // Assert that the cell for 'TCOM' is not visible in the next schedule
-  cy.get(`#${selectedTimeSlot}-${selectedDay}-${letter}`).should('not.be.visible');
-
-
-  // Navigate back to the previous schedule
-  cy.get('#prevSchedule').click();
-
-  // Assert that the date range for the previous schedule is displayed correctly
-  cy.get('#scheduleDateRange').should('have.text', '02/02/2024 - 03/01/2024');
-
-  // Assert that the cell for 'TCOM' is visible again in the previous schedule
-  cy.get(`#${selectedTimeSlot}-${selectedDay}-${letter}`).should('be.visible');
-
-  /!**
-     * Date format
-     *!/
-  // Assert that the date range for the next schedule is displayed correctly and in the expected format
-  cy.get('#scheduleDateRange').invoke('text').then((dateRangeText) => {
-    const dateRangeParts = dateRangeText.split(' - ');
-    const startDate = Cypress.moment(dateRangeParts[0], 'DD/MM/YYYY', true);
-    const endDate = Cypress.moment(dateRangeParts[1], 'DD/MM/YYYY', true);
-
-    // Check the date format and validity
-    expect(startDate.isValid()).to.be.true;
-    expect(endDate.isValid()).to.be.true;
-
-
-    // Check the format explicitly
-    expect(dateRangeParts[0]).to.match(/^\d{2}\/\d{2}\/\d{4}$/);
-    expect(dateRangeParts[1]).to.match(/^\d{2}\/\d{2}\/\d{4}$/);
-  });
-
-
-  /!**
-     * Test that the close button closes and that new program button opens modal
-     //      *!/
-  // Wait for the buttons to be visible
-  cy.get('#newProgramBtn').should('be.visible');
-  cy.get('#newProgramBtn').click();
-  cy.get('#closeModal').should('be.visible');
-  cy.get('#closeModal').click();
-  cy.get('#newProgramBtn').should('not.be.visible');
 
 
   /!**

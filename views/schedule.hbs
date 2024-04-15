@@ -48,6 +48,7 @@
 
 
     <div class="container-fluid" {{#if isHidden}}hidden{{/if}}>
+        <h4 style="margin-left:200px">Schedule Builder for: <strong>{{program.programName}} {{term.calendarYear}} Term#{{term.termNumber}}</strong></h4>
         <div id="groupButtons" style="margin-left: 200px;" class="d-flex">
         {{#each groupLetters}}
             <button id="{{this}}button" class="btn {{#if @first}}btn-primary{{else}}btn-outline-primary{{/if}} groupButtons ms-2" onclick="onGroupClick({{this}})">{{this}}</button>
@@ -56,19 +57,18 @@
         {{#each groups}}
             <div id="{{groupLetter}}" class="container groups {{#unless @first}}visually-hidden{{/unless}}">
                 <p class="mb-3">Overall Range: <strong>{{schedule.startDate}}</strong> to <strong>{{schedule.endDate}}</strong></p>
-                <h5>Schedule Builder for: <strong>{{../program.programName}} {{../term.calendarYear}} Term#{{../term.termNumber}}</strong></h5>
                 <div class="row">
                     <div id="scheduleCarousel{{@index}}" class="carousel slide" data-bs-interval="false">
-                        <button id="next{{groupLetter}}" class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#scheduleCarousel{{@index}}" data-bs-slide="prev" onclick="onCarouselArrowClick()">
+                        <button id="prev{{groupLetter}}" class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#scheduleCarousel{{@index}}" data-bs-slide="prev" onclick="onCarouselArrowClick()">
                             <span class="carousel-control-prev-icon custom-carousel-control-icon" aria-hidden="true"></span>
                         </button>
-                        <button id="prev{{groupLetter}}" class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#scheduleCarousel{{@index}}" data-bs-slide="next" onclick="onCarouselArrowClick()">
+                        <button id="next{{groupLetter}}" class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#scheduleCarousel{{@index}}" data-bs-slide="next" onclick="onCarouselArrowClick()">
                             <span class="carousel-control-next-icon custom-carousel-control-icon" aria-hidden="true"></span>
                         </button>
                         <div class="carousel-inner">
                             {{#each schedule.split}}
                                 <div id="carousel{{../groupLetter}}{{@../index}}{{@index}}" class="carousel-item carousels {{../groupLetter}} {{#if @first}}active first{{/if}}">
-                                    <p>Table Range: <strong>{{startDate}}</strong> to <strong>{{endDate}}</strong></p>
+                                    <p id="tableRange{{@../index}}{{@index}}">Table Range: <strong>{{startDate}}</strong> to <strong>{{endDate}}</strong></p>
                                     <div class="row"> <!-- Ensure this row is here to contain the columns properly -->
                                         <div class="col-md-8 table-responsive table-sm">
                                             <table class="table table-bordered table-hover border-dark scrollable-container table-sm">

@@ -38,8 +38,6 @@ router.post('/', async (req, res) => {
   await getGroups(term, program, groupCount);
   const groupLetters = [];
   groups.forEach((e) => groupLetters.push(e.groupLetter));
-  console.log(term);
-  console.log(program);
 
   res.render('schedule', {
     term,
@@ -119,12 +117,23 @@ async function getSchedules(term, program, groupLetter, schedule) {
     where: {group: groupLetter, ProgramId: program.id, TermId: term.id},
   });
   for (const e of timeSlots) {
-    e.primaryInstructor = await Instructor.findByPk(e.primaryInstructor);
-    e.alternativeInstructor = await Instructor.findByPk(e.alternativeInstructor);
-    e.courseOffering = await CourseOffering.findByPk(e.CourseOfferingId);
-    e.classroom = await Classroom.findByPk(e.ClassroomId);
-    e.course = await e.courseOffering.getCourse();
+    try{
+      e.primaryInstructor = await Instructor.findByPk(e.primaryInstructor);
+      e.alternativeInstructor = await Instructor.findByPk(e.alternativeInstructor);
+      e.courseOffering = await CourseOffering.findByPk(e.CourseOfferingId);
+      e.classroom = await Classroom.findByPk(e.ClassroomId);
+      e.course = await e.courseOffering.getCourse();
+    }
+    catch(f) {
+      e.primaryInstructor="";
+      e.alternativeInstructor="";
+      e.courseOffering="";
+      e.classroom="";
+      await Timeslot.destroy({where: {id: e.id}});
+    }
   }
+
+
 
   const uniqueDates = [term.startDate, term.endDate];
   timeSlots.forEach((ts) => {

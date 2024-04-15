@@ -1,4 +1,5 @@
 const CourseOffering = require('./CourseOffering');
+const Timeslot = require('./Timeslot');
 
 /**
  * Creates a course offering in the database, returns course offering
@@ -17,6 +18,7 @@ async function createCourseOffering(createCO) {
  * @param updateCO
  */
 async function updateCourseOffering(updateCO) {
+
     try {
         const updated = await CourseOffering.findByPk(updateCO.id);
 
@@ -31,6 +33,7 @@ async function updateCourseOffering(updateCO) {
  * @param deleteCO
  */
 async function deleteCourseOffering(deleteCO) {
+
     try {
         return await CourseOffering.destroy({
             where: {
