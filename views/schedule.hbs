@@ -74,7 +74,7 @@
                                                 {{#each tableRows}}
                                                     <tr>
                                                         {{#each this}}
-                                                            <td id="{{@../../../index}}{{@../../index}}{{@../index}}{{@index}}" oncontextmenu="onRightClick('{{this.id}}')" onclick="onTSClick({{@../../../index}},{{@../../index}}, {{@../index}}, {{@index}})">
+                                                            <td id="{{@../../../index}}{{@../../index}}{{@../index}}{{@index}}" oncontextmenu="onRightClick('{{this.id}}')" onclick="onTSClick({{@../../../index}},{{@../../index}}, {{@../index}}, {{@index}}, {{this.id}})">
                                                                 <p>{{#if this.course.courseName}}{{this.course.courseName}}{{else}}{{this.dateTime}}{{/if}}</p>
                                                                 <p>{{this.primaryInstructor.lastName}}{{#if
                                                                         this.alternativeInstructor.lastName}}{{this.alternativeInstructor.lastName}}{{/if}}</p>
@@ -302,7 +302,7 @@
         groupLetter.classList.remove('visually-hidden');
     }
 
-    async function onTSClick(groupIndex, tableIndex, rowIndex, itemIndex) {
+    async function onTSClick(groupIndex, tableIndex, rowIndex, itemIndex, tsID) {
         const classroom = document.getElementById('classroomSelect00').value;
         // const cell = document.getElementById(`${groupIndex}${tableIndex}${rowIndex}${itemIndex}`);
         // let pElement = cell.querySelector('p');
@@ -313,6 +313,16 @@
         //         isEmpty = true;
         //     }
         // }
+        if (tsID) {
+            await fetch('/schedule', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({tsID,}),
+            })
+        }
+
         if (currentCOID && rowIndex !== 0 && itemIndex !== 0) {
             try {
                 await fetch('/schedule', {
