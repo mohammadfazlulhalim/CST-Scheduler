@@ -48,14 +48,15 @@
 
 
     <div class="container-fluid" {{#if isHidden}}hidden{{/if}}>
-        <div id="groupButtons" style="margin-left: 200px;" class="d-flex mx-5">
+        <div id="groupButtons" style="margin-left: 200px;" class="d-flex">
         {{#each groupLetters}}
-            <button id="{{this}}button" class="btn {{#if @first}}btn-success{{else}}btn-outline-success{{/if}} groupButtons ms-2" onclick="onGroupClick({{this}})">{{this}}</button>
+            <button id="{{this}}button" class="btn {{#if @first}}btn-primary{{else}}btn-outline-primary{{/if}} groupButtons ms-2" onclick="onGroupClick({{this}})">{{this}}</button>
         {{/each}}
         </div>
         {{#each groups}}
             <div id="{{groupLetter}}" class="container groups {{#unless @first}}visually-hidden{{/unless}}">
-                <p class="mb-5">Overall Range: <strong>{{schedule.startDate}}</strong> to <strong>{{schedule.endDate}}</strong></p>
+                <p class="mb-3">Overall Range: <strong>{{schedule.startDate}}</strong> to <strong>{{schedule.endDate}}</strong></p>
+                <h5>Schedule Builder for: <strong>{{../program.programName}} {{../term.calendarYear}} Term#{{../term.termNumber}}</strong></h5>
                 <div class="row">
                     <div id="scheduleCarousel{{@index}}" class="carousel slide" data-bs-interval="false">
                         <button id="next{{groupLetter}}" class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#scheduleCarousel{{@index}}" data-bs-slide="prev" onclick="onCarouselArrowClick()">
@@ -77,7 +78,7 @@
                                                             <td id="{{@../../../index}}{{@../../index}}{{@../index}}{{@index}}" oncontextmenu="onRightClick('{{this.id}}')" onclick="onTSClick({{@../../../index}},{{@../../index}}, {{@../index}}, {{@index}}, {{this.id}})">
                                                                 <p>{{#if this.course.courseName}}{{this.course.courseName}}{{else}}{{this.dateTime}}{{/if}}</p>
                                                                 <p>{{this.primaryInstructor.lastName}}{{#if
-                                                                        this.alternativeInstructor.lastName}}{{this.alternativeInstructor.lastName}}{{/if}}</p>
+                                                                        this.alternativeInstructor.lastName}} / {{this.alternativeInstructor.lastName}}{{/if}}</p>
                                                                 <p>{{this.classroom.roomNumber}}</p>
                                                             </td>
                                                         {{/each}}
@@ -86,25 +87,25 @@
                                             </table>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="classroomSelect{{@../index}}{{@index}}" class="form-label">Current Classroom:</label>
-                                            <select class="mb-5 classroomSelect form-select" id="classroomSelect{{@../index}}{{@index}}" onchange="updateDropdowns(this.value)">
+                                            <h3><label for="classroomSelect{{@../index}}{{@index}}" class="form-label">Current Classroom:</label></h3>
+                                            <select class="mb-3 classroomSelect form-select" id="classroomSelect{{@../index}}{{@index}}" onchange="updateDropdowns(this.value)">
                                                 {{#each ../../classrooms}}
                                                     <option value="{{id}}">{{roomNumber}}</option>
                                                 {{/each}}
                                             </select>
-                                            <h1>Course Offerings</h1>
-                                            <div class="d-flex flex-column overflow-auto py-2" role="group"
+                                            <h3>Course Offerings</h3>
+                                            <div class="d-flex flex-column overflow-auto py-1" role="group"
                                                  aria-label="Course offerings" style="max-height: 500px;">
                                                 {{#each COArray}}
                                                     <button id="{{this.id}}{{@../index}}"
                                                             onclick="onCOClick({{this.id}}, {{this.id}}{{@../index}})"
-                                                            class="COButtons btn btn-outline-success mb-2 d-flex flex-column justify-content-center py-3 align-items-center"
-                                                            style="height: 400px;">
+                                                            class="COButtons btn btn-outline-primary mb-2 d-flex flex-column justify-content-center py-3 align-items-center"
+                                                            style="height: 125px;">
                                                         <span class="btn-custom-content text-center h5"><strong>{{this.name}}</strong></span>
                                                         <span class="btn-custom-content text-center">Primary Instructor: <strong> {{this.primaryInstructor.lastName}} </strong></span>
                                                         <span class="btn-custom-content text-center">{{#if
                                                                 this.alternativeInstructor.lastName}}
-                                                            Alternative Instructor:{{this.alternativeInstructor.lastName}}{{else}}
+                                                            Alternative Instructor: <strong>{{this.alternativeInstructor.lastName}}</strong>{{else}}
                                                             &nbsp;{{/if}}</span>
                                                         <span class="btn-custom-content text-center">Range: <strong>{{this.startDate}}</strong> to <strong>{{this.endDate}}</strong></span>
                                                     </button>
@@ -122,7 +123,7 @@
 
 
 
-        <a href="http://localhost:3000" style="margin-left: 200px;" class="mx-5 btn btn-success mt-3">Return</a>
+        <a href="http://localhost:3000" style="margin-left: 200px;" class="btn btn-primary mt-3">Return</a>
     </div>
 </div>
 <script>
@@ -185,12 +186,12 @@
     }
 
     async function fetchAndUpdateContent() {
-        let selectedButton = document.querySelector('button.groupButtons.btn-success').id;
+        let selectedButton = document.querySelector('button.groupButtons.btn-primary').id;
         let selectedGroup = document.querySelector('div.groups:not(.visually-hidden)').id;
         let currentCarousels = document.querySelectorAll('div.carousels.active');
         let highlightedButton;
-        if (document.querySelector('button.COButtons.btn-success')) {
-             highlightedButton = document.querySelector('button.COButtons.btn-success').id;
+        if (document.querySelector('button.COButtons.btn-primary')) {
+             highlightedButton = document.querySelector('button.COButtons.btn-primary').id;
         }
         let carouselIds = [];
         currentCarousels.forEach(e => {
@@ -228,8 +229,8 @@
         let groups = document.querySelectorAll('.groups');
 
         buttons.forEach((button) => {
-            button.classList.remove('btn-success');
-            button.classList.add('btn-outline-success');
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline-primary');
         });
 
         carousels.forEach(carousel => {
@@ -242,12 +243,12 @@
 
 
         document.getElementById(selectedGroup).classList.remove('visually-hidden');
-        document.getElementById(selectedButton).classList.add('btn-success');
-        document.getElementById(selectedButton).classList.remove('btn-outline-success');
+        document.getElementById(selectedButton).classList.add('btn-primary');
+        document.getElementById(selectedButton).classList.remove('btn-outline-primary');
 
         if (document.getElementById(highlightedButton)) {
-            document.getElementById(highlightedButton).classList.add('btn-success');
-            document.getElementById(highlightedButton).classList.remove('btn-outline-success');
+            document.getElementById(highlightedButton).classList.add('btn-primary');
+            document.getElementById(highlightedButton).classList.remove('btn-outline-primary');
         } else {
             currentCOID = null;
         }
@@ -275,8 +276,8 @@
         } else {
             currentCOID = COId;
             removeHighlights();
-            document.getElementById(button).classList.remove('btn-outline-success');
-            document.getElementById(button).classList.add('btn-success');
+            document.getElementById(button).classList.remove('btn-outline-primary');
+            document.getElementById(button).classList.add('btn-primary');
         }
 
     }
@@ -290,15 +291,15 @@
     function onGroupClick(groupLetter) {
         const buttons = document.querySelectorAll('.groupButtons');
         buttons.forEach((button) => {
-            button.classList.remove('btn-success');
-            button.classList.add('btn-outline-success');
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline-primary');
         });
         const allGroups = document.querySelectorAll('.groups');
         allGroups.forEach((groups) => {
             groups.classList.add('visually-hidden');
         });
-        document.getElementById(groupLetter.id+'button').classList.add('btn-success');
-        document.getElementById(groupLetter.id+'button').classList.remove('btn-outline-success');
+        document.getElementById(groupLetter.id+'button').classList.add('btn-primary');
+        document.getElementById(groupLetter.id+'button').classList.remove('btn-outline-primary');
         groupLetter.classList.remove('visually-hidden');
         removeHighlights();
         currentCOID = null;
@@ -352,8 +353,8 @@
     function removeHighlights() {
         const buttons = document.querySelectorAll('.COButtons');
         buttons.forEach((button) => {
-            button.classList.remove('btn-success');
-            button.classList.add('btn-outline-success');
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline-primary');
         });
     }
 </script>
@@ -396,7 +397,9 @@
     }
 
     .COButtons {
-        height: 100px; /* Makes height responsive to the container's height */
+        margin-left:auto;
+        margin-right:auto;
+        width:350px;
         padding: 10px; /* Comfortable padding */
         box-sizing: border-box; /* Include padding and border in the height */
     }
@@ -404,6 +407,23 @@
     td p {
         margin-top: 1px;
         margin-bottom: 1px;
+        text-align: center;
+    }
+
+    .classroomSelect {
+        top: -50px;
+    }
+
+    tr td:first-child p {
+        font-weight: bold;
+    }
+
+    tr:first-child td p {
+        font-weight: bold;
+    }
+
+    tr:first-child td {
+        height:20px;
     }
 
 

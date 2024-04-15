@@ -45,6 +45,7 @@ async function fillCourseOfferingTable() {
 
 
 
+
   /* CourseOffering.belongsTo(Term);
   CourseOffering.belongsTo(Course);
   CourseOffering.belongsTo(Instructor);

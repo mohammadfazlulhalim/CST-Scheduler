@@ -34,11 +34,16 @@ router.post('/', async (req, res) => {
   const classrooms = await Classroom.findAll();
   groups = [];
 
+
   await getGroups(term, program, groupCount);
   const groupLetters = [];
   groups.forEach((e) => groupLetters.push(e.groupLetter));
+  console.log(term);
+  console.log(program);
 
   res.render('schedule', {
+    term,
+    program,
     isHidden: false,
     groups,
     classrooms,
