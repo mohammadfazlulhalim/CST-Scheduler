@@ -12,11 +12,10 @@
                 <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
                 <div class="modal-body">
                     <!--                form begins here-->
-                    <form method="POST" action="/instructorHours">
-                        <small class="text-info"> <b>Please select term.</b></small>
+                    <form method="POST" action="/instructorHours" class="mb-3">
                         <!-- Select box for term -->
-                        <div class="form-group">
-                            <label for="termSelect" class="form-label mt-4">Terms</label>
+                        <div class="mb-3">
+                            <label for="termSelect" class="form-label">Terms</label>
                             <select name="termSelect" class="form-select" id="termSelect" required>
                                 <option value="" disabled selected>Select Term</option>
                                 {{#each termList}}
@@ -24,15 +23,9 @@
                                 {{/each}}
                             </select>
                         </div>
-                        <div class="modal-footer">
-                            <button id="closeBtn" type="button" class="btn btn-outline-danger"
-                                    data-bs-dismiss="modal">
-                                Close
-                            </button>
                             <button id="submitBtn"
-                                    type="submit" class="btn btn-outline-success">Save changes
+                                    type="submit" class="btn btn-primary">New Report
                             </button>
-                        </div>
                     </form>
                 </div>
             </div>
@@ -69,12 +62,6 @@
         const modal = new bootstrap.Modal(document.getElementById('instructorHoursModal'));
         {{#if modal}}
             modal.show();
-
-            // check if the "close" button was clicked
-            closeBtn.addEventListener("click", function () {
-                modal.hide();
-            });
-
             // check if the 'x' button was clicked
             xBtn.addEventListener("click", function () {
                 modal.hide();

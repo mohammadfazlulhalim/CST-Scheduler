@@ -97,11 +97,10 @@
             <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
             <div class="modal-body">
                 <!--                form begins here-->
-                <form method="POST" action="/programReport">
-                    <small class="text-info"> <b>Please select program, term, and a group.</b></small>
+                <form method="POST" action="/programReport"  class="mb-3">
                     <!-- Select box for program -->
-                    <div class="form-group">
-                        <label for="selectProgramReport" class="form-label mt-4">Program</label>
+                    <div class="mb-3">
+                        <label for="selectProgramReport" class="form-label">Program</label>
                         <select name="selectProgramReport" class="form-select" id="selectProgramReport" required>
                             <option value="" disabled selected>Select Program</option>
                             {{#each programList}}
@@ -110,8 +109,8 @@
                         </select>
                     </div>
                     <!-- Select box for term -->
-                    <div class="form-group">
-                        <label for="selectTermReport" class="form-label mt-4">Terms</label>
+                    <div class="mb-3">
+                        <label for="selectTermReport" class="form-label">Terms</label>
                         <select name="selectTermReport" class="form-select" id="selectTermReport" required>
                             <option value="" disabled selected>Select Term</option>
                             {{#each newTermList}}
@@ -120,8 +119,8 @@
                         </select>
                     </div>
                     <!-- Select box for group -->
-                    <div class="form-group">
-                        <label for="selectGroupReport" class="form-label mt-4">Groups</label>
+                    <div class="mb-3">
+                        <label for="selectGroupReport" class="form-label">Groups</label>
                         <select name="selectGroupReport" class="form-select" id="selectGroupReport" required>
                             <option value="" disabled selected>Select group</option>
                             {{#each groupList}}
@@ -129,14 +128,9 @@
                             {{/each}}
                         </select>
                     </div>
-                    <div class="modal-footer">
-                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger"
-                                data-bs-dismiss="modal">Close
-                        </button>
                         <button id="submitBtn"
-                                type="submit" class="btn btn-outline-success">Save changes
+                                type="submit" class="btn btn-primary">New Report
                         </button>
-                    </div>
                 </form>
                 <!--                Form ends here-->
 
@@ -147,11 +141,11 @@
 
 <!-- New report and print buttons -->
 <div class="btnPairsCustom">
-    <button id="newProgramBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal"
+    <button id="newProgramBtn" type="button" class="btn btn-primary" data-bs-toggle="modal"
             data-bs-target="#programReportModal">
         New Report
     </button>
-    <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
+    <button id="printRptBtn" class="btn btn-outline-primary" onclick="printReport()">Print this page</button>
 </div>
 </div>
 
@@ -166,7 +160,6 @@
     let xBtn;
     let newProgramBtn;
     const modal = new bootstrap.Modal(document.getElementById("programReportModal"));
-    closeBtn = document.getElementById("modalCloseBtn");
     xBtn = document.getElementById("xBtn");
 
     // On arrival the modal will open
@@ -180,10 +173,6 @@
 
         // only open upon first arrival
         {{#if showModal}}
-            // check if the "close" button was clicked
-            closeBtn.addEventListener("click", function () {
-                modal.hide();
-            });
 
             // check if the 'x' button was clicked
             xBtn.addEventListener("click", function () {
@@ -247,12 +236,6 @@
         printWindow.document.close();
         printWindow.print();
     }
-
-
-    // check if the "close" button was clicked
-    closeBtn.addEventListener("click", function () {
-        modal.hide();
-    });
 
     // check if the 'x' button was clicked
     xBtn.addEventListener("click", function () {

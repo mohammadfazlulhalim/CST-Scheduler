@@ -90,10 +90,9 @@
             <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
             <div class="modal-body">
                 <!--                form begins here-->
-                <form method="POST" action="/instructorReport">
-                    <small class="text-info"> <b>Please select both an instructor and a term.</b></small>
-                    <div class="form-group">
-                        <label for="selectInstructorInstructorReport" class="form-label mt-4">Instructors</label>
+                <form method="POST" action="/instructorReport" class="mb-3">
+                    <div class="mb-3">
+                        <label for="selectInstructorInstructorReport" class="form-label">Instructors</label>
                         <select name="selectInstructorReport" class="form-select" id="selectInstructorInstructorReport"
                                 required>
                             <option value="" disabled selected>Select Instructor</option>
@@ -103,8 +102,8 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="selectTermInstructorReport" class="form-label mt-4">Terms</label>
+                    <div class="mb-3">
+                        <label for="selectTermInstructorReport" class="form-label">Terms</label>
                         <select name="selectTermInstructorReport" class="form-select" id="selectTermInstructorReport"
                                 required>
                             <option value="" disabled selected>Select Term</option>
@@ -113,14 +112,9 @@
                             {{/each}}
                         </select>
                     </div>
-                    <div class="modal-footer">
-                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
-                            Close
-                        </button>
                         <button id="submitBtn"
-                                type="submit" class="btn btn-outline-success">Save changes
+                                type="submit" class="btn btn-primary">New Report
                         </button>
-                    </div>
                 </form>
                 <!--                Form ends here-->
 
@@ -129,11 +123,11 @@
     </div>
 </div>
 <div class="btnPairsCustom">
-    <button id="newInstructorReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal"
+    <button id="newInstructorReportBtn" type="button" class="btn btn-primary" data-bs-toggle="modal"
             data-bs-target="#instructorReportModal">
         New Report
     </button>
-    <button id="printRptBtn" class="btn btn-outline-success" onclick="printReport()">Print this page</button>
+    <button id="printRptBtn" class="btn btn-outline-primary" onclick="printReport()">Print this page</button>
 </div>
 <script defer>
 
@@ -145,7 +139,6 @@
     let newProgramBtn;
     // On arrival the modal will open
     window.onload = function () {
-        closeBtn = document.getElementById("modalCloseBtn");
         xBtn = document.getElementById("xBtn");
         submitBtn = document.getElementById("submitBtn");
         selectedInstructor = document.getElementById("selectInstructorInstructorReport");
@@ -154,10 +147,6 @@
         submitBtn.disabled = true;
         // only open upon first arrival
         {{#if showModal}}
-            // check if the "close" button was clicked
-            closeBtn.addEventListener("click", function () {
-                modal.hide();
-            });
 
             // check if the 'x' button was clicked
             xBtn.addEventListener("click", function () {
