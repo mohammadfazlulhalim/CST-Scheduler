@@ -13,9 +13,10 @@ const hours12 = globalConsts.timeColumn8amTo3pmDisplayArray;
 const weekdaysAllFullySpelled = globalConsts.weekdaysFullySpelled;
 const getSortedTerm = require('./termRouter').readAllTerms
 const Instructor = require('../private/javascript/Instructor');
+const getSimpleTerm = require('../private/javascript/termMethods').reduceTermsToSeason;
 
 router.get('/', async (req, res, next) => {
-  const newTermList = await getSortedTerm();
+  const newTermList = await getSimpleTerm();
   const classrooms = await classroom.findAll({order: [['roomNumber', 'ASC']]});
 
 
@@ -34,10 +35,14 @@ router.post('/', async (req, res, next) => {
   await createAllTables(false);
   const dateGenerated= new Date();
 
-  const realTerm = await term.findOne({where: {id: req.body.term}});
+  const termDatesArray = (req.body.term).split('_');
+  //const realTerm = await term.findOne({where: {id: req.body.term}});
+  const realTerm ={};
+  realTerm.startDate = termDatesArray[0];
+  realTerm.endDate = termDatesArray[1];
   const realClassroom = await classroom.findOne({where: {id: req.body.classroom}});
 
-  const TimeSlots = await generateSchedule(realTerm.startDate, realTerm.endDate, realClassroom);
+  const TimeSlots = await generateSchedule(termDatesArray[0], termDatesArray[1], realClassroom);
 
   const uniqueDates = await getUniqueDates(realTerm, realClassroom);
 
@@ -59,7 +64,7 @@ router.post('/', async (req, res, next) => {
   res.render('classroomReport', {
     dateGen: dateGenerated.getFullYear()+'-'+dateGenerated.getMonth()+'-'+dateGenerated.getDate(),
     routerPost: true,
-    realTerm,
+    //realTerm,
     scheduleArray,
     TIMES,
     hours12,

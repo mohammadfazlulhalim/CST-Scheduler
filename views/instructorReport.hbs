@@ -41,7 +41,7 @@
                                     <!-- innerloop starts here-->
                                     {{#each this}}
                                         {{#if timeSlot}}
-                                            <td>{{../../../program}}<br>{{course.courseCode}}{{courseOffering.group}}
+                                            <td>{{this.program.programAbbreviation}} {{this.term.year}}<br>{{course.courseCode}}{{courseOffering.group}}
                                                 <br>{{classRoom.roomNumber}}</td>
                                         {{else}}
                                             {{#if timeRow}}
