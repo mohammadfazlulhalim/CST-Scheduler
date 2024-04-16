@@ -11,7 +11,7 @@ const {globalConsts} = require('../constants');
 const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
 const hours12 = globalConsts.timeColumn8amTo3pmDisplayArray;
 const weekdaysAllFullySpelled = globalConsts.weekdaysFullySpelled;
-const getSortedTerm = require('./termRouter').readAllTerms
+const getSortedTerm = require('./termRouter').readAllTerms;
 const Instructor = require('../private/javascript/Instructor');
 
 router.get('/', async (req, res, next) => {

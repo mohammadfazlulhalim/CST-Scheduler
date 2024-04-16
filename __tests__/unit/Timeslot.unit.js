@@ -14,7 +14,7 @@ const term1 = require('../../fixtures/Term.fix').term1;
 const course1 = require('../../fixtures/Course.fix').course1;
 const program1 = require('../../fixtures/Program.fix').program1;
 const classroom1 = require('../../fixtures/Classroom.fix').classroom1;
-const timeSlot1 = require('../../fixtures/Timeslot.fix').timeSlot1
+const timeSlot1 = require('../../fixtures/Timeslot.fix').timeSlot1;
 
 
 let timeSlotInstance;
@@ -134,14 +134,14 @@ describe('timeslotStartTime', () => {
     }
   });
 
-  test('testDayLowerValid', async() => {
+  test('testDayLowerValid', async () => {
     timeSlotInstance.day = 0;
     const createdTimeSlot = await Timeslot.create(timeSlotInstance);
     expect(createdTimeSlot).toBeTruthy();
     expect(createdTimeSlot.day).toBe(0);
   });
 
-  test('testDayLowerInvalid', async() => {
+  test('testDayLowerInvalid', async () => {
     try {
       timeSlotInstance.day = -2;
 
@@ -150,12 +150,12 @@ describe('timeslotStartTime', () => {
     } catch (error) {
       expect(error.errors.length).toBe(1);
       expect(error.errors[0].message)
-        .toBe('Invalid Day for TimeSlot');
+          .toBe('Invalid Day for TimeSlot');
     }
     timeSlotInstance.day = 0;
-  })
+  });
 
-  test('testDayUpperValid', async() => {
+  test('testDayUpperValid', async () => {
     timeSlotInstance.day = 6;
     const createdTimeSlot = await Timeslot.create(timeSlotInstance);
     expect(createdTimeSlot).toBeTruthy();

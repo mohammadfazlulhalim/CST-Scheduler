@@ -54,7 +54,7 @@ router.post('/', async (req, res, next) => {
     classroomList: classrooms,
     err: violations,
     submittedClassroom: violations ? req.body : undefined,
-    URL
+    URL,
   });
 });
 
@@ -89,7 +89,7 @@ router.put('/', async (req, res, next) => {
     classroomList: classrooms,
     err: violations,
     putClassroom: violations ? req.body : undefined,
-    URL
+    URL,
   });
 });
 
@@ -122,7 +122,7 @@ router.delete('/', async (req, res, next) => {
     classroomList: classrooms,
     err: violations,
     delClassroom: violations ? req.body : undefined,
-    URL
+    URL,
   });
 });
 

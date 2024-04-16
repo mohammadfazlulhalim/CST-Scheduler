@@ -31,19 +31,15 @@ async function fillCourseOfferingTable() {
     COSPLIT[i].setTerm(2);
     COSPLIT[i].setProgram(2);
   }
-  const insArray = [11,1,7,6];
-  const courseArray = [15,11,4,14];
+  const insArray = [11, 1, 7, 6];
+  const courseArray = [15, 11, 4, 14];
 
 
   for (let i=0; i<16; i++) {
-    const index =   i   %   4    ;
+    const index = i % 4;
     COSPLIT[i].setInstructor(insArray[index]);
     COSPLIT[i].setCourse(courseArray[index]);
   }
-
-
-
-
 
 
   /* CourseOffering.belongsTo(Term);
@@ -161,19 +157,19 @@ const validCourseOfferingsA = [
 ];
 
 const validSplitCourseOfferings =[
-  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'A', CourseId: 1, alternativeInstructor:4},
+  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'A', CourseId: 1, alternativeInstructor: 4},
   {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-28', group: 'A', CourseId: 1},
   {name: 'Seminar', startDate: '2023-01-02', endDate: '2023-02-02', group: 'A', CourseId: 1},
   {name: 'Technical Communications', startDate: '2023-04-15', endDate: '2023-05-14', group: 'A', CourseId: 1},
-  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'B', CourseId: 1, alternativeInstructor:4},
+  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'B', CourseId: 1, alternativeInstructor: 4},
   {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-28', group: 'B', CourseId: 1},
   {name: 'Seminar', startDate: '2023-01-02', endDate: '2023-02-02', group: 'B', CourseId: 1},
   {name: 'Technical Communications', startDate: '2023-04-15', endDate: '2023-05-14', group: 'B', CourseId: 1},
-  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'C', CourseId: 1, alternativeInstructor:4},
+  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'C', CourseId: 1, alternativeInstructor: 4},
   {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-28', group: 'C', CourseId: 1},
   {name: 'Seminar', startDate: '2023-01-02', endDate: '2023-02-02', group: 'C', CourseId: 1},
   {name: 'Technical Communications', startDate: '2023-04-15', endDate: '2023-05-14', group: 'C', CourseId: 1},
-  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'D', CourseId: 1, alternativeInstructor:4},
+  {name: 'Hardware', startDate: '2023-01-02', endDate: '2023-04-28', group: 'D', CourseId: 1, alternativeInstructor: 4},
   {name: 'Advanced Programming', startDate: '2023-03-01', endDate: '2023-04-28', group: 'D', CourseId: 1},
   {name: 'Seminar', startDate: '2023-01-02', endDate: '2023-02-02', group: 'D', CourseId: 1},
   {name: 'Technical Communications', startDate: '2023-04-15', endDate: '2023-05-14', group: 'D', CourseId: 1},

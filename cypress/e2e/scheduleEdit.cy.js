@@ -4,11 +4,10 @@
 const groupLetters = ['A'];
 
 describe('Test Editing the Schedule', () => {
-
   // Resets the DB before each test
   beforeEach(()=>{
     cy.exec('node electron-db-reset.js');
-  })
+  });
 
   it('Test1', ()=> {
   // Goes to the page and loads test schedule
@@ -114,7 +113,7 @@ describe('Test Editing the Schedule', () => {
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
           cy.get('#'+t+'-'+d+'-'+letter).click();
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','SEM283NewRoom: 239A');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', 'SEM283NewRoom: 239A');
         }
       }
 
@@ -135,7 +134,7 @@ describe('Test Editing the Schedule', () => {
       cy.get('#btn' + letter).click();
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','SEM283NewRoom: 239A');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', 'SEM283NewRoom: 239A');
         }
       }
 
@@ -151,7 +150,7 @@ describe('Test Editing the Schedule', () => {
       cy.get('#btn' + letter).click();
       for (let t = 0; t < 8; t++) {
         for (let d = 1; d < 6; d++) {
-          cy.get('#'+t+'-'+d+'-'+letter).should('have.text','\n                                        \n                                            SEM283\n                                            New\n\n                                                Room: 239A\n                                        \n\n                                    ');
+          cy.get('#'+t+'-'+d+'-'+letter).should('have.text', '\n                                        \n                                            SEM283\n                                            New\n\n                                                Room: 239A\n                                        \n\n                                    ');
         }
       }
 

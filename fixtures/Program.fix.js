@@ -33,7 +33,7 @@ const programList = [
 
 const program1 = {
   programAbbreviation: 'CST',
-    programName: 'Computer Systems Technology',
+  programName: 'Computer Systems Technology',
 };
 
 module.exports = {program1, programList, fillProgramTable};

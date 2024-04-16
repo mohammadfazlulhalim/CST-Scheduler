@@ -1,6 +1,6 @@
 const Instructor = require('../../private/javascript/Instructor');
-const validInstructor = require('../../fixtures/Instructor.fix').validInstructor
-const instructor1 = require('../../fixtures/Instructor.fix').instructor1
+const validInstructor = require('../../fixtures/Instructor.fix').validInstructor;
+const instructor1 = require('../../fixtures/Instructor.fix').instructor1;
 /**
  * These are tests for the firstName attribute of Instructor
  */
@@ -37,7 +37,7 @@ describe('firstName', () => {
 
     if (instructor) { // destroy instructor if created
       await instructor.destroy();
-      }
+    }
   });
 
   test('testThatFirstNameCanNotBeEmpty', async function() {
@@ -275,7 +275,6 @@ describe('officeNum', () => {
     if (instructor) { // destroy instructor if created
       await instructor.destroy();
     }
-
   });
 
   test('testCreatingInstructorWithEmptyOfficeNumber', async function() {

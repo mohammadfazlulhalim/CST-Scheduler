@@ -46,7 +46,7 @@ describe('Testing Instructor CRUD options', () => {
 
   before( ()=>{
     cy.exec('node electron-db-reset.js');
-  })
+  });
 
   beforeEach(()=>{
     cy.visit('http://localhost:3000');

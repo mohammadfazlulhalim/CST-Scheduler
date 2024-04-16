@@ -4,7 +4,7 @@ describe('Test Instructor Report Page', () => {
   // Resets the DB before each test
   before(()=>{
     cy.exec('node electron-db-reset.js');
-  })
+  });
   it('testNavigationToTheReportInstructorPage', () => {
     cy.viewport(1920, 1080);
     const expectedTimes12 = ['8:00', '9:00', '10:00', '11:00', '12:00', '1:00', '2:00', '3:00'];
@@ -44,8 +44,8 @@ describe('Test Instructor Report Page', () => {
     // Check if the generate button is still disabled
     cy.get('#submitBtn').should('be.disabled');
 
-        // Select the term from the dropdown based on value
-        cy.get('#selectTermInstructorReport').select('2023-2024 - Term 1');
+    // Select the term from the dropdown based on value
+    cy.get('#selectTermInstructorReport').select('2023-2024 - Term 1');
 
     // Check if the generate button is enabled after selecting both instructor and term
     cy.get('#submitBtn').should('be.enabled');
@@ -124,15 +124,15 @@ describe('Test Instructor Report Page', () => {
     // Opens the landing page
     cy.visit('localhost:3000');
 
-        //create timeslot
-        cy.contains('Schedule Builder').click();
-        cy.get('#programSelect').select('CST');
-        cy.get('#termSelect').select('2023-2024 - Term 1');
-        cy.get('#groupSelect').select('4');
-        cy.get('#modalSubmit').click();
-        cy.get('#btnD').click();
-        cy.get('#Systems\\ Administration\\ 2-D').click();
-        cy.get('#0-3-D').click();
+    // create timeslot
+    cy.contains('Schedule Builder').click();
+    cy.get('#programSelect').select('CST');
+    cy.get('#termSelect').select('2023-2024 - Term 1');
+    cy.get('#groupSelect').select('4');
+    cy.get('#modalSubmit').click();
+    cy.get('#btnD').click();
+    cy.get('#Systems\\ Administration\\ 2-D').click();
+    cy.get('#0-3-D').click();
 
 
     // Click on the "Reports" dropdown toggle
@@ -145,8 +145,8 @@ describe('Test Instructor Report Page', () => {
     // Select the instructor from the dropdown based on value
     cy.get('#selectInstructorInstructorReport').select('1');
 
-        // Select the term from the dropdown based on value
-        cy.get('#selectTermInstructorReport').select('2023-2024 - Term 1');
+    // Select the term from the dropdown based on value
+    cy.get('#selectTermInstructorReport').select('2023-2024 - Term 1');
 
     // Submit the form
     cy.get('#submitBtn').click();
@@ -221,15 +221,15 @@ describe('Test Instructor Report Page', () => {
     cy.viewport(1920, 1080);
     cy.visit('localhost:3000');
 
-        //create timeslot
-        cy.contains('Schedule Builder').click();
-        cy.get('#programSelect').select('CST');
-        cy.get('#termSelect').select('2023-2024 - Term 1');
-        cy.get('#groupSelect').select('4');
-        cy.get('#modalSubmit').click();
-        cy.get('#btnC').click();
-        cy.get('#Mathematics\\ of\\ Computation-C').click();
-        cy.get('#2-2-C').click();
+    // create timeslot
+    cy.contains('Schedule Builder').click();
+    cy.get('#programSelect').select('CST');
+    cy.get('#termSelect').select('2023-2024 - Term 1');
+    cy.get('#groupSelect').select('4');
+    cy.get('#modalSubmit').click();
+    cy.get('#btnC').click();
+    cy.get('#Mathematics\\ of\\ Computation-C').click();
+    cy.get('#2-2-C').click();
 
     // Click on the "Reports" dropdown toggle
     // cy.get('.nav-item.dropdown .nav-link.dropdown-toggle').click();
@@ -241,8 +241,8 @@ describe('Test Instructor Report Page', () => {
     // Select the instructor from the dropdown based on value
     cy.get('#selectInstructorInstructorReport').select('1');
 
-        // Select the term from the dropdown based on value
-        cy.get('#selectTermInstructorReport').select('2023-2024 - Term 1');
+    // Select the term from the dropdown based on value
+    cy.get('#selectTermInstructorReport').select('2023-2024 - Term 1');
 
     // Submit the form
     cy.get('#submitBtn').click();
@@ -361,8 +361,8 @@ describe('Test Instructor Report Page', () => {
     // Select the instructor from the dropdown based on value
     cy.get('#selectInstructorInstructorReport').select('5');
 
-        // Select the term from the dropdown based on value
-        cy.get('#selectTermInstructorReport').select('2023-2024 - Term 1');
+    // Select the term from the dropdown based on value
+    cy.get('#selectTermInstructorReport').select('2023-2024 - Term 1');
 
     // Submit the form
     cy.get('#submitBtn').click();

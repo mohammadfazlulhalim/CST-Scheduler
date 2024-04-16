@@ -104,7 +104,7 @@ describe('Test Schedule Report Page', () => {
     cy.get('.COButtons').last().click({force: true}); // Click the first course button
     cy.get('#0012').click(); // schedule it for monday at 9:00 am
 
-    //clicking arrows and checking for content
+    // clicking arrows and checking for content
     cy.wait(100);
     cy.get('#nextA').should('be.visible').click();
     cy.get('#tableRange01').contains('2023-04-15 to 2023-04-28');
@@ -115,7 +115,7 @@ describe('Test Schedule Report Page', () => {
     cy.get('#tableRange01').contains('2023-04-15 to 2023-04-28');
     // test that the date format is correct
     // Assuming you want to check all elements with IDs that start with 'tableRange'
-    cy.get('[id^="tableRange"]').each($el => {
+    cy.get('[id^="tableRange"]').each(($el) => {
       const text = $el.text();
       const dates = text.replace(/Table Range: /, '').split(' to ');
       const regex = /^\d{4}-\d{2}-\d{2}$/;
@@ -129,18 +129,11 @@ describe('Test Schedule Report Page', () => {
       expect(endDate, 'End Date Format').to.match(regex);
     });
 
-
-
-
-
-
-
+    cy.get;
   });
 
 
   /*
-
-
 
 
   /!**

@@ -196,7 +196,6 @@ async function getCOList() {
  */
 
 
-
 async function getCourses() {
   const courses = await Course.findAll({order: [['courseCode', 'ASC']]});
 
@@ -219,5 +218,5 @@ function createTermTitle(term) {
   return term;
 }
 
-module.exports = {router}
+module.exports = {router};
 

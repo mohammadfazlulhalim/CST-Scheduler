@@ -1,8 +1,8 @@
 const Instructor = require('../../private/javascript/Instructor');
 const supertest = require('supertest');
 const app = require('../../app');
-const validInstructor = require('../../fixtures/Instructor.fix').validInstructor
-const instructor1 = require('../../fixtures/Instructor.fix').instructor1
+const validInstructor = require('../../fixtures/Instructor.fix').validInstructor;
+const instructor1 = require('../../fixtures/Instructor.fix').instructor1;
 
 describe('Instructors in database', () => {
   let testInstructor;
@@ -12,7 +12,6 @@ describe('Instructors in database', () => {
     // drop the table and re-create it
     await Instructor.sync({force: true});
     testInstructor = {...instructor1};
-
   });
 
   test('testThatValidInstructorPostAddsToEmptyList', async () => {

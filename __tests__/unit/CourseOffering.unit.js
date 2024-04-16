@@ -89,10 +89,10 @@ describe('Functional Course Offering', () => {
     let bCaughtErr=false;
     testCourseOffering1.CourseId= '';
     try {
-      const res = await CourseOffering.create(testCourseOffering1)
+      const res = await CourseOffering.create(testCourseOffering1);
     } catch (err) {
       bCaughtErr = true;
-      expect(err.message).toBe("SQLITE_CONSTRAINT: FOREIGN KEY constraint failed");
+      expect(err.message).toBe('SQLITE_CONSTRAINT: FOREIGN KEY constraint failed');
     }
 
     if (!bCaughtErr) {

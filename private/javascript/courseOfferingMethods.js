@@ -6,11 +6,11 @@ const Timeslot = require('./Timeslot');
  * @param createCO
  */
 async function createCourseOffering(createCO) {
-    try {
-        return await CourseOffering.create(createCO);
-    } catch (e) {
-        return mapErrors(e);
-    }
+  try {
+    return await CourseOffering.create(createCO);
+  } catch (e) {
+    return mapErrors(e);
+  }
 }
 
 /**
@@ -18,14 +18,13 @@ async function createCourseOffering(createCO) {
  * @param updateCO
  */
 async function updateCourseOffering(updateCO) {
+  try {
+    const updated = await CourseOffering.findByPk(updateCO.id);
 
-    try {
-        const updated = await CourseOffering.findByPk(updateCO.id);
-
-        return await updated.update(updateCO);
-    } catch (e) {
-        return mapErrors(e);
-    }
+    return await updated.update(updateCO);
+  } catch (e) {
+    return mapErrors(e);
+  }
 }
 
 /**
@@ -33,16 +32,15 @@ async function updateCourseOffering(updateCO) {
  * @param deleteCO
  */
 async function deleteCourseOffering(deleteCO) {
-
-    try {
-        return await CourseOffering.destroy({
-            where: {
-                id: deleteCO.id,
-            },
-        });
-    } catch (e) {
-        return 0;
-    }
+  try {
+    return await CourseOffering.destroy({
+      where: {
+        id: deleteCO.id,
+      },
+    });
+  } catch (e) {
+    return 0;
+  }
 }
 
 /**
@@ -51,18 +49,18 @@ async function deleteCourseOffering(deleteCO) {
  * @return {{}}         - Formatted error object
  */
 const mapErrors = (err) => {
-    const violations = {error: {}};
+  const violations = {error: {}};
 
-    if (err.errors && err.errors.length > 0) {
-        for (const error of err.errors) {
-            violations.error[error.path] = error.message;
-        }
-    } else {
-        // If the expected errors structure is not found, handle it accordingly
-        violations.error.general = 'An unexpected error occurred.';
+  if (err.errors && err.errors.length > 0) {
+    for (const error of err.errors) {
+      violations.error[error.path] = error.message;
     }
+  } else {
+    // If the expected errors structure is not found, handle it accordingly
+    violations.error.general = 'An unexpected error occurred.';
+  }
 
-    return violations;
+  return violations;
 };
 
-module.exports={createCourseOffering, updateCourseOffering, deleteCourseOffering}
+module.exports={createCourseOffering, updateCourseOffering, deleteCourseOffering};

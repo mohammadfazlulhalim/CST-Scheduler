@@ -11,7 +11,7 @@ router.get('/', async function(req, res, next) {
   res.render('instructor', {
     title,
     instructorList: instructorLists,
-     URL
+    URL,
   });
 });
 
@@ -50,7 +50,7 @@ router.post('/', async function(req, res, next) {
     instructorList: instructorLists,
     err: violations,
     submittedInstructor: violations ? req.body : undefined,
-    URL
+    URL,
   });
 });
 
@@ -58,7 +58,6 @@ router.post('/', async function(req, res, next) {
  * DELETE handler for http://localhost:3000/instructor
  */
 router.delete('/', async function(req, res, next) {
-
   const result = await deleteInstructor({id: req.body.id});
   let violations;
   if (result <= 0) {
@@ -71,7 +70,7 @@ router.delete('/', async function(req, res, next) {
     instructorList: instructorLists,
     err: violations,
     submittedInstructor: violations ? req.body : undefined,
-    URL
+    URL,
   });
 });
 
@@ -108,7 +107,7 @@ router.put('/', async function(req, res, next) {
     instructorList: instructorLists,
     putErr: violations,
     putSubmittedInstructor,
-    URL
+    URL,
   });
 });
 

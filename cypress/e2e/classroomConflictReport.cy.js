@@ -28,7 +28,7 @@ describe( 'classroom conflict report page', ()=>{
   // Resets the DB before each test
   beforeEach(()=>{
     cy.exec('node electron-db-reset.js');
-  })
+  });
 
   it('testLoadClassroomConflictReport ', () => {
   // Opens main page - and go to Classroom Conflict Report Page
@@ -86,20 +86,20 @@ describe( 'classroom conflict report page', ()=>{
     }
 
 
-  // check table header elements
-  for (let i = 0; i < headingsForEachClassroomReportTable.length; i++) {
-    cy.get(`#tblRoom239ATerm6DayMonday tbody th:eq(${i})`).should('have.text', headingsForEachClassroomReportTable[i]);
-  }
-  // to select element inside 2D array we will use count which will be incremented inside the for loop
-  let count2 =0;
-  /** testTableElements */
-  // check table header elements
-  for (let i = 0; i < rowContentsForConflictTimeslotsTable2.length; i++) {
-    for (let j = 0; j < rowContentsForConflictTimeslotsTable2[0].length; j++) {
-      cy.get(`#tblRoom239ATerm6DayMonday tbody td:eq(${count2++})`).should('have.text', rowContentsForConflictTimeslotsTable2[i][j]);
+    // check table header elements
+    for (let i = 0; i < headingsForEachClassroomReportTable.length; i++) {
+      cy.get(`#tblRoom239ATerm6DayMonday tbody th:eq(${i})`).should('have.text', headingsForEachClassroomReportTable[i]);
     }
-  }
-});
+    // to select element inside 2D array we will use count which will be incremented inside the for loop
+    let count2 =0;
+    /** testTableElements */
+    // check table header elements
+    for (let i = 0; i < rowContentsForConflictTimeslotsTable2.length; i++) {
+      for (let j = 0; j < rowContentsForConflictTimeslotsTable2[0].length; j++) {
+        cy.get(`#tblRoom239ATerm6DayMonday tbody td:eq(${count2++})`).should('have.text', rowContentsForConflictTimeslotsTable2[i][j]);
+      }
+    }
+  });
 
 
   it('testNoConflictAvailablePage', () => {

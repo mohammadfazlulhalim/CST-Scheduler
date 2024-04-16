@@ -52,7 +52,6 @@ router.post('/', async function(req, res, next) {
   // checking if autogenerating - if so, using separate res.render
   // will not enter if there is an error for efficiency
   if (req.body.auto && !result.error) {
-
     // calling these now as they are needed later
     const instructors = await Instructor.findAll({order: [['lastName', 'ASC']]});
     const programs = await Program.findAll({order: [['programAbbreviation', 'ASC']]});

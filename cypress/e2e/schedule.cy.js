@@ -1,7 +1,7 @@
 // Resets the DB before each test
 beforeEach(()=>{
   cy.exec('node electron-db-reset.js');
-})
+});
 
 it('testThatModalWorks', () => {
   // Opens main page - and go to Schedule Courses
@@ -75,7 +75,7 @@ it('testThatModalWorks', () => {
       cy.get('#' + t + '-' + d + '-C').should('be.hidden');
       cy.get('#' + t + '-' + d + '-D').should('be.hidden');
       if (t+1!==d) {
-        cy.get('#'+t+'-'+d+'-A').should('have.class','empty');
+        cy.get('#'+t+'-'+d+'-A').should('have.class', 'empty');
       }
     }
   }
@@ -120,7 +120,7 @@ it('testThatModalWorks', () => {
       cy.get('#' + t + '-' + d + '-C').should('be.hidden');
       cy.get('#' + t + '-' + d + '-D').should('be.hidden');
       if (t+d!==8) {
-        cy.get('#'+t+'-'+d+'-B').should('have.class','empty');
+        cy.get('#'+t+'-'+d+'-B').should('have.class', 'empty');
       }
     }
   }
@@ -148,9 +148,9 @@ it('testTechDebt', () => {
 
   // Check that Program field can be entered
   cy.contains('Program');
-  let programList = ['CNT', 'CST', 'ECE'];
+  const programList = ['CNT', 'CST', 'ECE'];
   for (let i = 0; i < programList.length; i++) {
-    let nChild = i + 2;
+    const nChild = i + 2;
     cy.get('#programSelect > option:nth-child(' + nChild + ')').should('have.text', programList[i]);
   }
 
@@ -161,9 +161,9 @@ it('testTechDebt', () => {
 
   // Check that Term field can be entered
   cy.contains('Term');
-  let termList = ['2023-2024 - Term 1', '2023-2024 - Term 4', '2023-2024 - Term 5', '2022-2023 - Term 2', '2022-2023 - Term 3', '2022-2023 - Term 5', '2022-2023 - Term 6'];
+  const termList = ['2023-2024 - Term 1', '2023-2024 - Term 4', '2023-2024 - Term 5', '2022-2023 - Term 2', '2022-2023 - Term 3', '2022-2023 - Term 5', '2022-2023 - Term 6'];
   for (let i = 0; i < termList.length; i++) {
-    let nChild = i + 2;
+    const nChild = i + 2;
     cy.get('#termSelect > option:nth-child(' + nChild + ')').should('have.text', termList[i]);
   }
 
@@ -188,7 +188,7 @@ it('testTechDebt', () => {
   });
 
 
-// DONE check group C
+  // DONE check group C
   cy.get('#btnC').click();
   cy.wait(250);
 
@@ -212,12 +212,12 @@ it('testTechDebt', () => {
       cy.get('#' + t + '-' + d + '-A').should('be.hidden');
       cy.get('#' + t + '-' + d + '-B').should('be.hidden');
       cy.get('#' + t + '-' + d + '-D').should('be.hidden');
-      cy.get('#' + t + '-' + d + '-C').should('have.class','empty');
+      cy.get('#' + t + '-' + d + '-C').should('have.class', 'empty');
     }
   }
 
 
-// DONE check group D
+  // DONE check group D
   cy.get('#btnD').click();
   cy.wait(250);
   cy.get('#mon').contains('Monday');
@@ -240,8 +240,7 @@ it('testTechDebt', () => {
       cy.get('#' + t + '-' + d + '-A').should('be.hidden');
       cy.get('#' + t + '-' + d + '-B').should('be.hidden');
       cy.get('#' + t + '-' + d + '-C').should('be.hidden');
-      cy.get('#' + t + '-' + d + '-D').should('have.class','empty');
+      cy.get('#' + t + '-' + d + '-D').should('have.class', 'empty');
     }
   }
-
 });

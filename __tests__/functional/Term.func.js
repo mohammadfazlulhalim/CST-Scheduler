@@ -2,7 +2,7 @@
 const Term = require('../../private/javascript/Term.js');
 const supertest = require('supertest');
 const app = require('../../app');
-const validTerms = require('../../fixtures/Term.fix').validTerms
+const validTerms = require('../../fixtures/Term.fix').validTerms;
 
 // this set of tests ensures that Term objects are handled within the database properly
 describe('Terms in database', () => {

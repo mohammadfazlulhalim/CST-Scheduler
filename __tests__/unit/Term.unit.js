@@ -1,7 +1,7 @@
 // Importing the ORM object
 const Term = require('../../private/javascript/Term.js');
 const {sequelize} = require('../../dataSource');
-const validTerms = require('../../fixtures/Term.fix').validTerms
+const validTerms = require('../../fixtures/Term.fix').validTerms;
 
 
 // This describe checks validators on start dates based on what term number it is

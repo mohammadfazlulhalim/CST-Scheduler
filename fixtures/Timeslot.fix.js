@@ -177,7 +177,7 @@ async function s50CreateConflictingTimeslot() {
     // note - InstructorId placed here - will check if works
     {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '08:30', endTime: '10:30', day: 1, group: 'B'},
     {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '14:00', endTime: '15:00', day: 1, group: 'B'},
-//	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '09:00', endTime: '10:00', day: 2, group: 'B'},
+    //	  {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '09:00', endTime: '10:00', day: 2, group: 'B'},
     {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '09:30', endTime: '10:30', day: 2, group: 'B'},
     {startDate: '2024-05-01', endDate: '2024-05-31', startTime: '10:15', endTime: '11:00', day: 2, group: 'B'},
 
@@ -227,5 +227,4 @@ function displayTimeslot(ts) {
 }
 
 
-
-module.exports = { timeSlot1, validTimeslots, fillTimeslotTable};
+module.exports = {timeSlot1, validTimeslots, fillTimeslotTable};

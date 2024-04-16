@@ -55,25 +55,46 @@ router.put('/', async (req, res) => {
   const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   const GROUPS = ['A', 'B', 'C', 'D'];
 
-
   const CO = await CourseOffering.findByPk(req.body.COId);
-  const newtSlot = {
-    startDate: CO.startDate,
-    endDate: CO.endDate,
-    CourseOfferingId: CO.id,
-    primaryInstructor: CO.primaryInstructor,
-    alternativeInstructor: CO.alternativeInstructor,
-    ClassroomId: req.body.classroom,
-    TermId: CO.TermId,
-    ProgramId: CO.ProgramId,
-    startTime: TIMES[req.body.timeIndex-1],
-    endTime: TIMES[req.body.timeIndex], // Corrected
-    day: DAYS[req.body.dayOfWeek-1],
-    group: GROUPS[req.body.group],
-  };
+  if (!CO) {
+    res.status(404).send('Course Offering not found.');
+    return;
+  }
 
-  const retTSlot = await Timeslot.create(newtSlot);
-  res.send(201);
+  // Correct overlap condition to check only relevant overlapping timeslots
+  const overlappingTimeslot = await Timeslot.findOne({
+    where: {
+      startTime: TIMES[req.body.timeIndex - 1],
+      day: DAYS[req.body.dayOfWeek - 1],
+      group: GROUPS[req.body.group],
+      [Op.and]: [
+        {startDate: {[Op.lte]: CO.endDate}},
+        {endDate: {[Op.gte]: CO.startDate}},
+      ],
+    },
+  });
+
+  if (overlappingTimeslot) {
+    res.status(409).send('A conflicting timeslot already exists.');
+  } else {
+    const newTimeslot = {
+      startDate: CO.startDate,
+      endDate: CO.endDate,
+      CourseOfferingId: CO.id,
+      primaryInstructor: CO.primaryInstructor,
+      alternativeInstructor: CO.alternativeInstructor,
+      ClassroomId: req.body.classroom,
+      TermId: CO.TermId,
+      ProgramId: CO.ProgramId,
+      startTime: TIMES[req.body.timeIndex - 1],
+      endTime: TIMES[req.body.timeIndex],
+      day: DAYS[req.body.dayOfWeek - 1],
+      group: GROUPS[req.body.group],
+    };
+
+    const retTimeslot = await Timeslot.create(newTimeslot);
+    res.status(201).send(retTimeslot);
+  }
 });
 
 
@@ -117,22 +138,20 @@ async function getSchedules(term, program, groupLetter, schedule) {
     where: {group: groupLetter, ProgramId: program.id, TermId: term.id},
   });
   for (const e of timeSlots) {
-    try{
+    try {
       e.primaryInstructor = await Instructor.findByPk(e.primaryInstructor);
       e.alternativeInstructor = await Instructor.findByPk(e.alternativeInstructor);
       e.courseOffering = await CourseOffering.findByPk(e.CourseOfferingId);
       e.classroom = await Classroom.findByPk(e.ClassroomId);
       e.course = await e.courseOffering.getCourse();
-    }
-    catch(f) {
-      e.primaryInstructor="";
-      e.alternativeInstructor="";
-      e.courseOffering="";
-      e.classroom="";
+    } catch (f) {
+      e.primaryInstructor='';
+      e.alternativeInstructor='';
+      e.courseOffering='';
+      e.classroom='';
       await Timeslot.destroy({where: {id: e.id}});
     }
   }
-
 
 
   const uniqueDates = [term.startDate, term.endDate];

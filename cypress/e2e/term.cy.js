@@ -9,7 +9,7 @@ const expectedInstructor = ['Ben Benson', 'Ron New'];
 // Resets the DB before each test
 beforeEach(()=>{
   cy.exec('node electron-db-reset.js');
-})
+});
 /*
  * Test for checking if the autogenerate works
  */
@@ -118,7 +118,7 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   // Instructor change
   cy.get('#' + 3 + 'coPrimaryInstructor').select('Bryce Barrie', {force: true});
   cy.wait(100);
-  cy.get('#' + 3 + 'coSecondaryInstructor').select("", {force: true});
+  cy.get('#' + 3 + 'coSecondaryInstructor').select('', {force: true});
   cy.wait(100);
   cy.get('#' + 6 + 'coSecondaryInstructor').select('Coralee Kaban', {force: true});
   cy.wait(100);
@@ -143,7 +143,7 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.contains('Course Offerings').click();
   const newCOs = [
     ['Hardware', 'A', 'COHS190', '2024-3', '2024-05-05', '2024-05-29', '\n                            Ben Benson\n                        ', 'Wade Lahoda', 'CST'],
-    ['Hardware', 'B', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', '\n                            Bryce Barrie\n                        ',  '\n                             \n                        ', 'CST'],
+    ['Hardware', 'B', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', '\n                            Bryce Barrie\n                        ', '\n                             \n                        ', 'CST'],
     ['Hardware', 'D', 'COHS190', '2024-3', '2024-05-03', '2024-06-02', '\n                            Ben Benson\n                        ', '\n                             \n                        ', 'CST'],
     ['Seminar', 'A', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', '\n                            Ron New\n                        ', '\n                             \n                        ', 'CST'],
     ['Seminar', 'B', 'SEM283', '2024-3', '2024-05-03', '2024-06-02', '\n                            Ron New\n                        ', '\n                             \n                        ', 'CNT'],
@@ -168,7 +168,6 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.visit('localhost:3000/term');
   cy.get('#tableBody > tr:nth-child(1) > td:nth-child(5) > button:nth-child(2)').click();
   cy.get('#deleteTerm').click();
-
 });
 
 /*
@@ -353,6 +352,5 @@ it('testThatTermAutogeneratesCourseOfferingsHasValidation', () => {
   cy.get('#tableBody > tr:nth-child(2) > td:nth-child(2)').contains('2024-05-03');
   cy.get('#tableBody > tr:nth-child(2) > td:nth-child(3)').contains('2024-06-02');
   cy.get('#tableBody > tr:nth-child(2) > td:nth-child(4)').contains('2023-2024');
-
 });
 

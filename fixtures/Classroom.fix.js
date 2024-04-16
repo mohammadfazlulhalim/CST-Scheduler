@@ -24,7 +24,7 @@ async function createClassrooms() {
 
 const classroom1 = {
   roomNumber: '239a',
-    location: 'Saskatoon',
+  location: 'Saskatoon',
 };
 
 module.exports = {classroom1, fillClassroomTable};

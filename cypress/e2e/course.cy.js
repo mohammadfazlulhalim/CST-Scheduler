@@ -2,7 +2,7 @@
 describe('Testing Course CRUD options', () => {
   beforeEach(()=>{
     cy.exec('node electron-db-reset.js');
-  })
+  });
   it('testCourse', () => {
     // Visit the course page
     cy.visit('http://localhost:3000/course');
@@ -62,7 +62,7 @@ describe('Testing Course CRUD options', () => {
 
     // Check if the edited course details are updated in the table
     cy.get('#table').within(() => {
-      cy.wait (500);
+      cy.wait(500);
       cy.get('tr:first-child > td').eq(0).should('contain.text', 'AAA222');
       cy.get('tr:first-child > td').eq(1).should('contain.text', 'Test Course');
       cy.get('tr:first-child > td').eq(2).should('contain.text', '3');

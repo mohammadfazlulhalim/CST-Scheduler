@@ -20,7 +20,7 @@ router.get('/', async function(req, res, next) {
   res.render('program', {
     program: programList,
     URL,
-    title
+    title,
   });
 });
 
@@ -55,7 +55,7 @@ router.post('/', async function(req, res, next) {
     err: violations,
     submittedProgram: violations ? req.body : undefined,
     URL,
-    title
+    title,
   });
 });
 
@@ -99,7 +99,7 @@ router.put('/', async function(req, res, next) {
     putErr: violations,
     putSubmittedProgram: violations ? req.body : undefined,
     URL,
-    title
+    title,
   });
 });
 
@@ -140,7 +140,7 @@ router.delete('/', async function(req, res, next) {
     err: violations,
     submittedProgram: violations ? req.body : undefined,
     URL,
-    title
+    title,
   });
 });
 

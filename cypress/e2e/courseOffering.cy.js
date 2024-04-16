@@ -1,6 +1,6 @@
 beforeEach(()=>{
   cy.exec('node electron-db-reset.js');
-})
+});
 
 it('testThatCourseOfferingHasAssociations', () => {
   cy.viewport(1920, 1080);
@@ -111,8 +111,8 @@ it('testThatCourseOfferingHasAssociations', () => {
     cy.get('tr:first-child > td').eq(3).should('contain.text', '2023-4');
     cy.get('tr:first-child > td').eq(4).should('contain.text', '2023-08-01');
     cy.get('tr:first-child > td').eq(5).should('contain.text', '2023-12-01');
-   // cy.get('tr:first-child > td').eq(6).should('contain.text', 'Micheal Grzesina');
-   // cy.get('tr:first-child > td').eq(7).should('contain.text', 'Bryce Barrie');
+    // cy.get('tr:first-child > td').eq(6).should('contain.text', 'Micheal Grzesina');
+    // cy.get('tr:first-child > td').eq(7).should('contain.text', 'Bryce Barrie');
     cy.get('tr:first-child > td').eq(8).should('contain.text', 'CST');
   });
   // eslint-disable-next-line max-len
@@ -125,8 +125,8 @@ it('testThatCourseOfferingHasAssociations', () => {
     cy.get('tr:nth-child(2) > td').eq(3).should('contain.text', expectedResult2[3]);
     cy.get('tr:nth-child(2) > td').eq(4).should('contain.text', expectedResult2[4]);
     cy.get('tr:nth-child(2) > td').eq(5).should('contain.text', expectedResult2[5]);
-   // cy.get('tr:nth-child(2) > td').eq(6).should('contain.text', expectedResult2[6]);
-   // cy.get('tr:nth-child(2) > td').eq(7).should('contain.text', expectedResult2[7]);
+    // cy.get('tr:nth-child(2) > td').eq(6).should('contain.text', expectedResult2[6]);
+    // cy.get('tr:nth-child(2) > td').eq(7).should('contain.text', expectedResult2[7]);
     cy.get('tr:nth-child(2) > td').eq(8).should('contain.text', expectedResult2[8]);
   });
 
@@ -165,7 +165,7 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.get('#eEndDate').should('contain.value', '2023-12-01');
   cy.get('#eGroup').should('contain.value', 'A');
   cy.get('#eProgram').find('option:selected').should('contain.text', 'CST');
- // cy.get('#eprimaryInstructor').find('option:selected').should('contain.text', 'Grzesina');
+  // cy.get('#eprimaryInstructor').find('option:selected').should('contain.text', 'Grzesina');
 
 
   // Changing associated fields
