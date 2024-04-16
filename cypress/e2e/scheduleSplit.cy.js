@@ -63,16 +63,7 @@ describe('Test Schedule Report Page', () => {
     });
 
     cy.get('#termSelect').select('2022-2023 - Term 2');
-
-    // cy.get('#groupSelect option').then(($options) => {
-    //   const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
-    //   const expectedOptions = ['', '1', '2', '3', '4'];
-    //   expect(optionsTexts).to.deep.equal(expectedOptions);
-    // });
-    // Check that Enter button is disabled
     cy.get('#modalSubmit').should('be.disabled');
-
-    // Check that Group field can be entered
     cy.contains('Number of Groups');
     cy.get('#groupSelect').select('4');
     cy.get('#groupSelect').find('option').then((options) => {
@@ -91,30 +82,30 @@ describe('Test Schedule Report Page', () => {
 
     cy.get('#scheduleModal').should('be.hidden');
 
-    cy.get('.COButtons').should('have.length.greaterThan', 0); // Check if there are course buttons present
-    cy.get('.COButtons').first().click(); // Click the first course button
-    cy.get('#0011').click(); // schedule it for monday at 8:00 am
-
-    // check that the cell for monday at 8:00 am has content now
-    cy.get('#0011').should('have.length.gt', 0);
-
-
-    // Create a split
-    cy.get('.COButtons').should('have.length.greaterThan', 0); // Check if there are course buttons present
-    cy.get('.COButtons').last().click({force: true}); // Click the first course button
-    cy.get('#0012').click(); // schedule it for monday at 9:00 am
-
-    // clicking arrows and checking for content
+    cy.get('.COButtons').should('have.length.greaterThan', 0);
+    cy.get('#180').click();
+    cy.get('#0011').click();
+    cy.get('#0011').contains('p', 'COHS190');
+    cy.get('#0011').contains('p', 'Benson / Caron');
+    cy.get('#0011').contains('p', '239A');
+    cy.get('.COButtons').should('have.length.greaterThan', 0);
+    cy.get('#210').click({force:true});
+    cy.get('#0012').click();
     cy.wait(100);
     cy.get('#nextA').should('be.visible').click();
     cy.get('#tableRange01').contains('2023-04-15 to 2023-04-28');
+    cy.get('#0112').contains('p', 'TCOM291'); //selects da box
+    cy.get('#0112').contains('p', 'Holtslan');
+    cy.get('#0112').contains('p', '239A');
     cy.get('#prevA').should('be.visible').click({force: true});
     cy.get('#tableRange00').contains('2023-01-02 to 2023-04-15');
-    // make sure clcking the buttons loops to begining again
-    cy.get('#nextA').should('be.visible').click();
+    cy.get('#0012').find('p').should('be.empty');
+    cy.get('#180').click({force:true});
+    cy.get('#0012').click({force:true});
+    cy.get('#0012').find('p').should('be.empty');
+    cy.wait(50);
+    cy.get('#nextA').should('be.visible').click({force:true});
     cy.get('#tableRange01').contains('2023-04-15 to 2023-04-28');
-    // test that the date format is correct
-    // Assuming you want to check all elements with IDs that start with 'tableRange'
     cy.get('[id^="tableRange"]').each(($el) => {
       const text = $el.text();
       const dates = text.replace(/Table Range: /, '').split(' to ');
@@ -129,7 +120,25 @@ describe('Test Schedule Report Page', () => {
       expect(endDate, 'End Date Format').to.match(regex);
     });
 
-    cy.get;
+    cy.get('#191').click({force:true}); // Click the first course button
+    cy.get('#0185').click({force:true});
+    cy.get('#tableRange01').contains('2023-03-01 to 2023-04-15');
+    cy.get('#0112').find('p').should('be.empty');
+    cy.get('#0185').contains('p', 'COSC292'); //selects da box
+    cy.get('#0185').contains('p', 'Barrie');
+    cy.get('#0185').contains('p', '239A');
+    cy.wait(50);
+    cy.get('#nextA').should('be.visible').click({force:true});
+    cy.get('#tableRange02').contains('2023-04-15 to 2023-04-28');
+    cy.get('#0285').contains('p', 'COSC292'); //selects da box
+    cy.get('#0285').contains('p', 'Barrie');
+    cy.get('#0285').contains('p', '239A');
+    cy.get('#0285').rightclick({force:true});
+    cy.get('#0085').find('p').should('be.empty');
+    cy.get('#tableRange02').contains('2023-04-15 to 2023-04-28');
+
+
+
   });
 
 

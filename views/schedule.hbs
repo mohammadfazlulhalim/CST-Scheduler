@@ -76,7 +76,7 @@
                                                     <tr>
                                                         {{#each this}}
                                                             <td id="{{@../../../index}}{{@../../index}}{{@../index}}{{@index}}" oncontextmenu="onRightClick('{{this.id}}')" onclick="onTSClick({{@../../../index}},{{@../../index}}, {{@../index}}, {{@index}}, {{this.id}})">
-                                                                <p>{{#if this.course.courseName}}{{this.course.courseName}}{{else}}{{this.dateTime}}{{/if}}</p>
+                                                                <p>{{#if this.course.courseCode}}{{this.course.courseCode}}{{else}}{{this.dateTime}}{{/if}}</p>
                                                                 <p>{{this.primaryInstructor.lastName}}{{#if
                                                                         this.alternativeInstructor.lastName}} / {{this.alternativeInstructor.lastName}}{{/if}}</p>
                                                                 <p>{{this.classroom.roomNumber}}</p>
