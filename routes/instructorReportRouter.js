@@ -165,6 +165,7 @@ router.post('/', async function(req, res, next) {
     timeDisplayHours,
     showModal: false,
     isSplit,
+    termName
   });
 });
 
