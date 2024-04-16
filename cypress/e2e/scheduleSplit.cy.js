@@ -89,10 +89,13 @@ describe('Test Schedule Report Page', () => {
     cy.get('#0011').contains('p', 'Benson / Caron');
     cy.get('#0011').contains('p', '239A');
     cy.get('.COButtons').should('have.length.greaterThan', 0);
+
     cy.get('#210').click({force:true});
     cy.get('#0012').click();
+    cy.get('#210').should('not.exist');
     cy.wait(100);
     cy.get('#nextA').should('be.visible').click();
+    cy.get('#211').should('exist');
     cy.get('#tableRange01').contains('2023-04-15 to 2023-04-28');
     cy.get('#0112').contains('p', 'TCOM291'); //selects da box
     cy.get('#0112').contains('p', 'Holtslan');
@@ -124,6 +127,7 @@ describe('Test Schedule Report Page', () => {
     cy.get('#0185').click({force:true});
     cy.get('#tableRange01').contains('2023-03-01 to 2023-04-15');
     cy.get('#0112').find('p').should('be.empty');
+
     cy.get('#0185').contains('p', 'COSC292'); //selects da box
     cy.get('#0185').contains('p', 'Barrie');
     cy.get('#0185').contains('p', '239A');
@@ -135,7 +139,7 @@ describe('Test Schedule Report Page', () => {
     cy.get('#0285').contains('p', '239A');
     cy.get('#0285').rightclick({force:true});
     cy.get('#0085').find('p').should('be.empty');
-    cy.get('#tableRange02').contains('2023-01-02 to 2023-04-15');
+    cy.get('#tableRange00').contains('2023-01-02 to 2023-04-15');
 
 
 
