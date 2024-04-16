@@ -8,6 +8,7 @@ const {sequelize} = require('../dataSource');
 const {QueryTypes, Op} = require('sequelize');
 const globalConsts = require('../constants').globalConsts;
 const getSortedTerm = require('./termRouter').readAllTerms;
+const getSimpleTerm = require('../private/javascript/termMethods').reduceTermsToSeason;
 
 
 // global constants here to work with time arrays
@@ -34,7 +35,7 @@ router.get('/', async function(req, res, next) {
   }
   // try to find all the terms
   try {
-    newTermList = await getSortedTerm();
+    newTermList = await getSimpleTerm();
   } catch (err) {
     newTermList = undefined;
   }
@@ -55,11 +56,11 @@ router.get('/', async function(req, res, next) {
 router.post('/', async function(req, res, next) {
   // redefine the database
   const instructorID = req.body.selectInstructorReport; // from the modal selection
-  const termID = req.body.selectTermInstructorReport; // from the modal selection
+  const termObj = (req.body.selectTermInstructorReport).split('_'); // from the modal selection
   let instRepTimeslots;
   let instructorName;
   let program = '';
-  let termName;
+  const termName ={};
   const dateGenerated = new Date();
   const monthArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May',
     'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
@@ -76,7 +77,8 @@ router.post('/', async function(req, res, next) {
     instructorName = undefined;
   }
 
-  termName = await Term.findOne({wjere: {id: termID}});
+  termName.startDate = termObj[0];
+  termName.endDate = termObj[1];
 
   // try to find the time slots based on selections
   try {
@@ -147,7 +149,7 @@ router.post('/', async function(req, res, next) {
 
   // find all the terms
   try {
-    newTermList = await getSortedTerm();
+    newTermList = await getSimpleTerm();
   } catch (err) {
     newTermList = undefined;
   }
@@ -206,8 +208,8 @@ async function generateSchedule(instRepTimeslots, start, end) {
         currentCourseOffering = await timeslot.getCourseOffering();
         currentClassroom = await timeslot.getClassroom();
         currentCourse = await currentCourseOffering.getCourse();
-        currentProgram = await currentCourseOffering.getProgram();
-        currentTerm = await currentCourseOffering.getTerm();
+        currentProgram = await timeslot.getProgram();
+        currentTerm = await timeslot.getTerm();
       } catch (e) {
         console.error(e);
       }

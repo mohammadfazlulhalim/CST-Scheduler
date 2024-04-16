@@ -108,7 +108,7 @@
                                 required>
                             <option value="" disabled selected>Select Term</option>
                             {{#each termList}}
-                                <option value="{{this.id}}">{{this.calendarYear}} - Term {{this.termNumber}}</option>
+                                <option value="{{this.startDate}}_{{this.endDate}}">{{this.season}} {{this.calendarYear}}</option>
                             {{/each}}
                         </select>
                     </div>
