@@ -13,8 +13,8 @@ describe('Test Editing the Schedule', () => {
   // Goes to the page and loads test schedule
     cy.visit('localhost:3000');
     cy.contains('Schedule Builder').click();
-    cy.get('#programSelect').select('CST');
-    cy.get('#termSelect').select('2022-2023 - Term 3');
+    cy.get('#programSelect').select('CNT');
+    cy.get('#termSelect').select('2022-2023 - Term 2');
     cy.get('#groupSelect').select('4');
     cy.get('#modalSubmit').click();
 
