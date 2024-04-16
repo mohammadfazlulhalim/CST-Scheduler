@@ -2,10 +2,9 @@ const Course = require('../private/javascript/Course');
 const express = require('express');
 const {sequelize} = require('../dataSource');
 const Instructor = require('../private/javascript/Instructor');
-const Program = require('../private/javascript/Program');
-const Term = require('../private/javascript/Term');
 const router = express.Router();
 const URL=require('../constants').URL;
+const title = require('../constants').pageTitles.course;
 
 
 /**
@@ -15,11 +14,9 @@ router.get('/', async (req, res, next)=>{
   // Declaring the array
   const courseLists= await readAllCourses();
   const listInstructor = await Instructor.findAll({order: [['lastName', 'ASC']]});
-  // console.log('Course Lists:', courseLists);
-  // console.log('List of Instructors:', listInstructor);
 
   res.render('course', {
-    title: 'Manage Courses',
+    title,
     listInstructor,
     courseList: courseLists, URL,
   });
@@ -76,7 +73,7 @@ router.post('/', async (req, res, next) => {
   const courseLists= await readAllCourses();
 
   res.render('course', {
-    title: 'Course List',
+    title,
     courseList: courseLists,
     putErr: violations,
     submittedCourse: violations ? req.body: undefined, URL,
@@ -99,7 +96,7 @@ router.delete('/', async function(req, res, next) {
   const courseLists = await readAllCourses();
   res.render('course', {
     listInstructor,
-    title: 'Manage Courses',
+    title,
     courseList: courseLists,
     putErr: violations,
     submittedCourse: violations ? req.body : undefined, URL,
@@ -136,7 +133,7 @@ router.put('/', async function(req, res, next) {
 
 
   res.render('course', {
-    title: 'Manage Courses',
+    title,
     courseList: courseLists,
     putErr: violations,
     listInstructor,

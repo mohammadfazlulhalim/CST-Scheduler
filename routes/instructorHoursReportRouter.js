@@ -3,6 +3,7 @@ const router = express.Router();
 const termMethods = require('../private/javascript/termMethods')
 const Instructor = require('../private/javascript/Instructor');
 const Timeslot = require('../private/javascript/Timeslot');
+const title = require('../constants').pageTitles.instructorHoursReport;
 
 
 router.get('/', async function(req, res, next) {
@@ -16,6 +17,7 @@ router.get('/', async function(req, res, next) {
   }
 
   res.render('instructorHoursReport', {
+    title,
     modal: true,
     termList,
     instructorList
@@ -31,6 +33,7 @@ router.post('/', async function(req, res, next) {
   const instructorList =await calculateHours(termList);
 
   res.render('instructorHoursReport', {
+    title,
     termSelected: simpleTermObj,
     instructorList,
   });
@@ -61,7 +64,7 @@ async function calculateHours(termList) {
             TermID: termList[j].id,
             alternativeInstructor: instructorList[i].id,
           }});
-      // TODO: Implement better logic to calculate this
+      // Could implement better logic to calculate this, but this works for limitations of schedule page
       instructorList[i].primaryHours += tsPrimaryArray.length;
       instructorList[i].alternativeHours += tsAlternativeArray.length;
       instructorList[i].totalHours += tsPrimaryArray.length+tsAlternativeArray.length;

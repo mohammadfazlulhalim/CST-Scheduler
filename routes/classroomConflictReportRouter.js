@@ -10,11 +10,9 @@ const Program= require('../private/javascript/Program');
 const Term=require('../private/javascript/Term');
 const GetTermsSorted = require('./termRouter').readAllTerms;
 const Timeslot = require('../private/javascript/Timeslot');
-const {QueryTypes} = require('sequelize');
 
 const term = require('../private/javascript/Term');
-const {stack} = require('sequelize/lib/utils');
-const {timeSlot1} = require('../fixtures/Timeslot.fix');
+const title = require('../constants').pageTitles.classroomConflictReport;
 
 // this is a quick array for designating weekdays as numbers
 // 0 is Sunday --> 6 is Saturday
@@ -57,6 +55,7 @@ router.post('/', async (req, res, next)=>{
 
 
   res.render('classroomConflictReport', {
+    title,
     routerPost: true,
     realClassroom,
     realTerm,
@@ -80,6 +79,7 @@ router.get('/', async (req, res, next)=>{
 
   const terms= await GetTermsSorted();
   res.render('classroomConflictReport', {
+    title,
     classrooms,
     terms,
     showModal: true,

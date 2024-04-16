@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const term = require('../private/javascript/Term');
@@ -11,9 +12,9 @@ const {globalConsts} = require('../constants');
 const hours24 = globalConsts.timeColumn8amTo3pmDisplayArray24Hr;
 const hours12 = globalConsts.timeColumn8amTo3pmDisplayArray;
 const weekdaysAllFullySpelled = globalConsts.weekdaysFullySpelled;
-const getSortedTerm = require('./termRouter').readAllTerms
 const Instructor = require('../private/javascript/Instructor');
 const getSimpleTerm = require('../private/javascript/termMethods').reduceTermsToSeason;
+const title = require('../constants').pageTitles.classroomReport;
 
 router.get('/', async (req, res, next) => {
   const newTermList = await getSimpleTerm();
@@ -21,8 +22,8 @@ router.get('/', async (req, res, next) => {
 
 
   res.render('classroomReport', {
+    title,
     routerPost: false,
-    title: 'Classroom Report',
     newTermList,
     classrooms,
     showModal: true,
@@ -62,6 +63,7 @@ router.post('/', async (req, res, next) => {
   }
 
   res.render('classroomReport', {
+    title,
     dateGen: dateGenerated.getFullYear()+'-'+dateGenerated.getMonth()+'-'+dateGenerated.getDate(),
     routerPost: true,
     //realTerm,

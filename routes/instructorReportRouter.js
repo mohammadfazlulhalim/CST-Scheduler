@@ -7,8 +7,8 @@ const Timeslot = require('../private/javascript/Timeslot');
 const {sequelize} = require('../dataSource');
 const {QueryTypes, Op} = require('sequelize');
 const globalConsts = require('../constants').globalConsts;
-const getSortedTerm = require('./termRouter').readAllTerms;
 const getSimpleTerm = require('../private/javascript/termMethods').reduceTermsToSeason;
+const title = require('../constants').pageTitles.instructorReport;
 
 
 // global constants here to work with time arrays
@@ -41,6 +41,7 @@ router.get('/', async function(req, res, next) {
   }
 
   res.render('instructorReport', {
+    title,
     instructorList,
     termList: newTermList,
     timeDisplayHours,
@@ -155,6 +156,7 @@ router.post('/', async function(req, res, next) {
   }
 
   res.render('instructorReport', {
+    title,
     instructorName,
     reportArray,
     dateGen: dateGenerated.getDate() + '-' + monthArray[dateGenerated.getMonth()] + '-' + dateGenerated.getFullYear(),

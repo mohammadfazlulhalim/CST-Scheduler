@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const title = require('../constants').pageTitles.index;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  const image = {src: "../private/Fancy.png", name:"backgroundImage"}
-  res.render('index', {image});
+
+  res.render('index', {title});
 });
 router.get('/admin', function(req, res, next) {
-  res.render('admin', {title: 'Administration'});
+  res.render('admin', {title});
 });
 
 

@@ -8,7 +8,7 @@ const Course = require('../private/javascript/Course');
 const URL = require('../constants').URL;
 const getSortedTerm = require('./termRouter').readAllTerms;
 const CourseOfferingMethods = require('../private/javascript/courseOfferingMethods');
-
+const title = require('../constants').pageTitles.courseOffering;
 // GET handler for http://localhost:3000/course-offering
 router.get('/', async function(req, res, next) {
   const listCO = await getCOList();
@@ -21,7 +21,7 @@ router.get('/', async function(req, res, next) {
 
   // render the courseOffering template file with appropriate title and the retrieved list of course offerings
   res.render('courseOffering', {
-    title: 'Manage Course Offerings',
+    title,
     listCO: listCO,
     listTerm,
     listProgram,
@@ -67,7 +67,7 @@ router.post('/', async function(req, res, next) {
   const listCO = await getCOList();
 
   res.render('courseOffering', {
-    title: 'Manage Course Offerings',
+    title,
     listCO: listCO,
     err: violations,
     submittedCO: violations ? req.body : undefined,
@@ -116,7 +116,7 @@ router.put('/', async function(req, res, next) {
   const listCO = await getCOList();
 
   res.render('courseOffering', {
-    title: 'Manage Course Offerings',
+    title,
     listCO: listCO,
     putErr: violations,
     submittedCO: violations ? req.body : undefined,
@@ -143,7 +143,7 @@ router.delete('/', async function(req, res, next) {
   const listCO = await getCOList();
 
   res.render('courseOffering', {
-    title: 'Manage Course Offerings',
+    title,
     listCO: listCO,
     err: violations,
     submittedCO: violations ? req.body : undefined,
