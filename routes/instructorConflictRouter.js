@@ -32,23 +32,20 @@ router.post('/', async (req, res, next)=> {
       TermId: req.body.filterTerm,
     },
   });
-
   const listInstructor = await Instructor.findAll();
 
-
+  // Creating a list of conflicts
   const conflictList = getConflicts(listTimeslot, listInstructor);
 
   try {
     await processConflictPairs(conflictList);
-    console.log('Conflict pairs processed successfully.');
   } catch (error) {
     console.error('Error processing conflict pairs:', error);
   }
 
 
-  console.log(JSON.stringify(conflictList, null, 2));
-
   const title = 'Instructor Conflicts for ' + listTerm[req.body.filterTerm].calendarYear + ' - Term ' + listTerm[req.body.filterTerm].termNumber;
+
   res.render('instructorConflict', {
     title,
     message: 'No instructor conflicts exist within selected term',
@@ -88,7 +85,11 @@ function getConflicts(timeslotList, instructorList) {
 
   return conflictList;
 }
-
+/**
+ * Function to find the conflicts witin the given timeslots
+ * @param {Array} timeslots - List of instructors.
+ * @return {Array} - List of conflicts grouped by instructor.
+ */
 function findConflictsForInstructor(timeslots) {
   const conflicts = [];
 
@@ -108,7 +109,6 @@ function findConflictsForInstructor(timeslots) {
           timeslotA,
           timeslotB,
         };
-
         conflicts.push(conflictPair);
       }
     }
@@ -117,9 +117,14 @@ function findConflictsForInstructor(timeslots) {
   return conflicts;
 }
 
-// Helper functions for date and time overlap checks (unchanged from your implementation)
 
-// Function to check if two time intervals overlap on the same day
+/**
+ * Function to find the times that overlap
+ * @param startTimeA
+ * @param endTimeA
+ * @param startTimeB
+ * @param endTimeB
+ */
 function timesOverlap(startTimeA, endTimeA, startTimeB, endTimeB) {
   const [startAHour, startAMin] = startTimeA.split(':').map(Number);
   const [endAHour, endAMin] = endTimeA.split(':').map(Number);
@@ -134,13 +139,18 @@ function timesOverlap(startTimeA, endTimeA, startTimeB, endTimeB) {
   return !(endATotalMinutes <= startBTotalMinutes || startATotalMinutes >= endBTotalMinutes);
 }
 
-// Function to check if two date ranges overlap
+/**
+ * Function to find the conflicts within the given days
+ * @param startDateA
+ * @param endDateA
+ * @param startDateB
+ * @param endDateB
+ */
 function datesOverlap(startDateA, endDateA, startDateB, endDateB) {
   const startA = new Date(startDateA);
   const endA = new Date(endDateA);
   const startB = new Date(startDateB);
   const endB = new Date(endDateB);
-
   return startA <= endB && endA >= startB;
 }
 
@@ -156,17 +166,19 @@ async function processConflictPairs(conflictList) {
       conflictPair.timeslotA.customid = generateCustomId();
       conflictPair.timeslotB.customid = generateCustomId();
 
+      // Create course offerings
       const courseOfferingA = await CourseOffering.findByPk(conflictPair.timeslotA.CourseOfferingId);
       const courseOfferingB = await CourseOffering.findByPk(conflictPair.timeslotA.CourseOfferingId);
       conflictPair.timeslotA.courseOfferingObj = courseOfferingA;
       conflictPair.timeslotB.courseOfferingObj = courseOfferingB;
 
+      // Create course
       const courseA = await Course.findByPk(courseOfferingA.CourseId);
       const courseB = await Course.findByPk(courseOfferingB.CourseId);
       conflictPair.timeslotA.courseObj = courseA;
       conflictPair.timeslotB.courseObj = courseB;
 
-      // Fetch the course for timeslotA
+      // Fetch program and Room
       const programA = await Program.findByPk(conflictPair.timeslotA.ProgramId);
       const roomA = await Classroom.findByPk(conflictPair.timeslotA.ClassroomId);
 
@@ -174,12 +186,12 @@ async function processConflictPairs(conflictList) {
       const programB = await Program.findByPk(conflictPair.timeslotB.ProgramId);
       const roomB = await Classroom.findByPk(conflictPair.timeslotB.ClassroomId);
 
-      // Update timeslotA and timeslotB with classroom information
       conflictPair.timeslotA.classroomObj = roomA;
       conflictPair.timeslotB.classroomObj = roomB;
       conflictPair.timeslotA.programObj = programA;
       conflictPair.timeslotB.programObj = programB;
 
+      // Set the fullDay attribute to the day instead of the integer value
       conflictPair.timeslotA.fullday = globalConsts.weekdaysFullySpelled[(conflictPair.timeslotA.day) - 1];
       conflictPair.timeslotB.fullday = globalConsts.weekdaysFullySpelled[(conflictPair.timeslotB.day) - 1];
 
@@ -200,6 +212,7 @@ async function processConflictPairs(conflictList) {
   }
 }
 
+// Function to autoIncrement the ID.
 // eslint-disable-next-line require-jsdoc
 function createAutoIncrementGenerator() {
   let autoIncrementId = 0; // Initialize auto-increment ID counter
@@ -207,6 +220,5 @@ function createAutoIncrementGenerator() {
   // Return a generator function that yields auto-incrementing IDs
   return () => `customid-${autoIncrementId++}`;
 }
-
 
 module.exports = {router};

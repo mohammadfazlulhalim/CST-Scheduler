@@ -55,7 +55,6 @@ beforeEach(()=>{
 
 it('testThatTermAutogeneratesCourseOfferings', () => {
   // Creating Fake Data for Test
-
   // Create Courseofferings
   cy.viewport(1920, 1080);
   cy.visit('localhost:3000');
@@ -77,10 +76,8 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#cProgram').select('CST');
   cy.get('#increment').click();
   cy.get('#createCO').click();
-
   cy.get('#30edit').click();
   cy.wait(100);
-
   cy.get('#eStartDate').clear().type('2023-05-05');
   cy.wait(100);
   cy.get('#eEndDate').clear().type('2023-05-20');
@@ -89,8 +86,6 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.wait(200);
   cy.get('#ealternativeInstructor').select('Caron');
   cy.get('#editCO').click();
-
-
   cy.get('#openCreateModal').click();
   cy.get('#cCourse').type('COHS190');
   cy.wait(100);
@@ -107,7 +102,6 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#cProgram').select('CST');
   cy.get('#increment').click();
   cy.get('#createCO').click();
-
   cy.get('#33edit').click();
   cy.wait(100);
   cy.get('#eprimaryInstructor').select('New');
@@ -123,13 +117,10 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#termSelect').select('2022-2023 - Term 3');
   cy.get('#groupSelect').select('2');
   cy.get('#modalSubmit').click();
-
-
   cy.get('#Hardware-A').click();
   cy.wait(100);
   cy.get('#0-1-A').click();
   cy.wait(100);
-
   cy.get('#Test\\ Course-A').click();
   cy.wait(100);
   cy.get('#0-2-A').click();
@@ -144,7 +135,6 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.wait(100);
   cy.get('#7-5-A').click();
   cy.wait(100);
-
   cy.get('#btnB').click();
   cy.wait(100);
   cy.get('#Hardware-B').click();
@@ -168,7 +158,6 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
     cy.get('#filterTerm').should('contain', term);
   });
 
-
   // Test that there are no conflicts and proper messages are displayed.
   cy.get('#filterTerm').select(2);
   cy.get('#generate').click();
@@ -181,8 +170,6 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
 
   courses.forEach((course, index) => {
     const customId = `#customid-${index}`;
-
-    // Use template literals to dynamically select elements and perform assertions
     cy.get(`${customId}-courseName`).contains(course.courseName);
     cy.get(`${customId}-time`).contains(course.time);
     cy.get(`${customId}-date`).contains(course.date);
