@@ -18,7 +18,7 @@ describe( 'classroom conflict report page', ()=>{
   ];
 
   const termsVisible = [
-    '6 2023-05-01',
+    '2022-2023 - Term 6'
   ];
 
   const classroomsVisible = [
@@ -67,7 +67,7 @@ describe( 'classroom conflict report page', ()=>{
     // check room number element
     cy.get('#selectedClassroom').contains(`Classroom: ${classroomsVisible[0]}`);
     // Check term element
-    cy.get('#selectedTerm').contains(`Term: ${termsVisible[0]}`);
+    cy.get('#selectedTerm').contains(termsVisible[0]);
 
 
     /** testTableHeaderElements */

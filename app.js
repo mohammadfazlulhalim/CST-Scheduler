@@ -16,6 +16,7 @@ const instructorReportRouter = require('./routes/instructorReportRouter');
 const viewCoursesRouter = require('./routes/courseRouter').router;
 const scheduleRouter = require('./routes/scheduleRouter');
 const programReportRouter = require('./routes/programReportRouter');
+const instructorHoursReportRouter = require('./routes/instructorHoursReportRouter').router;
 const {addAssociations} = require('./private/javascript/Associations');
 const createAllTables = require('./fixtures/createTables.fix');
 
@@ -30,6 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('views/images'));
 
 // routers
 app.use('/', indexRouter);
@@ -44,6 +46,7 @@ app.use('/schedule', scheduleRouter); // Story 41
 app.use('/instructorReport', instructorReportRouter);
 app.use('/programReport', programReportRouter);
 app.use('/classroomConflictReport', classroomConflictReportRouter);
+app.use('/instructorHours', instructorHoursReportRouter);
 
 addAssociations();
 createAllTables(false);

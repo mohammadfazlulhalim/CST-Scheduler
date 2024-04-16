@@ -39,8 +39,6 @@ describe('Testing Instructor CRUD options', () => {
   const ninthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(9)';
   const tenthRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(10)';
   const eleventhRowOfListings= 'body > div > div > div > table > tbody > tr:nth-child(11)';
-  const navMenuSelector ='#navbarColor04 > ul > li:nth-child(3) > a';
-  const navMenuItem= '#navbarColor04 > ul > li:nth-child(3) > div > a:nth-child(4)';
 
   /* Navigating to our expected page "http://localhost:3000/instructor"*/
 
@@ -50,8 +48,8 @@ describe('Testing Instructor CRUD options', () => {
 
   beforeEach(()=>{
     cy.visit('http://localhost:3000');
-    cy.get(navMenuSelector, {timeout: 10000}).trigger('click');
-    cy.get(navMenuItem, {timeout: 10000}).click();
+    cy.contains('Administration').click();
+    cy.contains('Instructor').click();
   });
 
 

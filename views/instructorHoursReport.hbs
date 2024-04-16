@@ -1,0 +1,71 @@
+<div class="container p-2">
+    <!--Modal for selecting term-->
+    <div class="modal fade" id="instructorHoursModal" tabindex="-1" aria-labelledby="programReportModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="programReportModalLabel">Create a Program Report For: </h5>
+                    <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <!--           MODAL FORM CONTENTS ENCLOSED IN MODAL-BODY -->
+                <div class="modal-body">
+                    <!--                form begins here-->
+                    <form method="POST" action="/instructorHours" class="mb-3">
+                        <!-- Select box for term -->
+                        <div class="mb-3">
+                            <label for="termSelect" class="form-label">Terms</label>
+                            <select name="termSelect" class="form-select" id="termSelect" required>
+                                <option value="" disabled selected>Select Term</option>
+                                {{#each termList}}
+                                    <option value="{{this.season}}_{{this.calendarYear}}_{{this.startDate}}_{{this.endDate}}">{{this.season}} {{this.calendarYear}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                            <button id="submitBtn"
+                                    type="submit" class="btn btn-primary">New Report
+                            </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1>Instructor Hours for {{#if termSelected}}{{termSelected.season}} {{termSelected.calendarYear}}{{else}}No Term Selected{{/if}}</h1>
+    <h3 id="dateRange">Date Range: {{#if termSelected}}{{termSelected.startDate}} - {{termSelected.endDate}}{{else}}No Term Selected{{/if}}</h3>
+        <table class="table table-striped">
+            <thead class="table-primary">
+            <tr>
+                <th>Instructor</th>
+                <th>Primary Hours</th>
+                <th>Alternative Hours</th>
+                <th>Total Hours</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each instructorList}}
+                <tr>
+                    <td>{{this.firstName}} {{this.lastName}}</td>
+                    <td>{{this.primaryHours}}</td>
+                    <td>{{this.alternativeHours}}</td>
+                    <td>{{this.totalHours}}</td>
+                </tr>
+
+            {{/each}}
+            </tbody>
+        </table>
+
+</div>
+
+<script>
+    window.onload = function() {
+        const modal = new bootstrap.Modal(document.getElementById('instructorHoursModal'));
+        {{#if modal}}
+            modal.show();
+            // check if the 'x' button was clicked
+            xBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+        {{/if}}
+    };
+</script>

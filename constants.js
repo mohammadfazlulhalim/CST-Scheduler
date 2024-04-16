@@ -31,17 +31,26 @@ const globalConsts = {
     '15:00',
   ],
   weekdaysFullySpelled: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-};
+}
 
 // Use this for page titles, and import it.
 // Having it in one spot makes it easy to spot consistency errors, or change quickly
 const pageTitles = {
+  index: 'CST Scheduler Home',
+  scheduleBuilder: 'Manage Schedules',
   classroom: 'Manage Classrooms',
+  course: 'Manage Courses',
+  courseOffering: 'Manage Course Offerings',
   instructor: 'Manage Instructors',
   program: 'Manage Programs',
   term: 'Manage Terms',
-};
+  classroomReport: 'Classroom Report',
+  instructorReport: 'Instructor Report',
+  instructorHoursReport: 'Instructor Hours Report',
+  programReport: 'Program Report',
+  classroomConflictReport: 'Classroom Conflicts',
+}
 
-const URL = 'http://localhost:3000';
+const URL = 'http://localhost:3000'
 
 module.exports = {instructorConstraints, termConstraints, globalConsts, URL, pageTitles};

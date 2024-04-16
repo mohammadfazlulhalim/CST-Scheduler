@@ -135,7 +135,7 @@ describe('Test Schedule Report Page', () => {
     cy.get('#0285').contains('p', '239A');
     cy.get('#0285').rightclick({force:true});
     cy.get('#0085').find('p').should('be.empty');
-    cy.get('#tableRange02').contains('2023-04-15 to 2023-04-28');
+    cy.get('#tableRange02').contains('2023-01-02 to 2023-04-15');
 
 
 
