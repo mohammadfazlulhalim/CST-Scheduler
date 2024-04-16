@@ -5,7 +5,7 @@ describe('story52Tests', async () => {
   // Resets the DB before each test
   beforeEach(()=>{
     cy.exec('node electron-db-reset.js');
-  })
+  });
 
   /**
    * Test that Classroom is handled when it is deleted after creating a timeslot
@@ -20,7 +20,7 @@ describe('story52Tests', async () => {
 
     // Check room dropdown is sorted numerically
     for (let i = 0; i < EXPECTEDROOMS.length; i++) {
-      let nChild = i + 1;
+      const nChild = i + 1;
       cy.get('#classroomSelectA > option:nth-child(' + nChild + ')').should('have.text', EXPECTEDROOMS[i]);
     }
 
@@ -56,7 +56,7 @@ describe('story52Tests', async () => {
     const newROOMS = ['239A', '239B', '239a', '240B', '242C'];
     // Checking that Room 241 is no longer an option
     for (let i = 0; i < newROOMS.length; i++) {
-      let nChild = i + 1;
+      const nChild = i + 1;
       cy.get('#classroomSelectA > option:nth-child(' + nChild + ')').should('have.text', newROOMS[i]);
     }
 
@@ -107,37 +107,33 @@ describe('story52Tests', async () => {
     cy.wait(50);
 
     // navigating to classroom conflict page
-    cy.contains('Reports').click();
-    cy.contains('Classroom Conflict Report').click();
+    cy.contains('Conflicts').click();
+    cy.contains('Classroom Conflict').click();
 
     cy.get('#classroomSelect').select('241');
     cy.get('#termSelect').select('3 2023-05-01');
 
     cy.get('#modalSubmit').click();
 
-    const conflict1 = ['3 2023-05-01','COHS190', 'Monday', '08:00', '09:00', 'Ben Benson/Wade Lahoda'];
-    const conflict2 = ['3 2023-05-01','SEM283', 'Monday', '08:00', '09:00', 'Ron New'];
+    const conflict1 = ['3 2023-05-01', 'COHS190', 'Monday', '08:00', '09:00', 'Ben Benson/Wade Lahoda'];
+    const conflict2 = ['3 2023-05-01', 'SEM283', 'Monday', '08:00', '09:00', 'Ron New'];
 
     // checking that conflict is there
-    const table = 'table > tbody >tr'
-    for (let i=0;i<conflict1.length;i++) {
+    const table = 'table > tbody >tr';
+    for (let i=0; i<conflict1.length; i++) {
       const nChild = i+1;
-      cy.get(table + ":nth-child(2) > td:nth-child(" +nChild + ")").contains(conflict1[i]);
-      cy.get(table + ":nth-child(3) > td:nth-child(" +nChild + ")").contains(conflict2[i]);
+      cy.get(table + ':nth-child(2) > td:nth-child(' +nChild + ')').contains(conflict1[i]);
+      cy.get(table + ':nth-child(3) > td:nth-child(' +nChild + ')').contains(conflict2[i]);
     }
-
-
-
-  })
+  });
 
   /**
    * Deletes all classrooms and then tries to save it
    */
   it('testThatTimeslotDoesNotSaveWithoutClassroom', ()=>{
-
     // deleting all classrooms
     cy.visit('localhost:3000/Classroom');
-    for (let i=1;i<7;i++) {
+    for (let i=1; i<7; i++) {
       cy.get('tbody > tr:nth-child(1) > td:nth-child(3) > button:nth-child(2)').click(); // deleting the first one, seven times
       cy.get('#delClassroom').click();
     }
@@ -163,7 +159,7 @@ describe('story52Tests', async () => {
 
     // checking that it has class empty - no room selected, does not save
     cy.get(cornerIDs[0]).should('have.class', 'empty');
-  })
+  });
 
 
   /**
@@ -171,7 +167,6 @@ describe('story52Tests', async () => {
    * Relies on existing schedule tests for full coverage
    */
   it('testThatTimeslotHasAlternateInstructorAndClassroom', () => {
-
     // Visiting the page
     cy.visit('localhost:3000');
     cy.contains('Schedule Builder').click();
@@ -182,7 +177,7 @@ describe('story52Tests', async () => {
 
     // Check room dropdown is sorted numerically
     for (let i = 0; i < EXPECTEDROOMS.length; i++) {
-      let nChild = i + 1;
+      const nChild = i + 1;
       cy.get('#classroomSelectA > option:nth-child(' + nChild + ')').should('have.text', EXPECTEDROOMS[i]);
     }
 
@@ -261,7 +256,6 @@ describe('story52Tests', async () => {
     cy.wait(50);
 
     for (let i = 0; i < cornerIDs.length; i++) {
-
       // Checking if it is even, as we only modified even
       if (i % 2 == 0) {
         cy.get(cornerIDs[i]).contains('COHS190');

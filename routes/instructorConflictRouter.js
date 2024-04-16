@@ -1,13 +1,16 @@
 const express= require('express');
 const router = express.Router();
-const {sequelize, Op, DataTypes} = require('../dataSource');
 const getSortedTerm = require('./termRouter').readAllTerms;
 const Timeslot = require('../private/javascript/Timeslot');
-const Instructor = require('../private/javascript/Instructor');
-const {URL} = require('../constants');
 const Term = require('../private/javascript/Term');
+const Instructor = require('../private/javascript/Instructor');
 const Classroom = require('../private/javascript/Classroom');
-const {where} = require('sequelize');
+const CourseOffering = require('../private/javascript/CourseOffering');
+const Program = require('../private/javascript/Program');
+const Course = require('../private/javascript/Course');
+const {globalConsts} = require('../constants');
+
+
 /**
  * The handler when the user selects the term
  * @param req
@@ -18,7 +21,7 @@ router.get('/', async (req, res, next)=> {
   const listTerm = await getSortedTerm();
   res.render('instructorConflict', {
     title: 'Instructor Conflicts',
-    message: 'No instructors exist within selected term',
+    message: 'Please select a term to see conflicts!',
     listTerm,
   });
 });
@@ -35,73 +38,175 @@ router.post('/', async (req, res, next)=> {
 
   const conflictList = getConflicts(listTimeslot, listInstructor);
 
+  try {
+    await processConflictPairs(conflictList);
+    console.log('Conflict pairs processed successfully.');
+  } catch (error) {
+    console.error('Error processing conflict pairs:', error);
+  }
+
+
+  console.log(JSON.stringify(conflictList, null, 2));
+
+  const title = 'Instructor Conflicts for ' + listTerm[req.body.filterTerm].calendarYear + ' - Term ' + listTerm[req.body.filterTerm].termNumber;
   res.render('instructorConflict', {
-    title: 'Instructor Conflicts',
-    message: 'No instructors exist within selected term',
+    title,
+    message: 'No instructor conflicts exist within selected term',
     conflictList,
     listTerm,
   });
 });
 
 /**
- * function that would return a list of timeslots with associated instructors that have conflicts.
- * @return {*[]}
- * @param timeslotList - List of timeslots that have the selected term
- * @param instructorList - List of all instructors
+ * Function to identify conflicts within timeslots based on instructors.
+ * @param {Array} timeslotList - List of timeslots.
+ * @param {Array} instructorList - List of instructors.
+ * @return {Array} - List of conflicts grouped by instructor.
  */
 function getConflicts(timeslotList, instructorList) {
   const conflictList = [];
 
   // Iterate over each instructor
   instructorList.forEach((instructor) => {
-    const instructorConflicts = [];
-
-    // Filter timeslots for the current instructor
+    // Filter timeslots where the instructor is either primary or alternative
     const instructorTimeslots = timeslotList.filter((timeslot) => {
       return timeslot.primaryInstructor === instructor.id || timeslot.alternativeInstructor === instructor.id;
     });
 
-    // Check for conflicts within the filtered timeslots
-    for (let i = 0; i < instructorTimeslots.length; i++) {
-      const timeslotA = instructorTimeslots[i];
-
-      // Compare timeslotA with other timeslots for conflicts
-      for (let j = i + 1; j < instructorTimeslots.length; j++) {
-        const timeslotB = instructorTimeslots[j];
-
-        // Check if timeslots overlap (same date, time, and day)
-        if (
-          timeslotA.startDate === timeslotB.startDate &&
-          timeslotA.endDate === timeslotB.endDate &&
-          timeslotA.startTime === timeslotB.startTime &&
-          timeslotA.endTime === timeslotB.endTime &&
-          timeslotA.day === timeslotB.day
-        ) {
-          // Create a conflict pair for the current pair of conflicting timeslots
-          const conflictPair = {
-            timeslot1: timeslotA,
-            timeslot2: timeslotB,
-          };
-
-          // Add the conflict pair to the instructor's conflicts list
-          instructorConflicts.push(conflictPair);
-        }
-      }
-    }
+    // Check for conflicts within the filtered timeslots for the current instructor
+    const instructorConflicts = findConflictsForInstructor(instructorTimeslots);
 
     // If the instructor has conflicts, add them to the main conflictList
     if (instructorConflicts.length > 0) {
-      // Create an object for the current instructor with their conflict pairs
       const instructorObj = {
-        instructor: instructor,
+        instructor,
         pairs: instructorConflicts,
       };
-
-      // Add the instructor's conflicts to the main conflictList
       conflictList.push(instructorObj);
     }
   });
-  console.log(conflictList);
+
   return conflictList;
 }
+
+function findConflictsForInstructor(timeslots) {
+  const conflicts = [];
+
+  // Check for conflicts within the filtered timeslots
+  for (let i = 0; i < timeslots.length; i++) {
+    const timeslotA = timeslots[i];
+
+    for (let j = i + 1; j < timeslots.length; j++) {
+      const timeslotB = timeslots[j];
+
+      // Check if both dates and times overlap
+      if (
+        datesOverlap(timeslotA.startDate, timeslotA.endDate, timeslotB.startDate, timeslotB.endDate) &&
+        timesOverlap(timeslotA.startTime, timeslotA.endTime, timeslotB.startTime, timeslotB.endTime)
+      ) {
+        const conflictPair = {
+          timeslotA,
+          timeslotB,
+        };
+
+        conflicts.push(conflictPair);
+      }
+    }
+  }
+
+  return conflicts;
+}
+
+// Helper functions for date and time overlap checks (unchanged from your implementation)
+
+// Function to check if two time intervals overlap on the same day
+function timesOverlap(startTimeA, endTimeA, startTimeB, endTimeB) {
+  const [startAHour, startAMin] = startTimeA.split(':').map(Number);
+  const [endAHour, endAMin] = endTimeA.split(':').map(Number);
+  const [startBHour, startBMin] = startTimeB.split(':').map(Number);
+  const [endBHour, endBMin] = endTimeB.split(':').map(Number);
+
+  const startATotalMinutes = startAHour * 60 + startAMin;
+  const endATotalMinutes = endAHour * 60 + endAMin;
+  const startBTotalMinutes = startBHour * 60 + startBMin;
+  const endBTotalMinutes = endBHour * 60 + endBMin;
+
+  return !(endATotalMinutes <= startBTotalMinutes || startATotalMinutes >= endBTotalMinutes);
+}
+
+// Function to check if two date ranges overlap
+function datesOverlap(startDateA, endDateA, startDateB, endDateB) {
+  const startA = new Date(startDateA);
+  const endA = new Date(endDateA);
+  const startB = new Date(startDateB);
+  const endB = new Date(endDateB);
+
+  return startA <= endB && endA >= startB;
+}
+
+/**
+ * A helper function used to get associated functions.
+ * @param conflictList
+ * @return {Promise<void>}
+ */
+async function processConflictPairs(conflictList) {
+  const generateCustomId = createAutoIncrementGenerator();
+  for (const instructorConflict of conflictList) {
+    for (const conflictPair of instructorConflict.pairs) {
+      conflictPair.timeslotA.customid = generateCustomId();
+      conflictPair.timeslotB.customid = generateCustomId();
+
+      const courseOfferingA = await CourseOffering.findByPk(conflictPair.timeslotA.CourseOfferingId);
+      const courseOfferingB = await CourseOffering.findByPk(conflictPair.timeslotA.CourseOfferingId);
+      conflictPair.timeslotA.courseOfferingObj = courseOfferingA;
+      conflictPair.timeslotB.courseOfferingObj = courseOfferingB;
+
+      const courseA = await Course.findByPk(courseOfferingA.CourseId);
+      const courseB = await Course.findByPk(courseOfferingB.CourseId);
+      conflictPair.timeslotA.courseObj = courseA;
+      conflictPair.timeslotB.courseObj = courseB;
+
+      // Fetch the course for timeslotA
+      const programA = await Program.findByPk(conflictPair.timeslotA.ProgramId);
+      const roomA = await Classroom.findByPk(conflictPair.timeslotA.ClassroomId);
+
+      // Fetch the course for timeslotB
+      const programB = await Program.findByPk(conflictPair.timeslotB.ProgramId);
+      const roomB = await Classroom.findByPk(conflictPair.timeslotB.ClassroomId);
+
+      // Update timeslotA and timeslotB with classroom information
+      conflictPair.timeslotA.classroomObj = roomA;
+      conflictPair.timeslotB.classroomObj = roomB;
+      conflictPair.timeslotA.programObj = programA;
+      conflictPair.timeslotB.programObj = programB;
+
+      conflictPair.timeslotA.fullday = globalConsts.weekdaysFullySpelled[(conflictPair.timeslotA.day) - 1];
+      conflictPair.timeslotB.fullday = globalConsts.weekdaysFullySpelled[(conflictPair.timeslotB.day) - 1];
+
+
+      // Determine instructor type for timeslots
+      if (conflictPair.timeslotB.primaryInstructor === instructorConflict.instructor.id) {
+        conflictPair.timeslotB.instructorType = 'Primary Instructor';
+      } else {
+        conflictPair.timeslotB.instructorType = 'Alternative Instructor';
+      }
+
+      if (conflictPair.timeslotA.primaryInstructor === instructorConflict.instructor.id) {
+        conflictPair.timeslotA.instructorType = 'Primary Instructor';
+      } else {
+        conflictPair.timeslotA.instructorType = 'Alternative Instructor';
+      }
+    }
+  }
+}
+
+// eslint-disable-next-line require-jsdoc
+function createAutoIncrementGenerator() {
+  let autoIncrementId = 0; // Initialize auto-increment ID counter
+
+  // Return a generator function that yields auto-incrementing IDs
+  return () => `customid-${autoIncrementId++}`;
+}
+
+
 module.exports = {router};
