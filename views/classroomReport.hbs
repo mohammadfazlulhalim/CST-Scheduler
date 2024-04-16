@@ -76,7 +76,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create a Classroom Report For: </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button id="xBtn" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form method="post" action="/classroomReport" class="mb-3">
@@ -85,7 +86,7 @@
                         <select id="termSelect" name="term" class="form-select">
                             <option value="" selected disabled>Select Term</option>
                             {{#each newTermList}}
-                                <option value="{{this.id}}">{{this.calendarYear}} - Term {{this.termNumber}}</option>
+                                <option value="{{this.startDate}}_{{this.endDate}}">{{this.season}} {{this.calendarYear}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -98,7 +99,7 @@
                             {{/each}}
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="btnGenerateSchedule" disabled>Submit</button>
+                    <button type="submit" class="btn btn-primary" id="btnGenerateSchedule" disabled>New Report</button>
                 </form>
             </div>
         </div>
@@ -117,6 +118,12 @@
         const modal = new bootstrap.Modal(document.getElementById('classroomReportInfoModal'));
 
         {{#if showModal}}
+            // check if the 'x' button was clicked
+            xBtn.addEventListener("click", function () {
+                modal.hide();
+            });
+
+
             modal.show();
         {{/if}}
 

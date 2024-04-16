@@ -152,9 +152,34 @@ const Term = sequelize.define('Term', {
     get() {
       const yearVal = +(this.startDate.split('-'))[0];
       if (this.termNumber == 1 || this.termNumber == 4) {
-        return yearVal + '-' + (yearVal+1);
+        return yearVal + '-' + (yearVal + 1);
       } else {
-        return (yearVal-1) + '-' + yearVal;
+        return (yearVal - 1) + '-' + yearVal;
+      }
+    },
+  },
+  season: {
+    type: DataTypes.STRING,
+    get() {
+      switch (this.termNumber) {
+        case 1:
+          return 'Fall';
+          break;
+        case 2:
+          return 'Winter';
+          break;
+        case 3:
+          return 'Spring';
+          break;
+        case 4:
+          return 'Fall';
+          break;
+        case 5:
+          return 'Winter';
+          break;
+        case 6:
+          return 'Spring';
+          break;
       }
     },
   },

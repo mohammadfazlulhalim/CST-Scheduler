@@ -1,5 +1,6 @@
-// Resets the DB before each test
-beforeEach(()=>{
+// Resets the DB before the first test (this test does not do any saving, so beforeEach
+// just slows the test down
+before(()=>{
   cy.exec('node electron-db-reset.js');
 })
 

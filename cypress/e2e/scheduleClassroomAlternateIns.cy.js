@@ -111,7 +111,7 @@ describe('story52Tests', async () => {
     cy.contains('Classroom Conflict').click();
 
     cy.get('#classroomSelect').select('241');
-    cy.get('#termSelect').select('3 2023-05-01');
+    cy.get('#termSelect').select('2022-2023 - Term 3');
 
     cy.get('#modalSubmit').click();
 

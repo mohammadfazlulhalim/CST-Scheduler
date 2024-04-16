@@ -16,7 +16,7 @@
                         <select id="termSelect" name="term" class="form-select">
                             <option value="" selected disabled>Select Term</option>
                             {{#each terms}}
-                                <option value="{{this.id}}">{{this.termNumber}} {{this.startDate}}</option>
+                                <option value="{{this.id}}">{{this.calendarYear}} - Term {{this.termNumber}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -29,12 +29,9 @@
                             {{/each}}
                         </select>
                     </div>
-                    <div class="modal-footer">
-                        <button id="modalCloseBtn" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
-                            Cancel
-                        </button>
+                    <div>
                         <button id="modalSubmit"
-                                type="submit" class="btn btn-outline-success" disabled>Generate Report
+                                type="submit" class="btn btn-primary" disabled>Generate Report
                         </button>
                     </div>
                 </form>
@@ -50,7 +47,7 @@
             <h2 id="selectedClassroom"><i>Classroom:</i> {{realClassroom.roomNumber}}</h2>
         </div>
         <div class="row">
-            <h2 id="selectedTerm"><i>Term:</i> {{realTerm.termNumber}} {{realTerm.startDate}}</h2>
+            <h2 id="selectedTerm">{{realTerm.calendarYear}} - Term {{realTerm.termNumber}}</h2>
         </div>
 </div>
 
@@ -86,7 +83,7 @@
     <h1 id="nothingToShow">Nothing to display at the moment</h1>
 {{/if}}
 {{!-- TODO determine if it's better to move button up --}}
-<button id="newReportBtn" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#classroomConflictModal">
+<button id="newReportBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#classroomConflictModal">
     New Report</button>
 
 
@@ -102,16 +99,11 @@
         let classroomSelect = document.getElementById('classroomSelect');
 
         let submitBtn = document.getElementById('modalSubmit');
-        let closeBtn = document.getElementById('modalCloseBtn');
         let xBtn =document.getElementById('xBtn');
         let newReportBtn=document.getElementById('newReportBtn');
 
 
         {{#if showModal}}
-            // check if the "close" button was clicked
-            closeBtn.addEventListener("click", function () {
-                modal.hide();
-            });
             // check if the 'x' button was clicked
             xBtn.addEventListener("click", function () {
                 modal.hide();

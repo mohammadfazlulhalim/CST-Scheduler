@@ -74,8 +74,11 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#calternativeInstructor').select('Lahoda');
   cy.wait(200);
   cy.get('#cProgram').select('CST');
+  cy.wait(100);
   cy.get('#increment').click();
+  cy.wait(100);
   cy.get('#createCO').click();
+  cy.wait(100);
   cy.get('#30edit').click();
   cy.wait(100);
   cy.get('#eStartDate').clear().type('2023-05-05');
@@ -85,8 +88,11 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#eprimaryInstructor').select('Lahoda');
   cy.wait(200);
   cy.get('#ealternativeInstructor').select('Caron');
+  cy.wait(100);
   cy.get('#editCO').click();
+  cy.wait(100);
   cy.get('#openCreateModal').click();
+  cy.wait(100);
   cy.get('#cCourse').type('COHS190');
   cy.wait(100);
   cy.get('#cName').clear().type('Test Course2');
@@ -100,13 +106,17 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#calternativeInstructor').select('Kaban');
   cy.wait(200);
   cy.get('#cProgram').select('CST');
+  cy.wait(100);
   cy.get('#increment').click();
+  cy.wait(100);
   cy.get('#createCO').click();
+  cy.wait(100);
   cy.get('#33edit').click();
   cy.wait(100);
   cy.get('#eprimaryInstructor').select('New');
   cy.wait(200);
   cy.get('#ealternativeInstructor').select('Kaban');
+  cy.wait(100);
   cy.get('#editCO').click();
 
 
@@ -138,12 +148,15 @@ it('testThatTermAutogeneratesCourseOfferings', () => {
   cy.get('#btnB').click();
   cy.wait(100);
   cy.get('#Hardware-B').click();
+  cy.wait(100);
   cy.get('#0-1-B').click();
   cy.wait(100);
   cy.get('#Test\\ Course-B').click();
+  cy.wait(100);
   cy.get('#0-2-B').click();
   cy.wait(100);
   cy.get('#Test\\ Course2-B').click();
+  cy.wait(100);
   cy.get('#7-5-B').click();
   cy.wait(100);
 
