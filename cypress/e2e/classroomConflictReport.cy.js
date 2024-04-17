@@ -33,7 +33,7 @@ describe( 'classroom conflict report page', ()=>{
   it('testLoadClassroomConflictReport ', () => {
   // Opens main page - and go to Classroom Conflict Report Page
     cy.visit('localhost:3000');
-    cy.contains('Reports').click();
+    cy.contains('Conflicts').click();
     cy.get('.nav-item.dropdown .dropdown-menu a[href="/classroomConflictReport"]').click();
 
     // Assert that the URL has changed to the classroom Conflict Report page

@@ -1,0 +1,85 @@
+<div class="container">
+    <h1 class="text-xl-center">{{title}}</h1>
+    <form id="termForm" action="/instructorConflict" method="post">
+        <div class="input-group">
+            <label for="filterTerm"></label>
+            <select required class="form-select" id="filterTerm" name="filterTerm">
+                <option>Select Term</option>
+                {{#each listTerm}}
+                    <option value="{{id}}" data-termstart="{{startDate}}" data-termend="{{endDate}}">
+                        {{this.calendarYear}} - Term {{this.termNumber}}
+                    </option>
+                {{/each}}
+            </select>
+            <button id="generate" class="btn btn-primary" type="submit">Generate</button>
+        </div>
+    </form>
+
+    {{#if conflictList}}
+        <div class="accordion text-lg-center" id="accordionExample">
+            {{#each conflictList}}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{@index}}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse{{@index}}"
+                                aria-expanded="true" aria-controls="collapse{{@index}}">
+                            <strong class="text-xl">{{this.instructor.firstName}} {{this.instructor.lastName}}</strong>
+                        </button>
+                    </h2>
+                    <div id="collapse{{@index}}" class="accordion-collapse collapse show" aria-labelledby="heading{{@index}}"
+                         data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {{#each this.pairs}}
+                                <div class="card mb-3">
+                                    <div class="card-header bg-secondary-subtle">
+                                        <h5 class="card-title mb-0">Conflict {{this.timeslotA.courseObj.courseCode}}{{this.timeslotA.group}} and {{this.timeslotB.courseObj.courseCode}}{{this.timeslotB.group}}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 with-divider">
+                                                <h3 id="{{this.timeslotA.customid}}-courseName" class="text-center"><strong>{{this.timeslotA.courseOfferingObj.name}} - {{this.timeslotA.instructorType}}</strong></h3>
+                                                <h4 id="{{this.timeslotA.customid}}-time" class="text-center">{{this.timeslotA.fullday}}  {{this.timeslotA.startTime}} - {{this.timeslotA.endTime}}</h4>
+                                                <div class="row p-2">
+                                                    <div class="col-md-6">
+                                                        <p><strong>Date:</strong> <span id="{{this.timeslotA.customid}}-date">{{this.timeslotA.startDate}} to {{this.timeslotA.endDate}}</span></p>
+                                                        <p><strong>Program:</strong> <span id="{{this.timeslotA.customid}}-program">{{this.timeslotA.programObj.programAbbreviation}}</span></p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p><strong>Group:</strong> <span id="{{this.timeslotA.customid}}-group">{{this.timeslotA.group}}</span></p>
+                                                        <p><strong>Classroom:</strong> <span id="{{this.timeslotA.customid}}-classroom">{{this.timeslotA.classroomObj.roomNumber}}</span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h3 id="{{this.timeslotB.customid}}-courseName" class="text-center"><strong>{{this.timeslotB.courseOfferingObj.name}} - {{this.timeslotB.instructorType}}</strong></h3>
+                                                <h4 id="{{this.timeslotB.customid}}-time" class="text-center">{{this.timeslotA.fullday}}   {{this.timeslotB.startTime}} - {{this.timeslotB.endTime}}</h4>
+                                                <div class="row p-2">
+                                                    <div class="col-md-6">
+                                                        <p><strong>Date:</strong> <span id="{{this.timeslotB.customid}}-date">{{this.timeslotB.startDate}} to {{this.timeslotB.endDate}}</span></p>
+                                                        <p><strong>Program:</strong> <span id="{{this.timeslotB.customid}}-program">{{this.timeslotB.programObj.programAbbreviation}}</span></p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p><strong>Group:</strong> <span id="{{this.timeslotB.customid}}-group">{{this.timeslotB.group}}</span></p>
+                                                        <p><strong>Classroom:</strong> <span id="{{this.timeslotB.customid}}-classroom">{{this.timeslotB.classroomObj.roomNumber}}</span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    {{else}}
+        <h3 class="text-center" id="message">{{message}}</h3>
+    {{/if}}
+</div>
+
+<style>
+    .with-divider {
+        border-right: 1px solid black;
+    }
+</style>

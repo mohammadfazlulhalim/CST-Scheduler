@@ -185,7 +185,7 @@ it('testThatTermSkipsAutogeneratesCourseOfferings', () => {
 
   // Fill out the add modal form
   cy.get('#cTermNumber').type('6');
-  cy.get('#cStartDate').type('2024-05-03');
+  cy.get('#cStartDate').clear().type('2024-05-03');
   cy.get('#cEndDate').type('2024-06-02');
 
   cy.get('#createTerm').click();
