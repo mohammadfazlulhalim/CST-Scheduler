@@ -1,5 +1,5 @@
 describe('story52Tests', async () => {
-  const EXPECTEDROOMS = ['239A', '239B', '239a', '240B', '241', '242C'];
+  const EXPECTEDROOMS = ['239A', '239B', '240B', '242C', '241', '239a'];
   const cornerIDs = ['#0-1-A', '#7-1-A', '#0-5-A', '#7-5-A']; // Monday 8am, 3pm, Friday 8am, 3pm
 
   // Resets the DB before each test
@@ -21,10 +21,10 @@ describe('story52Tests', async () => {
     // Check room dropdown is sorted numerically
     for (let i = 0; i < EXPECTEDROOMS.length; i++) {
       const nChild = i + 1;
-      cy.get('#classroomSelectA > option:nth-child(' + nChild + ')').should('have.text', EXPECTEDROOMS[i]);
+      cy.get('#classroomSelect00 > option:nth-child(' + nChild + ')').should('have.text', EXPECTEDROOMS[i]);
     }
 
-    cy.get('#classroomSelectA').select('241');
+    cy.get('#classroomSelect00').select('241');
 
     // Selecting Seminar and placing it in the four corners
     cy.get('#Seminar-A').click();
