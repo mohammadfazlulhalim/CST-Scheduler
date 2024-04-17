@@ -130,7 +130,7 @@ describe('Test Instructor Report Page', () => {
     cy.get('#termSelect').select('2023-2024 - Term 1');
     cy.get('#groupSelect').select('4');
     cy.get('#modalSubmit').click();
-    cy.get('#btnD').click();
+    cy.get('#dButton').click();
     cy.get('#Systems\\ Administration\\ 2-D').click();
     cy.get('#0-3-D').click();
 

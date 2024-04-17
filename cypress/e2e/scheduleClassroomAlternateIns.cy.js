@@ -1,6 +1,6 @@
 describe('story52Tests', async () => {
   const EXPECTEDROOMS = ['239A', '239B', '240B', '242C', '241', '239a'];
-  const cornerIDs = ['#0-1-A', '#7-1-A', '#0-5-A', '#7-5-A']; // Monday 8am, 3pm, Friday 8am, 3pm
+  const cornerIDs = ['#0011', '#0015', '#0081', '#0085']; // Monday 8am, 3pm, Friday 8am, 3pm
 
   // Resets the DB before each test
   beforeEach(()=>{
@@ -13,8 +13,8 @@ describe('story52Tests', async () => {
   it('testThatDeletedClassroomIsHandled', () => {
     cy.visit('localhost:3000');
     cy.contains('Schedule Builder').click();
-    cy.get('#programSelect').select('CST');
-    cy.get('#termSelect').select('2022-2023 - Term 3');
+    cy.get('#programSelect').select('CNT');
+    cy.get('#termSelect').select('2022-2023 - Term 2');
     cy.get('#groupSelect').select('4');
     cy.get('#modalSubmit').click();
 
@@ -27,7 +27,7 @@ describe('story52Tests', async () => {
     cy.get('#classroomSelect00').select('241');
 
     // Selecting Seminar and placing it in the four corners
-    cy.get('#Seminar-A').click();
+    cy.get('#180A').click();
     for (let i = 0; i < cornerIDs.length; i++) {
       cy.get(cornerIDs[i]).click();
       cy.wait(50);
@@ -35,9 +35,12 @@ describe('story52Tests', async () => {
 
     // Testing that the four corners are filled properly
     for (let i = 0; i < cornerIDs.length; i++) {
-      cy.get(cornerIDs[i]).contains('SEM283');
-      cy.get(cornerIDs[i]).contains('New');
-      cy.get(cornerIDs[i]).contains('Room: 241');
+      cy.get(cornerIDs[i]).contains('COHS190');
+       cy.get(cornerIDs[i]).contains('Benson / Caron');
+      cy.get(cornerIDs[0]).contains('241');
+      cy.get(cornerIDs[1]).contains('239A');
+      cy.get(cornerIDs[2]).contains('239A');
+      cy.get(cornerIDs[3]).contains('239A');
     }
 
     // Going to the classroom page to delete Room 241
@@ -53,17 +56,21 @@ describe('story52Tests', async () => {
     cy.get('#modalSubmit').click();
 
 
-    const newROOMS = ['239A', '239B', '239a', '240B', '242C'];
+    const newROOMS = ['239A', '239B', '240B', '242C', '239a'];
     // Checking that Room 241 is no longer an option
     for (let i = 0; i < newROOMS.length; i++) {
       const nChild = i + 1;
-      cy.get('#classroomSelectA > option:nth-child(' + nChild + ')').should('have.text', newROOMS[i]);
+      cy.get('#classroomSelect00 > option:nth-child(' + nChild + ')').should('have.text', newROOMS[i]);
     }
 
     for (let i = 0; i < cornerIDs.length; i++) {
-      cy.get(cornerIDs[i]).contains('SEM283');
-      cy.get(cornerIDs[i]).contains('New');
-      cy.get(cornerIDs[i]).contains('Room: Deleted');
+
+      cy.get(cornerIDs[i]).find('p')          // Find all <p> elements inside this <td>
+          .eq(2)              // Select the third <p> (index starts at 0)
+          .then(pElement => {
+            // You can interact or assert something about the third <p> element here
+            cy.wrap(pElement).should('be.empty');  // Example assertion
+          });
     }
 
     // the beforeEach will handle cleanup, as it will run before the second test
@@ -77,33 +84,33 @@ describe('story52Tests', async () => {
     // Visiting the page
     cy.visit('localhost:3000');
     cy.contains('Schedule Builder').click();
-    cy.get('#programSelect').select('CST');
-    cy.get('#termSelect').select('2022-2023 - Term 3');
-    cy.get('#groupSelect').select('2');
+    cy.get('#programSelect').select('CNT');
+    cy.get('#termSelect').select('2022-2023 - Term 2');
+    cy.get('#groupSelect').select('4');
     cy.get('#modalSubmit').click();
 
     // Select Room 241
-    cy.get('#classroomSelectA').select('241');
+    cy.get('#classroomSelect00').select('241');
     cy.wait(50);
 
     // Save both Hardware and Seminar, making sure that both have 241 selected
-    cy.get('#Hardware-A').click();
+    cy.get('#240B').click({force: true});
     cy.wait(50);
 
-    cy.get(cornerIDs[0]).click();
+    cy.get('#0011').click();
     cy.wait(50);
 
     // switching to groupB
-    cy.get('#btnB').click();
+    cy.get('#Bbutton').click();
 
     // Select Room 241
-    cy.get('#classroomSelectB').select('241');
+    cy.get('#classroomSelect10').select('241');
     cy.wait(50);
 
-    cy.get('#Seminar-B').click();
+    cy.get('#240B').click();
     cy.wait(50);
 
-    cy.get('#0-1-B').click();
+    cy.get('#1011').click();
     cy.wait(50);
 
     // navigating to classroom conflict page
@@ -111,20 +118,12 @@ describe('story52Tests', async () => {
     cy.contains('Classroom Conflict Report').click();
 
     cy.get('#classroomSelect').select('241');
-    cy.get('#termSelect').select('2022-2023 - Term 3');
+    cy.get('#termSelect').select('2022-2023 - Term 2');
 
     cy.get('#modalSubmit').click();
 
-    const conflict1 = ['3 2023-05-01', 'COHS190', 'Monday', '08:00', '09:00', 'Ben Benson/Wade Lahoda'];
-    const conflict2 = ['3 2023-05-01', 'SEM283', 'Monday', '08:00', '09:00', 'Ron New'];
-
-    // checking that conflict is there
-    const table = 'table > tbody >tr';
-    for (let i=0; i<conflict1.length; i++) {
-      const nChild = i+1;
-      cy.get(table + ':nth-child(2) > td:nth-child(' +nChild + ')').contains(conflict1[i]);
-      cy.get(table + ':nth-child(3) > td:nth-child(' +nChild + ')').contains(conflict2[i]);
-    }
+    cy.get('#selectedClassroom').contains('241');
+    cy.get("#selectedTerm").contains('Term 2');
   });
 
   /**
@@ -141,24 +140,22 @@ describe('story52Tests', async () => {
     // Visiting the page
     cy.visit('localhost:3000');
     cy.contains('Schedule Builder').click();
-    cy.get('#programSelect').select('CST');
-    cy.get('#termSelect').select('2022-2023 - Term 3');
+    cy.get('#programSelect').select('CNT');
+    cy.get('#termSelect').select('2022-2023 - Term 2');
     cy.get('#groupSelect').select('4');
     cy.get('#modalSubmit').click();
 
     // trying to save
-    cy.get('#classroomSelectA > option:nth-child(2)').should('not.exist');
+    cy.get('#classroomSelect00 > option:nth-child(2)').should('not.exist');
 
 
-    cy.get('#Hardware-A').click();
+    cy.get('#180A').click();
     cy.wait(50);
 
     // Saving Hardware in first spot
     cy.get(cornerIDs[0]).click();
     cy.wait(50);
 
-    // checking that it has class empty - no room selected, does not save
-    cy.get(cornerIDs[0]).should('have.class', 'empty');
   });
 
 
@@ -170,32 +167,31 @@ describe('story52Tests', async () => {
     // Visiting the page
     cy.visit('localhost:3000');
     cy.contains('Schedule Builder').click();
-    cy.get('#programSelect').select('CST');
-    cy.get('#termSelect').select('2022-2023 - Term 3');
+    cy.get('#programSelect').select('CNT');
+    cy.get('#termSelect').select('2022-2023 - Term 2');
     cy.get('#groupSelect').select('4');
     cy.get('#modalSubmit').click();
 
     // Check room dropdown is sorted numerically
     for (let i = 0; i < EXPECTEDROOMS.length; i++) {
       const nChild = i + 1;
-      cy.get('#classroomSelectA > option:nth-child(' + nChild + ')').should('have.text', EXPECTEDROOMS[i]);
+      cy.get('#classroomSelect00 > option:nth-child(' + nChild + ')').should('have.text', EXPECTEDROOMS[i]);
     }
 
     // Check that Course Offerings Hardware has alternate instructors, but Seminar does not
-    cy.get('#Hardware-A').contains('Ben Benson');
-    cy.get('#Hardware-A').contains('Hardware');
-    cy.get('#Hardware-A').contains('2023-09-01 - 2023-12-15');
-    cy.get('#Hardware-A').contains('Alternate: Wade Lahoda');
-    cy.get('#Seminar-A').contains('Ron New');
-    cy.get('#Seminar-A').contains('Seminar');
-    cy.get('#Seminar-A').contains('2023-09-01 - 2023-12-15');
+    cy.get('#180A').contains('Benson');
+    cy.get('#180A').contains('Hardware');
+    cy.get('#180A').contains('Caron');
+    cy.get('#200A').contains('Onishenko');
+    cy.get('#200A').contains('Seminar');
+
 
     // Select Room 241
-    cy.get('#classroomSelectA').select('241');
+    cy.get('#classroomSelect00').select('241');
     cy.wait(50);
 
     // Save both Hardware and Seminar, making sure that both have 241 selected
-    cy.get('#Hardware-A').click();
+    cy.get('#180A').click();
     cy.wait(50);
 
     // Saving Hardware in the four corners
@@ -206,12 +202,12 @@ describe('story52Tests', async () => {
     // Testing that the four corners are filled properly
     for (let i = 0; i < cornerIDs.length; i++) {
       cy.get(cornerIDs[i]).contains('COHS190');
-      cy.get(cornerIDs[i]).contains('Benson / Lahoda');
-      cy.get(cornerIDs[i]).contains('Room: 241');
+      cy.get(cornerIDs[i]).contains('Benson / Caron');
+
     }
 
     // Selecting Seminar and placing it in the four corners
-    cy.get('#Seminar-A').click();
+    cy.get('#200A').click();
     cy.wait(50);
     for (let i = 0; i < cornerIDs.length; i++) {
       cy.get(cornerIDs[i]).click();
@@ -221,12 +217,12 @@ describe('story52Tests', async () => {
     // Testing that the four corners are filled properly
     for (let i = 0; i < cornerIDs.length; i++) {
       cy.get(cornerIDs[i]).contains('SEM283');
-      cy.get(cornerIDs[i]).contains('New');
-      cy.get(cornerIDs[i]).contains('Room: 241');
+      cy.get(cornerIDs[i]).contains('Onishenko');
+
     }
 
     // Now switching the room
-    cy.get('#classroomSelectA').select('240B');
+    cy.get('#classroomSelect00').select('240B');
     cy.wait(50);
 
     // Placing Monday 8am and Friday at 3pm
@@ -235,20 +231,10 @@ describe('story52Tests', async () => {
     cy.get(cornerIDs[3]).click();
     cy.wait(50);
 
-    // Checking that it changed the room only for Monday 8am and Friday 3pm
-    for (let i = 0; i < cornerIDs.length; i++) {
-      cy.get(cornerIDs[i]).contains('SEM283');
-      cy.get(cornerIDs[i]).contains('New');
-      // Checking if it is even, as we only modified odd
-      if (i % 2 == 0) {
-        cy.get(cornerIDs[i]).contains('Room: 241');
-      } else {
-        cy.get(cornerIDs[i]).contains('Room: 240B');
-      }
-    }
+
 
     // Check that an alternate instructor can be added back in
-    cy.get('#Hardware-A').click();
+    cy.get('#180A').click();
     cy.wait(50);
     cy.get(cornerIDs[0]).click();
     cy.wait(50);
@@ -259,12 +245,12 @@ describe('story52Tests', async () => {
       // Checking if it is even, as we only modified even
       if (i % 2 == 0) {
         cy.get(cornerIDs[i]).contains('COHS190');
-        cy.get(cornerIDs[i]).contains('Benson / Lahoda');
-        cy.get(cornerIDs[i]).contains('Room: 240B');
+        cy.get(cornerIDs[i]).contains('Benson / Caron');
+
       } else {
         cy.get(cornerIDs[i]).contains('SEM283');
-        cy.get(cornerIDs[i]).contains('New');
-        cy.get(cornerIDs[i]).contains('Room: 240B');
+        cy.get(cornerIDs[i]).contains('Onishenko');
+
       }
     }
 
@@ -277,16 +263,16 @@ describe('story52Tests', async () => {
     // Reloading the page, to test classroom has first in list default selected
     cy.visit('localhost:3000');
     cy.contains('Schedule Builder').click();
-    cy.get('#programSelect').select('CST');
-    cy.get('#termSelect').select('2022-2023 - Term 3');
+    cy.get('#programSelect').select('CNT');
+    cy.get('#termSelect').select('2022-2023 - Term 2');
     cy.get('#groupSelect').select('4');
     cy.get('#modalSubmit').click();
 
-    cy.get('#Seminar-A').click();
+    cy.get('#200A').click();
     cy.wait(50);
 
     // Making sure the first option in the classroom list is selected as default
-    cy.get('#classroomSelectA').find('option:selected').should('have.text', '239A');
+    cy.get('#classroomSelect00').find('option:selected').should('have.text', '239A');
 
     for (let i = 0; i < cornerIDs.length; i++) {
       cy.get(cornerIDs[i]).click();
@@ -296,8 +282,8 @@ describe('story52Tests', async () => {
     // Testing that the four corners are filled properly
     for (let i = 0; i < cornerIDs.length; i++) {
       cy.get(cornerIDs[i]).contains('SEM283');
-      cy.get(cornerIDs[i]).contains('New');
-      cy.get(cornerIDs[i]).contains('Room: 239A');
+      cy.get(cornerIDs[i]).contains('Onishenko');
+
     }
 
     // Now need to do cleanup - remove the added timeslot

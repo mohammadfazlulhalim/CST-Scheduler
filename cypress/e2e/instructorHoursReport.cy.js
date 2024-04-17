@@ -112,21 +112,21 @@ describe('story52Tests', async () => {
     cy.get('#modalSubmit').click();
 
     // ATP #1 Total Bryce hours: 3
-    cy.get('#Hardware-A').click();
+    cy.get('#180A').click();
     cy.wait(25);
-    cy.get('#0-1-A').click();
+    cy.get('#0011').click();
     cy.wait(25);
-    cy.get('#0-3-A').click();
+    cy.get('#0013').click();
     cy.wait(25);
-    cy.get('#0-5-A').click();
+    cy.get('#0015').click();
     cy.wait(25);
 
     // ATP #2 Total Ernesto hours: 2
-    cy.get('#Seminar-A').click();
+    cy.get('#200A').click();
     cy.wait(25);
-    cy.get('#3-1-A').click();
+    cy.get('#0042').click();
     cy.wait(25);
-    cy.get('#3-3-A').click();
+    cy.get('#0045').click();
     cy.wait(25);
 
     // ATP #9 Onishenko Year 1 Hours: 2
