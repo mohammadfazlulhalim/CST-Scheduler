@@ -13,17 +13,7 @@ it('testThatCourseOfferingHasAssociations', () => {
 
   // Test the select box
   cy.get('#filterTerm').select(1);
-  cy.get('#dataTable').within(() => {
-   // cy.get('tr:nth-child(21) > td').eq(0).should('contain.text', 'Mathematics of Computation');
-    /*cy.get('tr:nth-child(0) > td').eq(1).should('contain.text', 'C');
-    cy.get('tr:nth-child(0) > td').eq(2).should('contain.text', 'COHS190');
-    cy.get('tr:nth-child(0) > td').eq(3).should('contain.text', '2023-1');
-    cy.get('tr:nth-child(0) > td').eq(4).should('contain.text', '2023-09-01');
-    cy.get('tr:nth-child(0) > td').eq(5).should('contain.text', '2023-10-31');
-    cy.get('tr:nth-child(0) > td').eq(6).should('contain.text', 'Bryce Barrie');
-    cy.get('tr:nth-child(0) > td').eq(7).should('contain.text', '');
-    cy.get('tr:nth-child(0) > td').eq(8).should('contain.text', 'CST');*/
-  });
+
   cy.get('#filterTerm').select(0);
 
 
@@ -31,12 +21,7 @@ it('testThatCourseOfferingHasAssociations', () => {
   cy.contains('Add New Course Offering').click();
   cy.get('#addModal').should('be.visible');
 
-  // Terms
-  /*  const termList = ['2023-2024 - Term 1', '2023-2024 - Term 4', '2023-2024 - Term 5', '2022-2023 - Term 2', '2022-2023 - Term 3', '2022-2023 - Term 5', '2022-2023 - Term 6'];
-  for (let i = 0; i < termList.length; i++) {
-    const nChild = i + 2;
-    cy.get('#cTerm > option:nth-child(' + nChild + ')').should('have.text', termList[i]);
-  } */
+
   const termList = ['2023-2024 - Term 1', '2023-2024 - Term 4', '2023-2024 - Term 5', '2022-2023 - Term 2', '2022-2023 - Term 3', '2022-2023 - Term 5', '2022-2023 - Term 6'];
   termList.forEach((term) => {
     cy.get('#cTerm').should('contain', term);
@@ -111,8 +96,6 @@ it('testThatCourseOfferingHasAssociations', () => {
     cy.get('tr:first-child > td').eq(3).should('contain.text', '2023-4');
     cy.get('tr:first-child > td').eq(4).should('contain.text', '2023-08-01');
     cy.get('tr:first-child > td').eq(5).should('contain.text', '2023-12-01');
-    // cy.get('tr:first-child > td').eq(6).should('contain.text', 'Micheal Grzesina');
-    // cy.get('tr:first-child > td').eq(7).should('contain.text', 'Bryce Barrie');
     cy.get('tr:first-child > td').eq(8).should('contain.text', 'CST');
   });
   // eslint-disable-next-line max-len

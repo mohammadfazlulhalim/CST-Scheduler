@@ -88,13 +88,7 @@ it('testTechDebt', () => {
   // Check that Enter button is disabled
   cy.get('#modalSubmit').should('be.disabled');
 
-  /* // Check that Term field can be entered
-  cy.contains('Term');
-  const termList = ['2023-2024 - Term 1', '2023-2024 - Term 4', '2023-2024 - Term 5', '2022-2023 - Term 2', '2022-2023 - Term 3', '2022-2023 - Term 5', '2022-2023 - Term 6'];
-  for (let i = 0; i < termList.length; i++) {
-    const nChild = i + 2;
-    cy.get('#termSelect > option:nth-child(' + nChild + ')').should('have.text', termList[i]);
-  }*/
+
 
   cy.get('#termSelect').select('2023-2024 - Term 5');
 
@@ -110,11 +104,7 @@ it('testTechDebt', () => {
 
   cy.get('#scheduleModal').should('be.hidden');
 
-  /*  cy.get('#time').then((tdElement) => {
-    // Use .text() to get the text content of the <td> element
-    const tdText = tdElement.text();
-    expect(tdText).contains('Time');
-  });*/
+
 
 
   // DONE check group C

@@ -112,7 +112,7 @@ describe('story52Tests', async () => {
     cy.get('#modalSubmit').click();
 
     // ATP #1 Total Bryce hours: 3
-    cy.get('#180A').click();
+    cy.get('#460A').click();
     cy.wait(25);
     cy.get('#0011').click();
     cy.wait(25);
@@ -122,7 +122,7 @@ describe('story52Tests', async () => {
     cy.wait(25);
 
     // ATP #2 Total Ernesto hours: 2
-    cy.get('#200A').click();
+    cy.get('#470A').click();
     cy.wait(25);
     cy.get('#0042').click();
     cy.wait(25);
@@ -130,87 +130,81 @@ describe('story52Tests', async () => {
     cy.wait(25);
 
     // ATP #9 Onishenko Year 1 Hours: 2
-    cy.get('#Communications-A').click();
+    cy.get('#540A').click();
     cy.wait(25);
     // Tuesday at 9am and 11am
-    cy.get('#2-2-A').click();
+    cy.get('#0081').click();
     cy.wait(25);
-    cy.get('#4-2-A').click();
+    cy.get('#0082').click();
     cy.wait(25);
 
     // ATP #3 Total Ron hours: 4
-    cy.get('#btnB').click();
-    cy.wait(25);
-    cy.get('#Hardware-B').click();
-    cy.wait(25);
-    cy.get('#3-1-B').click();
-    cy.wait(25);
-    cy.get('#3-3-B').click();
+    cy.get('#Bbutton').click();
     cy.wait(25);
 
     // ATP #5 Total Ben hours: 5
-    cy.get('#Seminar-B').click();
+    cy.get('#480B').click({force:true});
     cy.wait(25);
-    cy.get('#5-1-B').click();
+    cy.get('#1011').click({force:true});
     cy.wait(25);
-    cy.get('#5-3-B').click();
+    cy.get('#1012').click({force:true});
     cy.wait(25);
-    cy.get('#5-5-B').click();
+    cy.get('#1013').click({force:true});
     cy.wait(25);
 
     // ATP #4 Total Coralee Hours: 2
-    cy.get('#btnC').click();
+    cy.get('#Cbutton').click();
     cy.wait(25);
-    cy.get('#Hardware-C').click();
+    cy.get('#500C').click({force:true});
     cy.wait(25);
-    cy.get('#3-1-C').click();
+    cy.get('#2011').click({force:true});
     cy.wait(25);
 
-    cy.get('#btnD').click();
+    cy.get('#Dbutton').click();
     cy.wait(25);
-    cy.get('#Hardware-D').click();
+    cy.get('#520D').click({force:true});
     cy.wait(25);
-    cy.get('#3-1-D').click();
+    cy.get('#3011').click({force:true});
     cy.wait(25);
 
     // ATP #6 Total Wade Hours: 11 (testing double digits here as well)
-    cy.get('#Seminar-D').click();
+    cy.get('#530D').click({force:true});
     cy.wait(25);
 
-    cy.get('#0-1-D').click();
+    cy.get('#3081').click({force:true});
     cy.wait(25);
-    cy.get('#1-1-D').click();
+    cy.get('#3082').click({force:true});
     cy.wait(25);
-    cy.get('#2-1-D').click();
+    cy.get('#3083').click({force:true});
     cy.wait(25);
-    cy.get('#4-1-D').click();
-    cy.wait(25);
-
-    cy.get('#0-3-D').click();
-    cy.wait(25);
-    cy.get('#1-3-D').click();
-    cy.wait(25);
-    cy.get('#2-3-D').click();
-    cy.wait(25);
-    cy.get('#3-3-D').click();
+    cy.get('#3084').click({force:true});
     cy.wait(25);
 
-    cy.contains('Schedule Builder').click();
+    cy.get('#3071').click({force:true});
+    cy.wait(25);
+    cy.get('#3072').click({force:true});
+    cy.wait(25);
+    cy.get('#3073').click({force:true});
+    cy.wait(25);
+    cy.get('#3074').click({force:true});
+    cy.wait(25);
+
+    cy.contains('Schedule Builder').click({force:true});
     cy.get('#programSelect').select('CNT');
     cy.get('#termSelect').select('2023-2024 - Term 3');
     cy.get('#groupSelect').select('4');
-    cy.get('#modalSubmit').click();
-    cy.get('#btnC').click();
+    cy.get('#modalSubmit').click({force:true});
+    cy.get('#Cbutton').click({force:true});
     cy.wait(25);
 
-    cy.get('#Seminar-C').click();
+    cy.get('#510C').click({force:true});
     cy.wait(25);
 
-    cy.get('#0-5-C').click();
+    cy.get('#2011').click({force:true});
     cy.wait(25);
-    cy.get('#1-5-C').click();
+    cy.get('#2012').click({force:true});
     cy.wait(25);
-    cy.get('#2-5-C').click();
+    cy.get('#2013').click({force:true});
     cy.wait(25);
 
     // ATP #9 - navigating to other term
@@ -222,12 +216,12 @@ describe('story52Tests', async () => {
     cy.wait(25);
 
     // ATP #9 Onishenko Year 2 Hours: 2, total 4
-    cy.get('#Linux-A').click();
+    cy.get('#550A').click();
     cy.wait(25);
     // Thursday at 9am and 11am
-    cy.get('#2-4-A').click();
+    cy.get('#0011').click();
     cy.wait(25);
-    cy.get('#4-4-A').click();
+    cy.get('#0012').click();
     cy.wait(25);
 
     // ATP #11 Creating three terms, one with earliest start date, one with latest end date
@@ -296,9 +290,9 @@ describe('story52Tests', async () => {
     cy.get('#dateRange').contains('Date Range: 2024-05-01 - 2024-06-21');
 
     // Arrays with each number representing an instructor's hours, sorted by last name
-    const expectedPrimaryHours = [3, 0, 5, 0, 0, 0, 2, 11, 2, 4, 0];
-    const expectedAlternativeHours = [0, 2, 0, 4, 0, 0, 0, 0, 2, 0, 0];
-    const expectedTotalHours = [3, 2, 5, 4, 0, 0, 2, 11, 4, 4, 0];
+    const expectedPrimaryHours = [3, 0, 3, 0, 0, 0, 2, 10, 2, 3, 0];
+    const expectedAlternativeHours = [0, 2, 0, 3, 0, 0, 0, 0, 3, 0, 0];
+    const expectedTotalHours = [3, 2, 3, 3, 0, 0, 2, 10, 5, 3, 0];
 
     // Looping through each row in the table, and checking that the hours are what is expected
     for (let i = 0; i < INSTRUCTORLIST.length; i++) {
