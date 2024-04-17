@@ -38,7 +38,7 @@ it('testThatModalWorks', () => {
 
   cy.get('#scheduleModal').should('be.hidden');
 
-  /*cy.get('#time').then((tdElement) => {
+  /* cy.get('#time').then((tdElement) => {
     // Use .text() to get the text content of the <td> element
     const tdText = tdElement.text();
 
@@ -61,7 +61,6 @@ it('testThatModalWorks', () => {
   cy.get('#0060').contains('1:00');
   cy.get('#0070').contains('2:00');
   cy.get('#0080').contains('3:00');
-
 });
 
 it('testTechDebt', () => {
@@ -88,7 +87,7 @@ it('testTechDebt', () => {
   // Check that Enter button is disabled
   cy.get('#modalSubmit').should('be.disabled');
 
- /* // Check that Term field can be entered
+  /* // Check that Term field can be entered
   cy.contains('Term');
   const termList = ['2023-2024 - Term 1', '2023-2024 - Term 4', '2023-2024 - Term 5', '2022-2023 - Term 2', '2022-2023 - Term 3', '2022-2023 - Term 5', '2022-2023 - Term 6'];
   for (let i = 0; i < termList.length; i++) {
@@ -102,7 +101,7 @@ it('testTechDebt', () => {
   cy.get('#modalSubmit').should('be.disabled');
 
   // Check that Group field can be entered
-  //cy.contains('Number of Groups');
+  // cy.contains('Number of Groups');
   cy.get('#groupSelect').select('4');
 
   cy.get('#modalSubmit').should('not.be.disabled');
@@ -110,7 +109,7 @@ it('testTechDebt', () => {
 
   cy.get('#scheduleModal').should('be.hidden');
 
-/*  cy.get('#time').then((tdElement) => {
+  /*  cy.get('#time').then((tdElement) => {
     // Use .text() to get the text content of the <td> element
     const tdText = tdElement.text();
     expect(tdText).contains('Time');
@@ -136,16 +135,10 @@ it('testTechDebt', () => {
   cy.get('#2080').contains('3:00');
 
 
-
-  for(let col= 1; col<6; col++)
-  {
-
-      for(let row=1; row<9; row++)
-      {
-        cy.get('#20'+row+col).should('be.visible');
-      }
-
-
+  for (let col= 1; col<6; col++) {
+    for (let row=1; row<9; row++) {
+      cy.get('#20'+row+col).should('be.visible');
+    }
   }
   // DONE check group C
   cy.get('#Dbutton').click();
@@ -165,16 +158,9 @@ it('testTechDebt', () => {
   cy.get('#3070').contains('2:00');
   cy.get('#3080').contains('3:00');
 
-
-
-  for(let col= 1; col<6; col++)
-  {
-
-    for(let row=1; row<9; row++)
-    {
+  for (let col= 1; col<6; col++) {
+    for (let row=1; row<9; row++) {
       cy.get('#30'+row+col).should('be.visible');
     }
-
-
   }
 });

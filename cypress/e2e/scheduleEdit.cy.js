@@ -21,17 +21,17 @@ describe('Test Editing the Schedule', () => {
     // Runs all tests for each group page
     // eslint-disable-next-line guard-for-in
     for (const letter of groupLetters) {
-      cy.get('#btn' + letter).click();
+      cy.get('Bbutton').click();
 
       // Tests that course offering exists
-      cy.get('#Hardware-' + letter).contains('Ben Benson');
-      cy.get('#Hardware-' + letter).should('be.visible');
-      cy.get('#Seminar-' + letter).contains('Ron New');
-      cy.get('#Seminar-' + letter).should('be.visible');
+      cy.get('#180' + letter).contains('Ben Benson');
+      cy.get('#190' + letter).should('be.visible');
+      cy.get('#200' + letter).contains('Ron New');
+      cy.get('#210' + letter).should('be.visible');
 
       // Test that no CO are highlighted
-      cy.get('#Hardware-' + letter).should('have.class', 'bg-secondary');
-      cy.get('#Seminar-' + letter).should('have.class', 'bg-secondary');
+      cy.get('#180' + letter).should('have.class', 'bg');
+      cy.get('#190' + letter).should('have.class', 'btn-outline-primary');
 
       // Test that clicking CO highlights it
       cy.get('#Hardware-' + letter).click();
@@ -117,7 +117,6 @@ describe('Test Editing the Schedule', () => {
         }
       }
 
-      // Test that all of the other groups are blank
       for (const subLetter of groupLetters) {
         if (subLetter !== letter) {
           cy.get('#btn' + subLetter).click();

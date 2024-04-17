@@ -97,8 +97,8 @@
                                             <div class="d-flex flex-column overflow-auto py-1" role="group"
                                                  aria-label="Course offerings" style="max-height: 500px;">
                                                 {{#each COArray}}
-                                                    <button id="{{this.id}}{{@../index}}"
-                                                            onclick="onCOClick({{this.id}}, {{this.id}}{{@../index}})"
+                                                    <button id="{{this.id}}{{@../index}}{{../../groupLetter}}"
+                                                            onclick="onCOClick({{this.id}}, '{{this.id}}{{@../index}}{{../../groupLetter}}')"
                                                             class="COButtons btn btn-outline-primary mb-2 d-flex flex-column justify-content-center py-3 align-items-center"
                                                             style="height: 125px;">
                                                         <span class="btn-custom-content text-center h5"><strong>{{this.name}}</strong></span>
