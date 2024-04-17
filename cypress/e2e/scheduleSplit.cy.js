@@ -5,6 +5,508 @@
 const urlGET = 'http://localhost:3000/schedule';
 const urlPOST = 'http://localhost:3000/schedule';
 
+describe('Tests from ScheduleEdit', () => {
+  const programList = ['CNT', 'CST', 'ECE'];
+  const termList = ['2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2023 - 5', '2023 - 6', '2024 - 5'];
+  before(() => {
+    cy.exec('node electron-db-reset.js');
+  });
+
+  it('testAllCOsAppear', () => {
+    // Opens the landing page
+    cy.visit(urlGET);
+    /**
+     * Modal appears upon arrival
+     */
+    cy.get('#scheduleModal').should('be.visible');
+    // Sort orders are checked in the other test, as one giant test was not running smoothly
+    /**
+     * Button disabling and enabling
+     */
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+    // Check that Program field can be entered
+    cy.contains('Program');
+    cy.get('#programSelect').select('CNT');
+    /**
+     * testThatProgramSelectBoxesAreSorted
+     */
+    // Get the options from the select box
+
+    cy.get('#programSelect').children('option').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => a.localeCompare(b, 'en', {sensitivity: 'base'}));
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+
+    /**
+     * testThatTermSelectBoxesAreSorted
+     */
+    cy.get('#termSelect').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => {
+        const yearA = parseInt(a.match(/\d{4}/)[0]);
+        const yearB = parseInt(b.match(/\d{4}/)[0]);
+        return yearA - yearB;
+      });
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+
+    cy.get('#termSelect').select('2022-2023 - Term 2');
+    cy.get('#modalSubmit').should('be.disabled');
+    cy.contains('Number of Groups');
+    cy.get('#groupSelect').select('4');
+    cy.get('#groupSelect').find('option').then((options) => {
+      const values = Array.from(options, (option) => option.value);
+      // Check if the values are sorted in ascending order
+      const sortedValues = [...values].sort();
+      expect(values).to.deep.equal(sortedValues);
+    });
+
+    cy.get('#groupSelect').select('4');
+    cy.get('#modalSubmit').not('be.disabled');
+    cy.get('#modalSubmit').click();
+    cy.get('#scheduleModal').should('be.hidden');
+
+    cy.get('#180A').should('exist');
+    cy.get('#190A').should('exist');
+    cy.get('#200A').should('exist');
+    cy.get('#210A').should('exist');
+
+    cy.get('#Bbutton').click({force: true});
+    cy.get('#220B').should('exist');
+    cy.get('#230B').should('exist');
+    cy.get('#240B').should('exist');
+    cy.get('#250B').should('exist');
+
+    cy.get('#Cbutton').click({force: true});
+    cy.get('#260C').should('exist');
+    cy.get('#270C').should('exist');
+    cy.get('#280C').should('exist');
+    cy.get('#290C').should('exist');
+
+    cy.get('#Dbutton').click({force: true});
+    cy.get('#300D').should('exist');
+    cy.get('#310D').should('exist');
+    cy.get('#320D').should('exist');
+    cy.get('#330D').should('exist');
+  });
+
+  it('testHighlights', () => {
+    // Opens the landing page
+    cy.visit(urlGET);
+    /**
+     * Modal appears upon arrival
+     */
+    cy.get('#scheduleModal').should('be.visible');
+    // Sort orders are checked in the other test, as one giant test was not running smoothly
+    /**
+     * Button disabling and enabling
+     */
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+    // Check that Program field can be entered
+    cy.contains('Program');
+    cy.get('#programSelect').select('CNT');
+    /**
+     * testThatProgramSelectBoxesAreSorted
+     */
+    // Get the options from the select box
+
+    cy.get('#programSelect').children('option').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => a.localeCompare(b, 'en', {sensitivity: 'base'}));
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+
+    /**
+     * testThatTermSelectBoxesAreSorted
+     */
+    cy.get('#termSelect').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => {
+        const yearA = parseInt(a.match(/\d{4}/)[0]);
+        const yearB = parseInt(b.match(/\d{4}/)[0]);
+        return yearA - yearB;
+      });
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+
+    cy.get('#termSelect').select('2022-2023 - Term 2');
+    cy.get('#modalSubmit').should('be.disabled');
+    cy.contains('Number of Groups');
+    cy.get('#groupSelect').select('4');
+    cy.get('#groupSelect').find('option').then((options) => {
+      const values = Array.from(options, (option) => option.value);
+      // Check if the values are sorted in ascending order
+      const sortedValues = [...values].sort();
+      expect(values).to.deep.equal(sortedValues);
+    });
+
+    cy.get('#groupSelect').select('4');
+    cy.get('#modalSubmit').not('be.disabled');
+    cy.get('#modalSubmit').click();
+    cy.get('#scheduleModal').should('be.hidden');
+
+
+    clickButtonAndCheckClasses('#Abutton', ['#180A', '#190A', '#200A', '#210A']);
+    clickButtonAndCheckClasses('#Bbutton', ['#220B', '#230B', '#240B', '#250B']);
+    clickButtonAndCheckClasses('#Cbutton', ['#260C', '#270C', '#280C', '#290C']);
+    clickButtonAndCheckClasses('#Dbutton', ['#300D', '#310D', '#320D', '#330D']);
+
+    // Click button A again and check classes
+    cy.get('#Abutton').click({force: true});
+    clickItemAndCheckClasses('#180A');
+    clickButtonAndCheckClasses('#Abutton', ['#190A', '#200A', '#210A']);
+    clickButtonAndCheckClasses('#Bbutton', ['#220B', '#230B', '#240B', '#250B']);
+    clickButtonAndCheckClasses('#Cbutton', ['#260C', '#270C', '#280C', '#290C']);
+    clickButtonAndCheckClasses('#Dbutton', ['#300D', '#310D', '#320D', '#330D']);
+    cy.get('#Abutton').click({force: true});
+    clickItemAndCheckClasses('#190A');
+    clickButtonAndCheckClasses('#Abutton', ['#180A', '#200A', '#210A']);
+    clickButtonAndCheckClasses('#Bbutton', ['#220B', '#230B', '#240B', '#250B']);
+    clickButtonAndCheckClasses('#Cbutton', ['#260C', '#270C', '#280C', '#290C']);
+    clickButtonAndCheckClasses('#Dbutton', ['#300D', '#310D', '#320D', '#330D']);
+    cy.get('#Abutton').click({force: true});
+    clickItemAndCheckClasses('#180A');
+    cy.wait(500);
+    cy.get('#190A').click({force: true});
+    cy.get('#190A').should('have.class', 'btn-primary');
+    cy.get('#180A').should('not.have.class', 'btn-primary');
+
+
+    // eslint-disable-next-line require-jsdoc
+    function clickButtonAndCheckClasses(buttonSelector, items) {
+      cy.get(buttonSelector).click({force: true});
+      items.forEach((item) => {
+        cy.get(item).should('not.have.class', 'btn-primary');
+        cy.get(item).should('have.class', 'btn-outline-primary');
+      });
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    function clickItemAndCheckClasses(item) {
+      cy.get(item).click();
+      cy.get(item).should('have.class', 'btn-primary');
+      cy.get(item).should('not.have.class', 'btn-outline-primary');
+    }
+  });
+
+  it('testClickingExceptions', () => {
+    // Opens the landing page
+    cy.visit(urlGET);
+    /**
+     * Modal appears upon arrival
+     */
+    cy.get('#scheduleModal').should('be.visible');
+    // Sort orders are checked in the other test, as one giant test was not running smoothly
+    /**
+     * Button disabling and enabling
+     */
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+    // Check that Program field can be entered
+    cy.contains('Program');
+    cy.get('#programSelect').select('CNT');
+    /**
+     * testThatProgramSelectBoxesAreSorted
+     */
+    // Get the options from the select box
+
+    cy.get('#programSelect').children('option').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => a.localeCompare(b, 'en', {sensitivity: 'base'}));
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+
+    /**
+     * testThatTermSelectBoxesAreSorted
+     */
+    cy.get('#termSelect').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => {
+        const yearA = parseInt(a.match(/\d{4}/)[0]);
+        const yearB = parseInt(b.match(/\d{4}/)[0]);
+        return yearA - yearB;
+      });
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+
+    cy.get('#termSelect').select('2022-2023 - Term 2');
+    cy.get('#modalSubmit').should('be.disabled');
+    cy.contains('Number of Groups');
+    cy.get('#groupSelect').select('4');
+    cy.get('#groupSelect').find('option').then((options) => {
+      const values = Array.from(options, (option) => option.value);
+      // Check if the values are sorted in ascending order
+      const sortedValues = [...values].sort();
+      expect(values).to.deep.equal(sortedValues);
+    });
+
+    cy.get('#groupSelect').select('4');
+    cy.get('#modalSubmit').not('be.disabled');
+    cy.get('#modalSubmit').click();
+    cy.get('#scheduleModal').should('be.hidden');
+
+    cy.get('#0010').rightclick({force: true});
+    cy.get('#0010').contains('8:00');
+    cy.get('#0003').rightclick({force: true});
+    cy.get('#0003').contains('Wednesday');
+    cy.get('#180A').click({force: true});
+    cy.get('#0010').click({force: true});
+    cy.get('#0010').contains('8:00');
+    cy.get('#0003').click({force: true});
+    cy.get('#0003').contains('Wednesday');
+  });
+
+  it('testLeavingAndRe-entering', () => {
+    // Opens the landing page
+    cy.visit(urlGET);
+    /**
+     * Modal appears upon arrival
+     */
+    cy.get('#scheduleModal').should('be.visible');
+    // Sort orders are checked in the other test, as one giant test was not running smoothly
+    /**
+     * Button disabling and enabling
+     */
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+    // Check that Program field can be entered
+    cy.contains('Program');
+    cy.get('#programSelect').select('CNT');
+    /**
+     * testThatProgramSelectBoxesAreSorted
+     */
+    // Get the options from the select box
+
+    cy.get('#programSelect').children('option').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => a.localeCompare(b, 'en', {sensitivity: 'base'}));
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+
+    /**
+     * testThatTermSelectBoxesAreSorted
+     */
+    cy.get('#termSelect').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => {
+        const yearA = parseInt(a.match(/\d{4}/)[0]);
+        const yearB = parseInt(b.match(/\d{4}/)[0]);
+        return yearA - yearB;
+      });
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+
+    cy.get('#termSelect').select('2022-2023 - Term 2');
+    cy.get('#modalSubmit').should('be.disabled');
+    cy.contains('Number of Groups');
+    cy.get('#groupSelect').select('4');
+    cy.get('#groupSelect').find('option').then((options) => {
+      const values = Array.from(options, (option) => option.value);
+      // Check if the values are sorted in ascending order
+      const sortedValues = [...values].sort();
+      expect(values).to.deep.equal(sortedValues);
+    });
+    cy.get('#groupSelect').select('4');
+    cy.get('#modalSubmit').not('be.disabled');
+    cy.get('#modalSubmit').click();
+    cy.get('#scheduleModal').should('be.hidden');
+
+    cy.get('#180A').click({force: true});
+    cy.get('#0011').click({force: true});
+    cy.get('#0011').contains('COHS190');
+    cy.get('#homeBtn').click({force: true});
+    // Opens the landing page
+    cy.visit(urlGET);
+    /**
+     * Modal appears upon arrival
+     */
+    cy.get('#scheduleModal').should('be.visible');
+    // Sort orders are checked in the other test, as one giant test was not running smoothly
+    /**
+     * Button disabling and enabling
+     */
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+    // Check that Program field can be entered
+    cy.contains('Program');
+    cy.get('#programSelect').select('CNT');
+    /**
+     * testThatProgramSelectBoxesAreSorted
+     */
+    // Get the options from the select box
+
+    cy.get('#programSelect').children('option').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => a.localeCompare(b, 'en', {sensitivity: 'base'}));
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+
+    /**
+     * testThatTermSelectBoxesAreSorted
+     */
+    cy.get('#termSelect').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => {
+        const yearA = parseInt(a.match(/\d{4}/)[0]);
+        const yearB = parseInt(b.match(/\d{4}/)[0]);
+        return yearA - yearB;
+      });
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+
+    cy.get('#termSelect').select('2022-2023 - Term 2');
+    cy.get('#modalSubmit').should('be.disabled');
+    cy.contains('Number of Groups');
+    cy.get('#groupSelect').select('4');
+    cy.get('#groupSelect').find('option').then((options) => {
+      const values = Array.from(options, (option) => option.value);
+      // Check if the values are sorted in ascending order
+      const sortedValues = [...values].sort();
+      expect(values).to.deep.equal(sortedValues);
+    });
+    cy.get('#groupSelect').select('4');
+    cy.get('#modalSubmit').not('be.disabled');
+    cy.get('#modalSubmit').click();
+    cy.get('#scheduleModal').should('be.hidden');
+
+    cy.get('#0011').contains('COHS190');
+  });
+
+  it('testGroupsAreIndividual', () => {
+    // Opens the landing page
+    cy.visit(urlGET);
+    /**
+     * Modal appears upon arrival
+     */
+    cy.get('#scheduleModal').should('be.visible');
+    // Sort orders are checked in the other test, as one giant test was not running smoothly
+    /**
+     * Button disabling and enabling
+     */
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+    // Check that Program field can be entered
+    cy.contains('Program');
+    cy.get('#programSelect').select('CNT');
+    /**
+     * testThatProgramSelectBoxesAreSorted
+     */
+    // Get the options from the select box
+
+    cy.get('#programSelect').children('option').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => a.localeCompare(b, 'en', {sensitivity: 'base'}));
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+    // Check that Enter button is disabled
+    cy.get('#modalSubmit').should('be.disabled');
+
+    /**
+     * testThatTermSelectBoxesAreSorted
+     */
+    cy.get('#termSelect').then(($options) => {
+      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
+      const sortedOptions = [...optionsTexts].sort((a, b) => {
+        const yearA = parseInt(a.match(/\d{4}/)[0]);
+        const yearB = parseInt(b.match(/\d{4}/)[0]);
+        return yearA - yearB;
+      });
+      expect(optionsTexts).to.deep.equal(sortedOptions);
+    });
+
+    cy.get('#termSelect').select('2022-2023 - Term 2');
+    cy.get('#modalSubmit').should('be.disabled');
+    cy.contains('Number of Groups');
+    cy.get('#groupSelect').select('4');
+    cy.get('#groupSelect').find('option').then((options) => {
+      const values = Array.from(options, (option) => option.value);
+      // Check if the values are sorted in ascending order
+      const sortedValues = [...values].sort();
+      expect(values).to.deep.equal(sortedValues);
+    });
+    cy.get('#groupSelect').select('4');
+    cy.get('#modalSubmit').not('be.disabled');
+    cy.get('#modalSubmit').click();
+    cy.get('#scheduleModal').should('be.hidden');
+
+    cy.get('#180A').click({force: true});
+    cy.get('#0083').click({force: true});
+    cy.get('#0084').click({force: true});
+    cy.get('#0085').click({force: true});
+    cy.get('#Bbutton').click({force: true});
+    cy.get('#220B').click({force: true});
+    cy.get('#1073').click({force: true});
+    cy.get('#1074').click({force: true});
+    cy.get('#1075').click({force: true});
+    cy.get('#1083').find('p').should('be.empty');
+    cy.get('#1084').find('p').should('be.empty');
+    cy.get('#1085').find('p').should('be.empty');
+    cy.get('#Cbutton').click({force: true});
+    cy.get('#260C').click({force: true});
+    cy.get('#2063').click({force: true});
+    cy.get('#2064').click({force: true});
+    cy.get('#2065').click({force: true});
+    cy.get('#2083').find('p').should('be.empty');
+    cy.get('#2084').find('p').should('be.empty');
+    cy.get('#2085').find('p').should('be.empty');
+    cy.get('#2073').find('p').should('be.empty');
+    cy.get('#2074').find('p').should('be.empty');
+    cy.get('#2075').find('p').should('be.empty');
+    cy.get('#Dbutton').click({force: true});
+    cy.get('#300D').click({force: true});
+    cy.get('#3053').click({force: true});
+    cy.get('#3054').click({force: true});
+    cy.get('#3055').click({force: true});
+    cy.get('#3083').find('p').should('be.empty');
+    cy.get('#3084').find('p').should('be.empty');
+    cy.get('#3085').find('p').should('be.empty');
+    cy.get('#3073').find('p').should('be.empty');
+    cy.get('#3074').find('p').should('be.empty');
+    cy.get('#3075').find('p').should('be.empty');
+    cy.get('#3063').find('p').should('be.empty');
+    cy.get('#3064').find('p').should('be.empty');
+    cy.get('#3065').find('p').should('be.empty');
+  });
+});
+
+/**
+ * todo classroom shows up as "deleted" when deleted
+ * todo check for classroom conflicts when scheduling
+ * todo deleting all classrooms? (ask brandon)
+ * todo alt instructor and classroom show up on CO//ts (mostly done)
+ */
+describe('tests from scheduleclassroomalternative', () => {
+  const programList = ['CNT', 'CST', 'ECE'];
+  const termList = ['2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2023 - 5', '2023 - 6', '2024 - 5'];
+  before(() => {
+    cy.exec('node electron-db-reset.js');
+  });
+
+  it('testDeletingClassroomShowsUpAsDeleted', () => {
+
+  });
+
+  it('testClassroomConflicts', () => {
+
+  });
+
+  it('testAltInstructorAndClassroomShowUp', () => {
+
+  });
+});
 
 describe('Test Schedule Report Page', () => {
   const programList = ['CNT', 'CST', 'ECE'];
