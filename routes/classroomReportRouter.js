@@ -146,12 +146,12 @@ async function generateScheduleTable(TimeSlots, TIMES) {
     const currentCourse= await currentCourseOffering.getCourse();
     try {
       scheduleArray[TIMES.indexOf(ts.startTime)][ts.day - 1] =
-        {
-          timeSlot: ts,
-          courseOffering: currentCourseOffering,
-          course: currentCourse,
-          Instructor: currentInstructorOffering,
-        };
+          {
+            timeSlot: ts,
+            courseOffering: currentCourseOffering,
+            course: currentCourse,
+            Instructor: currentInstructorOffering,
+          };
     } catch (e) {
       console.log('Goofed');
     }

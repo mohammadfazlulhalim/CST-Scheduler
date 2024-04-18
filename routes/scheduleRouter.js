@@ -65,7 +65,7 @@ router.put('/', async (req, res) => {
   const overlappingTimeslot = await Timeslot.findOne({
     where: {
       startTime: TIMES[req.body.timeIndex - 1],
-      day: DAYS[req.body.dayOfWeek - 1],
+      day: req.body.dayOfWeek - 1,
       group: GROUPS[req.body.group],
       [Op.and]: [
         {startDate: {[Op.lte]: CO.endDate}},
@@ -88,7 +88,7 @@ router.put('/', async (req, res) => {
       ProgramId: CO.ProgramId,
       startTime: TIMES[req.body.timeIndex - 1],
       endTime: TIMES[req.body.timeIndex],
-      day: DAYS[req.body.dayOfWeek - 1],
+      day: req.body.dayOfWeek - 1,
       group: GROUPS[req.body.group],
     };
 
@@ -207,7 +207,7 @@ async function getTableRows(split, COArray, term, program, groupLetter, timeSlot
         continue;
       }
       rowsToReturn[i][j] = timeSlots.find(
-          (ts) => ts.day === topRow[j] && ts.startTime === times24hr[i-1] &&
+          (ts) => ts.day === j-1 && ts.startTime === times24hr[i-1] &&
               (ts.startDate < split.endDate && ts.endDate > split.startDate));
     }
   }
