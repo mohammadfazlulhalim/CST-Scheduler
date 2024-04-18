@@ -43,6 +43,7 @@ router.post('/', async (req, res, next)=> {
     console.error('Error processing conflict pairs:', error);
   }
 
+  console.log(req.body.filterTerm);
 
   const title = 'Instructor Conflicts for ' + listTerm[req.body.filterTerm].calendarYear + ' - Term ' + listTerm[req.body.filterTerm].termNumber;
 
