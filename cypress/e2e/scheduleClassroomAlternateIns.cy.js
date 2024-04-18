@@ -38,9 +38,9 @@ describe('story52Tests', async () => {
       cy.get(cornerIDs[i]).contains('COHS190');
       cy.get(cornerIDs[i]).contains('Benson / Caron');
       cy.get(cornerIDs[0]).contains('241');
-      cy.get(cornerIDs[1]).contains('239A');
-      cy.get(cornerIDs[2]).contains('239A');
-      cy.get(cornerIDs[3]).contains('239A');
+      cy.get(cornerIDs[1]).contains('241');
+      cy.get(cornerIDs[2]).contains('241');
+      cy.get(cornerIDs[3]).contains('241');
     }
 
     // Going to the classroom page to delete Room 241
@@ -64,12 +64,11 @@ describe('story52Tests', async () => {
     }
 
     for (let i = 0; i < cornerIDs.length; i++) {
-
-      cy.get(cornerIDs[i]).find('p')          // Find all <p> elements inside this <td>
-          .eq(2)              // Select the third <p> (index starts at 0)
-          .then(pElement => {
+      cy.get(cornerIDs[i]).find('p') // Find all <p> elements inside this <td>
+          .eq(2) // Select the third <p> (index starts at 0)
+          .then((pElement) => {
             // You can interact or assert something about the third <p> element here
-            cy.wrap(pElement).should('be.empty');  // Example assertion
+            cy.wrap(pElement).should('be.empty'); // Example assertion
           });
     }
 
@@ -123,7 +122,7 @@ describe('story52Tests', async () => {
     cy.get('#modalSubmit').click();
 
     cy.get('#selectedClassroom').contains('241');
-    cy.get("#selectedTerm").contains('Term 2');
+    cy.get('#selectedTerm').contains('Term 2');
   });
 
   /**
@@ -155,7 +154,6 @@ describe('story52Tests', async () => {
     // Saving Hardware in first spot
     cy.get(cornerIDs[0]).click();
     cy.wait(50);
-
   });
 
 
@@ -203,7 +201,6 @@ describe('story52Tests', async () => {
     for (let i = 0; i < cornerIDs.length; i++) {
       cy.get(cornerIDs[i]).contains('COHS190');
       cy.get(cornerIDs[i]).contains('Benson / Caron');
-
     }
 
     // Selecting Seminar and placing it in the four corners
@@ -218,7 +215,6 @@ describe('story52Tests', async () => {
     for (let i = 0; i < cornerIDs.length; i++) {
       cy.get(cornerIDs[i]).contains('SEM283');
       cy.get(cornerIDs[i]).contains('Onishenko');
-
     }
 
     // Now switching the room
@@ -230,7 +226,6 @@ describe('story52Tests', async () => {
     cy.wait(50);
     cy.get(cornerIDs[3]).click();
     cy.wait(50);
-
 
 
     // Check that an alternate instructor can be added back in
@@ -246,11 +241,9 @@ describe('story52Tests', async () => {
       if (i % 2 == 0) {
         cy.get(cornerIDs[i]).contains('COHS190');
         cy.get(cornerIDs[i]).contains('Benson / Caron');
-
       } else {
         cy.get(cornerIDs[i]).contains('SEM283');
         cy.get(cornerIDs[i]).contains('Onishenko');
-
       }
     }
 
@@ -283,7 +276,6 @@ describe('story52Tests', async () => {
     for (let i = 0; i < cornerIDs.length; i++) {
       cy.get(cornerIDs[i]).contains('SEM283');
       cy.get(cornerIDs[i]).contains('Onishenko');
-
     }
 
     // Now need to do cleanup - remove the added timeslot

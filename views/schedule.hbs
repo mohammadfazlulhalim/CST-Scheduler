@@ -128,10 +128,10 @@
 </div>
 <script>
     'use strict';
+
+    //Currently selected course offering from list
     let currentCOID;
 
-    let currCO = null;
-    let currDOM = null;
 
     window.onload = function () {
         const modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
@@ -143,6 +143,8 @@
 
     };
 
+    //Updates the classroom dropdown so that they are all consistent, and also used when page
+    //reloads
     function updateDropdowns(selectedValue) {
         const dropdowns = document.querySelectorAll('.classroomSelect');
         dropdowns.forEach((dropdown) => {
@@ -154,6 +156,7 @@
 
 
 
+    //For modal to check if the submit button should be enabled
     function checkEnable() {
         let bTermSelected = document.getElementById('termSelect').value !== '';
         let bProgramSelected = document.getElementById('programSelect').value !== '';
@@ -185,10 +188,21 @@
 
     }
 
+    /**
+     * This method does two things.
+     * The first is that it is the method that does a post to reload the page with the new stuff after
+     * a delete or put occurs.
+     * Secondly it saves variables so that it can reload the page where the user left off, making it
+     * seamless for the user.
+     * @returns {Promise<void>}
+     */
     async function fetchAndUpdateContent() {
+        //Saved state for the group button, coid, carousel page, and classroom
         let selectedButton = document.querySelector('button.groupButtons.btn-primary').id;
         let selectedGroup = document.querySelector('div.groups:not(.visually-hidden)').id;
         let currentCarousels = document.querySelectorAll('div.carousels.active');
+        let selectedClassroom = document.getElementById('classroomSelect00').value;
+
         let highlightedButton;
         if (document.querySelector('button.COButtons.btn-primary')) {
              highlightedButton = document.querySelector('button.COButtons.btn-primary').id;
@@ -224,6 +238,8 @@
             console.error('Error setting innerHTML:', error);
         }
 
+
+        //Resetting the state to where it was pre-post.
         let buttons = document.querySelectorAll('.groupButtons');
         let carousels = document.querySelectorAll('.carousels');
         let groups = document.querySelectorAll('.groups');
@@ -240,6 +256,9 @@
         groups.forEach(group => {
             group.classList.add('visually-hidden');
         });
+
+        console.log(selectedClassroom);
+        updateDropdowns(selectedClassroom);
 
 
         document.getElementById(selectedGroup).classList.remove('visually-hidden');
@@ -269,6 +288,8 @@
 
     }
 
+    //This method will make it so when a course offering button is clicked, it is highlighted and ready to be
+    //added to a slot
     function onCOClick(COId, button) {
         if (currentCOID === COId) {
             currentCOID = null;
@@ -282,12 +303,15 @@
 
     }
 
+    //Simple method to ensure that a course offering from another page can't be added
+    //to an invalid slot.
     function onCarouselArrowClick() {
         currentCOID = null;
         removeHighlights();
     }
 
 
+    //Setting the highlights and ensuring that the correct group shows up when the group letters are clicked
     function onGroupClick(groupLetter) {
         const buttons = document.querySelectorAll('.groupButtons');
         buttons.forEach((button) => {
@@ -305,17 +329,10 @@
         currentCOID = null;
     }
 
+    //When a courseoffering is selected this method is the thing that
+    //determines how the TS is made which is crucial
     async function onTSClick(groupIndex, tableIndex, rowIndex, itemIndex, tsID) {
         const classroom = document.getElementById('classroomSelect00').value;
-        // const cell = document.getElementById(`${groupIndex}${tableIndex}${rowIndex}${itemIndex}`);
-        // let pElement = cell.querySelector('p');
-        // let isEmpty = false; // Assume not empty by default
-        // if (pElement) {
-        //     // Check if the <p> is visually empty (including whitespace-only scenarios)
-        //     if (pElement.innerText.trim() === '') {
-        //         isEmpty = true;
-        //     }
-        // }
         if (tsID) {
             await fetch('/schedule', {
                 method: 'DELETE',
@@ -350,6 +367,7 @@
     }
 
 
+    //A function to remove highlights from all course offering buttons.
     function removeHighlights() {
         const buttons = document.querySelectorAll('.COButtons');
         buttons.forEach((button) => {

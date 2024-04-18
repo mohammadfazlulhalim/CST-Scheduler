@@ -17,7 +17,6 @@ describe('Tests from ScheduleEdit', () => {
     cy.visit(urlGET);
 
 
-
     cy.get('#programSelect').select('CNT', {force: true});
 
     cy.get('#termSelect').select('2022-2023 - Term 2', {force: true});
@@ -420,87 +419,9 @@ describe('Tests from ScheduleEdit', () => {
     cy.get('#2073').find('p').should('be.empty');
     cy.get('#2074').find('p').should('be.empty');
     cy.get('#2075').find('p').should('be.empty');
-
   });
 });
 
-
-describe('tests from scheduleclassroomalternative', () => {
-  const programList = ['CNT', 'CST', 'ECE'];
-  const termList = ['2023 - 1', '2023 - 2', '2023 - 3', '2023 - 4', '2023 - 5', '2023 - 6', '2024 - 5'];
-  before(() => {
-    cy.exec('node electron-db-reset.js');
-  });
-
-  it('testDeletingClassroomShowsUpAsEmpty', () => {
-    // Opens the landing page
-    cy.visit(urlGET);
-    /**
-     * Modal appears upon arrival
-     */
-    cy.get('#scheduleModal').should('be.visible');
-    // Sort orders are checked in the other test, as one giant test was not running smoothly
-    /**
-     * Button disabling and enabling
-     */
-    // Check that Enter button is disabled
-    cy.get('#modalSubmit').should('be.disabled');
-    // Check that Program field can be entered
-    cy.contains('Program');
-    cy.get('#programSelect').select('CNT');
-    /**
-     * testThatProgramSelectBoxesAreSorted
-     */
-    // Get the options from the select box
-
-    cy.get('#programSelect').children('option').then(($options) => {
-      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
-      const sortedOptions = [...optionsTexts].sort((a, b) => a.localeCompare(b, 'en', {sensitivity: 'base'}));
-      expect(optionsTexts).to.deep.equal(sortedOptions);
-    });
-    // Check that Enter button is disabled
-    cy.get('#modalSubmit').should('be.disabled');
-
-    /**
-     * testThatTermSelectBoxesAreSorted
-     */
-    cy.get('#termSelect').then(($options) => {
-      const optionsTexts = $options.toArray().map((option) => option.textContent.trim());
-      const sortedOptions = [...optionsTexts].sort((a, b) => {
-        const yearA = parseInt(a.match(/\d{4}/)[0]);
-        const yearB = parseInt(b.match(/\d{4}/)[0]);
-        return yearA - yearB;
-      });
-      expect(optionsTexts).to.deep.equal(sortedOptions);
-    });
-
-    cy.get('#termSelect').select('2022-2023 - Term 2');
-    cy.get('#modalSubmit').should('be.disabled');
-    cy.contains('Number of Groups');
-    cy.get('#groupSelect').select('4');
-    cy.get('#groupSelect').find('option').then((options) => {
-      const values = Array.from(options, (option) => option.value);
-      // Check if the values are sorted in ascending order
-      const sortedValues = [...values].sort();
-      expect(values).to.deep.equal(sortedValues);
-    });
-    cy.get('#groupSelect').select('4');
-    cy.get('#modalSubmit').not('be.disabled');
-    cy.get('#modalSubmit').click();
-    cy.get('#scheduleModal').should('be.hidden');
-
-
-
-  });
-
-  it('testClassroomConflicts', () => {
-
-  });
-
-  it('testAltInstructorAndClassroomShowUp', () => {
-
-  });
-});
 
 describe('Test Schedule Report Page', () => {
   const programList = ['CNT', 'CST', 'ECE'];

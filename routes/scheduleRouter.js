@@ -153,7 +153,7 @@ async function getSchedules(term, program, groupLetter, schedule) {
     }
   }
 
-
+  // check for unique dates
   const uniqueDates = [term.startDate, term.endDate];
   timeSlots.forEach((ts) => {
     if (!uniqueDates.includes(ts.startDate) && ts.startDate > term.startDate) {
@@ -165,6 +165,7 @@ async function getSchedules(term, program, groupLetter, schedule) {
   });
   uniqueDates.sort();
 
+  // make splits based on unique dates
   for (let i=0; i<uniqueDates.length-1; i++) {
     schedule.split[i] = {
       startDate: undefined,
