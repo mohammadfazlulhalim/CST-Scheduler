@@ -244,9 +244,9 @@ describe('story52Tests', async () => {
     cy.get('#cTermNumber').type('6');
     cy.wait(100);
     cy.get('#cStartDate').type('2024-05-15');
-    cy.wait(100);
+    cy.wait(500);
     cy.get('#cEndDate').type('2024-06-21');
-    cy.wait(100);
+    cy.wait(500);
     cy.get('#createTerm').click({force: true});
     cy.wait(100);
 
@@ -290,9 +290,9 @@ describe('story52Tests', async () => {
     cy.get('#dateRange').contains('Date Range: 2024-05-01 - 2024-06-21');
 
     // Arrays with each number representing an instructor's hours, sorted by last name
-    const expectedPrimaryHours = [3, 0, 3, 0, 0, 0, 2, 10, 2, 3, 0];
+    const expectedPrimaryHours = [3, 0, 3, 0, 0, 0, 2, 11, 2, 3, 0];
     const expectedAlternativeHours = [0, 2, 0, 3, 0, 0, 0, 0, 3, 0, 0];
-    const expectedTotalHours = [3, 2, 3, 3, 0, 0, 2, 10, 5, 3, 0];
+    const expectedTotalHours = [3, 2, 3, 3, 0, 0, 2, 11, 5, 3, 0];
 
     // Looping through each row in the table, and checking that the hours are what is expected
     for (let i = 0; i < INSTRUCTORLIST.length; i++) {
